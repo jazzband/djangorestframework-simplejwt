@@ -1,0 +1,3 @@
+-r requirements/requirements-codestyle.txt
+-r requirements/requirements-packaging.txt
+-r requirements/requirements-testing.txt
