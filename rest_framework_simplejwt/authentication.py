@@ -4,8 +4,7 @@ from django.contrib.auth import get_user_model
 from django.utils.six import text_type
 from django.utils.translation import ugettext_lazy as _
 from jose import jwt
-from rest_framework import HTTP_HEADER_ENCODING
-from rest_framework.authentication import BaseAuthentication
+from rest_framework import HTTP_HEADER_ENCODING, authentication
 from rest_framework.exceptions import AuthenticationFailed
 
 AUTH_HEADER_TYPE = 'Bearer'
@@ -19,7 +18,7 @@ SECRET_KEY = 'blah'
 User = get_user_model()
 
 
-class JWTAuthentication(BaseAuthentication):
+class JWTAuthentication(authentication.BaseAuthentication):
     """
     An authentication plugin that authenticates requests through a JSON web
     token provided in a request header.
