@@ -2,8 +2,10 @@ from __future__ import unicode_literals
 
 from django.contrib.auth import get_user_model
 from django.utils.translation import ugettext_lazy as _
+from django.utils.six import text_type
 from jose import jwt
-from rest_framework.authentication import BaseAuthentication, get_authorization_header
+from rest_framework import HTTP_HEADER_ENCODING
+from rest_framework.authentication import BaseAuthentication
 from rest_framework.exceptions import AuthenticationFailed
 
 AUTH_HEADER_TYPE = 'Bearer'
@@ -21,7 +23,13 @@ class JWTAuthentication(BaseAuthentication):
 
     def authenticate(self, request):
         header = self.get_header(request)
+        if header is None:
+            return None
+
         token = self.get_token(header)
+        if token is None:
+            return None
+
         payload = self.get_payload(token)
         user_id = self.get_user_id(payload)
 
@@ -34,18 +42,22 @@ class JWTAuthentication(BaseAuthentication):
         )
 
     def get_header(self, request):
-        return get_authorization_header(request)
+        header = request.META.get('HTTP_AUTHORIZATION')
+
+        if isinstance(header, text_type):
+            # Work around django test client oddness
+            header = header.encode(HTTP_HEADER_ENCODING)
+
+        return header
 
     def get_token(self, header):
         parts = header.split()
 
-        if not parts or parts[0] != AUTH_HEADER_TYPE_BYTES:
+        if parts[0] != AUTH_HEADER_TYPE_BYTES:
             return None
 
-        if len(parts) == 1:
-            raise AuthenticationFailed(_('No token provided.'))
-        elif len(parts) > 2:
-            raise AuthenticationFailed(_('Token should not contain spaces.'))
+        if len(parts) != 2:
+            raise AuthenticationFailed(_('Authorization header is invalid.'))
 
         return parts[1]
 
@@ -53,7 +65,7 @@ class JWTAuthentication(BaseAuthentication):
         try:
             return jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
         except TypeError:
-            raise AuthenticationFailed(_('Token was invalid.'))
+            raise AuthenticationFailed(_('Token is invalid.'))
 
     def get_user_id(self, payload):
         try:
@@ -68,6 +80,6 @@ class JWTAuthentication(BaseAuthentication):
             raise AuthenticationFailed(_('User not found.'))
 
         if not user.is_active:
-            raise AuthenticationFailed(_('User inactive.'))
+            raise AuthenticationFailed(_('User is inactive.'))
 
         return user
