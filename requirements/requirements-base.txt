@@ -1,0 +1,3 @@
+django
+djangorestframework
+python-jose
