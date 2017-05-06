@@ -13,6 +13,7 @@ AUTH_HEADER_TYPE_BYTES = AUTH_HEADER_TYPE.encode('utf-8')
 
 USER_ID_FIELD = 'pk'
 PAYLOAD_ID_FIELD = 'user_pk'
+
 SECRET_KEY = 'blah'
 
 User = get_user_model()
