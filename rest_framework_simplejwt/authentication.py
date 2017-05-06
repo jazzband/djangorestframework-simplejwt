@@ -7,13 +7,9 @@ from jose import jwt
 from rest_framework import HTTP_HEADER_ENCODING, authentication
 from rest_framework.exceptions import AuthenticationFailed
 
-AUTH_HEADER_TYPE = 'Bearer'
-AUTH_HEADER_TYPE_BYTES = AUTH_HEADER_TYPE.encode('utf-8')
+from .settings import api_settings
 
-USER_ID_FIELD = 'pk'
-PAYLOAD_ID_FIELD = 'user_pk'
-
-SECRET_KEY = 'blah'
+AUTH_HEADER_TYPE_BYTES = api_settings.AUTH_HEADER_TYPE.encode('utf-8')
 
 User = get_user_model()
 
@@ -41,7 +37,7 @@ class JWTAuthentication(authentication.BaseAuthentication):
 
     def authenticate_header(self, request):
         return '{0} realm="{1}"'.format(
-            AUTH_HEADER_TYPE,
+            api_settings.AUTH_HEADER_TYPE,
             self.www_authenticate_realm,
         )
 
@@ -79,7 +75,7 @@ class JWTAuthentication(authentication.BaseAuthentication):
         Extracts a data payload from the given JSON web token.
         """
         try:
-            return jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
+            return jwt.decode(token, api_settings.SECRET_KEY, algorithms=['HS256'])
         except TypeError:
             raise AuthenticationFailed(_('Token is invalid.'))
 
@@ -89,7 +85,7 @@ class JWTAuthentication(authentication.BaseAuthentication):
         object.
         """
         try:
-            return payload[PAYLOAD_ID_FIELD]
+            return payload[api_settings.PAYLOAD_ID_FIELD]
         except KeyError:
             raise AuthenticationFailed(_('Token contained no recognizable user identification.'))
 
@@ -99,7 +95,7 @@ class JWTAuthentication(authentication.BaseAuthentication):
         identifier.
         """
         try:
-            user = User.objects.get(**{USER_ID_FIELD: user_id})
+            user = User.objects.get(**{api_settings.USER_ID_FIELD: user_id})
         except User.DoesNotExist:
             raise AuthenticationFailed(_('User not found.'))
 

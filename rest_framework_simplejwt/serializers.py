@@ -1,6 +1,6 @@
 from __future__ import unicode_literals
 
-from datetime import datetime, timedelta
+from datetime import datetime
 
 from django.contrib.auth import authenticate, get_user_model
 from django.utils.six import text_type
@@ -8,11 +8,7 @@ from django.utils.translation import ugettext_lazy as _
 from jose import jwt
 from rest_framework import serializers
 
-USER_ID_FIELD = 'pk'
-PAYLOAD_ID_FIELD = 'user_pk'
-TOKEN_LIFETIME = timedelta(seconds=300)
-
-SECRET_KEY = 'blah'
+from .settings import api_settings
 
 User = get_user_model()
 
@@ -61,8 +57,8 @@ class TokenObtainSerializer(serializers.Serializer):
         Serializes the given user into a payload object.
         """
         payload = {
-            PAYLOAD_ID_FIELD: text_type(getattr(user, USER_ID_FIELD)),
-            'exp': datetime.utcnow() + TOKEN_LIFETIME
+            api_settings.PAYLOAD_ID_FIELD: text_type(getattr(user, api_settings.USER_ID_FIELD)),
+            'exp': datetime.utcnow() + api_settings.TOKEN_LIFETIME
         }
 
         return payload
@@ -71,4 +67,4 @@ class TokenObtainSerializer(serializers.Serializer):
         """
         Converts the given payload object into a JSON web token.
         """
-        return jwt.encode(payload, SECRET_KEY, algorithm='HS256')
+        return jwt.encode(payload, api_settings.SECRET_KEY, algorithm='HS256')
