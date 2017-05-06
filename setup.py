@@ -42,7 +42,7 @@ setup(
     packages=find_packages(exclude=['tests', 'licenses', 'requirements']),
     install_requires=['django', 'djangorestframework', 'python-jose'],
     classifiers=[
-        'Development Status :: 2 - Pre-Alpha',
+        'Development Status :: 3 - Alpha',
         'Environment :: Web Environment',
         'Framework :: Django',
         'Framework :: Django :: 1.8',
