@@ -89,4 +89,4 @@ class TestTokenObtainSerializer(TestCase):
 
         token = s.get_token(payload)
 
-        self.assertEqual(token, 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX3BrIjoiMSIsImV4cCI6OTQ2Njg0ODAwfQ.bs1QLAe3hVYD6mWTp-f2TMb-_PZ27xx8x4ZLJMiad_Y')
+        self.assertEqual(token, 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX3BrIjoiMSJ9.nGBUNP5o11vWigBoLqcYt_YlTpkF9blNPqceDIzXBkU')
