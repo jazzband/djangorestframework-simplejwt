@@ -33,19 +33,16 @@ class TokenObtainSerializer(serializers.Serializer):
         self.fields['password'] = PasswordField()
 
     def validate(self, attrs):
+        # The default authentication backend will also return None when a user
+        # is inactive
         user = authenticate(**{
             self.username_field: attrs[self.username_field],
             'password': attrs['password'],
         })
 
-        if not user:
+        if user is None:
             raise serializers.ValidationError(
-                _('No account found with the given credentials.'),
-            )
-
-        if not user.is_active:
-            raise serializers.ValidationError(
-                _('User is inactive.'),
+                _('No active account found with the given credentials.'),
             )
 
         payload = self.get_payload(user)
