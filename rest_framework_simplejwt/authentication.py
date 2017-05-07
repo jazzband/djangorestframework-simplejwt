@@ -4,12 +4,13 @@ from django.contrib.auth import get_user_model
 from django.utils.six import text_type
 from django.utils.translation import ugettext_lazy as _
 from jose import jwt
+from jose.exceptions import JOSEError
 from rest_framework import HTTP_HEADER_ENCODING, authentication
 from rest_framework.exceptions import AuthenticationFailed
 
 from .settings import api_settings
 
-AUTH_HEADER_TYPE_BYTES = api_settings.AUTH_HEADER_TYPE.encode('utf-8')
+AUTH_HEADER_TYPE_BYTES = api_settings.AUTH_HEADER_TYPE.encode(HTTP_HEADER_ENCODING)
 
 User = get_user_model()
 
@@ -76,7 +77,7 @@ class JWTAuthentication(authentication.BaseAuthentication):
         """
         try:
             return jwt.decode(token, api_settings.SECRET_KEY, algorithms=['HS256'])
-        except TypeError:
+        except JOSEError:
             raise AuthenticationFailed(_('Token is invalid.'))
 
     def get_user_id(self, payload):
