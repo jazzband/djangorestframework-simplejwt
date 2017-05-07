@@ -18,9 +18,8 @@ class TestTokenObtainSerializer(TestCase):
 
         self.user = User.objects.create_user(
             username=self.username,
+            password=self.password,
         )
-        self.user.set_password(self.password)
-        self.user.save()
 
     def test_it_should_not_validate_if_any_fields_missing(self):
         s = TokenObtainSerializer(data={})
