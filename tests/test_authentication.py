@@ -22,6 +22,10 @@ class TestJWTAuthentication(TestCase):
         self.fake_header = b'Bearer ' + self.fake_token
 
     def test_get_header(self):
+        # Should return None if no authorization header
+        request = self.factory.get('/test-url/')
+        self.assertIsNone(self.backend.get_header(request))
+
         # Should pull correct header off request
         request = self.factory.get('/test-url/', HTTP_AUTHORIZATION=self.fake_header)
         self.assertEqual(self.backend.get_header(request), self.fake_header)
