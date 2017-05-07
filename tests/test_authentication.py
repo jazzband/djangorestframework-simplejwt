@@ -67,7 +67,6 @@ class TestJWTAuthentication(TestCase):
         # Token with invalid signature should cause exception
         payload['exp'] = datetime.utcnow() + timedelta(days=1)
         token = jwt.encode(payload, api_settings.SECRET_KEY, algorithm='HS256')
-
         payload['foo'] = 'baz'
         other_token = jwt.encode(payload, api_settings.SECRET_KEY, algorithm='HS256')
 
@@ -77,3 +76,6 @@ class TestJWTAuthentication(TestCase):
 
         with self.assertRaises(AuthenticationFailed):
             self.backend.get_payload(invalid_token)
+
+        # Otherwise, should return data payload for token
+        self.assertEqual(self.backend.get_payload(other_token), payload)
