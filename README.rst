@@ -5,7 +5,9 @@ A bare-bones JSON Web Token authentication plugin for the `Django REST
 Framework <http://www.django-rest-framework.org/>`_.
 
 .. image:: https://travis-ci.org/davesque/django-rest-framework-simplejwt.svg?branch=master
-    :target: https://travis-ci.org/davesque/django-rest-framework-simplejwt
+  :target: https://travis-ci.org/davesque/django-rest-framework-simplejwt
+.. image:: https://codecov.io/gh/davesque/django-rest-framework-simplejwt/branch/master/graph/badge.svg
+  :target: https://codecov.io/gh/davesque/django-rest-framework-simplejwt
 
 ----
 
