@@ -1,5 +1,5 @@
 from django.contrib.auth import get_user_model
-from django.urls import reverse
+from rest_framework_simplejwt.compat import reverse
 from rest_framework_simplejwt.settings import api_settings
 
 from .utils import APIViewTestCase
