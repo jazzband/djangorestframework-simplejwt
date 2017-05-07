@@ -91,4 +91,11 @@ class TestTokenObtainSerializer(TestCase):
         with override_api_settings(SECRET_KEY='not_secret'):
             token = s.get_token(payload)
 
-        self.assertEqual(token, 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjk0NjY4NDgwMH0.NHpdD2X8ub4SE_MZLBedWa57FCpntGaN_r6f8kNKdUs')
+        # Token could be one of two depending on header dict ordering
+        self.assertIn(
+            token,
+            (
+                'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjk0NjY4NDgwMH0.NHpdD2X8ub4SE_MZLBedWa57FCpntGaN_r6f8kNKdUs',
+                'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjk0NjY4NDgwMH0.jvxQgXCSDToR8uKoRJcMT-LmMJJn2-NM76nfSR2FOgs',
+            ),
+        )
