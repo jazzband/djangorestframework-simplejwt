@@ -25,6 +25,23 @@ class TestTestView(APIViewTestCase):
         self.assertEqual(res.status_code, 401)
         self.assertIn('credentials were not provided', res.data['detail'])
 
+    def test_wrong_auth_type(self):
+        res = self.client.post(
+            reverse('rest_framework_simplejwt:token_obtain'),
+            data={
+                User.USERNAME_FIELD: self.username,
+                'password': self.password,
+            },
+        )
+
+        token = res.data['token']
+        self.authenticate_with_token('Wrong', token)
+
+        res = self.view_get()
+
+        self.assertEqual(res.status_code, 401)
+        self.assertIn('credentials were not provided', res.data['detail'])
+
     def test_user_can_get_token_and_use_it(self):
         res = self.client.post(
             reverse('rest_framework_simplejwt:token_obtain'),
