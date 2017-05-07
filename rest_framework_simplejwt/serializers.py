@@ -40,7 +40,7 @@ class TokenObtainSerializer(serializers.Serializer):
             'password': attrs['password'],
         })
 
-        if user is None:
+        if user is None or not user.is_active:
             raise serializers.ValidationError(
                 _('No active account found with the given credentials.'),
             )
