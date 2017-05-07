@@ -84,9 +84,8 @@ class TestTokenObtainSerializer(TestCase):
     def test_get_token(self):
         # Should return a JSON web token for the given payload
         s = TokenObtainSerializer()
-        payload = s.get_payload(self.user)
-        del payload['exp']
+        payload = {'exp': datetime(year=2000, month=1, day=1)}
 
         token = s.get_token(payload)
 
-        self.assertEqual(token, 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX3BrIjoiMSJ9.nGBUNP5o11vWigBoLqcYt_YlTpkF9blNPqceDIzXBkU')
+        self.assertEqual(token, 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjk0NjY4NDgwMH0.VKoOnMgmETawjDZwxrQaHG0xHdo6xBodFy6FXJzTVxs')
