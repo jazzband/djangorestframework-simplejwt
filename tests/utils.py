@@ -4,7 +4,6 @@ import contextlib
 
 from django.core.urlresolvers import reverse
 from django.test import TestCase
-from rest_framework.authtoken.models import Token
 from rest_framework.test import APIClient
 from rest_framework_simplejwt.settings import api_settings
 
@@ -27,33 +26,19 @@ def client_action_wrapper(action):
     return wrapper_method
 
 
-class APIClientTestCaseMixin(object):
-    def setUp(self):
-        super(APIClientTestCaseMixin, self).setUp()
+class APIViewTestCase(TestCase):
+    client_class = APIClient
 
-        self.client = APIClient()
-
-    def authenticate_with_user(self, user):
-        """
-        Authenticates requests with the given user's token.
-        """
-        self.authenticate_with_token(Token.objects.get(user=user))
-
-    def authenticate_with_token(self, token):
+    def authenticate_with_token(self, type, token):
         """
         Authenticates requests with the given token.
         """
-        self.client.credentials(HTTP_AUTHORIZATION='Token ' + token.key)
+        self.client.credentials(HTTP_AUTHORIZATION='{} {}'.format(type, token))
 
     view_name = None
 
     view_post = client_action_wrapper('post')
-    view_patch = client_action_wrapper('patch')
     view_get = client_action_wrapper('get')
-
-
-class APIViewTestCase(APIClientTestCaseMixin, TestCase):
-    pass
 
 
 @contextlib.contextmanager
