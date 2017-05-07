@@ -79,3 +79,15 @@ class TestJWTAuthentication(TestCase):
 
         # Otherwise, should return data payload for token
         self.assertEqual(self.backend.get_payload(other_token), payload)
+
+    def test_get_user_id(self):
+        payload = {'some_other_id': 'foo'}
+
+        # Should raise error if no recognizable user identification
+        with self.assertRaises(AuthenticationFailed):
+            self.backend.get_user_id(payload)
+
+        payload[api_settings.PAYLOAD_ID_FIELD] = 'foo'
+
+        # Should return any recognizable user identification
+        self.assertEqual(self.backend.get_user_id(payload), 'foo')
