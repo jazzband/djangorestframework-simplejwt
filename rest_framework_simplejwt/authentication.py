@@ -73,7 +73,7 @@ class JWTAuthentication(authentication.BaseAuthentication):
 
     def get_payload(self, token):
         """
-        Extracts a data payload from the given JSON web token.
+        Validates a JSON web token and extracts a data payload from it.
         """
         try:
             payload = jwt.decode(token, api_settings.SECRET_KEY, algorithms=['HS256'])
