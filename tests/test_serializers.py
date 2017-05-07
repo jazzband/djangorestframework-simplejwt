@@ -85,7 +85,7 @@ class TestTokenObtainSerializer(TestCase):
         # Should return a JSON web token for the given payload
         s = TokenObtainSerializer()
         payload = s.get_payload(self.user)
-        payload['exp'] = datetime(year=2000, month=1, day=1)
+        del payload['exp']
 
         token = s.get_token(payload)
 
