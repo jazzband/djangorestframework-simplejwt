@@ -11,6 +11,4 @@ class TestView(APIView):
     def get(self, request):
         return Response({'foo': 'bar'})
 
-    post = get
-
 test_view = TestView.as_view()
