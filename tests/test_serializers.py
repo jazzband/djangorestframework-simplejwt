@@ -8,6 +8,8 @@ from django.utils.six import text_type
 from rest_framework_simplejwt.serializers import TokenObtainSerializer
 from rest_framework_simplejwt.settings import api_settings
 
+from .utils import override_api_settings
+
 User = get_user_model()
 
 
@@ -86,6 +88,7 @@ class TestTokenObtainSerializer(TestCase):
         s = TokenObtainSerializer()
         payload = {'exp': datetime(year=2000, month=1, day=1)}
 
-        token = s.get_token(payload)
+        with override_api_settings(SECRET_KEY='not_secret'):
+            token = s.get_token(payload)
 
-        self.assertEqual(token, 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjk0NjY4NDgwMH0.VKoOnMgmETawjDZwxrQaHG0xHdo6xBodFy6FXJzTVxs')
+        self.assertEqual(token, 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjk0NjY4NDgwMH0.NHpdD2X8ub4SE_MZLBedWa57FCpntGaN_r6f8kNKdUs')
