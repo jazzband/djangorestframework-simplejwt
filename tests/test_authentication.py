@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 
 from datetime import datetime, timedelta
 
+from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.utils.six.moves import reload_module
 from jose import jwt
@@ -11,6 +12,8 @@ from rest_framework_simplejwt import authentication
 from rest_framework_simplejwt.settings import api_settings
 
 from .utils import override_api_settings
+
+User = get_user_model()
 
 
 class TestJWTAuthentication(TestCase):
@@ -91,3 +94,21 @@ class TestJWTAuthentication(TestCase):
 
         # Should return any recognizable user identification
         self.assertEqual(self.backend.get_user_id(payload), 'foo')
+
+    def test_get_user(self):
+        u = User.objects.create_user(username='markhamill', is_active=False)
+        correct_id = getattr(u, api_settings.USER_ID_FIELD)
+
+        # Should raise exception if user not found
+        with self.assertRaises(AuthenticationFailed):
+            self.backend.get_user(42)
+
+        # Should raise exception if user is inactive
+        with self.assertRaises(AuthenticationFailed):
+            self.backend.get_user(correct_id)
+
+        u.is_active = True
+        u.save()
+
+        # Otherwise, should return correct user
+        self.assertEqual(self.backend.get_user(correct_id).id, u.id)
