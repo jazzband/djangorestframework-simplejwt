@@ -96,7 +96,10 @@ class TestJWTAuthentication(TestCase):
         self.assertEqual(self.backend.get_user_id(payload), 'foo')
 
     def test_get_user(self):
-        u = User.objects.create_user(username='markhamill', is_active=False)
+        u = User.objects.create_user(username='markhamill')
+        u.is_active = False
+        u.save()
+
         correct_id = getattr(u, api_settings.USER_ID_FIELD)
 
         # Should raise exception if user not found
