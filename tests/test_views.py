@@ -25,17 +25,17 @@ class TestTokenObtainView(APIViewTestCase):
         self.assertIn(User.USERNAME_FIELD, res.data)
         self.assertIn('password', res.data)
 
-        res = self.view_post(data={User.USERNAME_FIELD: 'test_user'})
+        res = self.view_post(data={User.USERNAME_FIELD: self.username})
         self.assertEqual(res.status_code, 400)
         self.assertIn('password', res.data)
 
-        res = self.view_post(data={'password': 'test_password'})
+        res = self.view_post(data={'password': self.password})
         self.assertEqual(res.status_code, 400)
         self.assertIn(User.USERNAME_FIELD, res.data)
 
     def test_credentials_wrong(self):
         res = self.view_post(data={
-            User.USERNAME_FIELD: 'test_user',
+            User.USERNAME_FIELD: self.username,
             'password': 'test_user',
         })
         self.assertEqual(res.status_code, 400)
@@ -46,16 +46,16 @@ class TestTokenObtainView(APIViewTestCase):
         self.user.save()
 
         res = self.view_post(data={
-            User.USERNAME_FIELD: 'test_user',
-            'password': 'test_password',
+            User.USERNAME_FIELD: self.username,
+            'password': self.password,
         })
         self.assertEqual(res.status_code, 400)
         self.assertIn('non_field_errors', res.data)
 
     def test_success(self):
         res = self.view_post(data={
-            User.USERNAME_FIELD: 'test_user',
-            'password': 'test_password',
+            User.USERNAME_FIELD: self.username,
+            'password': self.password,
         })
         self.assertEqual(res.status_code, 200)
         self.assertIn('token', res.data)
