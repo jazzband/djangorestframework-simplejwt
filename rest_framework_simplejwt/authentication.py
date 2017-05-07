@@ -76,9 +76,14 @@ class JWTAuthentication(authentication.BaseAuthentication):
         Extracts a data payload from the given JSON web token.
         """
         try:
-            return jwt.decode(token, api_settings.SECRET_KEY, algorithms=['HS256'])
+            payload = jwt.decode(token, api_settings.SECRET_KEY, algorithms=['HS256'])
         except JOSEError:
-            raise AuthenticationFailed(_('Token is invalid.'))
+            raise AuthenticationFailed(_('Token is invalid or expired.'))
+
+        if 'exp' not in payload:
+            raise AuthenticationFailed(_('Token has no expiration.'))
+
+        return payload
 
     def get_user_id(self, payload):
         """
