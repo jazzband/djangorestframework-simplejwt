@@ -2,9 +2,9 @@ from __future__ import unicode_literals
 
 import contextlib
 
-from django.core.urlresolvers import reverse
 from django.test import TestCase
 from rest_framework.test import APIClient
+from rest_framework_simplejwt.compat import reverse
 from rest_framework_simplejwt.settings import api_settings
 
 
