@@ -33,13 +33,19 @@ class TokenObtainSerializer(serializers.Serializer):
         self.fields['password'] = PasswordField()
 
     def validate(self, attrs):
-        # The default authentication backend will also return None when a user
-        # is inactive
         user = authenticate(**{
             self.username_field: attrs[self.username_field],
             'password': attrs['password'],
         })
 
+        # Prior to Django 1.10, inactive users could be authenticated with the
+        # default `ModelBackend`.  As of Django 1.10, the default
+        # `ModelBackend` prevents inactive users from authenticating.  App
+        # designers can still allow inactive users to authenticate by opting
+        # for the new `AllowAllUsersModelBackend`.  However, we explicitly
+        # prevent inactive users from authenticating to enforce a reasonable
+        # policy and provide sensible backwards compatibility with older Django
+        # versions.
         if user is None or not user.is_active:
             raise serializers.ValidationError(
                 _('No active account found with the given credentials.'),

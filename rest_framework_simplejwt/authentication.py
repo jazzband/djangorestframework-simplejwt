@@ -44,7 +44,8 @@ class JWTAuthentication(authentication.BaseAuthentication):
 
     def get_header(self, request):
         """
-        Extracts a header containing a JSON web token from the given request.
+        Extracts the header containing the JSON web token from the given
+        request.
         """
         header = request.META.get('HTTP_AUTHORIZATION')
 
@@ -80,6 +81,8 @@ class JWTAuthentication(authentication.BaseAuthentication):
         except JOSEError:
             raise AuthenticationFailed(_('Token is invalid or expired.'))
 
+        # Some libraries might allow tokens with no expiration.  We explicitly
+        # require expiry.
         if 'exp' not in payload:
             raise AuthenticationFailed(_('Token has no expiration.'))
 
@@ -97,8 +100,7 @@ class JWTAuthentication(authentication.BaseAuthentication):
 
     def get_user(self, user_id):
         """
-        Attempts to find and return a user record with the given user
-        identifier.
+        Attempts to find and return a user with the given user identifier.
         """
         try:
             user = User.objects.get(**{api_settings.USER_ID_FIELD: user_id})

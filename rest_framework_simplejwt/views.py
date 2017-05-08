@@ -20,7 +20,7 @@ class TokenViewBase(generics.GenericAPIView):
 class TokenObtainView(TokenViewBase):
     """
     Takes a set of user credentials and returns a JSON web token to prove the
-    authentication of those credentials against some user in the database.
+    authentication of those credentials.
     """
     serializer_class = serializers.TokenObtainSerializer
 
