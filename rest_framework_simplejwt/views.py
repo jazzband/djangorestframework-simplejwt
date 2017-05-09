@@ -7,6 +7,9 @@ from . import serializers
 
 
 class TokenViewBase(generics.GenericAPIView):
+    permission_classes = ()
+    authentication_classes = ()
+
     serializer_class = None
 
     def post(self, request, *args, **kwargs):
