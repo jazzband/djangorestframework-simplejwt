@@ -26,7 +26,7 @@ if sys.argv[-1] == 'publish':
     print('  git push --tags')
     shutil.rmtree('dist')
     shutil.rmtree('build')
-    shutil.rmtree('djangorestframework.egg-info')
+    shutil.rmtree('djangorestframework_simplejwt.egg-info')
     sys.exit()
 
 
