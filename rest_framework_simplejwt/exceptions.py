@@ -1,0 +1,2 @@
+class TokenBackendError(Exception):
+    pass

@@ -2,13 +2,12 @@ from __future__ import unicode_literals
 
 from django.utils.six import text_type
 from django.utils.translation import ugettext_lazy as _
-from jose import jwt
-from jose.exceptions import JOSEError
 from rest_framework import HTTP_HEADER_ENCODING, authentication
 from rest_framework.exceptions import AuthenticationFailed
 
+from .exceptions import TokenBackendError
 from .settings import api_settings
-from .state import User
+from .state import User, token_backend
 
 AUTH_HEADER_TYPE_BYTES = api_settings.AUTH_HEADER_TYPE.encode(HTTP_HEADER_ENCODING)
 
@@ -75,16 +74,9 @@ class JWTAuthentication(authentication.BaseAuthentication):
         Validates a JSON web token and extracts a data payload from it.
         """
         try:
-            payload = jwt.decode(token, api_settings.SECRET_KEY, algorithms=['HS256'])
-        except JOSEError:
-            raise AuthenticationFailed(_('Token is invalid or expired.'))
-
-        # Some libraries might allow tokens with no expiration.  We explicitly
-        # require expiry.
-        if 'exp' not in payload:
-            raise AuthenticationFailed(_('Token has no expiration.'))
-
-        return payload
+            return token_backend.decode(token)
+        except TokenBackendError as e:
+            raise AuthenticationFailed(e.args[0])
 
     def get_user_id(self, payload):
         """

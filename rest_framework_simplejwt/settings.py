@@ -15,7 +15,13 @@ DEFAULTS = {
 
     'TOKEN_LIFETIME': timedelta(days=7),
 
+    'TOKEN_BACKEND': 'rest_framework_simplejwt.backends.TokenBackend',
+
     'SECRET_KEY': settings.SECRET_KEY,
 }
 
-api_settings = APISettings(USER_SETTINGS, DEFAULTS, tuple())
+IMPORT_STRING_SETTINGS = (
+    'TOKEN_BACKEND',
+)
+
+api_settings = APISettings(USER_SETTINGS, DEFAULTS, IMPORT_STRING_SETTINGS)

@@ -55,33 +55,18 @@ class TestJWTAuthentication(TestCase):
         self.assertEqual(self.backend.get_token(self.fake_header), self.fake_token)
 
     def test_get_payload(self):
-        # No expiry tokens should cause exception
         payload = {'foo': 'bar'}
-        no_exp_token = jwt.encode(payload, api_settings.SECRET_KEY, algorithm='HS256')
+
+        # Should raise AuthenticationFailed if token not valid
+        payload['exp'] = datetime.utcnow() - timedelta(days=1)
+        bad_token = jwt.encode(payload, api_settings.SECRET_KEY, algorithm='HS256')
         with self.assertRaises(AuthenticationFailed):
-            self.backend.get_payload(no_exp_token)
-
-        # Expired tokens should cause exception
-        payload['exp'] = datetime.utcnow() - timedelta(seconds=1)
-        expired_token = jwt.encode(payload, api_settings.SECRET_KEY, algorithm='HS256')
-        with self.assertRaises(AuthenticationFailed):
-            self.backend.get_payload(expired_token)
-
-        # Token with invalid signature should cause exception
-        payload['exp'] = datetime.utcnow() + timedelta(days=1)
-        token = jwt.encode(payload, api_settings.SECRET_KEY, algorithm='HS256')
-        payload['foo'] = 'baz'
-        other_token = jwt.encode(payload, api_settings.SECRET_KEY, algorithm='HS256')
-
-        incorrect_payload = other_token.rsplit('.', 1)[0]
-        correct_sig = token.rsplit('.', 1)[-1]
-        invalid_token = incorrect_payload + '.' + correct_sig
-
-        with self.assertRaises(AuthenticationFailed):
-            self.backend.get_payload(invalid_token)
+            self.backend.get_payload(bad_token)
 
         # Otherwise, should return data payload for token
-        self.assertEqual(self.backend.get_payload(other_token), payload)
+        payload['exp'] = datetime.utcnow() + timedelta(days=1)
+        good_token = jwt.encode(payload, api_settings.SECRET_KEY, algorithm='HS256')
+        self.assertEqual(self.backend.get_payload(good_token), payload)
 
     def test_get_user_id(self):
         payload = {'some_other_id': 'foo'}
