@@ -1,10 +1,15 @@
 from __future__ import unicode_literals
 
+from datetime import datetime
+
 from django.contrib.auth import authenticate
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 
+from .exceptions import TokenBackendError
+from .settings import api_settings
 from .state import User, token_backend
+from .utils import datetime_to_epoch
 
 
 class PasswordField(serializers.CharField):
@@ -45,5 +50,33 @@ class TokenObtainSerializer(serializers.Serializer):
             )
 
         payload = token_backend.get_payload_for_user(user)
+
+        return {'token': token_backend.encode(payload)}
+
+
+class TokenRefreshSerializer(serializers.Serializer):
+    token = serializers.CharField()
+
+    def validate(self, attrs):
+        try:
+            payload = token_backend.decode(attrs['token'])
+        except TokenBackendError as e:
+            raise serializers.ValidationError(e.args[0])
+
+        # Ensure this token has a refresh expiration claim
+        if 'refresh_exp' not in payload:
+            raise serializers.ValidationError(_('Token has no refresh expiration claim.'))
+
+        now = datetime.utcnow()
+
+        # Get the refresh expiration timestamp and check if the refresh period
+        # for this token has expired
+        refresh_exp = datetime.utcfromtimestamp(payload['refresh_exp'])
+        if refresh_exp < now:
+            raise serializers.ValidationError(_('Token refresh period has expired.'))
+
+        # Update the expiration timestamp for this token
+        exp = now + api_settings.TOKEN_LIFETIME
+        payload.update({'exp': datetime_to_epoch(exp)})
 
         return {'token': token_backend.encode(payload)}
