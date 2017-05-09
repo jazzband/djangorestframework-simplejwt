@@ -2,15 +2,14 @@ from __future__ import unicode_literals
 
 from datetime import datetime
 
-from django.contrib.auth import authenticate, get_user_model
+from django.contrib.auth import authenticate
 from django.utils.six import text_type
 from django.utils.translation import ugettext_lazy as _
 from jose import jwt
 from rest_framework import serializers
 
 from .settings import api_settings
-
-User = get_user_model()
+from .state import User
 
 
 class PasswordField(serializers.CharField):

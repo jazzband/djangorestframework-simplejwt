@@ -1,6 +1,5 @@
 from __future__ import unicode_literals
 
-from django.contrib.auth import get_user_model
 from django.utils.six import text_type
 from django.utils.translation import ugettext_lazy as _
 from jose import jwt
@@ -9,10 +8,9 @@ from rest_framework import HTTP_HEADER_ENCODING, authentication
 from rest_framework.exceptions import AuthenticationFailed
 
 from .settings import api_settings
+from .state import User
 
 AUTH_HEADER_TYPE_BYTES = api_settings.AUTH_HEADER_TYPE.encode(HTTP_HEADER_ENCODING)
-
-User = get_user_model()
 
 
 class JWTAuthentication(authentication.BaseAuthentication):
