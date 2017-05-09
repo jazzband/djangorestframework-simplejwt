@@ -25,3 +25,13 @@ class TokenObtainView(TokenViewBase):
     serializer_class = serializers.TokenObtainSerializer
 
 token_obtain = TokenObtainView.as_view()
+
+
+class TokenRefreshView(TokenViewBase):
+    """
+    Takes a JSON web token and returns a new, refreshed version if the token's
+    refresh period has not expired.
+    """
+    serializer_class = serializers.TokenRefreshSerializer
+
+token_refresh = TokenRefreshView.as_view()
