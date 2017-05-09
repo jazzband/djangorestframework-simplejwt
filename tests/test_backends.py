@@ -39,8 +39,8 @@ class TestTokenObtainSerializer(TestCase):
         self.assertIn('exp', payload)
         self.assertTrue(isinstance(payload['exp'], int))
 
-        self.assertIn('orig_iat', payload)
-        self.assertTrue(isinstance(payload['orig_iat'], int))
+        self.assertIn('refresh_exp', payload)
+        self.assertTrue(isinstance(payload['refresh_exp'], int))
 
     def test_encode(self):
         # Should return a JSON web token for the given payload

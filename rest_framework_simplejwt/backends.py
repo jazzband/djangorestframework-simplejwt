@@ -20,11 +20,12 @@ class TokenBackend(object):
 
         user_id = text_type(getattr(user, api_settings.USER_ID_FIELD))
         exp = now + api_settings.TOKEN_LIFETIME
+        refresh_exp = now + api_settings.TOKEN_REFRESH_LIFETIME
 
         return {
             api_settings.PAYLOAD_ID_FIELD: user_id,
             'exp': datetime_to_epoch(exp),
-            'orig_iat': datetime_to_epoch(now),
+            'refresh_exp': datetime_to_epoch(refresh_exp),
         }
 
     def encode(self, payload):

@@ -13,7 +13,8 @@ DEFAULTS = {
     'USER_ID_FIELD': 'pk',
     'PAYLOAD_ID_FIELD': 'user_pk',
 
-    'TOKEN_LIFETIME': timedelta(days=7),
+    'TOKEN_LIFETIME': timedelta(days=1),
+    'TOKEN_REFRESH_LIFETIME': timedelta(days=7),
 
     'TOKEN_BACKEND': 'rest_framework_simplejwt.backends.TokenBackend',
 
