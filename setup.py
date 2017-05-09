@@ -35,7 +35,7 @@ setup(
     version=version,
     url='https://github.com/davesque/django-rest-framework-simplejwt',
     license='MIT',
-    description='A bare-bones JSON Web Token authentication plugin for Django REST Framework',
+    description='A minimal JSON Web Token authentication plugin for Django REST Framework',
     long_description=open('README.rst', 'r', encoding='utf-8').read(),
     author='David Sanders',
     author_email='davesque@gmail.com',
