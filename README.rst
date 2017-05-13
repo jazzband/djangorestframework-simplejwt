@@ -105,3 +105,35 @@ Or you can refresh the token if it is still refreshable::
 
   ...
   {"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX3BrIjoxLCJjb2xkX3N0dWZmIjoi4piDIiwiZXhwIjoxMjM0ODAsInJlZnJlc2hfZXhwIjoxMjM1MDB9.tTXYxsumgb7Odj9NsAAVpSaNnkS8gfAh-yjEnlW0JiQ"}
+
+Settings
+--------
+
+Some of Simple JWT's behavior can be customized through settings variables in
+``settings.py``::
+
+  from datetime import timedelta
+
+  ...
+
+  SIMPLE_JWT = {
+      'AUTH_HEADER_TYPE': 'Bearer',
+
+      'USER_ID_FIELD': 'pk',
+      'PAYLOAD_ID_FIELD': 'user_pk',
+
+      'TOKEN_LIFETIME': timedelta(days=1),
+      'TOKEN_REFRESH_LIFETIME': timedelta(days=7),
+
+      'TOKEN_BACKEND': 'rest_framework_simplejwt.backends.TokenBackend',
+
+      'SECRET_KEY': SECRET_KEY,  # Default to the django secret key
+  }
+
+-----
+
+AUTH_HEADER_TYPE
+  The authorization header type that will be checked for views that require
+  authentication.  For example, a value of ``'Bearer'`` means that views
+  requiring authentication would look for a header with the following format:
+  ``Authorization: Bearer <token>``.  **Default**: ``'Bearer'``.
