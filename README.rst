@@ -95,7 +95,7 @@ You can use the returned token to prove authentication for a protected view::
     -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX3BrIjoxLCJjb2xkX3N0dWZmIjoi4piDIiwiZXhwIjoxMjM0NTYsInJlZnJlc2hfZXhwIjoxMjM1MDB9.8po9BafZiPi1aaWTKYCt3q0_2eLlWabj4nfQVYXLCK8" \
     http://localhost:8000/api/some-protected-view/
 
-Of you can refresh the token if it is still refreshable::
+Or you can refresh the token if it is still refreshable::
 
   curl \
     -X POST \
