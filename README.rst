@@ -45,7 +45,7 @@ in the foot.
 Installation
 ------------
 
-Simple JWT can be installed from pip::
+Simple JWT can be installed with pip::
 
   pip install djangorestframework_simplejwt
 
@@ -83,7 +83,7 @@ test requests::
   curl \
     -X POST \
     -H "Content-Type: application/json" \
-    -d '{"username": "testymctestface", "password": "noodles"}' \
+    -d '{"username": "davidattenborough", "password": "boatymcboatface"}' \
     http://localhost:8000/api/token/obtain/
 
   ...
