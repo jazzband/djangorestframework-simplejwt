@@ -119,8 +119,8 @@ Some of Simple JWT's behavior can be customized through settings variables in
   SIMPLE_JWT = {
       'AUTH_HEADER_TYPE': 'Bearer',
 
-      'USER_ID_FIELD': 'pk',
-      'PAYLOAD_ID_FIELD': 'user_pk',
+      'USER_ID_FIELD': 'id',
+      'PAYLOAD_ID_FIELD': 'user_id',
 
       'TOKEN_LIFETIME': timedelta(days=1),
       'TOKEN_REFRESH_LIFETIME': timedelta(days=7),

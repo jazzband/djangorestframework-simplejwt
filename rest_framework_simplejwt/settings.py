@@ -10,8 +10,8 @@ USER_SETTINGS = getattr(settings, 'SIMPLE_JWT', None)
 DEFAULTS = {
     'AUTH_HEADER_TYPE': 'Bearer',
 
-    'USER_ID_FIELD': 'pk',
-    'PAYLOAD_ID_FIELD': 'user_pk',
+    'USER_ID_FIELD': 'id',
+    'PAYLOAD_ID_FIELD': 'user_id',
 
     'TOKEN_LIFETIME': timedelta(days=1),
     'TOKEN_REFRESH_LIFETIME': timedelta(days=7),
