@@ -142,8 +142,14 @@ USER_ID_FIELD
   The database field from the user model that will be included in generated
   tokens to identify users.  It is recommended that the value of this setting
   specifies a field which does not normally change once its initial value is
-  chosen.  For example, specifying the "username" or "email" field would be a
-  poor choice since an account's username or email might change depending on how
+  chosen.  For example, specifying a "username" or "email" field would be a poor
+  choice since an account's username or email might change depending on how
   account management in a given service is designed.  This could allow a new
   account to be created with an old username while an existing token is still
   valid which uses that username as a user identifier.  **Default**: ``'id'``.
+
+PAYLOAD_ID_FIELD
+  The key name which will be used for the claim that specifies the user
+  identifier in generated tokens.  For example, a setting value of ``'user_id'``
+  would mean generated tokens include a "user_id" claim that contains the user's
+  identifier.  **Default**: ``'user_id'``.
