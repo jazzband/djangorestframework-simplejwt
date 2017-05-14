@@ -173,9 +173,9 @@ TOKEN_REFRESH_LIFETIME
 
 SECRET_KEY
   The secret key which is used to sign the content of generated tokens.  This
-  setting defaults to the ``SECRET_KEY`` value for the django project.  Although
-  this is the most reasonable default that Simple JWT can provide, it is
-  recommended that developers change this setting to a value which is independent
-  from the django project secret key.  This will make changing the secret key
-  used for tokens easier in the event that it is compromised or a token exists
-  which must be immediately invalidated.
+ setting defaults to the value of the ``SECRET_KEY`` setting for the django
+ project.  Although this is the most reasonable default that Simple JWT can
+ provide, it is recommended that developers change this setting to a value which
+ is independent from the django project secret key.  This will make changing the
+ secret key used for tokens easier in the event that it is compromised or a
+ token exists which must be immediately invalidated.
