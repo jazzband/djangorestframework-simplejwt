@@ -184,3 +184,8 @@ TOKEN_BACKEND
   Specifies a dot path to a class which implements a set of low-level token
   operations used by Simple JWT.  For more information, see the "Customization"
   section below.
+
+Customization
+-------------
+
+Not written yet :P.
