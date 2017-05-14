@@ -125,10 +125,12 @@ Some of Simple JWT's behavior can be customized through settings variables in
       'TOKEN_LIFETIME': timedelta(days=1),
       'TOKEN_REFRESH_LIFETIME': timedelta(days=7),
 
-      'TOKEN_BACKEND': 'rest_framework_simplejwt.backends.TokenBackend',
-
       'SECRET_KEY': SECRET_KEY,  # Default to the django secret key
+
+      'TOKEN_BACKEND': 'rest_framework_simplejwt.backends.TokenBackend',
   }
+
+Above, the default values for these settings are shown.
 
 -----
 
@@ -136,7 +138,7 @@ AUTH_HEADER_TYPE
   The authorization header type that will be checked for views that require
   authentication.  For example, a value of ``'Bearer'`` means that views
   requiring authentication would look for a header with the following format:
-  ``Authorization: Bearer <token>``.  **Default**: ``'Bearer'``.
+  ``Authorization: Bearer <token>``.
 
 USER_ID_FIELD
   The database field from the user model that will be included in generated
@@ -146,10 +148,34 @@ USER_ID_FIELD
   choice since an account's username or email might change depending on how
   account management in a given service is designed.  This could allow a new
   account to be created with an old username while an existing token is still
-  valid which uses that username as a user identifier.  **Default**: ``'id'``.
+  valid which uses that username as a user identifier.
 
 PAYLOAD_ID_FIELD
   The key name which will be used for the claim that specifies the user
   identifier in generated tokens.  For example, a setting value of ``'user_id'``
   would mean generated tokens include a "user_id" claim that contains the user's
-  identifier.  **Default**: ``'user_id'``.
+  identifier.
+
+TOKEN_LIFETIME
+  A ``datetime.timedelta`` object which specifies how long a generated token is
+  valid.  This ``timedelta`` value is added to the current UTC time while a token
+  is being generated to obtain the token's "exp" claim value.  Once the time
+  specified by this "exp" claim has passed, a token will no longer be valid for
+  authorization and can no longer be refreshed.
+
+TOKEN_REFRESH_LIFETIME
+  A ``datetime.timedelta`` object which specifies how long a generated token
+  may be refreshed.  This ``timedelta`` value is added to the current UTC time
+  while a token is being generated to obtain the token's "refresh_exp" claim
+  value.  Once the time specified by this "refresh_exp" claim has passed, a token
+  can no longer be refreshed.  However, if the time specified by a token's "exp"
+  claim still has not passed, it can still be used for authorization.
+
+SECRET_KEY
+  The secret key which is used to sign the content of generated tokens.  This
+  setting defaults to the ``SECRET_KEY`` value for the django project.  Although
+  this is the most reasonable default that Simple JWT can provide, it is
+  recommended that developers change this setting to a value which is independent
+  from the django project secret key.  This will make changing the secret key
+  used for tokens easier in the event that it is compromised or a token exists
+  which must be immediately invalidated.

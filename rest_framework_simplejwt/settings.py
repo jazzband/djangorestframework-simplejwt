@@ -16,9 +16,9 @@ DEFAULTS = {
     'TOKEN_LIFETIME': timedelta(days=1),
     'TOKEN_REFRESH_LIFETIME': timedelta(days=7),
 
-    'TOKEN_BACKEND': 'rest_framework_simplejwt.backends.TokenBackend',
-
     'SECRET_KEY': settings.SECRET_KEY,
+
+    'TOKEN_BACKEND': 'rest_framework_simplejwt.backends.TokenBackend',
 }
 
 IMPORT_STRING_SETTINGS = (
