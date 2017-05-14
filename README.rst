@@ -189,3 +189,14 @@ Customization
 -------------
 
 Not written yet :P.
+
+Acknowledgements
+----------------
+
+This project borrows code from the `Django REST Framework
+<https://github.com/encode/django-rest-framework/>`_ as well as concepts from
+the implementation of another JSON web token library for the Django REST
+Framework, `django-rest-framework-jwt
+<https://github.com/GetBlimp/django-rest-framework-jwt>`_.  The licenses from
+both of those projects have been included in this repository under in the
+"licenses" directory.
