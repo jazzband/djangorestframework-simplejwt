@@ -31,10 +31,11 @@ class TestTokenObtainSerializer(TestCase):
         # Should return a dict with the expected keys and values
         payload = self.token_backend.get_payload_for_user(self.user)
 
-        self.assertEqual(
-            payload[api_settings.PAYLOAD_ID_FIELD],
-            text_type(getattr(self.user, api_settings.USER_ID_FIELD)),
-        )
+        user_id = getattr(self.user, api_settings.USER_ID_FIELD)
+        if not isinstance(user_id, int):
+            user_id = text_type(user_id)
+
+        self.assertEqual(payload[api_settings.PAYLOAD_ID_FIELD], user_id)
 
         self.assertIn('exp', payload)
         self.assertTrue(isinstance(payload['exp'], int))

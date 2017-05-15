@@ -18,7 +18,10 @@ class TokenBackend(object):
         """
         now = datetime.utcnow()
 
-        user_id = text_type(getattr(user, api_settings.USER_ID_FIELD))
+        user_id = getattr(user, api_settings.USER_ID_FIELD)
+        if not isinstance(user_id, int):
+            user_id = text_type(user_id)
+
         exp = now + api_settings.TOKEN_LIFETIME
         refresh_exp = now + api_settings.TOKEN_REFRESH_LIFETIME
 
