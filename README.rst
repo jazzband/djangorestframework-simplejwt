@@ -9,7 +9,7 @@ A minimal JSON Web Token authentication plugin for the `Django REST Framework
 .. image:: https://codecov.io/gh/davesque/django-rest-framework-simplejwt/branch/master/graph/badge.svg
   :target: https://codecov.io/gh/davesque/django-rest-framework-simplejwt
 
-----
+-------------------------------------------------------------------------------
 
 Simple JWT provides a JSON Web Token authentication backend for the Django REST
 Framework.  It aims to provide an out-of-the-box solution for JWT
@@ -132,7 +132,7 @@ Some of Simple JWT's behavior can be customized through settings variables in
 
 Above, the default values for these settings are shown.
 
------
+-------------------------------------------------------------------------------
 
 AUTH_HEADER_TYPE
   The authorization header type that will be checked for views that require
