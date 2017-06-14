@@ -151,10 +151,9 @@ USER_ID_FIELD
   valid which uses that username as a user identifier.
 
 PAYLOAD_ID_FIELD
-  The key name which will be used for the claim that specifies the user
-  identifier in generated tokens.  For example, a setting value of ``'user_id'``
-  would mean generated tokens include a "user_id" claim that contains the user's
-  identifier.
+  The key name which will be used for the user identifier claim in generated
+  tokens.  For example, a setting value of ``'user_id'`` would mean generated
+  tokens include a "user_id" claim that contains the user's identifier.
 
 TOKEN_LIFETIME
   A ``datetime.timedelta`` object which specifies how long a generated token is
@@ -198,5 +197,5 @@ This project borrows code from the `Django REST Framework
 the implementation of another JSON web token library for the Django REST
 Framework, `django-rest-framework-jwt
 <https://github.com/GetBlimp/django-rest-framework-jwt>`_.  The licenses from
-both of those projects have been included in this repository under in the
-"licenses" directory.
+both of those projects have been included in this repository in the "licenses"
+directory.
