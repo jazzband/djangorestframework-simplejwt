@@ -29,9 +29,8 @@ class JWTAuthentication(authentication.BaseAuthentication):
             return None
 
         payload = self.get_payload(token)
-        user_id = self.get_user_id(payload)
 
-        return (self.get_user(user_id), None)
+        return (self.get_user(payload), None)
 
     def authenticate_header(self, request):
         return '{0} realm="{1}"'.format(
@@ -78,20 +77,15 @@ class JWTAuthentication(authentication.BaseAuthentication):
         except TokenBackendError as e:
             raise AuthenticationFailed(e.args[0])
 
-    def get_user_id(self, payload):
+    def get_user(self, payload):
         """
-        Extracts a recognizable user identifier from the given data payload
-        object.
+        Attempts to find and return a user using the given token payload.
         """
         try:
-            return payload[api_settings.PAYLOAD_ID_FIELD]
+            user_id = payload[api_settings.PAYLOAD_ID_FIELD]
         except KeyError:
             raise AuthenticationFailed(_('Token contained no recognizable user identification.'))
 
-    def get_user(self, user_id):
-        """
-        Attempts to find and return a user with the given user identifier.
-        """
         try:
             user = User.objects.get(**{api_settings.USER_ID_FIELD: user_id})
         except User.DoesNotExist:

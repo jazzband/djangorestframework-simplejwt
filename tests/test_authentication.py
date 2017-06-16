@@ -68,35 +68,31 @@ class TestJWTAuthentication(TestCase):
         good_token = jwt.encode(payload, api_settings.SECRET_KEY, algorithm='HS256')
         self.assertEqual(self.backend.get_payload(good_token), payload)
 
-    def test_get_user_id(self):
+    def test_get_user(self):
         payload = {'some_other_id': 'foo'}
 
         # Should raise error if no recognizable user identification
         with self.assertRaises(AuthenticationFailed):
-            self.backend.get_user_id(payload)
+            self.backend.get_user(payload)
 
-        payload[api_settings.PAYLOAD_ID_FIELD] = 'foo'
+        payload[api_settings.PAYLOAD_ID_FIELD] = 42
 
-        # Should return any recognizable user identification
-        self.assertEqual(self.backend.get_user_id(payload), 'foo')
+        # Should raise exception if user not found
+        with self.assertRaises(AuthenticationFailed):
+            self.backend.get_user(payload)
 
-    def test_get_user(self):
         u = User.objects.create_user(username='markhamill')
         u.is_active = False
         u.save()
 
-        correct_id = getattr(u, api_settings.USER_ID_FIELD)
-
-        # Should raise exception if user not found
-        with self.assertRaises(AuthenticationFailed):
-            self.backend.get_user(42)
+        payload[api_settings.PAYLOAD_ID_FIELD] = getattr(u, api_settings.USER_ID_FIELD)
 
         # Should raise exception if user is inactive
         with self.assertRaises(AuthenticationFailed):
-            self.backend.get_user(correct_id)
+            self.backend.get_user(payload)
 
         u.is_active = True
         u.save()
 
         # Otherwise, should return correct user
-        self.assertEqual(self.backend.get_user(correct_id).id, u.id)
+        self.assertEqual(self.backend.get_user(payload).id, u.id)
