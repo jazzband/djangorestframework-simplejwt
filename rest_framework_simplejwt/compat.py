@@ -10,7 +10,7 @@ class RemovedInDjango20Warning(DeprecationWarning):
     pass
 
 
-class CallableBool:
+class CallableBool:  # pragma: no cover
     """
     An boolean-like object that is also callable for backwards compatibility.
     """
