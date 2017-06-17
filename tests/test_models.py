@@ -65,6 +65,9 @@ class TestTokenUser(TestCase):
         self.assertNotEqual(user1, user2)
         self.assertEqual(user1, user3)
 
+    def test_hash(self):
+        self.assertEqual(hash(self.user), hash(self.user.id))
+
     def test_not_implemented(self):
         with self.assertRaises(NotImplementedError):
             self.user.save()
@@ -94,7 +97,7 @@ class TestTokenUser(TestCase):
         self.assertFalse(self.user.has_perm('test_perm'))
 
     def test_has_perms(self):
-        self.assertFalse(self.user.has_perm(['test_perm']))
+        self.assertFalse(self.user.has_perms(['test_perm']))
 
     def test_has_module_perms(self):
         self.assertFalse(self.user.has_module_perms('test_module'))
