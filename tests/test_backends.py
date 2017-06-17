@@ -43,6 +43,12 @@ class TestTokenObtainSerializer(TestCase):
         self.assertIn('refresh_exp', payload)
         self.assertTrue(isinstance(payload['refresh_exp'], int))
 
+        # Test with non-int user id
+        with override_api_settings(USER_ID_FIELD='username'):
+            payload = self.token_backend.get_payload_for_user(self.user)
+
+        self.assertEqual(payload[api_settings.PAYLOAD_ID_FIELD], self.username)
+
     def test_encode(self):
         # Should return a JSON web token for the given payload
         payload = {'exp': datetime(year=2000, month=1, day=1)}
