@@ -203,14 +203,14 @@ JWTTokenUserAuthentication backend
   backend (instead of the default ``JWTAuthentication`` backend) to the Django
   REST Framework's ``DEFAULT_AUTHENTICATION_CLASSES`` config setting::
 
-  REST_FRAMEWORK = {
-      ...
-      'DEFAULT_AUTHENTICATION_CLASSES': (
-          ...
-          'rest_framework_simplejwt.authentication.JWTTokenUserAuthentication',
-      )
-      ...
-  }
+    REST_FRAMEWORK = {
+        ...
+        'DEFAULT_AUTHENTICATION_CLASSES': (
+            ...
+            'rest_framework_simplejwt.authentication.JWTTokenUserAuthentication',
+        )
+        ...
+    }
 
 Acknowledgements
 ----------------
