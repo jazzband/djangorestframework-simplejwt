@@ -9,6 +9,7 @@ from jose import jwt
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.test import APIRequestFactory
 from rest_framework_simplejwt import authentication
+from rest_framework_simplejwt.models import TokenUser
 from rest_framework_simplejwt.settings import api_settings
 
 from .utils import override_api_settings
@@ -96,3 +97,23 @@ class TestJWTAuthentication(TestCase):
 
         # Otherwise, should return correct user
         self.assertEqual(self.backend.get_user(payload).id, u.id)
+
+
+class TestJWTTokenUserAuthentication(TestCase):
+    def setUp(self):
+        self.backend = authentication.JWTTokenUserAuthentication()
+
+    def test_get_user(self):
+        payload = {'some_other_id': 'foo'}
+
+        # Should raise error if no recognizable user identification
+        with self.assertRaises(AuthenticationFailed):
+            self.backend.get_user(payload)
+
+        payload[api_settings.PAYLOAD_ID_FIELD] = 42
+
+        # Otherwise, should return a token user object
+        user = self.backend.get_user(payload)
+
+        self.assertIsInstance(user, TokenUser)
+        self.assertEqual(user.id, 42)

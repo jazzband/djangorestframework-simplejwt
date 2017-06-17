@@ -6,6 +6,7 @@ from rest_framework import HTTP_HEADER_ENCODING, authentication
 from rest_framework.exceptions import AuthenticationFailed
 
 from .exceptions import TokenBackendError
+from .models import TokenUser
 from .settings import api_settings
 from .state import User, token_backend
 
@@ -95,3 +96,16 @@ class JWTAuthentication(authentication.BaseAuthentication):
             raise AuthenticationFailed(_('User is inactive.'))
 
         return user
+
+
+class JWTTokenUserAuthentication(JWTAuthentication):
+    def get_user(self, payload):
+        """
+        Returns a user for the given token payload.
+        """
+        if api_settings.PAYLOAD_ID_FIELD not in payload:
+            # The TokenUser class assumes token payloads will have a
+            # recognizable user identifier claim.
+            raise AuthenticationFailed(_('Token contained no recognizable user identification.'))
+
+        return TokenUser(payload)
