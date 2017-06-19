@@ -62,7 +62,6 @@ class TokenRefreshSerializer(serializers.Serializer):
 
         try:
             token = Token(attrs['token'])
-
             # Check that the timestamp in the 'refresh_exp' claim has not
             # passed
             token.check_expiration('refresh_exp', current_time=now)

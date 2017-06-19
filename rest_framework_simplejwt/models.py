@@ -17,7 +17,7 @@ class TokenUser(object):
     implement single sign-on functionality across services which share the same
     secret key.  `JWTTokenUserAuthentication` will return an instance of this
     class instead of a `User` model instance.  Instances of this class act as
-    stateless user objects which are built from validated token payloads.
+    stateless user objects which are backed by validated tokens.
     """
     username = ''
 
