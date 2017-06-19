@@ -3,13 +3,13 @@ from __future__ import unicode_literals
 from datetime import datetime
 
 from django.contrib.auth import authenticate
+from django.utils.six import text_type
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 
-from .exceptions import TokenBackendError
-from .settings import api_settings
-from .state import User, token_backend
-from .utils import datetime_to_epoch
+from .exceptions import TokenError
+from .state import User
+from .tokens import Token
 
 
 class PasswordField(serializers.CharField):
@@ -49,34 +49,27 @@ class TokenObtainSerializer(serializers.Serializer):
                 _('No active account found with the given credentials.'),
             )
 
-        payload = token_backend.get_payload_for_user(user)
+        token = Token.for_user(user)
 
-        return {'token': token_backend.encode(payload)}
+        return {'token': text_type(token)}
 
 
 class TokenRefreshSerializer(serializers.Serializer):
     token = serializers.CharField()
 
     def validate(self, attrs):
-        try:
-            payload = token_backend.decode(attrs['token'])
-        except TokenBackendError as e:
-            raise serializers.ValidationError(e.args[0])
-
-        # Ensure this token has a refresh expiration claim
-        if 'refresh_exp' not in payload:
-            raise serializers.ValidationError(_('Token has no refresh expiration claim.'))
-
         now = datetime.utcnow()
 
-        # Get the refresh expiration timestamp and check if the refresh period
-        # for this token has expired
-        refresh_exp = datetime.utcfromtimestamp(payload['refresh_exp'])
-        if refresh_exp < now:
-            raise serializers.ValidationError(_('Token refresh period has expired.'))
+        try:
+            token = Token(attrs['token'])
 
-        # Update the expiration timestamp for this token
-        exp = now + api_settings.TOKEN_LIFETIME
-        payload.update({'exp': datetime_to_epoch(exp)})
+            # Check that the timestamp in the 'refresh_exp' claim has not
+            # passed
+            token.check_expiration('refresh_exp', current_time=now)
+        except TokenError as e:
+            raise serializers.ValidationError(e.args[0])
 
-        return {'token': token_backend.encode(payload)}
+        # Update the 'exp' claim for this token
+        token.update_expiration(from_time=now)
+
+        return {'token': text_type(token)}

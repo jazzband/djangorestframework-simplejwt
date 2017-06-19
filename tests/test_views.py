@@ -110,7 +110,7 @@ class TestTokenRefreshView(APIViewTestCase):
         res = self.view_post(data={'token': token})
         self.assertEqual(res.status_code, 400)
         self.assertIn('non_field_errors', res.data)
-        self.assertIn('no refresh expiration claim', res.data['non_field_errors'][0])
+        self.assertIn('has no \'refresh_exp\' claim', res.data['non_field_errors'][0])
 
     def test_it_should_return_400_if_token_has_refresh_period_expired(self):
         payload = {
@@ -123,7 +123,7 @@ class TestTokenRefreshView(APIViewTestCase):
         res = self.view_post(data={'token': token})
         self.assertEqual(res.status_code, 400)
         self.assertIn('non_field_errors', res.data)
-        self.assertIn('refresh period has expired', res.data['non_field_errors'][0])
+        self.assertIn('\'refresh_exp\' claim has expired', res.data['non_field_errors'][0])
 
     def test_it_should_update_token_exp_claim_if_everything_ok(self):
         now = datetime.utcnow()

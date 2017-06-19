@@ -101,7 +101,7 @@ class TestTokenRefreshSerializer(TestCase):
         s = TokenRefreshSerializer(data={'token': token})
         self.assertFalse(s.is_valid())
         self.assertIn('non_field_errors', s.errors)
-        self.assertIn('no refresh expiration claim', s.errors['non_field_errors'][0])
+        self.assertIn('has no \'refresh_exp\' claim', s.errors['non_field_errors'][0])
 
     def test_it_should_not_validate_if_token_has_refresh_period_expired(self):
         payload = {
@@ -114,7 +114,7 @@ class TestTokenRefreshSerializer(TestCase):
         s = TokenRefreshSerializer(data={'token': token})
         self.assertFalse(s.is_valid())
         self.assertIn('non_field_errors', s.errors)
-        self.assertIn('refresh period has expired', s.errors['non_field_errors'][0])
+        self.assertIn('\'refresh_exp\' claim has expired', s.errors['non_field_errors'][0])
 
     def test_it_should_update_token_exp_claim_if_everything_ok(self):
         now = datetime.utcnow()
