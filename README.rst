@@ -27,7 +27,7 @@ Object-oriented API
 -------------------
 
 Simple JWT strives to implement its functionality in an object-oriented
-way.  Some behavior can be customized through settings variables but it is
+way.  Some behavior can be customized through settings variables, but it is
 expected that the rest will be handled through subclassing.  Following from
 this, people wishing to customize the finer details of Simple JWT's behavior
 are expected to become familiar with the library's classes and the

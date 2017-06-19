@@ -18,16 +18,18 @@ class Token(object):
     A class which validates and wraps an existing JWT or can be used to build a
     new JWT.
 
-    !!!!!!!! VERY IMPORTANT !!!!!!!!
+    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! IMPORTANT !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     The `__init__` and `decode` methods of this class MUST raise a TokenError
     with a user-facing error message if they receive a token that is invalid,
     expired, or otherwise not safe to use.
+    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     """
     def __init__(self, token=None):
         """
-        !!!!!!!! VERY IMPORTANT !!!!!!!!
+        !!!!!!!!!!!!!!!!!!!!!!!!!!!! IMPORTANT !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         MUST raise a TokenError with a user-facing error message if the given
         token is invalid, expired, or otherwise not safe to use.
+        !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         """
         self.token = token
 
@@ -94,9 +96,10 @@ class Token(object):
         Validates and decodes the given token and returns its payload
         dictionary.
 
-        !!!!!!!! VERY IMPORTANT !!!!!!!!
+        !!!!!!!!!!!!!!!!!!!!!!!!!!!! IMPORTANT !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         MUST raise a TokenError with a user-facing error message if the given
         token is invalid, expired, or otherwise not safe to use.
+        !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         """
         try:
             payload = jwt.decode(token, api_settings.SECRET_KEY, algorithms=['HS256'])
