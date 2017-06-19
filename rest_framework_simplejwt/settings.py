@@ -17,12 +17,9 @@ DEFAULTS = {
     'TOKEN_REFRESH_LIFETIME': timedelta(days=7),
 
     'SECRET_KEY': settings.SECRET_KEY,
-
-    'TOKEN_BACKEND': 'rest_framework_simplejwt.backends.TokenBackend',
 }
 
 IMPORT_STRING_SETTINGS = (
-    'TOKEN_BACKEND',
 )
 
 api_settings = APISettings(USER_SETTINGS, DEFAULTS, IMPORT_STRING_SETTINGS)
