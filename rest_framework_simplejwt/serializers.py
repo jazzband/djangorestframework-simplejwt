@@ -8,8 +8,7 @@ from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 
 from .exceptions import TokenError
-from .state import User
-from .tokens import Token
+from .state import User, Token
 
 
 class PasswordField(serializers.CharField):
