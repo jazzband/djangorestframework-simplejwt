@@ -22,25 +22,24 @@ Discourage crypto negotiation
 Protocols which allow for negotiation of crypto algorithms (this includes JWT)
 are generally considered to be weak by design.  Simple JWT assumes that most
 use cases will be covered by sha-256 HMAC signing with a shared secret.
-Customization of which algorithms are used to sign/verify tokens is possible
-but not intended to be easy.
 
-Object oriented API
+Object-oriented API
 -------------------
 
-The implementation of Simple JWT emphasizes an object-oriented design.  The
-intention is that customization of Simple JWT's funcionality is done mostly
-through subclassing.  This will hopefully encourage developers to understand
-the library at a deeper level and possibly reduce the risk of deploying a
-flawed JWT authentication system.  The classes which comprise the bulk of
-Simple JWT's functionality are meant to be easy to read and understand.
+Simple JWT strives to implement its functionality in an object-oriented
+way.  Some behavior can be customized through settings variables but it is
+expected that the rest will be handled through subclassing.  Following from
+this, people wishing to customize the finer details of Simple JWT's behavior
+are expected to become familiar with the library's classes and the
+relationships there between.
 
-Safe defaults
--------------
+Safe defaults, predictability
+-----------------------------
 
-Configurable aspects of Simple JWT should have reasonably safe defaults.  Users
-of this library should feel free to plug and play without shooting themselves
-in the foot.
+Assuming users of the library don't extensively and invasively subclass
+everything, Simple JWT's overall behavior shouldn't be surprising.  Settings
+variable defaults should be safe.  Where authentication and authorization are
+concerned, it should be hard to shoot oneself in the foot.
 
 Installation
 ------------
@@ -126,8 +125,6 @@ Some of Simple JWT's behavior can be customized through settings variables in
       'TOKEN_REFRESH_LIFETIME': timedelta(days=7),
 
       'SECRET_KEY': SECRET_KEY,  # Default to the django secret key
-
-      'TOKEN_BACKEND': 'rest_framework_simplejwt.backends.TokenBackend',
   }
 
 Above, the default values for these settings are shown.
@@ -144,11 +141,11 @@ USER_ID_FIELD
   The database field from the user model that will be included in generated
   tokens to identify users.  It is recommended that the value of this setting
   specifies a field which does not normally change once its initial value is
-  chosen.  For example, specifying a "username" or "email" field would be a poor
-  choice since an account's username or email might change depending on how
-  account management in a given service is designed.  This could allow a new
-  account to be created with an old username while an existing token is still
-  valid which uses that username as a user identifier.
+  chosen.  For example, specifying a "username" or "email" field would be a
+  poor choice since an account's username or email might change depending on
+  how account management in a given service is designed.  This could allow a
+  new account to be created with an old username while an existing token is
+  still valid which uses that username as a user identifier.
 
 PAYLOAD_ID_FIELD
   The key name which will be used for the user identifier claim in generated
@@ -157,37 +154,28 @@ PAYLOAD_ID_FIELD
 
 TOKEN_LIFETIME
   A ``datetime.timedelta`` object which specifies how long a generated token is
-  valid.  This ``timedelta`` value is added to the current UTC time while a token
-  is being generated to obtain the token's "exp" claim value.  Once the time
-  specified by this "exp" claim has passed, a token will no longer be valid for
-  authorization and can no longer be refreshed.
+  valid.  This ``timedelta`` value is added to the current UTC time while a
+  token is being generated to obtain the token's "exp" claim value.  Once the
+  time specified by this "exp" claim has passed, a token will no longer be
+  valid for authorization and can no longer be refreshed.
 
 TOKEN_REFRESH_LIFETIME
   A ``datetime.timedelta`` object which specifies how long a generated token
   may be refreshed.  This ``timedelta`` value is added to the current UTC time
   while a token is being generated to obtain the token's "refresh_exp" claim
-  value.  Once the time specified by this "refresh_exp" claim has passed, a token
-  can no longer be refreshed.  However, if the time specified by a token's "exp"
-  claim still has not passed, it can still be used for authorization.
+  value.  Once the time specified by this "refresh_exp" claim has passed, a
+  token can no longer be refreshed.  However, if the time specified by a
+  token's "exp" claim still has not passed, it can still be used for
+  authorization.
 
 SECRET_KEY
   The secret key which is used to sign the content of generated tokens.  This
   setting defaults to the value of the ``SECRET_KEY`` setting for the django
   project.  Although this is the most reasonable default that Simple JWT can
-  provide, it is recommended that developers change this setting to a value which
-  is independent from the django project secret key.  This will make changing the
-  secret key used for tokens easier in the event that it is compromised or a
-  token exists which must be immediately invalidated.
-
-TOKEN_BACKEND
-  Specifies a dot path to a class which implements a set of low-level token
-  operations used by Simple JWT.  For more information, see the "Customization"
-  section below.
-
-Customization
--------------
-
-Not written yet :P.
+  provide, it is recommended that developers change this setting to a value
+  which is independent from the django project secret key.  This will make
+  changing the secret key used for tokens easier in the event that it is
+  compromised or a token exists which must be immediately invalidated.
 
 Experimental features
 ---------------------
@@ -196,10 +184,10 @@ JWTTokenUserAuthentication backend
   The ``JWTTokenUserAuthentication`` backend's ``authenticate`` method does not
   perform a database lookup to obtain a user instance.  Instead, it returns a
   ``TokenUser`` instance which acts as a stateless user object backed only by a
-  validated token payload instead of a record in a database.  This can
-  facilitate developing single sign-on functionality between separately hosted
-  Django apps which all share the same token secret key.  To use this feature,
-  add the ``rest_framework_simplejwt.authentication.JWTTokenUserAuthentication``
+  validated token instead of a record in a database.  This can facilitate
+  developing single sign-on functionality between separately hosted Django apps
+  which all share the same token secret key.  To use this feature, add the
+  ``rest_framework_simplejwt.authentication.JWTTokenUserAuthentication``
   backend (instead of the default ``JWTAuthentication`` backend) to the Django
   REST Framework's ``DEFAULT_AUTHENTICATION_CLASSES`` config setting::
 
