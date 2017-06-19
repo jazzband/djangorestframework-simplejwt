@@ -127,13 +127,7 @@ class Token(object):
         token[api_settings.PAYLOAD_ID_FIELD] = user_id
 
         now = datetime.utcnow()
-        token.update_expiration(
-            from_time=now,
-        )
-        token.update_expiration(
-            from_time=now,
-            lifetime=api_settings.TOKEN_REFRESH_LIFETIME,
-            claim='refresh_exp',
-        )
+        token.update_expiration(from_time=now)
+        token.update_expiration('refresh_exp', from_time=now, lifetime=api_settings.TOKEN_REFRESH_LIFETIME)
 
         return token
