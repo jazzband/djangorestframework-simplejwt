@@ -15,7 +15,7 @@ from .utils import override_api_settings
 User = get_user_model()
 
 
-class TestTokenObtainSerializer(TestCase):
+class TestTokenBackend(TestCase):
     def setUp(self):
         self.token_backend = TokenBackend()
 
