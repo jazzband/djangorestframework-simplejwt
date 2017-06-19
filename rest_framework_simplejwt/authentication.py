@@ -25,7 +25,7 @@ class JWTAuthentication(authentication.BaseAuthentication):
         if header is None:
             return None
 
-        token = self.get_token(header)
+        token = self.get_raw_token(header)
         if token is None:
             return None
 
@@ -52,7 +52,7 @@ class JWTAuthentication(authentication.BaseAuthentication):
 
         return header
 
-    def get_token(self, header):
+    def get_raw_token(self, header):
         """
         Extracts a JSON web token from the given header.
         """

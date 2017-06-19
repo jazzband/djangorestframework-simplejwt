@@ -38,22 +38,22 @@ class TestJWTAuthentication(TestCase):
         request = self.factory.get('/test-url/', HTTP_AUTHORIZATION=self.fake_header.decode('utf-8'))
         self.assertEqual(self.backend.get_header(request), self.fake_header)
 
-    def test_get_token(self):
+    def test_get_raw_token(self):
         # Should return None if header lacks correct type keyword
         with override_api_settings(AUTH_HEADER_TYPE='JWT'):
             reload_module(authentication)
-            self.assertIsNone(self.backend.get_token(self.fake_header))
+            self.assertIsNone(self.backend.get_raw_token(self.fake_header))
         reload_module(authentication)
 
         # Should raise error if header is malformed
         with self.assertRaises(AuthenticationFailed):
-            self.backend.get_token(b'Bearer one two')
+            self.backend.get_raw_token(b'Bearer one two')
 
         with self.assertRaises(AuthenticationFailed):
-            self.backend.get_token(b'Bearer')
+            self.backend.get_raw_token(b'Bearer')
 
-        # Otherwise, should return token in header
-        self.assertEqual(self.backend.get_token(self.fake_header), self.fake_token)
+        # Otherwise, should return unvalidated token in header
+        self.assertEqual(self.backend.get_raw_token(self.fake_header), self.fake_token)
 
     def test_get_payload(self):
         payload = {'foo': 'bar'}
