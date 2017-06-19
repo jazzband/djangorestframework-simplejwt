@@ -84,7 +84,7 @@ class JWTAuthentication(authentication.BaseAuthentication):
         Attempts to find and return a user using the given validated token.
         """
         try:
-            user_id = validated_token[api_settings.PAYLOAD_ID_FIELD]
+            user_id = validated_token[api_settings.USER_ID_CLAIM]
         except KeyError:
             raise AuthenticationFailed(_('Token contained no recognizable user identification.'))
 
@@ -105,7 +105,7 @@ class JWTTokenUserAuthentication(JWTAuthentication):
         Returns a stateless user object which is backed by the given validated
         token.
         """
-        if api_settings.PAYLOAD_ID_FIELD not in validated_token:
+        if api_settings.USER_ID_CLAIM not in validated_token:
             # The TokenUser class assumes tokens will have a recognizable user
             # identifier claim.
             raise AuthenticationFailed(_('Token contained no recognizable user identification.'))

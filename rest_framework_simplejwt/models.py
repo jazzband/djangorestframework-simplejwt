@@ -42,7 +42,7 @@ class TokenUser(object):
 
     @cached_property
     def id(self):
-        return self.token[api_settings.PAYLOAD_ID_FIELD]
+        return self.token[api_settings.USER_ID_CLAIM]
 
     @cached_property
     def pk(self):

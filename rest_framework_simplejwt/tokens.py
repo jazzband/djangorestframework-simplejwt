@@ -127,7 +127,7 @@ class Token(object):
             user_id = text_type(user_id)
 
         token = cls()
-        token[api_settings.PAYLOAD_ID_FIELD] = user_id
+        token[api_settings.USER_ID_CLAIM] = user_id
 
         now = datetime.utcnow()
         token.update_expiration(from_time=now)

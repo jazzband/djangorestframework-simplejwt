@@ -119,7 +119,7 @@ Some of Simple JWT's behavior can be customized through settings variables in
       'AUTH_HEADER_TYPE': 'Bearer',
 
       'USER_ID_FIELD': 'id',
-      'PAYLOAD_ID_FIELD': 'user_id',
+      'USER_ID_CLAIM': 'user_id',
 
       'TOKEN_LIFETIME': timedelta(days=1),
       'TOKEN_REFRESH_LIFETIME': timedelta(days=7),
@@ -147,10 +147,10 @@ USER_ID_FIELD
   new account to be created with an old username while an existing token is
   still valid which uses that username as a user identifier.
 
-PAYLOAD_ID_FIELD
-  The key name which will be used for the user identifier claim in generated
-  tokens.  For example, a setting value of ``'user_id'`` would mean generated
-  tokens include a "user_id" claim that contains the user's identifier.
+USER_ID_CLAIM
+  The claim in generated tokens which will be used to store user identifiers.
+  For example, a setting value of ``'user_id'`` would mean generated tokens
+  include a "user_id" claim that contains the user's identifier.
 
 TOKEN_LIFETIME
   A ``datetime.timedelta`` object which specifies how long a generated token is

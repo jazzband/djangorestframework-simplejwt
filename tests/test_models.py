@@ -10,7 +10,7 @@ from rest_framework_simplejwt.state import Token
 class TestTokenUser(TestCase):
     def setUp(self):
         self.token = Token()
-        self.token[api_settings.PAYLOAD_ID_FIELD] = 42
+        self.token[api_settings.USER_ID_CLAIM] = 42
         self.token['some_other_stuff'] = 'arstarst'
 
         self.user = TokenUser(self.token)
@@ -37,7 +37,7 @@ class TestTokenUser(TestCase):
         self.assertEqual(self.user.pk, 42)
 
     def test_is_staff(self):
-        payload = {api_settings.PAYLOAD_ID_FIELD: 42}
+        payload = {api_settings.USER_ID_CLAIM: 42}
         user = TokenUser(payload)
 
         self.assertFalse(user.is_staff)
@@ -48,7 +48,7 @@ class TestTokenUser(TestCase):
         self.assertTrue(user.is_staff)
 
     def test_is_superuser(self):
-        payload = {api_settings.PAYLOAD_ID_FIELD: 42}
+        payload = {api_settings.USER_ID_CLAIM: 42}
         user = TokenUser(payload)
 
         self.assertFalse(user.is_superuser)
@@ -59,9 +59,9 @@ class TestTokenUser(TestCase):
         self.assertTrue(user.is_superuser)
 
     def test_eq(self):
-        user1 = TokenUser({api_settings.PAYLOAD_ID_FIELD: 1})
-        user2 = TokenUser({api_settings.PAYLOAD_ID_FIELD: 2})
-        user3 = TokenUser({api_settings.PAYLOAD_ID_FIELD: 1})
+        user1 = TokenUser({api_settings.USER_ID_CLAIM: 1})
+        user2 = TokenUser({api_settings.USER_ID_CLAIM: 2})
+        user3 = TokenUser({api_settings.USER_ID_CLAIM: 1})
 
         self.assertNotEqual(user1, user2)
         self.assertEqual(user1, user3)

@@ -76,7 +76,7 @@ class TestJWTAuthentication(TestCase):
         with self.assertRaises(AuthenticationFailed):
             self.backend.get_user(payload)
 
-        payload[api_settings.PAYLOAD_ID_FIELD] = 42
+        payload[api_settings.USER_ID_CLAIM] = 42
 
         # Should raise exception if user not found
         with self.assertRaises(AuthenticationFailed):
@@ -86,7 +86,7 @@ class TestJWTAuthentication(TestCase):
         u.is_active = False
         u.save()
 
-        payload[api_settings.PAYLOAD_ID_FIELD] = getattr(u, api_settings.USER_ID_FIELD)
+        payload[api_settings.USER_ID_CLAIM] = getattr(u, api_settings.USER_ID_FIELD)
 
         # Should raise exception if user is inactive
         with self.assertRaises(AuthenticationFailed):
@@ -110,7 +110,7 @@ class TestJWTTokenUserAuthentication(TestCase):
         with self.assertRaises(AuthenticationFailed):
             self.backend.get_user(payload)
 
-        payload[api_settings.PAYLOAD_ID_FIELD] = 42
+        payload[api_settings.USER_ID_CLAIM] = 42
 
         # Otherwise, should return a token user object
         user = self.backend.get_user(payload)

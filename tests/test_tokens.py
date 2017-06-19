@@ -151,7 +151,7 @@ class TestToken(TestCase):
         if not isinstance(user_id, int):
             user_id = text_type(user_id)
 
-        self.assertEqual(token[api_settings.PAYLOAD_ID_FIELD], user_id)
+        self.assertEqual(token[api_settings.USER_ID_CLAIM], user_id)
 
         self.assertIn('exp', token)
         self.assertTrue(isinstance(token['exp'], int))
@@ -163,7 +163,7 @@ class TestToken(TestCase):
         with override_api_settings(USER_ID_FIELD='username'):
             token = Token.for_user(self.user)
 
-        self.assertEqual(token[api_settings.PAYLOAD_ID_FIELD], self.username)
+        self.assertEqual(token[api_settings.USER_ID_CLAIM], self.username)
 
     def test_encode(self):
         # Should return a JSON web token for the given payload
