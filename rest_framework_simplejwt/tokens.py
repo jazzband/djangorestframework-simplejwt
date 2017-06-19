@@ -9,7 +9,7 @@ from jose.exceptions import JOSEError
 
 from .exceptions import TokenError
 from .settings import api_settings
-from .utils import datetime_to_epoch
+from .utils import datetime_to_epoch, format_lazy
 
 
 @python_2_unicode_compatible
@@ -51,7 +51,7 @@ class Token(object):
     def __contains__(self, name):
         return name in self.payload
 
-    def update_expiration(self, from_time=None, lifetime=None, claim='exp'):
+    def update_expiration(self, claim='exp', from_time=None, lifetime=None):
         """
         Updates the expiration time of a token.
         """
@@ -62,6 +62,24 @@ class Token(object):
             lifetime = api_settings.TOKEN_LIFETIME
 
         self.payload[claim] = datetime_to_epoch(from_time + lifetime)
+
+    def check_expiration(self, claim='exp', current_time=None):
+        """
+        Checks whether a timestamp value in the given claim has passed (since
+        the given datetime value in `current_time`).  Raises a TokenError with
+        a user-facing error message if so.
+        """
+        if current_time is None:
+            current_time = datetime.utcnow()
+
+        try:
+            claim_value = self.payload[claim]
+        except KeyError:
+            raise TokenError(format_lazy(_('Token has no \'{}\' claim'), claim))
+
+        claim_time = datetime.utcfromtimestamp(claim_value)
+        if claim_time < current_time:
+            raise TokenError(format_lazy(_('Token \'{}\' claim has expired'), claim))
 
     @classmethod
     def encode(cls, payload):
