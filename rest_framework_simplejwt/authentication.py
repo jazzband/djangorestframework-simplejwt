@@ -29,7 +29,7 @@ class JWTAuthentication(authentication.BaseAuthentication):
         if token is None:
             return None
 
-        payload = self.get_payload(token)
+        payload = self.get_validated_token(token)
 
         return (self.get_user(payload), None)
 
@@ -69,7 +69,7 @@ class JWTAuthentication(authentication.BaseAuthentication):
 
         return parts[1]
 
-    def get_payload(self, token):
+    def get_validated_token(self, token):
         """
         Validates a JSON web token and extracts a data payload from it.
         """
