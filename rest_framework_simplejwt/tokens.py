@@ -77,11 +77,11 @@ class Token(object):
         try:
             claim_value = self.payload[claim]
         except KeyError:
-            raise TokenError(format_lazy(_('Token has no \'{}\' claim'), claim))
+            raise TokenError(format_lazy(_('Token has no \'{}\' claim.'), claim))
 
         claim_time = datetime.utcfromtimestamp(claim_value)
         if claim_time < current_time:
-            raise TokenError(format_lazy(_('Token \'{}\' claim has expired'), claim))
+            raise TokenError(format_lazy(_('Token \'{}\' claim has expired.'), claim))
 
     @classmethod
     def encode(cls, payload):
