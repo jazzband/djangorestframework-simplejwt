@@ -12,7 +12,21 @@ from .utils import datetime_to_epoch
 
 @python_2_unicode_compatible
 class Token(object):
+    """
+    A class which validates and wraps an existing JWT or can be used to build a
+    new JWT.
+
+    !!!!!!!! VERY IMPORTANT !!!!!!!!
+    The `__init__` and `decode` methods of this class MUST raise a TokenError
+    with a user-facing error message if they receive a token that is invalid,
+    expired, or otherwise not safe to use.
+    """
     def __init__(self, token=None):
+        """
+        !!!!!!!! VERY IMPORTANT !!!!!!!!
+        MUST raise a TokenError with a user-facing error message if the given
+        token is invalid, expired, or otherwise not safe to use.
+        """
         self.token = token
 
         if token is not None:
@@ -58,8 +72,11 @@ class Token(object):
     def decode(cls, token):
         """
         Validates and decodes the given token and returns its payload
-        dictionary.  Must raise a TokenError with a user-facing error message
-        if validation fails.
+        dictionary.
+
+        !!!!!!!! VERY IMPORTANT !!!!!!!!
+        MUST raise a TokenError with a user-facing error message if the given
+        token is invalid, expired, or otherwise not safe to use.
         """
         try:
             payload = jwt.decode(token, api_settings.SECRET_KEY, algorithms=['HS256'])
