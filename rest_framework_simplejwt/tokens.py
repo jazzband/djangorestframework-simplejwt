@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from datetime import datetime
 
 from django.utils.six import text_type, python_2_unicode_compatible

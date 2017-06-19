@@ -4,15 +4,16 @@ from django.test import TestCase
 from django.utils import six
 from rest_framework_simplejwt.models import TokenUser
 from rest_framework_simplejwt.settings import api_settings
+from rest_framework_simplejwt.tokens import Token
 
 
 class TestTokenUser(TestCase):
     def setUp(self):
-        self.test_payload = {
-            api_settings.PAYLOAD_ID_FIELD: 42,
-            'some_other_stuff': 'arstarst',
-        }
-        self.user = TokenUser(self.test_payload)
+        self.token = Token()
+        self.token[api_settings.PAYLOAD_ID_FIELD] = 42
+        self.token['some_other_stuff'] = 'arstarst'
+
+        self.user = TokenUser(self.token)
 
     def test_username(self):
         self.assertEqual(self.user.username, '')

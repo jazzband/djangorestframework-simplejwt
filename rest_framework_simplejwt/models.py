@@ -28,12 +28,12 @@ class TokenUser(object):
     _groups = EmptyManager(auth_models.Group)
     _user_permissions = EmptyManager(auth_models.Permission)
 
-    def __init__(self, token_payload):
-        self.token_payload = token_payload
+    def __init__(self, token):
+        self.token = token
 
     def __getattr__(self, name):
         try:
-            return self.token_payload[name]
+            return self.token[name]
         except KeyError:
             raise AttributeError("'{}' object has no attirbute '{}'".format(self.__class__.__name__, name))
 
@@ -42,7 +42,7 @@ class TokenUser(object):
 
     @cached_property
     def id(self):
-        return self.token_payload[api_settings.PAYLOAD_ID_FIELD]
+        return self.token[api_settings.PAYLOAD_ID_FIELD]
 
     @cached_property
     def pk(self):
@@ -50,11 +50,11 @@ class TokenUser(object):
 
     @cached_property
     def is_staff(self):
-        return self.token_payload.get('is_staff', False)
+        return self.token.get('is_staff', False)
 
     @cached_property
     def is_superuser(self):
-        return self.token_payload.get('is_superuser', False)
+        return self.token.get('is_superuser', False)
 
     def __eq__(self, other):
         return self.id == other.id
