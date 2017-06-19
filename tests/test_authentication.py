@@ -64,10 +64,10 @@ class TestJWTAuthentication(TestCase):
         with self.assertRaises(AuthenticationFailed):
             self.backend.get_validated_token(bad_token)
 
-        # Otherwise, should return data payload for token
+        # Otherwise, should return validated token
         payload['exp'] = datetime.utcnow() + timedelta(days=1)
         good_token = jwt.encode(payload, api_settings.SECRET_KEY, algorithm='HS256')
-        self.assertEqual(self.backend.get_validated_token(good_token), payload)
+        self.assertEqual(self.backend.get_validated_token(good_token).payload, payload)
 
     def test_get_user(self):
         payload = {'some_other_id': 'foo'}

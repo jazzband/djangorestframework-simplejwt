@@ -5,10 +5,11 @@ from django.utils.translation import ugettext_lazy as _
 from rest_framework import HTTP_HEADER_ENCODING, authentication
 from rest_framework.exceptions import AuthenticationFailed
 
-from .exceptions import TokenBackendError
+from .exceptions import TokenError
 from .models import TokenUser
 from .settings import api_settings
-from .state import User, token_backend
+from .state import User
+from .tokens import Token
 
 AUTH_HEADER_TYPE_BYTES = api_settings.AUTH_HEADER_TYPE.encode(HTTP_HEADER_ENCODING)
 
@@ -25,13 +26,13 @@ class JWTAuthentication(authentication.BaseAuthentication):
         if header is None:
             return None
 
-        token = self.get_raw_token(header)
-        if token is None:
+        raw_token = self.get_raw_token(header)
+        if raw_token is None:
             return None
 
-        payload = self.get_validated_token(token)
+        validated_token = self.get_validated_token(raw_token)
 
-        return (self.get_user(payload), None)
+        return (self.get_user(validated_token), None)
 
     def authenticate_header(self, request):
         return '{0} realm="{1}"'.format(
@@ -54,7 +55,7 @@ class JWTAuthentication(authentication.BaseAuthentication):
 
     def get_raw_token(self, header):
         """
-        Extracts a JSON web token from the given header.
+        Extracts an unvalidated JSON web token from the given header.
         """
         parts = header.split()
 
@@ -69,21 +70,22 @@ class JWTAuthentication(authentication.BaseAuthentication):
 
         return parts[1]
 
-    def get_validated_token(self, token):
+    def get_validated_token(self, raw_token):
         """
-        Validates a JSON web token and extracts a data payload from it.
+        Validates an encoded JSON web token and returns a validated token
+        wrapper object.
         """
         try:
-            return token_backend.decode(token)
-        except TokenBackendError as e:
+            return Token(raw_token)
+        except TokenError as e:
             raise AuthenticationFailed(e.args[0])
 
-    def get_user(self, payload):
+    def get_user(self, validated_token):
         """
-        Attempts to find and return a user using the given token payload.
+        Attempts to find and return a user using the given validated token.
         """
         try:
-            user_id = payload[api_settings.PAYLOAD_ID_FIELD]
+            user_id = validated_token[api_settings.PAYLOAD_ID_FIELD]
         except KeyError:
             raise AuthenticationFailed(_('Token contained no recognizable user identification.'))
 
@@ -99,13 +101,14 @@ class JWTAuthentication(authentication.BaseAuthentication):
 
 
 class JWTTokenUserAuthentication(JWTAuthentication):
-    def get_user(self, payload):
+    def get_user(self, validated_token):
         """
-        Returns a user for the given token payload.
+        Returns a stateless user object which is backed by the given validated
+        token.
         """
-        if api_settings.PAYLOAD_ID_FIELD not in payload:
-            # The TokenUser class assumes token payloads will have a
-            # recognizable user identifier claim.
+        if api_settings.PAYLOAD_ID_FIELD not in validated_token:
+            # The TokenUser class assumes tokens will have a recognizable user
+            # identifier claim.
             raise AuthenticationFailed(_('Token contained no recognizable user identification.'))
 
-        return TokenUser(payload)
+        return TokenUser(validated_token)
