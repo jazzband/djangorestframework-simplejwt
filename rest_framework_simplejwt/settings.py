@@ -12,7 +12,6 @@ DEFAULTS = {
 
     'USER_ID_FIELD': 'id',
     'USER_ID_CLAIM': 'user_id',
-    '': 'user_id',
 
     'TOKEN_LIFETIME': timedelta(days=1),
     'TOKEN_REFRESH_LIFETIME': timedelta(days=7),
