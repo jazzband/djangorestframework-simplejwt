@@ -170,7 +170,7 @@ class TestToken(TestCase):
         payload = {'exp': datetime(year=2000, month=1, day=1)}
 
         with override_api_settings(SECRET_KEY='not_secret'):
-            token = Token.encode(payload)
+            token = Token._encode(payload)
 
         # Token could be one of two depending on header dict ordering
         self.assertIn(
@@ -182,17 +182,16 @@ class TestToken(TestCase):
         )
 
     def test_decode(self):
-        # No expiry tokens should cause exception
+        # No expiry causes no exception
         payload = {'foo': 'bar'}
         no_exp_token = jwt.encode(payload, api_settings.SECRET_KEY, algorithm='HS256')
-        with self.assertRaises(TokenError):
-            Token.decode(no_exp_token)
+        Token._decode(no_exp_token)
 
         # Expired tokens should cause exception
         payload['exp'] = datetime.utcnow() - timedelta(seconds=1)
         expired_token = jwt.encode(payload, api_settings.SECRET_KEY, algorithm='HS256')
         with self.assertRaises(TokenError):
-            Token.decode(expired_token)
+            Token._decode(expired_token)
 
         # Token with invalid signature should cause exception
         payload['exp'] = datetime.utcnow() + timedelta(days=1)
@@ -205,7 +204,7 @@ class TestToken(TestCase):
         invalid_token = incorrect_payload + '.' + correct_sig
 
         with self.assertRaises(TokenError):
-            Token.decode(invalid_token)
+            Token._decode(invalid_token)
 
         # Otherwise, should return data payload for token
-        self.assertEqual(Token.decode(other_token), payload)
+        self.assertEqual(Token._decode(other_token), payload)

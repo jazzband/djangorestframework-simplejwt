@@ -81,7 +81,7 @@ class TestTokenRefreshSerializer(TestCase):
         s = TokenRefreshSerializer(data={'token': token})
         self.assertFalse(s.is_valid())
         self.assertIn('non_field_errors', s.errors)
-        self.assertIn('has no expiration', s.errors['non_field_errors'][0])
+        self.assertIn("has no 'exp' claim", s.errors['non_field_errors'][0])
 
         payload['exp'] = datetime.utcnow() - timedelta(days=1)
         token = jwt.encode(payload, api_settings.SECRET_KEY, algorithm='HS256')

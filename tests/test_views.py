@@ -90,7 +90,7 @@ class TestTokenRefreshView(APIViewTestCase):
         res = self.view_post(data={'token': token})
         self.assertEqual(res.status_code, 400)
         self.assertIn('non_field_errors', res.data)
-        self.assertIn('has no expiration', res.data['non_field_errors'][0])
+        self.assertIn("has no 'exp' claim", res.data['non_field_errors'][0])
 
         payload['exp'] = datetime.utcnow() - timedelta(days=1)
         token = jwt.encode(payload, api_settings.SECRET_KEY, algorithm='HS256')

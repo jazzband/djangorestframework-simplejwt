@@ -17,12 +17,6 @@ class Token(object):
     """
     A class which validates and wraps an existing JWT or can be used to build a
     new JWT.
-
-    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! IMPORTANT !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    The `__init__` and `decode` methods of this class MUST raise a TokenError
-    with a user-facing error message if they receive a token that is invalid,
-    expired, or otherwise not safe to use.
-    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     """
     def __init__(self, token=None):
         """
@@ -34,12 +28,18 @@ class Token(object):
         self.token = token
 
         if token is not None:
-            self.payload = self.decode(token)
+            self.payload = self._decode(token)
+
+            # According to RFC 7519, the 'exp' claim is OPTIONAL:
+            # https://tools.ietf.org/html/rfc7519#section-4.1.4
+            # As a more sensible default behavior for tokens used for
+            # authorization, we require expiry.
+            self.check_expiration()
         else:
             self.payload = {}
 
     def __str__(self):
-        return self.encode(self.payload)
+        return self._encode(self.payload)
 
     def __repr__(self):
         return repr(self.payload)
@@ -84,37 +84,27 @@ class Token(object):
             raise TokenError(format_lazy(_('Token \'{}\' claim has expired.'), claim))
 
     @classmethod
-    def encode(cls, payload):
+    def _encode(cls, payload):
         """
         Returns an encoded token for the given payload dictionary.
         """
         return jwt.encode(payload, api_settings.SECRET_KEY, algorithm='HS256')
 
     @classmethod
-    def decode(cls, token):
+    def _decode(cls, token):
         """
-        Validates and decodes the given token and returns its payload
-        dictionary.
+        Performs a low-level validation of the given token and returns its
+        payload dictionary.
 
-        !!!!!!!!!!!!!!!!!!!!!!!!!!!! IMPORTANT !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        MUST raise a TokenError with a user-facing error message if the given
-        token is invalid, expired, or otherwise not safe to use.
-        !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        The amount of validation that occurs may vary depending on the token
+        library that is used.  The Python JOSE library doesn't require token
+        expiry.  We check for that at a higher level in the `__init__` method
+        of this class.
         """
         try:
-            payload = jwt.decode(token, api_settings.SECRET_KEY, algorithms=['HS256'])
+            return jwt.decode(token, api_settings.SECRET_KEY, algorithms=['HS256'])
         except JOSEError:
             raise TokenError(_('Token is invalid or expired.'))
-
-        # According to RFC 7519, the 'exp' claim is OPTIONAL:
-        # https://tools.ietf.org/html/rfc7519#section-4.1.4
-
-        # As a more sensible default behavior for tokens used in an
-        # authorization context, we require expiry
-        if 'exp' not in payload:
-            raise TokenError(_('Token has no expiration.'))
-
-        return payload
 
     @classmethod
     def for_user(cls, user):
