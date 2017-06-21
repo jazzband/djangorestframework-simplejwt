@@ -84,6 +84,25 @@ class Token(object):
             raise TokenError(format_lazy(_('Token \'{}\' claim has expired.'), claim))
 
     @classmethod
+    def for_user(cls, user):
+        """
+        Returns an authorization token for the given user that will be provided
+        after authenticating the user's credentials.
+        """
+        user_id = getattr(user, api_settings.USER_ID_FIELD)
+        if not isinstance(user_id, int):
+            user_id = text_type(user_id)
+
+        token = cls()
+        token[api_settings.USER_ID_CLAIM] = user_id
+
+        now = datetime.utcnow()
+        token.update_expiration(from_time=now)
+        token.update_expiration('refresh_exp', from_time=now, lifetime=api_settings.TOKEN_REFRESH_LIFETIME)
+
+        return token
+
+    @classmethod
     def _encode(cls, payload):
         """
         Returns an encoded token for the given payload dictionary.
@@ -105,22 +124,3 @@ class Token(object):
             return jwt.decode(token, api_settings.SECRET_KEY, algorithms=['HS256'])
         except JOSEError:
             raise TokenError(_('Token is invalid or expired.'))
-
-    @classmethod
-    def for_user(cls, user):
-        """
-        Returns an authorization token for the given user that will be provided
-        after authenticating the user's credentials.
-        """
-        user_id = getattr(user, api_settings.USER_ID_FIELD)
-        if not isinstance(user_id, int):
-            user_id = text_type(user_id)
-
-        token = cls()
-        token[api_settings.USER_ID_CLAIM] = user_id
-
-        now = datetime.utcnow()
-        token.update_expiration(from_time=now)
-        token.update_expiration('refresh_exp', from_time=now, lifetime=api_settings.TOKEN_REFRESH_LIFETIME)
-
-        return token
