@@ -21,7 +21,7 @@ class TokenBackend(object):
         """
         Returns an encoded token for the given payload dictionary.
         """
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
 
     def decode(self, token):
         """
@@ -31,7 +31,7 @@ class TokenBackend(object):
         Raises a `TokenBackendError` if the token is malformed or if its
         signature check fails.
         """
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
 
 
 class PythonJOSEBackend(TokenBackend):
