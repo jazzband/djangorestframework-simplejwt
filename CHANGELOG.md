@@ -1,3 +1,8 @@
+## Version 1.5.1
+
+* Version bump because pypi doesn't seem to let you update an existing
+  version's files.
+
 ## Version 1.5
 
 * Renamed `PAYLOAD_ID_FIELD` setting to `USER_ID_CLAIM` to keep more in line
