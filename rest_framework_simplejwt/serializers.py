@@ -63,7 +63,7 @@ class TokenRefreshSerializer(serializers.Serializer):
             token = Token(attrs['token'])
             # Check that the timestamp in the 'refresh_exp' claim has not
             # passed
-            token.check_expiration('refresh_exp', current_time=now)
+            token.check_exp('refresh_exp', current_time=now)
         except TokenError as e:
             raise serializers.ValidationError(e.args[0])
 

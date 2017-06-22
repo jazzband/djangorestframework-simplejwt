@@ -116,9 +116,9 @@ class TestToken(TestCase):
 
         # Should raise an exception if no claim of given kind
         with self.assertRaises(TokenError):
-            token.check_expiration()
+            token.check_exp()
         with self.assertRaises(TokenError):
-            token.check_expiration('some_other_claim')
+            token.check_exp('some_other_claim')
 
         now = datetime.utcnow()
         token.set_exp(from_time=now, lifetime=timedelta(seconds=0))
@@ -131,18 +131,18 @@ class TestToken(TestCase):
             fake_datetime.utcnow.return_value = now + timedelta(seconds=10)
 
             with self.assertRaises(TokenError):
-                token.check_expiration()
+                token.check_exp()
 
         # Otherwise, should raise no exception
         token.set_exp(from_time=now, lifetime=timedelta(days=1))
-        token.check_expiration()
+        token.check_exp()
 
         # Should allow specification of claim to be examined and timestamp to
         # compare against
         token.set_exp('refresh_exp', from_time=now, lifetime=timedelta(days=1))
-        token.check_expiration('refresh_exp')
+        token.check_exp('refresh_exp')
         with self.assertRaises(TokenError):
-            token.check_expiration('refresh_exp', current_time=now + timedelta(days=2))
+            token.check_exp('refresh_exp', current_time=now + timedelta(days=2))
 
     def test_for_user(self):
         # Should return an authorization token for the given user

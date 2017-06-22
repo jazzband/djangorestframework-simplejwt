@@ -37,7 +37,7 @@ class Token(object):
             # https://tools.ietf.org/html/rfc7519#section-4.1.4
             # As a more sensible default behavior for tokens used for
             # authorization, we require expiry.
-            self.check_expiration()
+            self.check_exp()
         else:
             self.payload = {}
 
@@ -73,7 +73,7 @@ class Token(object):
 
         self.payload[claim] = datetime_to_epoch(from_time + lifetime)
 
-    def check_expiration(self, claim='exp', current_time=None):
+    def check_exp(self, claim='exp', current_time=None):
         """
         Checks whether a timestamp value in the given claim has passed (since
         the given datetime value in `current_time`).  Raises a TokenError with
