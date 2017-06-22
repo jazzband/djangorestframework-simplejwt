@@ -28,7 +28,7 @@ class TestToken(TestCase):
         )
 
         self.token = Token()
-        self.token.update_expiration(
+        self.token.set_exp(
             from_time=datetime(year=2000, month=1, day=1),
             lifetime=timedelta(seconds=0),
         )
@@ -101,13 +101,13 @@ class TestToken(TestCase):
         # TOKEN_LIFETIME setting
         with patch('rest_framework_simplejwt.tokens.datetime') as fake_datetime:
             fake_datetime.utcnow.return_value = now
-            token.update_expiration()
+            token.set_exp()
 
         self.assertIn('exp', token)
         self.assertEqual(token['exp'], datetime_to_epoch(now + api_settings.TOKEN_LIFETIME))
 
         # Should allow overriding of beginning time, lifetime, and claim name
-        token.update_expiration(claim='refresh_exp', from_time=now, lifetime=api_settings.TOKEN_REFRESH_LIFETIME)
+        token.set_exp(claim='refresh_exp', from_time=now, lifetime=api_settings.TOKEN_REFRESH_LIFETIME)
         self.assertIn('refresh_exp', token)
         self.assertEqual(token['refresh_exp'], datetime_to_epoch(now + api_settings.TOKEN_REFRESH_LIFETIME))
 
@@ -121,7 +121,7 @@ class TestToken(TestCase):
             token.check_expiration('some_other_claim')
 
         now = datetime.utcnow()
-        token.update_expiration(from_time=now, lifetime=timedelta(seconds=0))
+        token.set_exp(from_time=now, lifetime=timedelta(seconds=0))
 
         # By default, checks 'exp' claim against utcnow.  Should raise an
         # exception if claim has expired.
@@ -134,12 +134,12 @@ class TestToken(TestCase):
                 token.check_expiration()
 
         # Otherwise, should raise no exception
-        token.update_expiration(from_time=now, lifetime=timedelta(days=1))
+        token.set_exp(from_time=now, lifetime=timedelta(days=1))
         token.check_expiration()
 
         # Should allow specification of claim to be examined and timestamp to
         # compare against
-        token.update_expiration('refresh_exp', from_time=now, lifetime=timedelta(days=1))
+        token.set_exp('refresh_exp', from_time=now, lifetime=timedelta(days=1))
         token.check_expiration('refresh_exp')
         with self.assertRaises(TokenError):
             token.check_expiration('refresh_exp', current_time=now + timedelta(days=2))

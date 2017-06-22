@@ -68,6 +68,6 @@ class TokenRefreshSerializer(serializers.Serializer):
             raise serializers.ValidationError(e.args[0])
 
         # Update the 'exp' claim for this token
-        token.update_expiration(from_time=now)
+        token.set_exp(from_time=now)
 
         return {'token': text_type(token)}

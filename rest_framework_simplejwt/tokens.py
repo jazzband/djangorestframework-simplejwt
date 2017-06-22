@@ -61,7 +61,7 @@ class Token(object):
 
         return token_backend.encode(self.payload)
 
-    def update_expiration(self, claim='exp', from_time=None, lifetime=None):
+    def set_exp(self, claim='exp', from_time=None, lifetime=None):
         """
         Updates the expiration time of a token.
         """
@@ -105,7 +105,7 @@ class Token(object):
         token[api_settings.USER_ID_CLAIM] = user_id
 
         now = datetime.utcnow()
-        token.update_expiration(from_time=now)
-        token.update_expiration('refresh_exp', from_time=now, lifetime=api_settings.TOKEN_REFRESH_LIFETIME)
+        token.set_exp(from_time=now)
+        token.set_exp('refresh_exp', from_time=now, lifetime=api_settings.TOKEN_REFRESH_LIFETIME)
 
         return token
