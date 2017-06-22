@@ -31,12 +31,6 @@ class TokenUser(object):
     def __init__(self, token):
         self.token = token
 
-    def __getattr__(self, name):
-        try:
-            return self.token[name]
-        except KeyError:
-            raise AttributeError("'{}' object has no attirbute '{}'".format(self.__class__.__name__, name))
-
     def __str__(self):
         return 'TokenUser {}'.format(self.id)
 

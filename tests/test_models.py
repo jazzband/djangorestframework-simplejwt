@@ -21,12 +21,6 @@ class TestTokenUser(TestCase):
     def test_is_active(self):
         self.assertTrue(self.user.is_active)
 
-    def test_getattr(self):
-        self.assertEqual(self.user.some_other_stuff, 'arstarst')
-
-        with self.assertRaises(AttributeError):
-            self.user.oienarsoitenars
-
     def test_str(self):
         self.assertEqual(six.text_type(self.user), 'TokenUser 42')
 
