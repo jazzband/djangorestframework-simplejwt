@@ -70,15 +70,13 @@ class TestToken(TestCase):
 
     def test_str(self):
         # Should encode the given token
-        with override_api_settings(SECRET_KEY='not_secret'):
-            encoded_token = str(self.token)
+        encoded_token = str(self.token)
 
         # Token could be one of two depending on header dict ordering
         self.assertIn(
             encoded_token,
             (
-                'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjk0NjY4NDgwMH0.NHpdD2X8ub4SE_MZLBedWa57FCpntGaN_r6f8kNKdUs',
-                'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjk0NjY4NDgwMH0.jvxQgXCSDToR8uKoRJcMT-LmMJJn2-NM76nfSR2FOgs',
+                'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjk0NjY4NDgwMH0.VKoOnMgmETawjDZwxrQaHG0xHdo6xBodFy6FXJzTVxs',
             ),
         )
 
@@ -167,47 +165,3 @@ class TestToken(TestCase):
             token = Token.for_user(self.user)
 
         self.assertEqual(token[api_settings.USER_ID_CLAIM], self.username)
-
-    def test_encode(self):
-        # Should return a JSON web token for the given payload
-        payload = {'exp': datetime(year=2000, month=1, day=1)}
-
-        with override_api_settings(SECRET_KEY='not_secret'):
-            token = Token._encode(payload)
-
-        # Token could be one of two depending on header dict ordering
-        self.assertIn(
-            token,
-            (
-                'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjk0NjY4NDgwMH0.NHpdD2X8ub4SE_MZLBedWa57FCpntGaN_r6f8kNKdUs',
-                'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjk0NjY4NDgwMH0.jvxQgXCSDToR8uKoRJcMT-LmMJJn2-NM76nfSR2FOgs',
-            ),
-        )
-
-    def test_decode(self):
-        # No expiry causes no exception
-        payload = {'foo': 'bar'}
-        no_exp_token = jwt.encode(payload, api_settings.SECRET_KEY, algorithm='HS256')
-        Token._decode(no_exp_token)
-
-        # Expired tokens should cause exception
-        payload['exp'] = datetime.utcnow() - timedelta(seconds=1)
-        expired_token = jwt.encode(payload, api_settings.SECRET_KEY, algorithm='HS256')
-        with self.assertRaises(TokenError):
-            Token._decode(expired_token)
-
-        # Token with invalid signature should cause exception
-        payload['exp'] = datetime.utcnow() + timedelta(days=1)
-        token = jwt.encode(payload, api_settings.SECRET_KEY, algorithm='HS256')
-        payload['foo'] = 'baz'
-        other_token = jwt.encode(payload, api_settings.SECRET_KEY, algorithm='HS256')
-
-        incorrect_payload = other_token.rsplit('.', 1)[0]
-        correct_sig = token.rsplit('.', 1)[-1]
-        invalid_token = incorrect_payload + '.' + correct_sig
-
-        with self.assertRaises(TokenError):
-            Token._decode(invalid_token)
-
-        # Otherwise, should return data payload for token
-        self.assertEqual(Token._decode(other_token), payload)

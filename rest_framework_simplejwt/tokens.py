@@ -4,10 +4,8 @@ from datetime import datetime
 
 from django.utils.six import text_type, python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
-from jose import jwt
-from jose.exceptions import JOSEError
 
-from .exceptions import TokenError
+from .exceptions import TokenError, TokenBackendError
 from .settings import api_settings
 from .utils import datetime_to_epoch, format_lazy
 
@@ -28,7 +26,12 @@ class Token(object):
         self.token = token
 
         if token is not None:
-            self.payload = self._decode(token)
+            from .state import token_backend
+
+            try:
+                self.payload = token_backend.decode(token)
+            except TokenBackendError:
+                raise TokenError(_('Token is invalid or expired.'))
 
             # According to RFC 7519, the 'exp' claim is OPTIONAL:
             # https://tools.ietf.org/html/rfc7519#section-4.1.4
@@ -37,9 +40,6 @@ class Token(object):
             self.check_expiration()
         else:
             self.payload = {}
-
-    def __str__(self):
-        return self._encode(self.payload)
 
     def __repr__(self):
         return repr(self.payload)
@@ -52,6 +52,14 @@ class Token(object):
 
     def __contains__(self, name):
         return name in self.payload
+
+    def __str__(self):
+        """
+        Signs and returns a token as a base64 encoded string.
+        """
+        from .state import token_backend
+
+        return token_backend.encode(self.payload)
 
     def update_expiration(self, claim='exp', from_time=None, lifetime=None):
         """
@@ -101,26 +109,3 @@ class Token(object):
         token.update_expiration('refresh_exp', from_time=now, lifetime=api_settings.TOKEN_REFRESH_LIFETIME)
 
         return token
-
-    @classmethod
-    def _encode(cls, payload):
-        """
-        Returns an encoded token for the given payload dictionary.
-        """
-        return jwt.encode(payload, api_settings.SECRET_KEY, algorithm='HS256')
-
-    @classmethod
-    def _decode(cls, token):
-        """
-        Performs a low-level validation of the given token and returns its
-        payload dictionary.
-
-        The amount of validation that occurs may vary depending on the token
-        library that is used.  The Python JOSE library doesn't require token
-        expiry.  We check for that at a higher level in the `__init__` method
-        of this class.
-        """
-        try:
-            return jwt.decode(token, api_settings.SECRET_KEY, algorithms=['HS256'])
-        except JOSEError:
-            raise TokenError(_('Token is invalid or expired.'))
