@@ -28,7 +28,10 @@ class TestToken(TestCase):
         )
 
         self.token = Token()
-        self.token['exp'] = datetime(year=2000, month=1, day=1)
+        self.token.update_expiration(
+            from_time=datetime(year=2000, month=1, day=1),
+            lifetime=timedelta(seconds=0),
+        )
 
     def test_init(self):
         # Should work with no arguments
