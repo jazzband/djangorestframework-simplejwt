@@ -9,7 +9,9 @@ from mock import patch
 from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.settings import api_settings
 from rest_framework_simplejwt.state import User
-from rest_framework_simplejwt.tokens import Token
+from rest_framework_simplejwt.tokens import (
+    AccessToken, RefreshToken, SlidingToken, Token,
+)
 from rest_framework_simplejwt.utils import datetime_to_epoch
 
 from .utils import override_api_settings
@@ -164,22 +166,20 @@ class TestToken(TestCase):
         self.assertIn('exp', self.token)
 
     def test_set_exp(self):
-        now = datetime.utcnow()
+        now = datetime(year=2000, month=1, day=1)
+
         token = MyToken()
+        token.current_time = now
 
-        # By default, should add 'exp' claim to token using utcnow and the
-        # TOKEN_LIFETIME setting
-        with patch('rest_framework_simplejwt.tokens.datetime') as fake_datetime:
-            fake_datetime.utcnow.return_value = now
-            token.set_exp()
-
-        self.assertIn('exp', token)
-        self.assertEqual(token['exp'], datetime_to_epoch(now + api_settings.SLIDING_TOKEN_LIFETIME))
+        # By default, should add 'exp' claim to token using `self.current_time`
+        # and the TOKEN_LIFETIME setting
+        token.set_exp()
+        self.assertEqual(token['exp'], datetime_to_epoch(now + MyToken.lifetime))
 
         # Should allow overriding of beginning time, lifetime, and claim name
-        token.set_exp(claim='refresh_exp', from_time=now, lifetime=api_settings.SLIDING_TOKEN_REFRESH_LIFETIME)
+        token.set_exp(claim='refresh_exp', from_time=now, lifetime=timedelta(days=1))
         self.assertIn('refresh_exp', token)
-        self.assertEqual(token['refresh_exp'], datetime_to_epoch(now + api_settings.SLIDING_TOKEN_REFRESH_LIFETIME))
+        self.assertEqual(token['refresh_exp'], datetime_to_epoch(now + timedelta(days=1)))
 
     def test_check_exp(self):
         token = MyToken()
@@ -194,7 +194,7 @@ class TestToken(TestCase):
 
         token.set_exp(lifetime=lifetime)
 
-        # By default, checks 'exp' claim against self.current_time.  Should
+        # By default, checks 'exp' claim against `self.current_time`.  Should
         # raise an exception if claim has expired.
         token.current_time = exp
         with self.assertRaises(TokenError):
@@ -246,3 +246,29 @@ class TestToken(TestCase):
             token = MyToken.for_user(user)
 
         self.assertEqual(token[api_settings.USER_ID_CLAIM], username)
+
+
+class TestSlidingToken(TestCase):
+    def test_init(self):
+        # Should set sliding refresh claim and token type claim
+        token = SlidingToken()
+
+        self.assertEqual(
+            token[api_settings.SLIDING_REFRESH_EXP_CLAIM],
+            datetime_to_epoch(token.current_time + api_settings.SLIDING_TOKEN_REFRESH_LIFETIME),
+        )
+        self.assertEqual(token[api_settings.TOKEN_TYPE_CLAIM], 'sliding')
+
+
+class TestAccessToken(TestCase):
+    def test_init(self):
+        # Should set token type claim
+        token = AccessToken()
+        self.assertEqual(token[api_settings.TOKEN_TYPE_CLAIM], 'access')
+
+
+class TestRefreshToken(TestCase):
+    def test_init(self):
+        # Should set token type claim
+        token = RefreshToken()
+        self.assertEqual(token[api_settings.TOKEN_TYPE_CLAIM], 'refresh')
