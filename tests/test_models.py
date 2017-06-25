@@ -4,12 +4,12 @@ from django.test import TestCase
 from django.utils import six
 from rest_framework_simplejwt.models import TokenUser
 from rest_framework_simplejwt.settings import api_settings
-from rest_framework_simplejwt.state import Token
+from rest_framework_simplejwt.state import AuthToken
 
 
 class TestTokenUser(TestCase):
     def setUp(self):
-        self.token = Token()
+        self.token = AuthToken()
         self.token[api_settings.USER_ID_CLAIM] = 42
         self.token['some_other_stuff'] = 'arstarst'
 

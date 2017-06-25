@@ -8,7 +8,7 @@ from rest_framework.exceptions import AuthenticationFailed
 from .exceptions import TokenError
 from .models import TokenUser
 from .settings import api_settings
-from .state import User, Token
+from .state import User, AuthToken
 
 AUTH_HEADER_TYPE_BYTES = api_settings.AUTH_HEADER_TYPE.encode(HTTP_HEADER_ENCODING)
 
@@ -75,7 +75,7 @@ class JWTAuthentication(authentication.BaseAuthentication):
         wrapper object.
         """
         try:
-            return Token(raw_token)
+            return AuthToken(raw_token)
         except TokenError as e:
             raise AuthenticationFailed(e.args[0])
 

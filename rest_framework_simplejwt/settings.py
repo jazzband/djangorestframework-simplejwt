@@ -27,13 +27,13 @@ DEFAULTS = {
     # Undocumented settings.  Changing these may lead to unexpected behavior.
     # Make sure you know what you're doing.  These might become part of the
     # public API eventually but that would require some adjustments.
-    'TOKEN_CLASS': 'rest_framework_simplejwt.tokens.SlidingToken',
+    'AUTH_TOKEN_CLASS': 'rest_framework_simplejwt.tokens.SlidingToken',
     'TOKEN_BACKEND_CLASS': 'rest_framework_simplejwt.backends.PythonJOSEBackend',
     'ALGORITHM': 'HS256',
 }
 
 IMPORT_STRING_SETTINGS = (
-    'TOKEN_CLASS',
+    'AUTH_TOKEN_CLASS',
     'TOKEN_BACKEND_CLASS',
 )
 
