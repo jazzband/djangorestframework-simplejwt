@@ -2,7 +2,6 @@ from datetime import datetime
 from unittest import TestCase
 
 from django.utils import six
-
 from rest_framework_simplejwt.utils import datetime_to_epoch, format_lazy
 
 

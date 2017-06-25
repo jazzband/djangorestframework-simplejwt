@@ -10,7 +10,7 @@ from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.settings import api_settings
 from rest_framework_simplejwt.state import User
 from rest_framework_simplejwt.tokens import (
-    AccessToken, RefreshToken, SlidingToken, Token,
+    AccessToken, RefreshToken, SlidingToken, Token
 )
 from rest_framework_simplejwt.utils import datetime_to_epoch
 
