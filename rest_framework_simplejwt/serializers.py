@@ -6,6 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 
 from .exceptions import TokenError
+from .settings import api_settings
 from .state import User
 from .tokens import (
     AccessToken, RefreshToken, SlidingToken
@@ -79,7 +80,7 @@ class TokenRefreshSlidingSerializer(serializers.Serializer):
             token = SlidingToken(attrs['token'])
             # Check that the timestamp in the "refresh_exp" claim has not
             # passed
-            token.check_exp('refresh_exp')
+            token.check_exp(api_settings.SLIDING_REFRESH_EXP_CLAIM)
         except TokenError as e:
             raise serializers.ValidationError(e.args[0])
 
