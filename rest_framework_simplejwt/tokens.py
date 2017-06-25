@@ -18,25 +18,27 @@ class Token(object):
     """
     def __init__(self, token=None):
         """
-        !!!!!!!!!!!!!!!!!!!!!!!!!!!! IMPORTANT !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        MUST raise a TokenError with a user-facing error message if the given
-        token is invalid, expired, or otherwise not safe to use.
-        !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        !!!! IMPORTANT !!!! MUST raise a TokenError with a user-facing error
+        message if the given token is invalid, expired, or otherwise not safe
+        to use.
         """
         self.token = token
 
+        # Set up token
         if token is not None:
+            # An encoded token was provided
             from .state import token_backend
 
+            # Ensure token and signature are valid
             try:
                 self.payload = token_backend.decode(token)
             except TokenBackendError:
                 raise TokenError(_('Token is invalid or expired.'))
 
-            # According to RFC 7519, the 'exp' claim is OPTIONAL:
-            # https://tools.ietf.org/html/rfc7519#section-4.1.4
-            # As a more sensible default behavior for tokens used for
-            # authorization, we require expiry.
+            # According to RFC 7519, the "exp" claim is OPTIONAL
+            # (https://tools.ietf.org/html/rfc7519#section-4.1.4).  As a more
+            # correct behavior for authorization tokens, we require an "exp"
+            # claim.  We don't want any zombie tokens walking around.
             self.check_exp()
         else:
             self.payload = {}
