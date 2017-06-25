@@ -10,7 +10,7 @@ from rest_framework.test import APIRequestFactory
 from rest_framework_simplejwt import authentication
 from rest_framework_simplejwt.models import TokenUser
 from rest_framework_simplejwt.settings import api_settings
-from rest_framework_simplejwt.tokens import SlidingToken
+from rest_framework_simplejwt.state import AuthToken
 
 from .utils import override_api_settings
 
@@ -57,7 +57,7 @@ class TestJWTAuthentication(TestCase):
 
     def test_get_validated_token(self):
         # Should raise AuthenticationFailed if token not valid
-        token = SlidingToken()
+        token = AuthToken()
         token.set_exp(lifetime=-timedelta(days=1))
         with self.assertRaises(AuthenticationFailed):
             self.backend.get_validated_token(str(token))

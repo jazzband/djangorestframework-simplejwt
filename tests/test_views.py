@@ -2,16 +2,14 @@ from __future__ import unicode_literals
 
 from datetime import datetime, timedelta
 
-from django.contrib.auth import get_user_model
 from rest_framework_simplejwt.settings import api_settings
+from rest_framework_simplejwt.state import User
 from rest_framework_simplejwt.tokens import SlidingToken
 
 from .utils import APIViewTestCase
 
-User = get_user_model()
 
-
-class TestTokenObtainView(APIViewTestCase):
+class TestTokenObtainSlidingView(APIViewTestCase):
     view_name = 'token_obtain_sliding'
 
     def setUp(self):
@@ -65,7 +63,7 @@ class TestTokenObtainView(APIViewTestCase):
         self.assertIn('token', res.data)
 
 
-class TestTokenRefreshView(APIViewTestCase):
+class TestTokenRefreshSlidingView(APIViewTestCase):
     view_name = 'token_refresh_sliding'
 
     def setUp(self):
