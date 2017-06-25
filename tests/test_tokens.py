@@ -272,3 +272,20 @@ class TestRefreshToken(TestCase):
         # Should set token type claim
         token = RefreshToken()
         self.assertEqual(token[api_settings.TOKEN_TYPE_CLAIM], 'refresh')
+
+    def test_access_token(self):
+        # Should create an access token from a refresh token
+        refresh = RefreshToken()
+        refresh['test_claim'] = 'arst'
+
+        access = refresh.access_token
+
+        self.assertIsInstance(access, AccessToken)
+        self.assertEqual(access[api_settings.TOKEN_TYPE_CLAIM], 'access')
+
+        # Should keep all copyable claims from refresh token
+        self.assertEqual(refresh['test_claim'], access['test_claim'])
+
+        # Should not copy certain claims from refresh token
+        for claim in RefreshToken.no_copy_claims:
+            self.assertNotEqual(refresh[claim], access[claim])

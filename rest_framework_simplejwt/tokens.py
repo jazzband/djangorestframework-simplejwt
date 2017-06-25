@@ -154,6 +154,24 @@ class SlidingToken(Token):
 class RefreshToken(Token):
     token_type = 'refresh'
     lifetime = api_settings.REFRESH_TOKEN_LIFETIME
+    no_copy_claims = (api_settings.TOKEN_TYPE_CLAIM, 'exp')
+
+    @property
+    def access_token(self):
+        """
+        Returns an access token created from this refresh token.  Copies all
+        claims present in this refresh token to the new access token except
+        those claims listed in the `no_copy_claims` attribute.
+        """
+        access = AccessToken()
+
+        no_copy = self.no_copy_claims
+        for claim, value in self.payload.items():
+            if claim in no_copy:
+                continue
+            access[claim] = value
+
+        return access
 
 
 class AccessToken(Token):
