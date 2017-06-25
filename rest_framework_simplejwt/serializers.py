@@ -92,7 +92,7 @@ class TokenRefreshSlidingSerializer(serializers.Serializer):
             token = SlidingToken(attrs['token'])
             # Check that the timestamp in the "refresh_exp" claim has not
             # passed
-            token.check_exp(api_settings.SLIDING_REFRESH_EXP_CLAIM)
+            token.check_exp(api_settings.SLIDING_TOKEN_REFRESH_EXP_CLAIM)
         except TokenError as e:
             raise serializers.ValidationError(e.args[0])
 

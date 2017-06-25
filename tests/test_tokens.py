@@ -254,7 +254,7 @@ class TestSlidingToken(TestCase):
         token = SlidingToken()
 
         self.assertEqual(
-            token[api_settings.SLIDING_REFRESH_EXP_CLAIM],
+            token[api_settings.SLIDING_TOKEN_REFRESH_EXP_CLAIM],
             datetime_to_epoch(token.current_time + api_settings.SLIDING_TOKEN_REFRESH_LIFETIME),
         )
         self.assertEqual(token[api_settings.TOKEN_TYPE_CLAIM], 'sliding')

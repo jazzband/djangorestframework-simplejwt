@@ -14,7 +14,7 @@ DEFAULTS = {
 
     'USER_ID_CLAIM': 'user_id',
     'TOKEN_TYPE_CLAIM': 'token_type',
-    'SLIDING_REFRESH_EXP_CLAIM': 'refresh_exp',
+    'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
 
     'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),

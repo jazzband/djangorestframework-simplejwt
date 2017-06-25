@@ -145,7 +145,7 @@ class SlidingToken(Token):
         if self.token is None:
             # Set sliding refresh expiration claim if new token
             self.set_exp(
-                api_settings.SLIDING_REFRESH_EXP_CLAIM,
+                api_settings.SLIDING_TOKEN_REFRESH_EXP_CLAIM,
                 from_time=self.current_time,
                 lifetime=api_settings.SLIDING_TOKEN_REFRESH_LIFETIME,
             )
