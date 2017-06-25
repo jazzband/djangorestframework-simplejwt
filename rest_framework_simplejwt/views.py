@@ -22,8 +22,8 @@ class TokenViewBase(generics.GenericAPIView):
 
 class TokenObtainSlidingView(TokenViewBase):
     """
-    Takes a set of user credentials and returns a JSON web token to prove the
-    authentication of those credentials.
+    Takes a set of user credentials and returns a sliding JSON web token to
+    prove the authentication of those credentials.
     """
     serializer_class = serializers.TokenObtainSlidingSerializer
 
@@ -32,8 +32,8 @@ token_obtain_sliding = TokenObtainSlidingView.as_view()
 
 class TokenRefreshSlidingView(TokenViewBase):
     """
-    Takes a JSON web token and returns a new, refreshed version if the token's
-    refresh period has not expired.
+    Takes a sliding JSON web token and returns a new, refreshed version if the
+    token's refresh period has not expired.
     """
     serializer_class = serializers.TokenRefreshSlidingSerializer
 
