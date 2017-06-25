@@ -33,7 +33,7 @@ class Token(object):
             try:
                 self.payload = token_backend.decode(token)
             except TokenBackendError:
-                raise TokenError(_('Token is invalid or expired.'))
+                raise TokenError(_('Token is invalid or expired'))
 
             # According to RFC 7519, the "exp" claim is OPTIONAL
             # (https://tools.ietf.org/html/rfc7519#section-4.1.4).  As a more
@@ -87,11 +87,11 @@ class Token(object):
         try:
             claim_value = self.payload[claim]
         except KeyError:
-            raise TokenError(format_lazy(_('Token has no \'{}\' claim.'), claim))
+            raise TokenError(format_lazy(_("Token has no '{}' claim"), claim))
 
         claim_time = datetime.utcfromtimestamp(claim_value)
         if claim_time < current_time:
-            raise TokenError(format_lazy(_('Token \'{}\' claim has expired.'), claim))
+            raise TokenError(format_lazy(_("Token '{}' claim has expired"), claim))
 
     @classmethod
     def for_user(cls, user):
