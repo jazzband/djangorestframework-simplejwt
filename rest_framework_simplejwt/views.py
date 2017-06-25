@@ -20,21 +20,21 @@ class TokenViewBase(generics.GenericAPIView):
         return Response(serializer.validated_data, status=status.HTTP_200_OK)
 
 
-class TokenObtainView(TokenViewBase):
+class TokenObtainSlidingView(TokenViewBase):
     """
     Takes a set of user credentials and returns a JSON web token to prove the
     authentication of those credentials.
     """
     serializer_class = serializers.TokenObtainSlidingSerializer
 
-token_obtain = TokenObtainView.as_view()
+token_obtain_sliding = TokenObtainSlidingView.as_view()
 
 
-class TokenRefreshView(TokenViewBase):
+class TokenRefreshSlidingView(TokenViewBase):
     """
     Takes a JSON web token and returns a new, refreshed version if the token's
     refresh period has not expired.
     """
     serializer_class = serializers.TokenRefreshSlidingSerializer
 
-token_refresh = TokenRefreshView.as_view()
+token_refresh_sliding = TokenRefreshSlidingView.as_view()

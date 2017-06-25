@@ -27,7 +27,7 @@ class TestTestView(APIViewTestCase):
 
     def test_wrong_auth_type(self):
         res = self.client.post(
-            reverse('rest_framework_simplejwt:token_obtain'),
+            reverse('token_obtain_sliding'),
             data={
                 User.USERNAME_FIELD: self.username,
                 'password': self.password,
@@ -44,7 +44,7 @@ class TestTestView(APIViewTestCase):
 
     def test_user_can_get_token_and_use_it(self):
         res = self.client.post(
-            reverse('rest_framework_simplejwt:token_obtain'),
+            reverse('token_obtain_sliding'),
             data={
                 User.USERNAME_FIELD: self.username,
                 'password': self.password,

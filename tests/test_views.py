@@ -12,7 +12,7 @@ User = get_user_model()
 
 
 class TestTokenObtainView(APIViewTestCase):
-    view_name = 'rest_framework_simplejwt:token_obtain'
+    view_name = 'token_obtain_sliding'
 
     def setUp(self):
         self.username = 'test_user'
@@ -66,7 +66,7 @@ class TestTokenObtainView(APIViewTestCase):
 
 
 class TestTokenRefreshView(APIViewTestCase):
-    view_name = 'rest_framework_simplejwt:token_refresh'
+    view_name = 'token_refresh_sliding'
 
     def setUp(self):
         self.username = 'test_user'
