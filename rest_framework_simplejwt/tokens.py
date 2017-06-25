@@ -52,6 +52,9 @@ class Token(object):
     def __setitem__(self, key, value):
         self.payload[key] = value
 
+    def __delitem__(self, key):
+        del self.payload[key]
+
     def __contains__(self, key):
         return key in self.payload
 

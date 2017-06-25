@@ -91,6 +91,13 @@ class TestToken(TestCase):
         self.token['test'] = 1234
         self.assertEqual(self.token.payload['test'], 1234)
 
+    def test_delitem(self):
+        self.token['test'] = 1234
+        self.assertEqual(self.token.payload['test'], 1234)
+
+        del self.token['test']
+        self.assertNotIn('test', self.token)
+
     def test_contains(self):
         self.assertIn('exp', self.token)
 
