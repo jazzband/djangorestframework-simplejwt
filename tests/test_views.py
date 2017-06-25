@@ -3,9 +3,8 @@ from __future__ import unicode_literals
 from datetime import datetime, timedelta
 
 from django.contrib.auth import get_user_model
-from jose import jwt
 from rest_framework_simplejwt.settings import api_settings
-from rest_framework_simplejwt.utils import datetime_to_epoch
+from rest_framework_simplejwt.tokens import SlidingToken
 
 from .utils import APIViewTestCase
 
@@ -84,66 +83,52 @@ class TestTokenRefreshView(APIViewTestCase):
         self.assertIn('token', res.data)
 
     def test_it_should_return_400_if_token_invalid(self):
-        payload = {'foo': 'bar'}
-        token = jwt.encode(payload, api_settings.SECRET_KEY, algorithm='HS256')
+        token = SlidingToken()
+        del token['exp']
 
-        res = self.view_post(data={'token': token})
+        res = self.view_post(data={'token': str(token)})
         self.assertEqual(res.status_code, 400)
         self.assertIn('non_field_errors', res.data)
         self.assertIn("has no 'exp' claim", res.data['non_field_errors'][0])
 
-        payload['exp'] = datetime.utcnow() - timedelta(days=1)
-        token = jwt.encode(payload, api_settings.SECRET_KEY, algorithm='HS256')
+        token.set_exp(lifetime=-timedelta(seconds=1))
 
-        res = self.view_post(data={'token': token})
+        res = self.view_post(data={'token': str(token)})
         self.assertEqual(res.status_code, 400)
         self.assertIn('non_field_errors', res.data)
         self.assertIn('invalid or expired', res.data['non_field_errors'][0])
 
     def test_it_should_return_400_if_token_has_no_refresh_exp_claim(self):
-        payload = {
-            'foo': 'bar',
-            'exp': datetime.utcnow() + timedelta(days=1),
-        }
-        token = jwt.encode(payload, api_settings.SECRET_KEY, algorithm='HS256')
+        token = SlidingToken()
+        del token[api_settings.SLIDING_REFRESH_EXP_CLAIM]
 
-        res = self.view_post(data={'token': token})
+        res = self.view_post(data={'token': str(token)})
         self.assertEqual(res.status_code, 400)
         self.assertIn('non_field_errors', res.data)
-        self.assertIn('has no \'refresh_exp\' claim', res.data['non_field_errors'][0])
+        self.assertIn("has no '{}' claim".format(api_settings.SLIDING_REFRESH_EXP_CLAIM), res.data['non_field_errors'][0])
 
     def test_it_should_return_400_if_token_has_refresh_period_expired(self):
-        payload = {
-            'foo': 'bar',
-            'exp': datetime.utcnow() + timedelta(days=1),
-            'refresh_exp': datetime_to_epoch(datetime.utcnow() - timedelta(days=1)),
-        }
-        token = jwt.encode(payload, api_settings.SECRET_KEY, algorithm='HS256')
+        token = SlidingToken()
+        token.set_exp(api_settings.SLIDING_REFRESH_EXP_CLAIM, lifetime=-timedelta(seconds=1))
 
-        res = self.view_post(data={'token': token})
+        res = self.view_post(data={'token': str(token)})
         self.assertEqual(res.status_code, 400)
         self.assertIn('non_field_errors', res.data)
-        self.assertIn('\'refresh_exp\' claim has expired', res.data['non_field_errors'][0])
+        self.assertIn("'{}' claim has expired".format(api_settings.SLIDING_REFRESH_EXP_CLAIM), res.data['non_field_errors'][0])
 
     def test_it_should_update_token_exp_claim_if_everything_ok(self):
         now = datetime.utcnow()
 
-        exp = now + timedelta(seconds=10)
-        refresh_exp = now + timedelta(days=1)
-
-        payload = {
-            'foo': 'bar',
-            'exp': exp,
-            'refresh_exp': datetime_to_epoch(refresh_exp),
-        }
-        token = jwt.encode(payload, api_settings.SECRET_KEY, algorithm='HS256')
+        token = SlidingToken()
+        exp = now + api_settings.SLIDING_TOKEN_LIFETIME - timedelta(seconds=1)
+        token.set_exp(from_time=now, lifetime=api_settings.SLIDING_TOKEN_LIFETIME - timedelta(seconds=1))
 
         # View returns 200
-        res = self.view_post(data={'token': token})
+        res = self.view_post(data={'token': str(token)})
         self.assertEqual(res.status_code, 200)
 
         # Expiration claim has moved into future
-        new_token = jwt.decode(res.data['token'], api_settings.SECRET_KEY, algorithms=['HS256'])
+        new_token = SlidingToken(res.data['token'])
         new_exp = datetime.utcfromtimestamp(new_token['exp'])
 
         self.assertTrue(exp < new_exp)

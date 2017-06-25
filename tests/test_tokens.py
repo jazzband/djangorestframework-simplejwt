@@ -2,55 +2,99 @@ from __future__ import unicode_literals
 
 from datetime import datetime, timedelta
 
-from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.utils.six import text_type
 from jose import jwt
 from mock import patch
 from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.settings import api_settings
+from rest_framework_simplejwt.state import User
 from rest_framework_simplejwt.tokens import Token
 from rest_framework_simplejwt.utils import datetime_to_epoch
 
 from .utils import override_api_settings
 
-User = get_user_model()
+
+class MyToken(Token):
+    token_type = 'test'
+    lifetime = timedelta(days=1)
 
 
 class TestToken(TestCase):
     def setUp(self):
-        self.username = 'test_user'
-        self.password = 'test_password'
-
-        self.user = User.objects.create_user(
-            username=self.username,
-            password=self.password,
-        )
-
-        self.token = Token()
+        self.token = MyToken()
         self.token.set_exp(
             from_time=datetime(year=2000, month=1, day=1),
             lifetime=timedelta(seconds=0),
         )
 
-    def test_init(self):
-        # Should work with no arguments
-        t = Token()
-        self.assertTrue(len(t.payload) == 0)
+    def test_init_no_token_type_or_lifetime(self):
+        class MyTestToken(Token):
+            pass
 
-        # No expiry tokens should cause exception
+        with self.assertRaises(TokenError):
+            MyTestToken()
+
+        MyTestToken.token_type = 'test'
+
+        with self.assertRaises(TokenError):
+            MyTestToken()
+
+        del MyTestToken.token_type
+        MyTestToken.lifetime = timedelta(days=1)
+
+        with self.assertRaises(TokenError):
+            MyTestToken()
+
+        MyTestToken.token_type = 'test'
+        MyTestToken()
+
+    def test_init_no_encoded_token_given(self):
+        now = datetime(year=2000, month=1, day=1)
+
+        with patch('rest_framework_simplejwt.tokens.datetime') as fake_datetime:
+            fake_datetime.utcnow.return_value = now
+            t = MyToken()
+
+        self.assertEqual(t.current_time, now)
+        self.assertIsNone(t.token)
+
+        self.assertEqual(len(t.payload), 2)
+        self.assertEqual(t.payload['exp'], datetime_to_epoch(now + MyToken.lifetime))
+        self.assertEqual(t.payload[api_settings.TOKEN_TYPE_CLAIM], MyToken.token_type)
+
+    def test_init_encoded_token_given(self):
+        # Test successful instantiation
+        original_now = datetime.utcnow()
+
+        with patch('rest_framework_simplejwt.tokens.datetime') as fake_datetime:
+            fake_datetime.utcnow.return_value = original_now
+            good_token = MyToken()
+
+        good_token['some_value'] = 'arst'
+        encoded_good_token = str(good_token)
+
+        now = datetime.utcnow()
+
+        # Create new token from encoded token
+        utcfromtimestamp = datetime.utcfromtimestamp
+        with patch('rest_framework_simplejwt.tokens.datetime') as fake_datetime:
+            fake_datetime.utcnow.return_value = now
+            fake_datetime.utcfromtimestamp = utcfromtimestamp
+            # Should raise no exception
+            t = MyToken(encoded_good_token)
+
+        # Should have expected properties
+        self.assertEqual(t.current_time, now)
+        self.assertEqual(t.token, encoded_good_token)
+
+        self.assertEqual(len(t.payload), 3)
+        self.assertEqual(t['some_value'], 'arst')
+        self.assertEqual(t['exp'], datetime_to_epoch(original_now + MyToken.lifetime))
+        self.assertEqual(t[api_settings.TOKEN_TYPE_CLAIM], MyToken.token_type)
+
+        # Test backend rejects encoded token (expired or bad signature)
         payload = {'foo': 'bar'}
-        no_exp_token = jwt.encode(payload, api_settings.SECRET_KEY, algorithm='HS256')
-        with self.assertRaises(TokenError):
-            Token(no_exp_token)
-
-        # Expired tokens should cause exception
-        payload['exp'] = datetime.utcnow() - timedelta(seconds=1)
-        expired_token = jwt.encode(payload, api_settings.SECRET_KEY, algorithm='HS256')
-        with self.assertRaises(TokenError):
-            Token(expired_token)
-
-        # Token with invalid signature should cause exception
         payload['exp'] = datetime.utcnow() + timedelta(days=1)
         token = jwt.encode(payload, api_settings.SECRET_KEY, algorithm='HS256')
         payload['foo'] = 'baz'
@@ -61,12 +105,28 @@ class TestToken(TestCase):
         invalid_token = incorrect_payload + '.' + correct_sig
 
         with self.assertRaises(TokenError):
-            Token(invalid_token)
+            t = MyToken(invalid_token)
 
-        # Otherwise, should accept good token
-        t = Token(other_token)
-        self.assertEqual(t.token, other_token)
-        self.assertEqual(t.payload, payload)
+        # Test encoded token has expired
+        t = MyToken()
+        t.set_exp(lifetime=-timedelta(seconds=1))
+
+        with self.assertRaises(TokenError):
+            MyToken(str(t))
+
+        # Test encoded token has no token type
+        t = MyToken()
+        del t[api_settings.TOKEN_TYPE_CLAIM]
+
+        with self.assertRaises(TokenError):
+            MyToken(str(t))
+
+        # Test encoded token has no wrong type
+        t = MyToken()
+        t[api_settings.TOKEN_TYPE_CLAIM] = 'wrong_type'
+
+        with self.assertRaises(TokenError):
+            MyToken(str(t))
 
     def test_str(self):
         # Should encode the given token
@@ -76,8 +136,7 @@ class TestToken(TestCase):
         self.assertIn(
             encoded_token,
             (
-                'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjk0NjY4NDgwMH0.VKoOnMgmETawjDZwxrQaHG0xHdo6xBodFy6FXJzTVxs',
-                'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjk0NjY4NDgwMH0.iqxxOHV63sjeqNR1GDxX3LPvMymfVB76sOIDqTbjAgk',
+                'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoidGVzdCIsImV4cCI6OTQ2Njg0ODAwfQ.pmyTEE6MqAUVhTUsXSIMhXnKtwhIXHeh6DTuQ5CfsFk',
             ),
         )
 
@@ -101,9 +160,9 @@ class TestToken(TestCase):
     def test_contains(self):
         self.assertIn('exp', self.token)
 
-    def test_update_expiration(self):
+    def test_set_exp(self):
         now = datetime.utcnow()
-        token = Token()
+        token = MyToken()
 
         # By default, should add 'exp' claim to token using utcnow and the
         # TOKEN_LIFETIME setting
@@ -112,64 +171,75 @@ class TestToken(TestCase):
             token.set_exp()
 
         self.assertIn('exp', token)
-        self.assertEqual(token['exp'], datetime_to_epoch(now + api_settings.TOKEN_LIFETIME))
+        self.assertEqual(token['exp'], datetime_to_epoch(now + api_settings.SLIDING_TOKEN_LIFETIME))
 
         # Should allow overriding of beginning time, lifetime, and claim name
-        token.set_exp(claim='refresh_exp', from_time=now, lifetime=api_settings.TOKEN_REFRESH_LIFETIME)
+        token.set_exp(claim='refresh_exp', from_time=now, lifetime=api_settings.SLIDING_TOKEN_REFRESH_LIFETIME)
         self.assertIn('refresh_exp', token)
-        self.assertEqual(token['refresh_exp'], datetime_to_epoch(now + api_settings.TOKEN_REFRESH_LIFETIME))
+        self.assertEqual(token['refresh_exp'], datetime_to_epoch(now + api_settings.SLIDING_TOKEN_REFRESH_LIFETIME))
 
-    def test_check_expiration(self):
-        token = Token()
+    def test_check_exp(self):
+        token = MyToken()
 
         # Should raise an exception if no claim of given kind
         with self.assertRaises(TokenError):
-            token.check_exp()
+            token.check_exp('non_existent_claim')
+
+        current_time = token.current_time
+        lifetime = timedelta(days=1)
+        exp = token.current_time + lifetime
+
+        token.set_exp(lifetime=lifetime)
+
+        # By default, checks 'exp' claim against self.current_time.  Should
+        # raise an exception if claim has expired.
+        token.current_time = exp
         with self.assertRaises(TokenError):
-            token.check_exp('some_other_claim')
+            token.check_exp()
 
-        now = datetime.utcnow()
-        token.set_exp(from_time=now, lifetime=timedelta(seconds=0))
-
-        # By default, checks 'exp' claim against utcnow.  Should raise an
-        # exception if claim has expired.
-        utcfromtimestamp = datetime.utcfromtimestamp
-        with patch('rest_framework_simplejwt.tokens.datetime') as fake_datetime:
-            fake_datetime.utcfromtimestamp = utcfromtimestamp
-            fake_datetime.utcnow.return_value = now + timedelta(seconds=10)
-
-            with self.assertRaises(TokenError):
-                token.check_exp()
+        token.current_time = exp + timedelta(seconds=1)
+        with self.assertRaises(TokenError):
+            token.check_exp()
 
         # Otherwise, should raise no exception
-        token.set_exp(from_time=now, lifetime=timedelta(days=1))
+        token.current_time = current_time
         token.check_exp()
 
         # Should allow specification of claim to be examined and timestamp to
         # compare against
-        token.set_exp('refresh_exp', from_time=now, lifetime=timedelta(days=1))
-        token.check_exp('refresh_exp')
+
+        # Default claim
         with self.assertRaises(TokenError):
-            token.check_exp('refresh_exp', current_time=now + timedelta(days=2))
+            token.check_exp(current_time=exp)
+
+        token.set_exp('refresh_exp', lifetime=timedelta(days=1))
+
+        # Default timestamp
+        token.check_exp('refresh_exp')
+
+        # Given claim and timestamp
+        with self.assertRaises(TokenError):
+            token.check_exp('refresh_exp', current_time=current_time + timedelta(days=1))
+        with self.assertRaises(TokenError):
+            token.check_exp('refresh_exp', current_time=current_time + timedelta(days=2))
 
     def test_for_user(self):
-        # Should return an authorization token for the given user
-        token = Token.for_user(self.user)
+        username = 'test_user'
+        user = User.objects.create_user(
+            username=username,
+            password='test_password',
+        )
 
-        user_id = getattr(self.user, api_settings.USER_ID_FIELD)
+        token = MyToken.for_user(user)
+
+        user_id = getattr(user, api_settings.USER_ID_FIELD)
         if not isinstance(user_id, int):
             user_id = text_type(user_id)
 
         self.assertEqual(token[api_settings.USER_ID_CLAIM], user_id)
 
-        self.assertIn('exp', token)
-        self.assertTrue(isinstance(token['exp'], int))
-
-        self.assertIn('refresh_exp', token)
-        self.assertTrue(isinstance(token['refresh_exp'], int))
-
         # Test with non-int user id
         with override_api_settings(USER_ID_FIELD='username'):
-            token = Token.for_user(self.user)
+            token = MyToken.for_user(user)
 
-        self.assertEqual(token[api_settings.USER_ID_CLAIM], self.username)
+        self.assertEqual(token[api_settings.USER_ID_CLAIM], username)

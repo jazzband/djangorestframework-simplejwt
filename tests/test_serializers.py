@@ -2,16 +2,13 @@ from __future__ import unicode_literals
 
 from datetime import datetime, timedelta
 
-from django.contrib.auth import get_user_model
 from django.test import TestCase
-from jose import jwt
 from rest_framework_simplejwt.serializers import (
     TokenObtainSerializer, TokenRefreshSerializer
 )
 from rest_framework_simplejwt.settings import api_settings
-from rest_framework_simplejwt.utils import datetime_to_epoch
-
-User = get_user_model()
+from rest_framework_simplejwt.state import User
+from rest_framework_simplejwt.tokens import SlidingToken
 
 
 class TestTokenObtainSerializer(TestCase):
@@ -75,66 +72,53 @@ class TestTokenObtainSerializer(TestCase):
 
 class TestTokenRefreshSerializer(TestCase):
     def test_it_should_not_validate_if_token_invalid(self):
-        payload = {'foo': 'bar'}
-        token = jwt.encode(payload, api_settings.SECRET_KEY, algorithm='HS256')
+        token = SlidingToken()
+        del token['exp']
 
-        s = TokenRefreshSerializer(data={'token': token})
+        s = TokenRefreshSerializer(data={'token': str(token)})
         self.assertFalse(s.is_valid())
         self.assertIn('non_field_errors', s.errors)
         self.assertIn("has no 'exp' claim", s.errors['non_field_errors'][0])
 
-        payload['exp'] = datetime.utcnow() - timedelta(days=1)
-        token = jwt.encode(payload, api_settings.SECRET_KEY, algorithm='HS256')
+        token.set_exp(lifetime=-timedelta(days=1))
 
-        s = TokenRefreshSerializer(data={'token': token})
+        s = TokenRefreshSerializer(data={'token': str(token)})
         self.assertFalse(s.is_valid())
         self.assertIn('non_field_errors', s.errors)
         self.assertIn('invalid or expired', s.errors['non_field_errors'][0])
 
     def test_it_should_not_validate_if_token_has_no_refresh_exp_claim(self):
-        payload = {
-            'foo': 'bar',
-            'exp': datetime.utcnow() + timedelta(days=1),
-        }
-        token = jwt.encode(payload, api_settings.SECRET_KEY, algorithm='HS256')
+        token = SlidingToken()
+        del token[api_settings.SLIDING_REFRESH_EXP_CLAIM]
 
-        s = TokenRefreshSerializer(data={'token': token})
+        s = TokenRefreshSerializer(data={'token': str(token)})
         self.assertFalse(s.is_valid())
         self.assertIn('non_field_errors', s.errors)
-        self.assertIn('has no \'refresh_exp\' claim', s.errors['non_field_errors'][0])
+        self.assertIn("has no '{}' claim".format(api_settings.SLIDING_REFRESH_EXP_CLAIM), s.errors['non_field_errors'][0])
 
     def test_it_should_not_validate_if_token_has_refresh_period_expired(self):
-        payload = {
-            'foo': 'bar',
-            'exp': datetime.utcnow() + timedelta(days=1),
-            'refresh_exp': datetime_to_epoch(datetime.utcnow() - timedelta(days=1)),
-        }
-        token = jwt.encode(payload, api_settings.SECRET_KEY, algorithm='HS256')
+        token = SlidingToken()
+        token.set_exp(api_settings.SLIDING_REFRESH_EXP_CLAIM, lifetime=-timedelta(days=1))
 
-        s = TokenRefreshSerializer(data={'token': token})
+        s = TokenRefreshSerializer(data={'token': str(token)})
         self.assertFalse(s.is_valid())
         self.assertIn('non_field_errors', s.errors)
-        self.assertIn('\'refresh_exp\' claim has expired', s.errors['non_field_errors'][0])
+        self.assertIn("'{}' claim has expired".format(api_settings.SLIDING_REFRESH_EXP_CLAIM), s.errors['non_field_errors'][0])
 
     def test_it_should_update_token_exp_claim_if_everything_ok(self):
-        now = datetime.utcnow()
+        old_token = SlidingToken()
 
-        exp = now + timedelta(seconds=10)
-        refresh_exp = now + timedelta(days=1)
+        lifetime = api_settings.SLIDING_TOKEN_LIFETIME - timedelta(seconds=1)
+        old_exp = old_token.current_time + lifetime
 
-        payload = {
-            'foo': 'bar',
-            'exp': exp,
-            'refresh_exp': datetime_to_epoch(refresh_exp),
-        }
-        token = jwt.encode(payload, api_settings.SECRET_KEY, algorithm='HS256')
+        old_token.set_exp(lifetime=lifetime)
 
         # Serializer validates
-        s = TokenRefreshSerializer(data={'token': token})
+        s = TokenRefreshSerializer(data={'token': str(old_token)})
         self.assertTrue(s.is_valid())
 
         # Expiration claim has moved into future
-        new_token = jwt.decode(s.validated_data['token'], api_settings.SECRET_KEY, algorithms=['HS256'])
+        new_token = SlidingToken(s.validated_data['token'])
         new_exp = datetime.utcfromtimestamp(new_token['exp'])
 
-        self.assertTrue(exp < new_exp)
+        self.assertTrue(old_exp < new_exp)

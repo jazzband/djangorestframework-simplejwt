@@ -16,13 +16,20 @@ class Token(object):
     A class which validates and wraps an existing JWT or can be used to build a
     new JWT.
     """
+    token_type = None
+    lifetime = None
+
     def __init__(self, token=None):
         """
         !!!! IMPORTANT !!!! MUST raise a TokenError with a user-facing error
         message if the given token is invalid, expired, or otherwise not safe
         to use.
         """
+        if self.token_type is None or self.lifetime is None:
+            raise TokenError(_('Cannot create token with no type or lifetime'))
+
         self.token = token
+        self.current_time = datetime.utcnow()
 
         # Set up token
         if token is not None:
@@ -40,8 +47,24 @@ class Token(object):
             # correct behavior for authorization tokens, we require an "exp"
             # claim.  We don't want any zombie tokens walking around.
             self.check_exp()
+
+            # Ensure token type claim is present and has correct value
+            try:
+                token_type = self.payload[api_settings.TOKEN_TYPE_CLAIM]
+            except KeyError:
+                raise TokenError(_('Token has no type'))
+
+            if self.token_type != token_type:
+                raise TokenError(_('Token has wrong type'))
+
         else:
-            self.payload = {}
+            # This is a new token.  Skip all the validation steps.
+            self.payload = {
+                api_settings.TOKEN_TYPE_CLAIM: self.token_type,
+            }
+
+            # Set "exp" claim with default value
+            self.set_exp(from_time=self.current_time, lifetime=self.lifetime)
 
     def __repr__(self):
         return repr(self.payload)
@@ -71,10 +94,10 @@ class Token(object):
         Updates the expiration time of a token.
         """
         if from_time is None:
-            from_time = datetime.utcnow()
+            from_time = self.current_time
 
         if lifetime is None:
-            lifetime = api_settings.TOKEN_LIFETIME
+            lifetime = self.lifetime
 
         self.payload[claim] = datetime_to_epoch(from_time + lifetime)
 
@@ -85,7 +108,7 @@ class Token(object):
         a user-facing error message if so.
         """
         if current_time is None:
-            current_time = datetime.utcnow()
+            current_time = self.current_time
 
         try:
             claim_value = self.payload[claim]
@@ -109,8 +132,30 @@ class Token(object):
         token = cls()
         token[api_settings.USER_ID_CLAIM] = user_id
 
-        now = datetime.utcnow()
-        token.set_exp(from_time=now)
-        token.set_exp('refresh_exp', from_time=now, lifetime=api_settings.TOKEN_REFRESH_LIFETIME)
-
         return token
+
+
+class SlidingToken(Token):
+    token_type = 'sliding'
+    lifetime = api_settings.SLIDING_TOKEN_LIFETIME
+
+    def __init__(self, *args, **kwargs):
+        super(SlidingToken, self).__init__(*args, **kwargs)
+
+        if self.token is None:
+            # Set sliding refresh expiration claim if new token
+            self.set_exp(
+                api_settings.SLIDING_REFRESH_EXP_CLAIM,
+                from_time=self.current_time,
+                lifetime=api_settings.SLIDING_TOKEN_REFRESH_LIFETIME,
+            )
+
+
+class RefreshToken(Token):
+    token_type = 'refresh'
+    lifetime = api_settings.REFRESH_TOKEN_LIFETIME
+
+
+class AccessToken(Token):
+    token_type = 'access'
+    lifetime = api_settings.ACCESS_TOKEN_LIFETIME

@@ -1,7 +1,5 @@
 from __future__ import unicode_literals
 
-from datetime import datetime
-
 from django.contrib.auth import authenticate
 from django.utils.six import text_type
 from django.utils.translation import ugettext_lazy as _
@@ -57,17 +55,15 @@ class TokenRefreshSerializer(serializers.Serializer):
     token = serializers.CharField()
 
     def validate(self, attrs):
-        now = datetime.utcnow()
-
         try:
             token = Token(attrs['token'])
             # Check that the timestamp in the "refresh_exp" claim has not
             # passed
-            token.check_exp('refresh_exp', current_time=now)
+            token.check_exp('refresh_exp')
         except TokenError as e:
             raise serializers.ValidationError(e.args[0])
 
         # Update the "exp" claim
-        token.set_exp(from_time=now)
+        token.set_exp()
 
         return {'token': text_type(token)}

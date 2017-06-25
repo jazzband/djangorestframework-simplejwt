@@ -1,16 +1,16 @@
 from __future__ import unicode_literals
 
-from datetime import datetime, timedelta
+from datetime import timedelta
 
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.utils.six.moves import reload_module
-from jose import jwt
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.test import APIRequestFactory
 from rest_framework_simplejwt import authentication
 from rest_framework_simplejwt.models import TokenUser
 from rest_framework_simplejwt.settings import api_settings
+from rest_framework_simplejwt.tokens import SlidingToken
 
 from .utils import override_api_settings
 
@@ -56,18 +56,15 @@ class TestJWTAuthentication(TestCase):
         self.assertEqual(self.backend.get_raw_token(self.fake_header), self.fake_token)
 
     def test_get_validated_token(self):
-        payload = {'foo': 'bar'}
-
         # Should raise AuthenticationFailed if token not valid
-        payload['exp'] = datetime.utcnow() - timedelta(days=1)
-        bad_token = jwt.encode(payload, api_settings.SECRET_KEY, algorithm='HS256')
+        token = SlidingToken()
+        token.set_exp(lifetime=-timedelta(days=1))
         with self.assertRaises(AuthenticationFailed):
-            self.backend.get_validated_token(bad_token)
+            self.backend.get_validated_token(str(token))
 
         # Otherwise, should return validated token
-        payload['exp'] = datetime.utcnow() + timedelta(days=1)
-        good_token = jwt.encode(payload, api_settings.SECRET_KEY, algorithm='HS256')
-        self.assertEqual(self.backend.get_validated_token(good_token).payload, payload)
+        token.set_exp()
+        self.assertEqual(self.backend.get_validated_token(str(token)).payload, token.payload)
 
     def test_get_user(self):
         payload = {'some_other_id': 'foo'}
