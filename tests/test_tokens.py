@@ -137,6 +137,9 @@ class TestToken(TestCase):
             encoded_token,
             (
                 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoidGVzdCIsImV4cCI6OTQ2Njg0ODAwfQ.pmyTEE6MqAUVhTUsXSIMhXnKtwhIXHeh6DTuQ5CfsFk',
+                'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjk0NjY4NDgwMCwidG9rZW5fdHlwZSI6InRlc3QifQ.DAsRXwirDhvBd_SaiOEJowjCDpCq1hSEauAnW7mYDBA',
+                'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoidGVzdCIsImV4cCI6OTQ2Njg0ODAwfQ.KhLI1M_Nkjjekz9g_mX4xYKmcinRuj-XkgLb59ncRwI',
+                'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjk0NjY4NDgwMCwidG9rZW5fdHlwZSI6InRlc3QifQ.X6MSEFhKEFtNKvSood0p7VFmKouyf8HSjeevPtd9a60'
             ),
         )
 
