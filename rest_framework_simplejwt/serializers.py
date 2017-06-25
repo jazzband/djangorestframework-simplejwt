@@ -20,17 +20,17 @@ class PasswordField(serializers.CharField):
         super(PasswordField, self).__init__(*args, **kwargs)
 
 
-class TokenObtainSlidingSerializer(serializers.Serializer):
+class TokenObtainSerializer(serializers.Serializer):
     username_field = User.USERNAME_FIELD
 
     def __init__(self, *args, **kwargs):
-        super(TokenObtainSlidingSerializer, self).__init__(*args, **kwargs)
+        super(TokenObtainSerializer, self).__init__(*args, **kwargs)
 
         self.fields[self.username_field] = serializers.CharField()
         self.fields['password'] = PasswordField()
 
     def validate(self, attrs):
-        user = authenticate(**{
+        self.user = authenticate(**{
             self.username_field: attrs[self.username_field],
             'password': attrs['password'],
         })
@@ -42,14 +42,21 @@ class TokenObtainSlidingSerializer(serializers.Serializer):
         # `AllowAllUsersModelBackend`.  However, we explicitly prevent inactive
         # users from authenticating to enforce a reasonable policy and provide
         # sensible backwards compatibility with older Django versions.
-        if user is None or not user.is_active:
+        if self.user is None or not self.user.is_active:
             raise serializers.ValidationError(
                 _('No active account found with the given credentials.'),
             )
 
-        token = SlidingToken.for_user(user)
+        return {}
 
-        return {'token': text_type(token)}
+
+class TokenObtainSlidingSerializer(TokenObtainSerializer):
+    def validate(self, attrs):
+        data = super(TokenObtainSlidingSerializer, self).validate(attrs)
+
+        data['token'] = text_type(SlidingToken.for_user(self.user))
+
+        return data
 
 
 class TokenRefreshSlidingSerializer(serializers.Serializer):
