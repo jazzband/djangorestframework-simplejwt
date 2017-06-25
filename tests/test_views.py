@@ -2,11 +2,125 @@ from __future__ import unicode_literals
 
 from datetime import datetime, timedelta
 
+from mock import patch
 from rest_framework_simplejwt.settings import api_settings
 from rest_framework_simplejwt.state import User
-from rest_framework_simplejwt.tokens import SlidingToken
+from rest_framework_simplejwt.tokens import (
+    AccessToken, RefreshToken, SlidingToken
+)
+from rest_framework_simplejwt.utils import datetime_to_epoch
 
 from .utils import APIViewTestCase
+
+
+class TestTokenObtainPairView(APIViewTestCase):
+    view_name = 'token_obtain_pair'
+
+    def setUp(self):
+        self.username = 'test_user'
+        self.password = 'test_password'
+
+        self.user = User.objects.create_user(
+            username=self.username,
+            password=self.password,
+        )
+
+    def test_fields_missing(self):
+        res = self.view_post(data={})
+        self.assertEqual(res.status_code, 400)
+        self.assertIn(User.USERNAME_FIELD, res.data)
+        self.assertIn('password', res.data)
+
+        res = self.view_post(data={User.USERNAME_FIELD: self.username})
+        self.assertEqual(res.status_code, 400)
+        self.assertIn('password', res.data)
+
+        res = self.view_post(data={'password': self.password})
+        self.assertEqual(res.status_code, 400)
+        self.assertIn(User.USERNAME_FIELD, res.data)
+
+    def test_credentials_wrong(self):
+        res = self.view_post(data={
+            User.USERNAME_FIELD: self.username,
+            'password': 'test_user',
+        })
+        self.assertEqual(res.status_code, 400)
+        self.assertIn('non_field_errors', res.data)
+
+    def test_user_inactive(self):
+        self.user.is_active = False
+        self.user.save()
+
+        res = self.view_post(data={
+            User.USERNAME_FIELD: self.username,
+            'password': self.password,
+        })
+        self.assertEqual(res.status_code, 400)
+        self.assertIn('non_field_errors', res.data)
+
+    def test_success(self):
+        res = self.view_post(data={
+            User.USERNAME_FIELD: self.username,
+            'password': self.password,
+        })
+        self.assertEqual(res.status_code, 200)
+        self.assertIn('access', res.data)
+        self.assertIn('refresh', res.data)
+
+
+class TestTokenRefreshView(APIViewTestCase):
+    view_name = 'token_refresh'
+
+    def setUp(self):
+        self.username = 'test_user'
+        self.password = 'test_password'
+
+        self.user = User.objects.create_user(
+            username=self.username,
+            password=self.password,
+        )
+
+    def test_fields_missing(self):
+        res = self.view_post(data={})
+        self.assertEqual(res.status_code, 400)
+        self.assertIn('refresh', res.data)
+
+    def test_it_should_return_400_if_token_invalid(self):
+        token = RefreshToken()
+        del token['exp']
+
+        res = self.view_post(data={'refresh': str(token)})
+        self.assertEqual(res.status_code, 400)
+        self.assertIn('non_field_errors', res.data)
+        self.assertIn("has no 'exp' claim", res.data['non_field_errors'][0])
+
+        token.set_exp(lifetime=-timedelta(seconds=1))
+
+        res = self.view_post(data={'refresh': str(token)})
+        self.assertEqual(res.status_code, 400)
+        self.assertIn('non_field_errors', res.data)
+        self.assertIn('invalid or expired', res.data['non_field_errors'][0])
+
+    def test_it_should_return_access_token_if_everything_ok(self):
+        refresh = RefreshToken()
+        refresh['test_claim'] = 'arst'
+
+        # View returns 200
+        now = datetime.utcnow() - api_settings.ACCESS_TOKEN_LIFETIME / 2
+
+        utcfromtimestamp = datetime.utcfromtimestamp
+        with patch('rest_framework_simplejwt.tokens.datetime') as fake_datetime:
+            fake_datetime.utcnow.return_value = now
+            fake_datetime.utcfromtimestamp = utcfromtimestamp
+
+            res = self.view_post(data={'refresh': str(refresh)})
+
+        self.assertEqual(res.status_code, 200)
+
+        access = AccessToken(res.data['access'])
+
+        self.assertEqual(refresh['test_claim'], access['test_claim'])
+        self.assertEqual(access['exp'], datetime_to_epoch(now + api_settings.ACCESS_TOKEN_LIFETIME))
 
 
 class TestTokenObtainSlidingView(APIViewTestCase):
