@@ -6,7 +6,8 @@ from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 
 from .exceptions import TokenError
-from .state import User, Token
+from .state import User
+from .tokens import SlidingToken
 
 
 class PasswordField(serializers.CharField):
@@ -19,11 +20,11 @@ class PasswordField(serializers.CharField):
         super(PasswordField, self).__init__(*args, **kwargs)
 
 
-class TokenObtainSerializer(serializers.Serializer):
+class TokenObtainSlidingSerializer(serializers.Serializer):
     username_field = User.USERNAME_FIELD
 
     def __init__(self, *args, **kwargs):
-        super(TokenObtainSerializer, self).__init__(*args, **kwargs)
+        super(TokenObtainSlidingSerializer, self).__init__(*args, **kwargs)
 
         self.fields[self.username_field] = serializers.CharField()
         self.fields['password'] = PasswordField()
@@ -46,17 +47,17 @@ class TokenObtainSerializer(serializers.Serializer):
                 _('No active account found with the given credentials.'),
             )
 
-        token = Token.for_user(user)
+        token = SlidingToken.for_user(user)
 
         return {'token': text_type(token)}
 
 
-class TokenRefreshSerializer(serializers.Serializer):
+class TokenRefreshSlidingSerializer(serializers.Serializer):
     token = serializers.CharField()
 
     def validate(self, attrs):
         try:
-            token = Token(attrs['token'])
+            token = SlidingToken(attrs['token'])
             # Check that the timestamp in the "refresh_exp" claim has not
             # passed
             token.check_exp('refresh_exp')

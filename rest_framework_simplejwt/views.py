@@ -25,7 +25,7 @@ class TokenObtainView(TokenViewBase):
     Takes a set of user credentials and returns a JSON web token to prove the
     authentication of those credentials.
     """
-    serializer_class = serializers.TokenObtainSerializer
+    serializer_class = serializers.TokenObtainSlidingSerializer
 
 token_obtain = TokenObtainView.as_view()
 
@@ -35,6 +35,6 @@ class TokenRefreshView(TokenViewBase):
     Takes a JSON web token and returns a new, refreshed version if the token's
     refresh period has not expired.
     """
-    serializer_class = serializers.TokenRefreshSerializer
+    serializer_class = serializers.TokenRefreshSlidingSerializer
 
 token_refresh = TokenRefreshView.as_view()
