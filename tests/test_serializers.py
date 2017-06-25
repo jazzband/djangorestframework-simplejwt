@@ -157,7 +157,6 @@ class TestTokenRefreshSlidingSerializer(TestCase):
     def test_it_should_not_validate_if_token_has_wrong_type(self):
         token = SlidingToken()
         token[api_settings.TOKEN_TYPE_CLAIM] = 'wrong_type'
-        token.set_exp(api_settings.SLIDING_REFRESH_EXP_CLAIM, lifetime=-timedelta(days=1))
 
         s = TokenRefreshSlidingSerializer(data={'token': str(token)})
         self.assertFalse(s.is_valid())
