@@ -3,15 +3,18 @@ from __future__ import unicode_literals
 from datetime import datetime, timedelta
 
 from django.test import TestCase
+from mock import patch
 from rest_framework_simplejwt.serializers import (
     TokenObtainPairSerializer, TokenObtainSerializer,
-    TokenObtainSlidingSerializer, TokenRefreshSlidingSerializer
+    TokenObtainSlidingSerializer, TokenRefreshSerializer,
+    TokenRefreshSlidingSerializer
 )
 from rest_framework_simplejwt.settings import api_settings
 from rest_framework_simplejwt.state import User
 from rest_framework_simplejwt.tokens import (
     AccessToken, RefreshToken, SlidingToken
 )
+from rest_framework_simplejwt.utils import datetime_to_epoch
 
 
 class TestTokenObtainSerializer(TestCase):
@@ -178,3 +181,51 @@ class TestTokenRefreshSlidingSerializer(TestCase):
         new_exp = datetime.utcfromtimestamp(new_token['exp'])
 
         self.assertTrue(old_exp < new_exp)
+
+
+class TestTokenRefreshSerializer(TestCase):
+    def test_it_should_not_validate_if_token_invalid(self):
+        token = RefreshToken()
+        del token['exp']
+
+        s = TokenRefreshSerializer(data={'refresh': str(token)})
+        self.assertFalse(s.is_valid())
+        self.assertIn('non_field_errors', s.errors)
+        self.assertIn("has no 'exp' claim", s.errors['non_field_errors'][0])
+
+        token.set_exp(lifetime=-timedelta(days=1))
+
+        s = TokenRefreshSerializer(data={'refresh': str(token)})
+        self.assertFalse(s.is_valid())
+        self.assertIn('non_field_errors', s.errors)
+        self.assertIn('invalid or expired', s.errors['non_field_errors'][0])
+
+    def test_it_should_not_validate_if_token_has_wrong_type(self):
+        token = RefreshToken()
+        token[api_settings.TOKEN_TYPE_CLAIM] = 'wrong_type'
+
+        s = TokenRefreshSerializer(data={'refresh': str(token)})
+        self.assertFalse(s.is_valid())
+        self.assertIn('non_field_errors', s.errors)
+        self.assertIn("wrong type", s.errors['non_field_errors'][0])
+
+    def test_it_should_return_access_token_if_everything_ok(self):
+        refresh = RefreshToken()
+        refresh['test_claim'] = 'arst'
+
+        # Serializer validates
+        s = TokenRefreshSerializer(data={'refresh': str(refresh)})
+
+        now = datetime.utcnow() - api_settings.ACCESS_TOKEN_LIFETIME / 2
+
+        utcfromtimestamp = datetime.utcfromtimestamp
+        with patch('rest_framework_simplejwt.tokens.datetime') as fake_datetime:
+            fake_datetime.utcnow.return_value = now
+            fake_datetime.utcfromtimestamp = utcfromtimestamp
+
+            self.assertTrue(s.is_valid())
+
+        access = AccessToken(s.validated_data['access'])
+
+        self.assertEqual(refresh['test_claim'], access['test_claim'])
+        self.assertEqual(access['exp'], datetime_to_epoch(now + api_settings.ACCESS_TOKEN_LIFETIME))

@@ -72,6 +72,18 @@ class TokenObtainSlidingSerializer(TokenObtainSerializer):
         return data
 
 
+class TokenRefreshSerializer(serializers.Serializer):
+    refresh = serializers.CharField()
+
+    def validate(self, attrs):
+        try:
+            refresh = RefreshToken(attrs['refresh'])
+        except TokenError as e:
+            raise serializers.ValidationError(e.args[0])
+
+        return {'access': text_type(refresh.access_token)}
+
+
 class TokenRefreshSlidingSerializer(serializers.Serializer):
     token = serializers.CharField()
 
