@@ -8,9 +8,7 @@ from rest_framework import serializers
 from .exceptions import TokenError
 from .settings import api_settings
 from .state import User
-from .tokens import (
-    AccessToken, RefreshToken, SlidingToken
-)
+from .tokens import RefreshToken, SlidingToken
 
 
 class PasswordField(serializers.CharField):
@@ -57,8 +55,10 @@ class TokenObtainPairSerializer(TokenObtainSerializer):
     def validate(self, attrs):
         data = super(TokenObtainPairSerializer, self).validate(attrs)
 
-        data['access'] = text_type(AccessToken.for_user(self.user))
-        data['refresh'] = text_type(RefreshToken.for_user(self.user))
+        refresh = RefreshToken.for_user(self.user)
+
+        data['refresh'] = text_type(refresh)
+        data['access'] = text_type(refresh.access_token)
 
         return data
 
