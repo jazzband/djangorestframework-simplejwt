@@ -1,3 +1,4 @@
--r requirements/requirements-codestyle.txt
--r requirements/requirements-packaging.txt
--r requirements/requirements-testing.txt
+-r requirements/base.txt
+-r requirements/codestyle.txt
+-r requirements/packaging.txt
+-r requirements/testing.txt
