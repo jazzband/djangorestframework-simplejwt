@@ -45,7 +45,7 @@ class TokenObtainSerializer(serializers.Serializer):
         # sensible backwards compatibility with older Django versions.
         if self.user is None or not self.user.is_active:
             raise serializers.ValidationError(
-                _('No active account found with the given credentials.'),
+                _('No active account found with the given credentials'),
             )
 
         return {}

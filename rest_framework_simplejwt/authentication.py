@@ -64,7 +64,7 @@ class JWTAuthentication(authentication.BaseAuthentication):
 
         if len(parts) != 2:
             raise AuthenticationFailed(
-                _('Authorization header must contain two space-delimited values.'),
+                _('Authorization header must contain two space-delimited values'),
             )
 
         return parts[1]
@@ -86,15 +86,15 @@ class JWTAuthentication(authentication.BaseAuthentication):
         try:
             user_id = validated_token[api_settings.USER_ID_CLAIM]
         except KeyError:
-            raise AuthenticationFailed(_('Token contained no recognizable user identification.'))
+            raise AuthenticationFailed(_('Token contained no recognizable user identification'))
 
         try:
             user = User.objects.get(**{api_settings.USER_ID_FIELD: user_id})
         except User.DoesNotExist:
-            raise AuthenticationFailed(_('User not found.'))
+            raise AuthenticationFailed(_('User not found'))
 
         if not user.is_active:
-            raise AuthenticationFailed(_('User is inactive.'))
+            raise AuthenticationFailed(_('User is inactive'))
 
         return user
 
@@ -108,6 +108,6 @@ class JWTTokenUserAuthentication(JWTAuthentication):
         if api_settings.USER_ID_CLAIM not in validated_token:
             # The TokenUser class assumes tokens will have a recognizable user
             # identifier claim.
-            raise AuthenticationFailed(_('Token contained no recognizable user identification.'))
+            raise AuthenticationFailed(_('Token contained no recognizable user identification'))
 
         return TokenUser(validated_token)

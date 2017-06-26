@@ -60,16 +60,16 @@ class TokenUser(object):
         return hash(self.id)
 
     def save(self):
-        raise NotImplementedError('Token users have no DB representation.')
+        raise NotImplementedError('Token users have no DB representation')
 
     def delete(self):
-        raise NotImplementedError('Token users have no DB representation.')
+        raise NotImplementedError('Token users have no DB representation')
 
     def set_password(self, raw_password):
-        raise NotImplementedError('Token users have no DB representation.')
+        raise NotImplementedError('Token users have no DB representation')
 
     def check_password(self, raw_password):
-        raise NotImplementedError('Token users have no DB representation.')
+        raise NotImplementedError('Token users have no DB representation')
 
     @property
     def groups(self):

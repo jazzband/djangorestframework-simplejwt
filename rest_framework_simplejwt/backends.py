@@ -61,4 +61,4 @@ class PythonJOSEBackend(TokenBackend):
         try:
             return self.jwt.decode(token, self.secret, algorithms=[self.algorithm])
         except self.JOSEError:
-            raise TokenBackendError(_('Token is invalid or expired.'))
+            raise TokenBackendError(_('Token is invalid or expired'))
