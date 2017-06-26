@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from calendar import timegm
 
 from django.utils import six

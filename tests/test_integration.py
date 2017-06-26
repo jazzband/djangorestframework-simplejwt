@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from mock import patch
 from rest_framework_simplejwt.compat import reverse
 from rest_framework_simplejwt.settings import api_settings
