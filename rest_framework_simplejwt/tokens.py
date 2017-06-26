@@ -1,14 +1,16 @@
 from __future__ import unicode_literals
 
 from datetime import datetime
-from uuid import uuid4
+from uuid import uuid4, UUID
 
+from django.conf import settings
 from django.utils.six import text_type, python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
 from .exceptions import TokenError, TokenBackendError
 from .settings import api_settings
 from .utils import datetime_to_epoch, format_lazy
+from .token_blacklist.models import OutstandingToken, BlacklistedToken
 
 
 @python_2_unicode_compatible
@@ -142,7 +144,55 @@ class Token(object):
         return token
 
 
-class SlidingToken(Token):
+class BlacklistMixin(object):
+    """
+    If the `rest_framework_simplejwt.token_blacklist` app was configured to be
+    used, `Token` subclasses which inherit from this mixin will insert
+    themselves into an outstanding token list and also check for their
+    membership in a token blacklist.
+    """
+    if 'rest_framework_simplejwt.token_blacklist' in settings.INSTALLED_APPS:
+        def __init__(self, *args, **kwargs):
+            super(BlacklistMixin, self).__init__(*args, **kwargs)
+
+            if self.token is not None:
+                self.check_blacklist()
+
+        def check_blacklist(self):
+            """
+            Check if this token is present in the token blacklist.  Raise
+            `TokenError` if so.
+            """
+            jti = UUID(hex=self.payload['jti'])
+
+            try:
+                BlacklistedToken.objects.get(token__jti=jti)
+                raise TokenError(_('Token is blacklisted'))
+            except BlacklistedToken.DoesNotExist:
+                pass
+
+        @classmethod
+        def for_user(cls, user):
+            """
+            Add this token to the outstanding token list.
+            """
+            token = super(BlacklistMixin, cls).for_user(user)
+
+            exp = token['exp']
+            jti = token['jti']
+
+            OutstandingToken.objects.create(
+                user=user,
+                jti=UUID(hex=jti),
+                token=str(token),
+                created_at=token.current_time,
+                expires_at=datetime.utcfromtimestamp(exp),
+            )
+
+            return token
+
+
+class SlidingToken(BlacklistMixin, Token):
     token_type = 'sliding'
     lifetime = api_settings.SLIDING_TOKEN_LIFETIME
 
@@ -158,7 +208,7 @@ class SlidingToken(Token):
             )
 
 
-class RefreshToken(Token):
+class RefreshToken(BlacklistMixin, Token):
     token_type = 'refresh'
     lifetime = api_settings.REFRESH_TOKEN_LIFETIME
     no_copy_claims = (api_settings.TOKEN_TYPE_CLAIM, 'exp')
