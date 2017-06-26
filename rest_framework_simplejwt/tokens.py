@@ -165,6 +165,12 @@ class RefreshToken(Token):
         """
         access = AccessToken()
 
+        # Use instantiation time of refresh token as relative timestamp for
+        # access token "exp" claim.  This ensures that both a refresh and
+        # access token expire relative to the same time if they are created as
+        # a pair.
+        access.set_exp(from_time=self.current_time)
+
         no_copy = self.no_copy_claims
         for claim, value in self.payload.items():
             if claim in no_copy:
