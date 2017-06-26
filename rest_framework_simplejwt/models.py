@@ -21,7 +21,7 @@ class TokenUser(object):
     """
     username = ''
 
-    # User is always active since SimpleJWT will never issue a token for an
+    # User is always active since Simple JWT will never issue a token for an
     # inactive user
     is_active = True
 
