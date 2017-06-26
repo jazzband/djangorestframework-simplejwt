@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 
 from datetime import datetime
+from uuid import uuid4
 
 from django.utils.six import text_type, python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
@@ -57,10 +58,16 @@ class Token(object):
             if self.token_type != token_type:
                 raise TokenError(_('Token has wrong type'))
 
+            # Ensure token id is present
+            if 'jti' not in self.payload:
+                raise TokenError(_('Token has no id'))
+
         else:
-            # This is a new token.  Skip all the validation steps.
+            # This is a new token.  Skip all the validation steps.  Set token
+            # type and token id claims.
             self.payload = {
                 api_settings.TOKEN_TYPE_CLAIM: self.token_type,
+                'jti': uuid4().hex,
             }
 
             # Set "exp" claim with default value

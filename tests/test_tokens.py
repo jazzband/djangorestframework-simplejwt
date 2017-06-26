@@ -25,10 +25,6 @@ class MyToken(Token):
 class TestToken(TestCase):
     def setUp(self):
         self.token = MyToken()
-        self.token.set_exp(
-            from_time=datetime(year=2000, month=1, day=1),
-            lifetime=timedelta(seconds=0),
-        )
 
     def test_init_no_token_type_or_lifetime(self):
         class MyTestToken(Token):
@@ -61,8 +57,9 @@ class TestToken(TestCase):
         self.assertEqual(t.current_time, now)
         self.assertIsNone(t.token)
 
-        self.assertEqual(len(t.payload), 2)
+        self.assertEqual(len(t.payload), 3)
         self.assertEqual(t.payload['exp'], datetime_to_epoch(now + MyToken.lifetime))
+        self.assertIn('jti', t.payload)
         self.assertEqual(t.payload[api_settings.TOKEN_TYPE_CLAIM], MyToken.token_type)
 
     def test_init_encoded_token_given(self):
@@ -90,10 +87,11 @@ class TestToken(TestCase):
         self.assertEqual(t.current_time, now)
         self.assertEqual(t.token, encoded_good_token)
 
-        self.assertEqual(len(t.payload), 3)
+        self.assertEqual(len(t.payload), 4)
         self.assertEqual(t['some_value'], 'arst')
         self.assertEqual(t['exp'], datetime_to_epoch(original_now + MyToken.lifetime))
         self.assertEqual(t[api_settings.TOKEN_TYPE_CLAIM], MyToken.token_type)
+        self.assertIn('jti', t.payload)
 
         # Test backend rejects encoded token (expired or bad signature)
         payload = {'foo': 'bar'}
@@ -130,18 +128,35 @@ class TestToken(TestCase):
         with self.assertRaises(TokenError):
             MyToken(str(t))
 
+        # Test token has id
+        t = MyToken()
+        del t['jti']
+
+        with self.assertRaises(TokenError):
+            MyToken(str(t))
+
     def test_str(self):
+        token = MyToken()
+        token.set_exp(
+            from_time=datetime(year=2000, month=1, day=1),
+            lifetime=timedelta(seconds=0),
+        )
+
+        # Delete all but one claim.  We want our lives to be easy and for there
+        # to only be a couple of possible encodings.  We're only testing that a
+        # payload is successfully encoded here, not that it has specific
+        # content.
+        del token[api_settings.TOKEN_TYPE_CLAIM]
+        del token['jti']
+
         # Should encode the given token
-        encoded_token = str(self.token)
+        encoded_token = str(token)
 
         # Token could be one of two depending on header dict ordering
         self.assertIn(
             encoded_token,
             (
-                'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoidGVzdCIsImV4cCI6OTQ2Njg0ODAwfQ.pmyTEE6MqAUVhTUsXSIMhXnKtwhIXHeh6DTuQ5CfsFk',
-                'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjk0NjY4NDgwMCwidG9rZW5fdHlwZSI6InRlc3QifQ.DAsRXwirDhvBd_SaiOEJowjCDpCq1hSEauAnW7mYDBA',
-                'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoidGVzdCIsImV4cCI6OTQ2Njg0ODAwfQ.KhLI1M_Nkjjekz9g_mX4xYKmcinRuj-XkgLb59ncRwI',
-                'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjk0NjY4NDgwMCwidG9rZW5fdHlwZSI6InRlc3QifQ.X6MSEFhKEFtNKvSood0p7VFmKouyf8HSjeevPtd9a60'
+                'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjk0NjY4NDgwMH0.VKoOnMgmETawjDZwxrQaHG0xHdo6xBodFy6FXJzTVxs',
             ),
         )
 
