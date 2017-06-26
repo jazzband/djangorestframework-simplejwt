@@ -1,14 +1,11 @@
-from django.contrib.auth import get_user_model
+from django.conf import settings
 from django.db import models
 from django.utils.six import python_2_unicode_compatible
 
 
-User = get_user_model()
-
-
 @python_2_unicode_compatible
 class OutstandingToken(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     jti = models.UUIDField(unique=True)
     token = models.TextField()
