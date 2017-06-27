@@ -13,8 +13,8 @@ A minimal JSON Web Token authentication plugin for the `Django REST Framework
 
 Simple JWT provides a JSON Web Token authentication backend for the Django REST
 Framework.  It aims to provide an out-of-the-box solution for JWT
-authentication which is minimal and avoids some of the common pitfalls of the
-JWT specification.  Below, we list some of the major goals of the project:
+authentication which avoids some of the common pitfalls of the JWT
+specification.  Below, we list some of the major goals of the project:
 
 Discourage crypto negotiation
 -----------------------------
@@ -26,12 +26,11 @@ use cases will be covered by sha-256 HMAC signing with a shared secret.
 Object-oriented API
 -------------------
 
-Simple JWT strives to implement its functionality in an object-oriented
-way.  Some behavior can be customized through settings variables, but it is
-expected that the rest will be handled through subclassing.  Following from
-this, people wishing to customize the finer details of Simple JWT's behavior
-are expected to become familiar with the library's classes and the
-relationships there between.
+Simple JWT strives to implement its functionality in an object-oriented way.
+Some behavior can be customized through settings variables, but it is expected
+that the rest will be handled through subclassing.  Following from this, people
+wishing to customize the finer details of Simple JWT's behavior are expected to
+become familiar with the library's classes and the relationships there between.
 
 Safe defaults, predictability
 -----------------------------
@@ -62,16 +61,20 @@ authentication classes::
       ...
   }
 
-Also, in your root ``urls.py`` file, include Simple JWT's default urls::
+Also, in your root ``urls.py`` file (or any other url config), include routes
+for Simple JWT's ``TokenObtainPairView`` and ``TokenRefreshView`` views::
+
+  from rest_framework_simplejwt.views import (
+      TokenObtainPairView,
+      TokenRefreshView,
+  )
 
   urlpatterns = [
       ...
-      url(r'^api/', include('rest_framework_simplejwt.urls')),
+      url(r'^api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+      url(r'^api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
       ...
   ]
-
-API views to obtain and refresh tokens should be available at
-``/api/token/obtain/`` and ``/api/token/refresh/``.
 
 Usage
 -----
@@ -83,27 +86,32 @@ test requests::
     -X POST \
     -H "Content-Type: application/json" \
     -d '{"username": "davidattenborough", "password": "boatymcboatface"}' \
-    http://localhost:8000/api/token/obtain/
+    http://localhost:8000/api/token/
 
   ...
-  {"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX3BrIjoxLCJjb2xkX3N0dWZmIjoi4piDIiwiZXhwIjoxMjM0NTYsInJlZnJlc2hfZXhwIjoxMjM1MDB9.8po9BafZiPi1aaWTKYCt3q0_2eLlWabj4nfQVYXLCK8"}
+  {
+    "access":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX3BrIjoxLCJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiY29sZF9zdHVmZiI6IuKYgyIsImV4cCI6MTIzNDU2LCJqdGkiOiJmZDJmOWQ1ZTFhN2M0MmU4OTQ5MzVlMzYyYmNhOGJjYSJ9.NHlztMGER7UADHZJlxNG0WSi22a2KaYSfd1S-AuT7lU",
+    "refresh":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX3BrIjoxLCJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImNvbGRfc3R1ZmYiOiLimIMiLCJleHAiOjIzNDU2NywianRpIjoiZGUxMmY0ZTY3MDY4NDI3ODg5ZjE1YWMyNzcwZGEwNTEifQ.aEoAYkSJjoWH1boshQAaTkf8G3yn0kapko6HFRt7Rh4"
+  }
 
-You can use the returned token to prove authentication for a protected view::
+You can use the returned access token to prove authentication for a protected
+view::
 
   curl \
-    -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX3BrIjoxLCJjb2xkX3N0dWZmIjoi4piDIiwiZXhwIjoxMjM0NTYsInJlZnJlc2hfZXhwIjoxMjM1MDB9.8po9BafZiPi1aaWTKYCt3q0_2eLlWabj4nfQVYXLCK8" \
+    -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX3BrIjoxLCJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiY29sZF9zdHVmZiI6IuKYgyIsImV4cCI6MTIzNDU2LCJqdGkiOiJmZDJmOWQ1ZTFhN2M0MmU4OTQ5MzVlMzYyYmNhOGJjYSJ9.NHlztMGER7UADHZJlxNG0WSi22a2KaYSfd1S-AuT7lU" \
     http://localhost:8000/api/some-protected-view/
 
-Or you can refresh the token if it is still refreshable::
+When this short-lived access token expires, you can use the longer-lived
+refresh token to obtain another access token::
 
   curl \
     -X POST \
     -H "Content-Type: application/json" \
-    -d '{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX3BrIjoxLCJjb2xkX3N0dWZmIjoi4piDIiwiZXhwIjoxMjM0NTYsInJlZnJlc2hfZXhwIjoxMjM1MDB9.8po9BafZiPi1aaWTKYCt3q0_2eLlWabj4nfQVYXLCK8"}' \
+    -d '{"refresh":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX3BrIjoxLCJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImNvbGRfc3R1ZmYiOiLimIMiLCJleHAiOjIzNDU2NywianRpIjoiZGUxMmY0ZTY3MDY4NDI3ODg5ZjE1YWMyNzcwZGEwNTEifQ.aEoAYkSJjoWH1boshQAaTkf8G3yn0kapko6HFRt7Rh4"}' \
     http://localhost:8000/api/token/refresh/
 
   ...
-  {"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX3BrIjoxLCJjb2xkX3N0dWZmIjoi4piDIiwiZXhwIjoxMjM0ODAsInJlZnJlc2hfZXhwIjoxMjM1MDB9.tTXYxsumgb7Odj9NsAAVpSaNnkS8gfAh-yjEnlW0JiQ"}
+  {"access":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX3BrIjoxLCJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiY29sZF9zdHVmZiI6IuKYgyIsImV4cCI6MTIzNTY3LCJqdGkiOiJjNzE4ZTVkNjgzZWQ0NTQyYTU0NWJkM2VmMGI0ZGQ0ZSJ9.ekxRxgb9OKmHkfy-zs1Ro_xs1eMLXiR17dIDBVxeT-w"}
 
 Settings
 --------
@@ -111,25 +119,52 @@ Settings
 Some of Simple JWT's behavior can be customized through settings variables in
 ``settings.py``::
 
+  # Django project settings.py
+
   from datetime import timedelta
 
   ...
 
-  SIMPLE_JWT = {
-      'AUTH_HEADER_TYPE': 'Bearer',
+  DEFAULTS = {
+      'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+      'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
 
+      'SECRET_KEY': SECRET_KEY,  # Defaults to django project secret key
+
+      'AUTH_HEADER_TYPE': 'Bearer',
       'USER_ID_FIELD': 'id',
       'USER_ID_CLAIM': 'user_id',
 
-      'TOKEN_LIFETIME': timedelta(days=1),
-      'TOKEN_REFRESH_LIFETIME': timedelta(days=7),
+      'AUTH_TOKEN_CLASS': 'rest_framework_simplejwt.tokens.AccessToken',
+      'TOKEN_TYPE_CLAIM': 'token_type',
 
-      'SECRET_KEY': SECRET_KEY,  # Default to the django secret key
+      'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
+      'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
+      'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
   }
 
 Above, the default values for these settings are shown.
 
 -------------------------------------------------------------------------------
+
+ACCESS_TOKEN_LIFETIME
+  A ``datetime.timedelta`` object which specifies how long access tokens are
+  valid.  This ``timedelta`` value is added to the current UTC time during
+  token generation to obtain the token's default "exp" claim value.
+
+REFRESH_TOKEN_LIFETIME
+  A ``datetime.timedelta`` object which specifies how long refresh tokens are
+  valid.  This ``timedelta`` value is added to the current UTC time during
+  token generation to obtain the token's default "exp" claim value.
+
+SECRET_KEY
+  The secret key which is used to sign the content of generated tokens.  This
+  setting defaults to the value of the ``SECRET_KEY`` setting for your django
+  project.  Although this is the most reasonable default that Simple JWT can
+  provide, it is recommended that developers change this setting to a value
+  which is independent from the django project secret key.  This will make
+  changing the secret key used for tokens easier in the event that it is
+  compromised.
 
 AUTH_HEADER_TYPE
   The authorization header type that will be checked for views that require
@@ -152,30 +187,42 @@ USER_ID_CLAIM
   For example, a setting value of ``'user_id'`` would mean generated tokens
   include a "user_id" claim that contains the user's identifier.
 
-TOKEN_LIFETIME
-  A ``datetime.timedelta`` object which specifies how long a generated token is
-  valid.  This ``timedelta`` value is added to the current UTC time while a
-  token is being generated to obtain the token's "exp" claim value.  Once the
-  time specified by this "exp" claim has passed, a token will no longer be
-  valid for authorization and can no longer be refreshed.
+AUTH_TOKEN_CLASS
+  A dot path to a class which specifies the type of token that is expected to
+  prove authentication.  More about this in the "Token types" section below.
 
-TOKEN_REFRESH_LIFETIME
-  A ``datetime.timedelta`` object which specifies how long a generated token
-  may be refreshed.  This ``timedelta`` value is added to the current UTC time
-  while a token is being generated to obtain the token's "refresh_exp" claim
-  value.  Once the time specified by this "refresh_exp" claim has passed, a
-  token can no longer be refreshed.  However, if the time specified by a
-  token's "exp" claim still has not passed, it can still be used for
-  authorization.
+TOKEN_TYPE_CLAIM
+  The claim name that is used to store a token's type.  More about this in the
+  "Token types" section below.
 
-SECRET_KEY
-  The secret key which is used to sign the content of generated tokens.  This
-  setting defaults to the value of the ``SECRET_KEY`` setting for the django
-  project.  Although this is the most reasonable default that Simple JWT can
-  provide, it is recommended that developers change this setting to a value
-  which is independent from the django project secret key.  This will make
-  changing the secret key used for tokens easier in the event that it is
-  compromised or a token exists which must be immediately invalidated.
+SLIDING_TOKEN_LIFETIME
+  A ``datetime.timedelta`` object which specifies how long sliding tokens are
+  valid to prove authentication.  This ``timedelta`` value is added to the
+  current UTC time during token generation to obtain the token's default "exp"
+  claim value.  More about this in the "Token types" section below.
+
+SLIDING_TOKEN_REFRESH_LIFETIME
+  A ``datetime.timedelta`` object which specifies how long sliding tokens are
+  valid to be refreshed.  This ``timedelta`` value is added to the current UTC
+  time during token generation to obtain the token's default "exp" claim value.
+  More about this in the "Token types" section below.
+
+SLIDING_TOKEN_REFRESH_EXP_CLAIM
+  The claim name that is used to store the exipration time of a sliding token's
+  refresh period.  More about this in the "Token types" section below.
+
+Token types
+-----------
+
+Simple JWT provides a number of token types which can be used for
+authorization.  In a token's payload, its type can be identified by the value
+of its token type claim, which is "token_type" by default.  This may have a
+value of "access", "refresh", or "sliding".
+
+By default, Simple JWT expects an "access" token to prove authentication.  The
+expected token type is determined by the value of the ``AUTH_TOKEN_CLASS``
+setting.  This setting contains a dot path to a token class and is normally set
+to ``'rest_framework_simplejwt.tokens.AccessToken'``.
 
 Experimental features
 ---------------------
