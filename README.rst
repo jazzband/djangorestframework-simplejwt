@@ -199,17 +199,17 @@ SLIDING_TOKEN_LIFETIME
   A ``datetime.timedelta`` object which specifies how long sliding tokens are
   valid to prove authentication.  This ``timedelta`` value is added to the
   current UTC time during token generation to obtain the token's default "exp"
-  claim value.  More about this in the "Token types" section below.
+  claim value.  More about this in the "Sliding tokens" section below.
 
 SLIDING_TOKEN_REFRESH_LIFETIME
   A ``datetime.timedelta`` object which specifies how long sliding tokens are
   valid to be refreshed.  This ``timedelta`` value is added to the current UTC
   time during token generation to obtain the token's default "exp" claim value.
-  More about this in the "Token types" section below.
+  More about this in the "Sliding tokens" section below.
 
 SLIDING_TOKEN_REFRESH_EXP_CLAIM
   The claim name that is used to store the exipration time of a sliding token's
-  refresh period.  More about this in the "Token types" section below.
+  refresh period.  More about this in the "Sliding tokens" section below.
 
 Token types
 -----------
@@ -217,12 +217,25 @@ Token types
 Simple JWT provides a number of token types which can be used for
 authorization.  In a token's payload, its type can be identified by the value
 of its token type claim, which is "token_type" by default.  This may have a
-value of "access", "refresh", or "sliding".
+value of "access", "refresh", or "sliding".  The claim name used to store the
+type can be customized by changing the ``TOKEN_TYPE_CLAIM`` setting.
 
 By default, Simple JWT expects an "access" token to prove authentication.  The
 expected token type is determined by the value of the ``AUTH_TOKEN_CLASS``
 setting.  This setting contains a dot path to a token class and is normally set
-to ``'rest_framework_simplejwt.tokens.AccessToken'``.
+to ``'rest_framework_simplejwt.tokens.AccessToken'``.  At present, the only
+other possible value for this setting is
+``'rest_framework_simplejwt.tokens.SlidingToken'``.
+
+Sliding tokens
+--------------
+
+Not written yet.
+
+Blacklist app
+-------------
+
+Not written yet.
 
 Experimental features
 ---------------------
@@ -230,10 +243,11 @@ Experimental features
 JWTTokenUserAuthentication backend
   The ``JWTTokenUserAuthentication`` backend's ``authenticate`` method does not
   perform a database lookup to obtain a user instance.  Instead, it returns a
-  ``TokenUser`` instance which acts as a stateless user object backed only by a
-  validated token instead of a record in a database.  This can facilitate
-  developing single sign-on functionality between separately hosted Django apps
-  which all share the same token secret key.  To use this feature, add the
+  ``rest_framework_simplejwt.models.TokenUser`` instance which acts as a
+  stateless user object backed only by a validated token instead of a record in
+  a database.  This can facilitate developing single sign-on functionality
+  between separately hosted Django apps which all share the same token secret
+  key.  To use this feature, add the
   ``rest_framework_simplejwt.authentication.JWTTokenUserAuthentication``
   backend (instead of the default ``JWTAuthentication`` backend) to the Django
   REST Framework's ``DEFAULT_AUTHENTICATION_CLASSES`` config setting::
