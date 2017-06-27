@@ -230,12 +230,72 @@ other possible value for this setting is
 Sliding tokens
 --------------
 
-Not written yet.
+Sliding tokens offer a more convenient experience to users of tokens with the
+trade-offs of being less secure and, in the case that the blacklist app is
+being used, less performant.  A sliding token is one which contains both an an
+expiration claim and a refresh expiration claim.  As long as the timestamp in
+a sliding token's expiration claim has not passed, it can be used to prove
+authentication.  Additionally, as long as the timestamp in its refresh
+expiration claim has not passed, it may also be submitted to a refresh view to
+get another copy of itself with a renewed expiration claim.
+
+If you want to use sliding tokens, change the value of the ``AUTH_TOKEN_CLASS``
+setting to ``'rest_framework_simplejwt.tokens.SlidingToken'``.  Also, instead
+of defining urls for the ``TokenObtainPairView`` and ``TokenRefreshView``
+views, define urls instead for the ``TokenObtainSlidingView`` and the
+``TokenRefreshSlidingView``::
+
+  from rest_framework_simplejwt.views import (
+      TokenObtainSlidingView,
+      TokenRefreshSlidingView,
+  )
+
+  urlpatterns = [
+      ...
+      url(r'^api/token/', TokenObtainSlidingView.as_view(), name='token_obtain'),
+      url(r'^api/token/refresh/', TokenRefreshSlidingView.as_view(), name='token_refresh'),
+      ...
+  ]
+
+Be aware that, if you are using the blacklist app, Simple JWT will validate all
+sliding tokens against the blacklist for each authenticated request.  This will
+slightly reduce the performance of authenticated API views.
 
 Blacklist app
 -------------
 
-Not written yet.
+Simple JWT includes an app that provides token blacklist functionality.  To use
+this app, include it in your list of installed apps in ``settings.py``::
+
+  # Django project settings.py
+
+  ...
+
+  INSTALLED_APPS = (
+      ...
+      'rest_framework_simplejwt.token_blacklist',
+      ...
+  }
+
+Also, make sure to run ``python manage.py migrate`` to run the app's
+migrations.
+
+If the blacklist app is detected in ``INSTALLED_APPS``, Simple JWT will add any
+generated refresh or sliding tokens to a list of outstanding tokens.  It will
+also check that any refresh or sliding token does not appear in a blacklist of
+tokens before it considers it as valid.
+
+The Simple JWT blacklist app implements its outstanding and blacklisted token
+lists using two model: ``OutstandingToken`` and ``BlacklistedToken``.  Model
+admins are defined for both of these models.  To add a token to the blacklist,
+find its corresponding ``OutstandingToken`` record in the admin and use the
+admin again to create a ``BlacklistedToken`` record that points to the
+``OutstandingToken`` record.
+
+The blacklist app also provides a management command, ``flushexpiredtokens``,
+which will delete any tokens from the outstanding list and blacklist that have
+expired.  You should set up a cron job on your server or hosting platform which
+runs this command daily.
 
 Experimental features
 ---------------------
