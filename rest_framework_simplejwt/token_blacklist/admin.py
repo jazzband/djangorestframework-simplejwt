@@ -1,39 +1,91 @@
 from __future__ import unicode_literals
 
 from django.contrib import admin
+from django.utils.translation import ugettext_lazy as _
 
 from .models import OutstandingToken, BlacklistedToken
 
 
 class OutstandingTokenAdmin(admin.ModelAdmin):
     list_display = (
-        'user',
         'jti',
-        'token',
+        'user',
         'created_at',
         'expires_at',
     )
+    search_fields = (
+        'user__id',
+        'jti',
+    )
+    ordering = (
+        'user',
+    )
 
     def get_queryset(self, *args, **kwargs):
-        qs = super(BlacklistedTokenAdmin, self).get_queryset(*args, **kwargs)
+        qs = super(OutstandingTokenAdmin, self).get_queryset(*args, **kwargs)
 
         return qs.select_related('user')
+
+    # Read-only behavior defined below
+    actions = None
+
+    def get_readonly_fields(self, *args, **kwargs):
+        return [f.name for f in self.model._meta.fields]
+
+    def has_add_permission(self, *args, **kwargs):
+        return False
+
+    def has_delete_permission(self, *args, **kwargs):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return (
+            request.method in ['GET', 'HEAD'] and
+            super(OutstandingTokenAdmin, self).has_change_permission(request, obj)
+        )
 
 admin.site.register(OutstandingToken, OutstandingTokenAdmin)
 
 
 class BlacklistedTokenAdmin(admin.ModelAdmin):
     list_display = (
-        'token__user',
-        'token__token',
-        'token__created_at',
-        'token__expires_at',
+        'token_jti',
+        'token_user',
+        'token_created_at',
+        'token_expires_at',
         'blacklisted_at',
+    )
+    search_fields = (
+        'token__user__id',
+        'token__jti',
+    )
+    ordering = (
+        'token__user',
     )
 
     def get_queryset(self, *args, **kwargs):
         qs = super(BlacklistedTokenAdmin, self).get_queryset(*args, **kwargs)
 
         return qs.select_related('token__user')
+
+    def token_jti(self, obj):
+        return obj.token.jti
+    token_jti.short_description = _('jti')
+    token_jti.admin_order_field = 'token__jti'
+
+    def token_user(self, obj):
+        return obj.token.user
+    token_user.short_description = _('user')
+    token_user.admin_order_field = 'token__user'
+
+    def token_created_at(self, obj):
+        return obj.token.created_at
+    token_created_at.short_description = _('created at')
+    token_created_at.admin_order_field = 'token__created_at'
+
+    def token_expires_at(self, obj):
+        return obj.token.expires_at
+    token_expires_at.short_description = _('expires at')
+    token_expires_at.admin_order_field = 'token__expires_at'
 
 admin.site.register(BlacklistedToken, BlacklistedTokenAdmin)
