@@ -4,4 +4,4 @@ from django.apps import AppConfig
 
 
 class TokenBlacklistConfig(AppConfig):
-    name = 'token_blacklist'
+    name = 'rest_framework_simplejwt.token_blacklist'

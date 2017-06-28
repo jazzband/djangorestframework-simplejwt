@@ -16,6 +16,12 @@ class OutstandingToken(models.Model):
     expires_at = models.DateTimeField()
 
     class Meta:
+        # Work around for a bug in Django:
+        # https://code.djangoproject.com/ticket/19422
+        #
+        # Also see corresponding ticket:
+        # https://github.com/encode/django-rest-framework/issues/705
+        abstract = 'rest_framework_simplejwt.token_blacklist' not in settings.INSTALLED_APPS
         ordering = ('user',)
 
     def __str__(self):
@@ -30,6 +36,14 @@ class BlacklistedToken(models.Model):
     token = models.OneToOneField(OutstandingToken, on_delete=models.CASCADE)
 
     blacklisted_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        # Work around for a bug in Django:
+        # https://code.djangoproject.com/ticket/19422
+        #
+        # Also see corresponding ticket:
+        # https://github.com/encode/django-rest-framework/issues/705
+        abstract = 'rest_framework_simplejwt.token_blacklist' not in settings.INSTALLED_APPS
 
     def __str__(self):
         return 'Blacklisted token for {}'.format(self.token.user)
