@@ -1,6 +1,6 @@
 from __future__ import unicode_literals
 
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from django.test import TestCase
 from django.utils import six, timezone
@@ -21,14 +21,13 @@ class TestMakeUtc(TestCase):
         dt = datetime(year=1970, month=12, day=1)
 
         with self.settings(USE_TZ=False):
-            self.assertEqual(dt, make_utc(dt))
+            dt = make_utc(dt)
+            self.assertTrue(timezone.is_naive(dt))
 
         with self.settings(USE_TZ=True):
-            self.assertNotEqual(dt, make_utc(dt))
-            self.assertEqual(timezone.make_aware(dt, timezone=timezone.utc), make_utc(dt))
-
-            dt = timezone.now()
-            self.assertEqual(dt, make_utc(dt))
+            dt = make_utc(dt)
+            self.assertTrue(timezone.is_aware(dt))
+            self.assertEqual(dt.utcoffset(), timedelta(seconds=0))
 
 
 class TestAwareUtcnow(TestCase):
