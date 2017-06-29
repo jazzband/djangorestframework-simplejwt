@@ -2,7 +2,7 @@ Simple JWT
 ==========
 
 A minimal JSON Web Token authentication plugin for the `Django REST Framework
-<http://www.django-rest-framework.org/>`_.
+<http://www.django-rest-framework.org/>`__.
 
 .. image:: https://travis-ci.org/davesque/django-rest-framework-simplejwt.svg?branch=master
   :target: https://travis-ci.org/davesque/django-rest-framework-simplejwt
@@ -325,9 +325,9 @@ Acknowledgements
 ----------------
 
 This project borrows code from the `Django REST Framework
-<https://github.com/encode/django-rest-framework/>`_ as well as concepts from
+<https://github.com/encode/django-rest-framework/>`__ as well as concepts from
 the implementation of another JSON web token library for the Django REST
 Framework, `django-rest-framework-jwt
-<https://github.com/GetBlimp/django-rest-framework-jwt>`_.  The licenses from
+<https://github.com/GetBlimp/django-rest-framework-jwt>`__.  The licenses from
 both of those projects have been included in this repository in the "licenses"
 directory.
