@@ -125,7 +125,7 @@ Some of Simple JWT's behavior can be customized through settings variables in
 
   ...
 
-  DEFAULTS = {
+  SIMPLE_JWT = {
       'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
       'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
 
