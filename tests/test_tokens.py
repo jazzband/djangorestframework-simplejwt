@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 from datetime import datetime, timedelta
 
 from django.test import TestCase
+from django.utils import timezone
 from django.utils.six import text_type
 from jose import jwt
 from mock import patch
@@ -12,7 +13,7 @@ from rest_framework_simplejwt.state import User
 from rest_framework_simplejwt.tokens import (
     AccessToken, RefreshToken, SlidingToken, Token
 )
-from rest_framework_simplejwt.utils import datetime_to_epoch
+from rest_framework_simplejwt.utils import datetime_to_epoch, make_utc
 
 from .utils import override_api_settings
 
@@ -48,10 +49,10 @@ class TestToken(TestCase):
         MyTestToken()
 
     def test_init_no_encoded_token_given(self):
-        now = datetime(year=2000, month=1, day=1)
+        now = make_utc(datetime(year=2000, month=1, day=1))
 
-        with patch('rest_framework_simplejwt.tokens.datetime') as fake_datetime:
-            fake_datetime.utcnow.return_value = now
+        with patch('rest_framework_simplejwt.tokens.timezone') as fake_timezone:
+            fake_timezone.now.return_value = now
             t = MyToken()
 
         self.assertEqual(t.current_time, now)
@@ -64,22 +65,20 @@ class TestToken(TestCase):
 
     def test_init_encoded_token_given(self):
         # Test successful instantiation
-        original_now = datetime.utcnow()
+        original_now = timezone.now()
 
-        with patch('rest_framework_simplejwt.tokens.datetime') as fake_datetime:
-            fake_datetime.utcnow.return_value = original_now
+        with patch('rest_framework_simplejwt.tokens.timezone') as fake_timezone:
+            fake_timezone.now.return_value = original_now
             good_token = MyToken()
 
         good_token['some_value'] = 'arst'
         encoded_good_token = str(good_token)
 
-        now = datetime.utcnow()
+        now = timezone.now()
 
         # Create new token from encoded token
-        utcfromtimestamp = datetime.utcfromtimestamp
-        with patch('rest_framework_simplejwt.tokens.datetime') as fake_datetime:
-            fake_datetime.utcnow.return_value = now
-            fake_datetime.utcfromtimestamp = utcfromtimestamp
+        with patch('rest_framework_simplejwt.tokens.timezone') as fake_timezone:
+            fake_timezone.now.return_value = now
             # Should raise no exception
             t = MyToken(encoded_good_token)
 
@@ -95,7 +94,7 @@ class TestToken(TestCase):
 
         # Test backend rejects encoded token (expired or bad signature)
         payload = {'foo': 'bar'}
-        payload['exp'] = datetime.utcnow() + timedelta(days=1)
+        payload['exp'] = timezone.now() + timedelta(days=1)
         token = jwt.encode(payload, api_settings.SECRET_KEY, algorithm='HS256')
         payload['foo'] = 'baz'
         other_token = jwt.encode(payload, api_settings.SECRET_KEY, algorithm='HS256')
@@ -138,7 +137,7 @@ class TestToken(TestCase):
     def test_str(self):
         token = MyToken()
         token.set_exp(
-            from_time=datetime(year=2000, month=1, day=1),
+            from_time=make_utc(datetime(year=2000, month=1, day=1)),
             lifetime=timedelta(seconds=0),
         )
 
@@ -182,7 +181,7 @@ class TestToken(TestCase):
         self.assertIn('exp', self.token)
 
     def test_set_exp(self):
-        now = datetime(year=2000, month=1, day=1)
+        now = make_utc(datetime(year=2000, month=1, day=1))
 
         token = MyToken()
         token.current_time = now

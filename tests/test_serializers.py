@@ -1,8 +1,9 @@
 from __future__ import unicode_literals
 
-from datetime import datetime, timedelta
+from datetime import timedelta
 
 from django.test import TestCase
+from django.utils import timezone
 from mock import patch
 from rest_framework_simplejwt.serializers import (
     TokenObtainPairSerializer, TokenObtainSerializer,
@@ -14,7 +15,9 @@ from rest_framework_simplejwt.state import User
 from rest_framework_simplejwt.tokens import (
     AccessToken, RefreshToken, SlidingToken
 )
-from rest_framework_simplejwt.utils import datetime_to_epoch
+from rest_framework_simplejwt.utils import (
+    datetime_from_timestamp, datetime_to_epoch
+)
 
 
 class TestTokenObtainSerializer(TestCase):
@@ -177,7 +180,7 @@ class TestTokenRefreshSlidingSerializer(TestCase):
 
         # Expiration claim has moved into future
         new_token = SlidingToken(s.validated_data['token'])
-        new_exp = datetime.utcfromtimestamp(new_token['exp'])
+        new_exp = datetime_from_timestamp(new_token['exp'])
 
         self.assertTrue(old_exp < new_exp)
 
@@ -215,13 +218,10 @@ class TestTokenRefreshSerializer(TestCase):
         # Serializer validates
         s = TokenRefreshSerializer(data={'refresh': str(refresh)})
 
-        now = datetime.utcnow() - api_settings.ACCESS_TOKEN_LIFETIME / 2
+        now = timezone.now() - api_settings.ACCESS_TOKEN_LIFETIME / 2
 
-        utcfromtimestamp = datetime.utcfromtimestamp
-        with patch('rest_framework_simplejwt.tokens.datetime') as fake_datetime:
-            fake_datetime.utcnow.return_value = now
-            fake_datetime.utcfromtimestamp = utcfromtimestamp
-
+        with patch('rest_framework_simplejwt.tokens.timezone') as fake_timezone:
+            fake_timezone.now.return_value = now
             self.assertTrue(s.is_valid())
 
         access = AccessToken(s.validated_data['access'])

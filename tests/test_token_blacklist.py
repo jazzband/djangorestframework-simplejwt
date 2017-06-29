@@ -1,11 +1,10 @@
-from datetime import datetime
 from uuid import UUID
 
 from django.contrib.auth.models import User
 from django.core.management import call_command
 from django.test import TestCase
+from django.utils import timezone
 from mock import patch
-
 from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.settings import api_settings
 from rest_framework_simplejwt.token_blacklist.models import (
@@ -14,6 +13,7 @@ from rest_framework_simplejwt.token_blacklist.models import (
 from rest_framework_simplejwt.tokens import (
     AccessToken, RefreshToken, SlidingToken
 )
+from rest_framework_simplejwt.utils import datetime_from_timestamp
 
 
 class TestTokenBlacklist(TestCase):
@@ -34,7 +34,7 @@ class TestTokenBlacklist(TestCase):
         self.assertEqual(outstanding_token.jti, UUID(hex=token['jti']))
         self.assertEqual(outstanding_token.token, str(token))
         self.assertEqual(outstanding_token.created_at, token.current_time)
-        self.assertEqual(outstanding_token.expires_at, datetime.utcfromtimestamp(token['exp']))
+        self.assertEqual(outstanding_token.expires_at, datetime_from_timestamp(token['exp']))
 
     def test_refresh_tokens_are_added_to_outstanding_list(self):
         token = RefreshToken.for_user(self.user)
@@ -47,7 +47,7 @@ class TestTokenBlacklist(TestCase):
         self.assertEqual(outstanding_token.jti, UUID(hex=token['jti']))
         self.assertEqual(outstanding_token.token, str(token))
         self.assertEqual(outstanding_token.created_at, token.current_time)
-        self.assertEqual(outstanding_token.expires_at, datetime.utcfromtimestamp(token['exp']))
+        self.assertEqual(outstanding_token.expires_at, datetime_from_timestamp(token['exp']))
 
     def test_access_tokens_are_not_added_to_outstanding_list(self):
         AccessToken.for_user(self.user)
@@ -89,12 +89,10 @@ class TestTokenBlacklistFlushExpiredTokens(TestCase):
         BlacklistedToken.objects.create(token=token)
 
         # Make tokens with fake exp time that will expire soon
-        utcfromtimestamp = datetime.utcfromtimestamp
-        fake_now = datetime.utcnow() - api_settings.REFRESH_TOKEN_LIFETIME
+        fake_now = timezone.now() - api_settings.REFRESH_TOKEN_LIFETIME
 
-        with patch('rest_framework_simplejwt.tokens.datetime') as fake_datetime:
-            fake_datetime.utcfromtimestamp = utcfromtimestamp
-            fake_datetime.utcnow.return_value = fake_now
+        with patch('rest_framework_simplejwt.tokens.timezone') as fake_timezone:
+            fake_timezone.now.return_value = fake_now
 
             RefreshToken.for_user(self.user)
             expired = RefreshToken.for_user(self.user)

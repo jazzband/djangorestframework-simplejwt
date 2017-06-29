@@ -1,13 +1,27 @@
 from __future__ import unicode_literals
 
 from calendar import timegm
+from datetime import datetime
 
+from django.conf import settings
 from django.utils import six
 from django.utils.functional import lazy
+from django.utils.timezone import is_aware, make_aware, utc
 
 
 def datetime_to_epoch(dt):
     return timegm(dt.utctimetuple())
+
+
+def datetime_from_timestamp(ts):
+    return make_utc(datetime.utcfromtimestamp(ts))
+
+
+def make_utc(dt):
+    if settings.USE_TZ and not is_aware(dt):
+        return make_aware(dt, timezone=utc)
+
+    return dt
 
 
 def format_lazy(s, *args, **kwargs):

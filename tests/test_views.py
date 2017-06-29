@@ -1,14 +1,17 @@
 from __future__ import unicode_literals
 
-from datetime import datetime, timedelta
+from datetime import timedelta
 
+from django.utils import timezone
 from mock import patch
 from rest_framework_simplejwt.settings import api_settings
 from rest_framework_simplejwt.state import User
 from rest_framework_simplejwt.tokens import (
     AccessToken, RefreshToken, SlidingToken
 )
-from rest_framework_simplejwt.utils import datetime_to_epoch
+from rest_framework_simplejwt.utils import (
+    datetime_from_timestamp, datetime_to_epoch
+)
 
 from .utils import APIViewTestCase
 
@@ -106,12 +109,10 @@ class TestTokenRefreshView(APIViewTestCase):
         refresh['test_claim'] = 'arst'
 
         # View returns 200
-        now = datetime.utcnow() - api_settings.ACCESS_TOKEN_LIFETIME / 2
+        now = timezone.now() - api_settings.ACCESS_TOKEN_LIFETIME / 2
 
-        utcfromtimestamp = datetime.utcfromtimestamp
-        with patch('rest_framework_simplejwt.tokens.datetime') as fake_datetime:
-            fake_datetime.utcnow.return_value = now
-            fake_datetime.utcfromtimestamp = utcfromtimestamp
+        with patch('rest_framework_simplejwt.tokens.timezone') as fake_timezone:
+            fake_timezone.now.return_value = now
 
             res = self.view_post(data={'refresh': str(refresh)})
 
@@ -229,7 +230,7 @@ class TestTokenRefreshSlidingView(APIViewTestCase):
         self.assertIn("'{}' claim has expired".format(api_settings.SLIDING_TOKEN_REFRESH_EXP_CLAIM), res.data['non_field_errors'][0])
 
     def test_it_should_update_token_exp_claim_if_everything_ok(self):
-        now = datetime.utcnow()
+        now = timezone.now()
 
         token = SlidingToken()
         exp = now + api_settings.SLIDING_TOKEN_LIFETIME - timedelta(seconds=1)
@@ -241,6 +242,6 @@ class TestTokenRefreshSlidingView(APIViewTestCase):
 
         # Expiration claim has moved into future
         new_token = SlidingToken(res.data['token'])
-        new_exp = datetime.utcfromtimestamp(new_token['exp'])
+        new_exp = datetime_from_timestamp(new_token['exp'])
 
         self.assertTrue(exp < new_exp)

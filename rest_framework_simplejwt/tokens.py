@@ -1,16 +1,16 @@
 from __future__ import unicode_literals
 
-from datetime import datetime
-from uuid import uuid4, UUID
+from uuid import UUID, uuid4
 
 from django.conf import settings
-from django.utils.six import text_type, python_2_unicode_compatible
+from django.utils import timezone
+from django.utils.six import python_2_unicode_compatible, text_type
 from django.utils.translation import ugettext_lazy as _
 
-from .exceptions import TokenError, TokenBackendError
+from .exceptions import TokenBackendError, TokenError
 from .settings import api_settings
-from .utils import datetime_to_epoch, format_lazy
-from .token_blacklist.models import OutstandingToken, BlacklistedToken
+from .token_blacklist.models import BlacklistedToken, OutstandingToken
+from .utils import datetime_from_timestamp, datetime_to_epoch, format_lazy
 
 
 @python_2_unicode_compatible
@@ -32,7 +32,7 @@ class Token(object):
             raise TokenError(_('Cannot create token with no type or lifetime'))
 
         self.token = token
-        self.current_time = datetime.utcnow()
+        self.current_time = timezone.now()
 
         # Set up token
         if token is not None:
@@ -124,7 +124,7 @@ class Token(object):
         except KeyError:
             raise TokenError(format_lazy(_("Token has no '{}' claim"), claim))
 
-        claim_time = datetime.utcfromtimestamp(claim_value)
+        claim_time = datetime_from_timestamp(claim_value)
         if claim_time <= current_time:
             raise TokenError(format_lazy(_("Token '{}' claim has expired"), claim))
 
@@ -147,7 +147,7 @@ class Token(object):
 class BlacklistMixin(object):
     """
     If the `rest_framework_simplejwt.token_blacklist` app was configured to be
-    used, `Token` subclasses which inherit from this mixin will insert
+    used, tokens created from `BlacklistMixin` subclasses will insert
     themselves into an outstanding token list and also check for their
     membership in a token blacklist.
     """
@@ -186,7 +186,7 @@ class BlacklistMixin(object):
                 jti=UUID(hex=jti),
                 token=str(token),
                 created_at=token.current_time,
-                expires_at=datetime.utcfromtimestamp(exp),
+                expires_at=datetime_from_timestamp(exp),
             )
 
             return token
