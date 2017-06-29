@@ -3,14 +3,15 @@ from __future__ import unicode_literals
 from uuid import UUID, uuid4
 
 from django.conf import settings
-from django.utils import timezone
 from django.utils.six import python_2_unicode_compatible, text_type
 from django.utils.translation import ugettext_lazy as _
 
 from .exceptions import TokenBackendError, TokenError
 from .settings import api_settings
 from .token_blacklist.models import BlacklistedToken, OutstandingToken
-from .utils import datetime_from_timestamp, datetime_to_epoch, format_lazy
+from .utils import (
+    aware_utcnow, datetime_from_timestamp, datetime_to_epoch, format_lazy
+)
 
 
 @python_2_unicode_compatible
@@ -32,7 +33,7 @@ class Token(object):
             raise TokenError(_('Cannot create token with no type or lifetime'))
 
         self.token = token
-        self.current_time = timezone.now()
+        self.current_time = aware_utcnow()
 
         # Set up token
         if token is not None:

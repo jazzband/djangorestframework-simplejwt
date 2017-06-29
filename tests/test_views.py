@@ -2,7 +2,6 @@ from __future__ import unicode_literals
 
 from datetime import timedelta
 
-from django.utils import timezone
 from mock import patch
 from rest_framework_simplejwt.settings import api_settings
 from rest_framework_simplejwt.state import User
@@ -10,7 +9,7 @@ from rest_framework_simplejwt.tokens import (
     AccessToken, RefreshToken, SlidingToken
 )
 from rest_framework_simplejwt.utils import (
-    datetime_from_timestamp, datetime_to_epoch
+    aware_utcnow, datetime_from_timestamp, datetime_to_epoch
 )
 
 from .utils import APIViewTestCase
@@ -109,10 +108,10 @@ class TestTokenRefreshView(APIViewTestCase):
         refresh['test_claim'] = 'arst'
 
         # View returns 200
-        now = timezone.now() - api_settings.ACCESS_TOKEN_LIFETIME / 2
+        now = aware_utcnow() - api_settings.ACCESS_TOKEN_LIFETIME / 2
 
-        with patch('rest_framework_simplejwt.tokens.timezone') as fake_timezone:
-            fake_timezone.now.return_value = now
+        with patch('rest_framework_simplejwt.tokens.aware_utcnow') as fake_aware_utcnow:
+            fake_aware_utcnow.return_value = now
 
             res = self.view_post(data={'refresh': str(refresh)})
 
@@ -230,7 +229,7 @@ class TestTokenRefreshSlidingView(APIViewTestCase):
         self.assertIn("'{}' claim has expired".format(api_settings.SLIDING_TOKEN_REFRESH_EXP_CLAIM), res.data['non_field_errors'][0])
 
     def test_it_should_update_token_exp_claim_if_everything_ok(self):
-        now = timezone.now()
+        now = aware_utcnow()
 
         token = SlidingToken()
         exp = now + api_settings.SLIDING_TOKEN_LIFETIME - timedelta(seconds=1)

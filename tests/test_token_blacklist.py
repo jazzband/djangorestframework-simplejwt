@@ -3,7 +3,6 @@ from uuid import UUID
 from django.contrib.auth.models import User
 from django.core.management import call_command
 from django.test import TestCase
-from django.utils import timezone
 from mock import patch
 from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.settings import api_settings
@@ -13,7 +12,9 @@ from rest_framework_simplejwt.token_blacklist.models import (
 from rest_framework_simplejwt.tokens import (
     AccessToken, RefreshToken, SlidingToken
 )
-from rest_framework_simplejwt.utils import datetime_from_timestamp
+from rest_framework_simplejwt.utils import (
+    aware_utcnow, datetime_from_timestamp
+)
 
 
 class TestTokenBlacklist(TestCase):
@@ -89,10 +90,10 @@ class TestTokenBlacklistFlushExpiredTokens(TestCase):
         BlacklistedToken.objects.create(token=token)
 
         # Make tokens with fake exp time that will expire soon
-        fake_now = timezone.now() - api_settings.REFRESH_TOKEN_LIFETIME
+        fake_now = aware_utcnow() - api_settings.REFRESH_TOKEN_LIFETIME
 
-        with patch('rest_framework_simplejwt.tokens.timezone') as fake_timezone:
-            fake_timezone.now.return_value = fake_now
+        with patch('rest_framework_simplejwt.tokens.aware_utcnow') as fake_aware_utcnow:
+            fake_aware_utcnow.return_value = fake_now
 
             RefreshToken.for_user(self.user)
             expired = RefreshToken.for_user(self.user)

@@ -3,11 +3,10 @@ from __future__ import unicode_literals
 from datetime import datetime, timedelta
 
 from django.test import TestCase
-from django.utils import timezone
 from jose import jwt
 from rest_framework_simplejwt.backends import PythonJOSEBackend
 from rest_framework_simplejwt.exceptions import TokenBackendError
-from rest_framework_simplejwt.utils import make_utc
+from rest_framework_simplejwt.utils import aware_utcnow, make_utc
 
 
 class TestPythonJOSEBackend(TestCase):
@@ -47,13 +46,13 @@ class TestPythonJOSEBackend(TestCase):
         self.token_backend.decode(no_exp_token)
 
         # Expired tokens should cause exception
-        payload['exp'] = timezone.now() - timedelta(seconds=1)
+        payload['exp'] = aware_utcnow() - timedelta(seconds=1)
         expired_token = jwt.encode(payload, self.secret, algorithm='HS256')
         with self.assertRaises(TokenBackendError):
             self.token_backend.decode(expired_token)
 
         # Token with invalid signature should cause exception
-        payload['exp'] = timezone.now() + timedelta(days=1)
+        payload['exp'] = aware_utcnow() + timedelta(days=1)
         token = jwt.encode(payload, self.secret, algorithm='HS256')
         payload['foo'] = 'baz'
         other_token = jwt.encode(payload, self.secret, algorithm='HS256')

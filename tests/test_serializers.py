@@ -3,7 +3,6 @@ from __future__ import unicode_literals
 from datetime import timedelta
 
 from django.test import TestCase
-from django.utils import timezone
 from mock import patch
 from rest_framework_simplejwt.serializers import (
     TokenObtainPairSerializer, TokenObtainSerializer,
@@ -16,7 +15,7 @@ from rest_framework_simplejwt.tokens import (
     AccessToken, RefreshToken, SlidingToken
 )
 from rest_framework_simplejwt.utils import (
-    datetime_from_timestamp, datetime_to_epoch
+    aware_utcnow, datetime_from_timestamp, datetime_to_epoch
 )
 
 
@@ -218,10 +217,10 @@ class TestTokenRefreshSerializer(TestCase):
         # Serializer validates
         s = TokenRefreshSerializer(data={'refresh': str(refresh)})
 
-        now = timezone.now() - api_settings.ACCESS_TOKEN_LIFETIME / 2
+        now = aware_utcnow() - api_settings.ACCESS_TOKEN_LIFETIME / 2
 
-        with patch('rest_framework_simplejwt.tokens.timezone') as fake_timezone:
-            fake_timezone.now.return_value = now
+        with patch('rest_framework_simplejwt.tokens.aware_utcnow') as fake_aware_utcnow:
+            fake_aware_utcnow.return_value = now
             self.assertTrue(s.is_valid())
 
         access = AccessToken(s.validated_data['access'])
