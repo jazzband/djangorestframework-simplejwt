@@ -2,8 +2,8 @@ from __future__ import unicode_literals
 
 from datetime import datetime
 
-from django.utils import six, timezone
 from django.test import TestCase
+from django.utils import six, timezone
 from mock import patch
 from rest_framework_simplejwt.utils import (
     aware_utcnow, datetime_from_epoch, datetime_to_epoch, format_lazy,

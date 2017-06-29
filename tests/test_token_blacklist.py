@@ -12,9 +12,7 @@ from rest_framework_simplejwt.token_blacklist.models import (
 from rest_framework_simplejwt.tokens import (
     AccessToken, RefreshToken, SlidingToken
 )
-from rest_framework_simplejwt.utils import (
-    aware_utcnow, datetime_from_epoch
-)
+from rest_framework_simplejwt.utils import aware_utcnow, datetime_from_epoch
 
 
 class TestTokenBlacklist(TestCase):
