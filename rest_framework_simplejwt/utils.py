@@ -6,11 +6,11 @@ from datetime import datetime
 from django.conf import settings
 from django.utils import six
 from django.utils.functional import lazy
-from django.utils.timezone import is_aware, make_aware, utc
+from django.utils.timezone import is_naive, make_aware, utc
 
 
 def make_utc(dt):
-    if settings.USE_TZ and not is_aware(dt):
+    if settings.USE_TZ and is_naive(dt):
         return make_aware(dt, timezone=utc)
 
     return dt
