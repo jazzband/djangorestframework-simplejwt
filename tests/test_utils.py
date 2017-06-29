@@ -6,7 +6,7 @@ from django.utils import six, timezone
 from django.test import TestCase
 from mock import patch
 from rest_framework_simplejwt.utils import (
-    aware_utcnow, datetime_from_timestamp, datetime_to_epoch, format_lazy,
+    aware_utcnow, datetime_from_epoch, datetime_to_epoch, format_lazy,
     make_utc
 )
 
@@ -57,14 +57,14 @@ class TestDatetimeToEpoch(TestCase):
 class TestDatetimeFromEpoch(TestCase):
     def test_it_should_return_the_correct_values(self):
         with self.settings(USE_TZ=False):
-            self.assertEqual(datetime_from_timestamp(0), datetime(year=1970, month=1, day=1))
-            self.assertEqual(datetime_from_timestamp(1), datetime(year=1970, month=1, day=1, second=1))
-            self.assertEqual(datetime_from_timestamp(946684800), datetime(year=2000, month=1, day=1), 946684800)
+            self.assertEqual(datetime_from_epoch(0), datetime(year=1970, month=1, day=1))
+            self.assertEqual(datetime_from_epoch(1), datetime(year=1970, month=1, day=1, second=1))
+            self.assertEqual(datetime_from_epoch(946684800), datetime(year=2000, month=1, day=1), 946684800)
 
         with self.settings(USE_TZ=True):
-            self.assertEqual(datetime_from_timestamp(0), make_utc(datetime(year=1970, month=1, day=1)))
-            self.assertEqual(datetime_from_timestamp(1), make_utc(datetime(year=1970, month=1, day=1, second=1)))
-            self.assertEqual(datetime_from_timestamp(946684800), make_utc(datetime(year=2000, month=1, day=1)))
+            self.assertEqual(datetime_from_epoch(0), make_utc(datetime(year=1970, month=1, day=1)))
+            self.assertEqual(datetime_from_epoch(1), make_utc(datetime(year=1970, month=1, day=1, second=1)))
+            self.assertEqual(datetime_from_epoch(946684800), make_utc(datetime(year=2000, month=1, day=1)))
 
 
 class TestFormatLazy(TestCase):

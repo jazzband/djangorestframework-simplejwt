@@ -13,7 +13,7 @@ from rest_framework_simplejwt.tokens import (
     AccessToken, RefreshToken, SlidingToken
 )
 from rest_framework_simplejwt.utils import (
-    aware_utcnow, datetime_from_timestamp
+    aware_utcnow, datetime_from_epoch
 )
 
 
@@ -35,7 +35,7 @@ class TestTokenBlacklist(TestCase):
         self.assertEqual(outstanding_token.jti, UUID(hex=token['jti']))
         self.assertEqual(outstanding_token.token, str(token))
         self.assertEqual(outstanding_token.created_at, token.current_time)
-        self.assertEqual(outstanding_token.expires_at, datetime_from_timestamp(token['exp']))
+        self.assertEqual(outstanding_token.expires_at, datetime_from_epoch(token['exp']))
 
     def test_refresh_tokens_are_added_to_outstanding_list(self):
         token = RefreshToken.for_user(self.user)
@@ -48,7 +48,7 @@ class TestTokenBlacklist(TestCase):
         self.assertEqual(outstanding_token.jti, UUID(hex=token['jti']))
         self.assertEqual(outstanding_token.token, str(token))
         self.assertEqual(outstanding_token.created_at, token.current_time)
-        self.assertEqual(outstanding_token.expires_at, datetime_from_timestamp(token['exp']))
+        self.assertEqual(outstanding_token.expires_at, datetime_from_epoch(token['exp']))
 
     def test_access_tokens_are_not_added_to_outstanding_list(self):
         AccessToken.for_user(self.user)

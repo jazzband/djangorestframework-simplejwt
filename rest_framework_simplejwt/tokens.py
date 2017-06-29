@@ -10,7 +10,7 @@ from .exceptions import TokenBackendError, TokenError
 from .settings import api_settings
 from .token_blacklist.models import BlacklistedToken, OutstandingToken
 from .utils import (
-    aware_utcnow, datetime_from_timestamp, datetime_to_epoch, format_lazy
+    aware_utcnow, datetime_from_epoch, datetime_to_epoch, format_lazy
 )
 
 
@@ -125,7 +125,7 @@ class Token(object):
         except KeyError:
             raise TokenError(format_lazy(_("Token has no '{}' claim"), claim))
 
-        claim_time = datetime_from_timestamp(claim_value)
+        claim_time = datetime_from_epoch(claim_value)
         if claim_time <= current_time:
             raise TokenError(format_lazy(_("Token '{}' claim has expired"), claim))
 
@@ -187,7 +187,7 @@ class BlacklistMixin(object):
                 jti=UUID(hex=jti),
                 token=str(token),
                 created_at=token.current_time,
-                expires_at=datetime_from_timestamp(exp),
+                expires_at=datetime_from_epoch(exp),
             )
 
             return token

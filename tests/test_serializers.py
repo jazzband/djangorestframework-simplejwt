@@ -15,7 +15,7 @@ from rest_framework_simplejwt.tokens import (
     AccessToken, RefreshToken, SlidingToken
 )
 from rest_framework_simplejwt.utils import (
-    aware_utcnow, datetime_from_timestamp, datetime_to_epoch
+    aware_utcnow, datetime_from_epoch, datetime_to_epoch
 )
 
 
@@ -179,7 +179,7 @@ class TestTokenRefreshSlidingSerializer(TestCase):
 
         # Expiration claim has moved into future
         new_token = SlidingToken(s.validated_data['token'])
-        new_exp = datetime_from_timestamp(new_token['exp'])
+        new_exp = datetime_from_epoch(new_token['exp'])
 
         self.assertTrue(old_exp < new_exp)
 

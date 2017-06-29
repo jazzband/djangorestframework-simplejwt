@@ -24,7 +24,7 @@ def datetime_to_epoch(dt):
     return timegm(dt.utctimetuple())
 
 
-def datetime_from_timestamp(ts):
+def datetime_from_epoch(ts):
     return make_utc(datetime.utcfromtimestamp(ts))
 
 
