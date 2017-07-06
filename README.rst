@@ -1,7 +1,7 @@
 Simple JWT
 ==========
 
-A minimal JSON Web Token authentication plugin for the `Django REST Framework
+A JSON Web Token authentication plugin for the `Django REST Framework
 <http://www.django-rest-framework.org/>`__.
 
 .. image:: https://travis-ci.org/davesque/django-rest-framework-simplejwt.svg?branch=master
