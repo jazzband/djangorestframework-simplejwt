@@ -212,7 +212,7 @@ class SlidingToken(BlacklistMixin, Token):
 class RefreshToken(BlacklistMixin, Token):
     token_type = 'refresh'
     lifetime = api_settings.REFRESH_TOKEN_LIFETIME
-    no_copy_claims = (api_settings.TOKEN_TYPE_CLAIM, 'exp')
+    no_copy_claims = (api_settings.TOKEN_TYPE_CLAIM, 'exp', 'jti')
 
     @property
     def access_token(self):
