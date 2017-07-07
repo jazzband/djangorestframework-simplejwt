@@ -78,7 +78,8 @@ class PyJWTBackend(TokenBackend):
         """
         Returns an encoded token for the given payload dictionary.
         """
-        return self.jwt.encode(payload, self.secret, algorithm=self.algorithm)
+        token = self.jwt.encode(payload, self.secret, algorithm=self.algorithm)
+        return token.decode('utf-8')
 
     def decode(self, token):
         """

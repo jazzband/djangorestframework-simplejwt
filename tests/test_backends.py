@@ -113,9 +113,9 @@ class TestPyJWTBackend(TestCase):
 
         # Token with invalid signature should cause exception
         payload['exp'] = aware_utcnow() + timedelta(days=1)
-        token = jwt.encode(payload, self.secret, algorithm='HS256')
+        token = jwt.encode(payload, self.secret, algorithm='HS256').decode('utf-8')
         payload['foo'] = 'baz'
-        other_token = jwt.encode(payload, self.secret, algorithm='HS256')
+        other_token = jwt.encode(payload, self.secret, algorithm='HS256').decode('utf-8')
 
         incorrect_payload = other_token.rsplit('.', 1)[0]
         correct_sig = token.rsplit('.', 1)[-1]
