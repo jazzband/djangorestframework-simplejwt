@@ -5,7 +5,6 @@ from django.utils.translation import ugettext_lazy as _
 from .exceptions import TokenBackendError
 from .utils import format_lazy
 
-
 ALLOWED_ALGORITHMS = (
     'HS256',
 )
@@ -63,4 +62,34 @@ class PythonJOSEBackend(TokenBackend):
         try:
             return self.jwt.decode(token, self.secret, algorithms=[self.algorithm])
         except self.JOSEError:
+            raise TokenBackendError(_('Token is invalid or expired'))
+
+
+class PyJWTBackend(TokenBackend):
+    def __init__(self, *args, **kwargs):
+        super(PyJWTBackend, self).__init__(*args, **kwargs)
+
+        import jwt
+
+        self.jwt = jwt
+        self.InvalidTokenError = jwt.InvalidTokenError
+
+    def encode(self, payload):
+        """
+        Returns an encoded token for the given payload dictionary.
+        """
+        token = self.jwt.encode(payload, self.secret, algorithm=self.algorithm)
+        return token.decode('utf-8')
+
+    def decode(self, token):
+        """
+        Performs a low-level validation of the given token and returns its
+        payload dictionary.
+
+        Raises a `TokenBackendError` if the token is malformed, if its
+        signature check fails, or if its 'exp' claim indicates it has expired.
+        """
+        try:
+            return self.jwt.decode(token, self.secret, algorithms=[self.algorithm])
+        except self.InvalidTokenError:
             raise TokenBackendError(_('Token is invalid or expired'))

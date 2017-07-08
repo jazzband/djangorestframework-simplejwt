@@ -40,7 +40,7 @@ setup(
     author='David Sanders',
     author_email='davesque@gmail.com',
     packages=find_packages(exclude=['tests', 'licenses', 'requirements']),
-    install_requires=['django', 'djangorestframework', 'python-jose'],
+    install_requires=['django', 'djangorestframework', 'pyjwt'],
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Environment :: Web Environment',

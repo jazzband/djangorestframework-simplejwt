@@ -28,7 +28,7 @@ DEFAULTS = {
     # Make sure you know what you're doing.  These might become part of the
     # public API eventually but that would require some adjustments and better
     # documentation.
-    'TOKEN_BACKEND_CLASS': 'rest_framework_simplejwt.backends.PythonJOSEBackend',
+    'TOKEN_BACKEND_CLASS': 'rest_framework_simplejwt.backends.PyJWTBackend',
     'ALGORITHM': 'HS256',
 }
 
