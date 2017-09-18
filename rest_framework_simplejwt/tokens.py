@@ -241,3 +241,8 @@ class RefreshToken(BlacklistMixin, Token):
 class AccessToken(Token):
     token_type = 'access'
     lifetime = api_settings.ACCESS_TOKEN_LIFETIME
+
+
+TOKEN_TYPES = dict(
+    (subcls.token_type, subcls) for subcls in Token.__subclasses__()
+)

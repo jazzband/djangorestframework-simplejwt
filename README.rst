@@ -297,6 +297,26 @@ which will delete any tokens from the outstanding list and blacklist that have
 expired.  You should set up a cron job on your server or hosting platform which
 runs this command daily.
 
+
+Validating tokens
+-----------------
+
+To allow others to validate tokens without sharing your secret you can add the
+``TokenValidationView`` to your urls::
+
+  from rest_framework_simplejwt.views import (
+      ...
+      TokenValidationView,
+      ...
+  )
+
+  urlpatterns = [
+      ...
+      url(r'^api/token/validate/$', TokenValidationView.as_view(), name='token_validate'),
+      ...
+  ]
+
+
 Experimental features
 ---------------------
 

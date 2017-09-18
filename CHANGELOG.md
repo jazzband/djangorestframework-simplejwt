@@ -1,3 +1,7 @@
+## Development
+
+* Added validation view to validate token.
+
 ## Version 2.1
 
 * Switched to using [PyJWT](https://github.com/jpadilla/pyjwt) as the
