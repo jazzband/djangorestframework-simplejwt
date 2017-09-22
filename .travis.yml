@@ -20,8 +20,6 @@ env:
 matrix:
     fast_finish: true
     include:
-      - python: "3.3"
-        env: DJANGO=1.8
       - python: "2.7"
         env: TOXENV="lint"
     exclude:
