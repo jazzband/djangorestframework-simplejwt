@@ -16,6 +16,17 @@ Framework.  It aims to provide an out-of-the-box solution for JWT
 authentication which avoids some of the common pitfalls of the JWT
 specification.  Below, we list some of the major goals of the project:
 
+Requirements
+------------
+
+* Python (2.7, 3.4, 3.5, 3.6)
+* Django (1.8, 1.9, 1.10, 1.11)
+* Django REST Framework (3.5, 3.6)
+
+These are the officially supported python and package versions.  Other versions
+will probably work.  You're free to modify the tox config and see what is
+possible.
+
 Discourage crypto negotiation
 -----------------------------
 
