@@ -146,7 +146,7 @@ Some of Simple JWT's behavior can be customized through settings variables in
       'USER_ID_FIELD': 'id',
       'USER_ID_CLAIM': 'user_id',
 
-      'AUTH_TOKEN_CLASS': 'rest_framework_simplejwt.tokens.AccessToken',
+      'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
       'TOKEN_TYPE_CLAIM': 'token_type',
 
       'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
@@ -198,9 +198,10 @@ USER_ID_CLAIM
   For example, a setting value of ``'user_id'`` would mean generated tokens
   include a "user_id" claim that contains the user's identifier.
 
-AUTH_TOKEN_CLASS
-  A dot path to a class which specifies the type of token that is expected to
-  prove authentication.  More about this in the "Token types" section below.
+AUTH_TOKEN_CLASSES
+  A list of dot paths to classes which specify the types of token that are
+  allowed to prove authentication.  More about this in the "Token types"
+  section below.
 
 TOKEN_TYPE_CLAIM
   The claim name that is used to store a token's type.  More about this in the
@@ -225,18 +226,22 @@ SLIDING_TOKEN_REFRESH_EXP_CLAIM
 Token types
 -----------
 
-Simple JWT provides a number of token types which can be used for
-authorization.  In a token's payload, its type can be identified by the value
+Simple JWT provides two different token types which can be used to prove
+authentication.  In a token's payload, its type can be identified by the value
 of its token type claim, which is "token_type" by default.  This may have a
-value of "access", "refresh", or "sliding".  The claim name used to store the
-type can be customized by changing the ``TOKEN_TYPE_CLAIM`` setting.
+value of "access", "sliding", or "refresh" however refresh tokens are not
+considered valid for authentication at this time.  The claim name used to store
+the type can be customized by changing the ``TOKEN_TYPE_CLAIM`` setting.
 
 By default, Simple JWT expects an "access" token to prove authentication.  The
-expected token type is determined by the value of the ``AUTH_TOKEN_CLASS``
-setting.  This setting contains a dot path to a token class and is normally set
-to ``'rest_framework_simplejwt.tokens.AccessToken'``.  At present, the only
-other possible value for this setting is
-``'rest_framework_simplejwt.tokens.SlidingToken'``.
+allowed auth token types are determined by the value of the
+``AUTH_TOKEN_CLASSES`` setting.  This setting contains a list of dot paths to
+token classes.  It includes the
+``'rest_framework_simplejwt.tokens.AccessToken'`` dot path by default but may
+also include the ``'rest_framework_simplejwt.tokens.SlidingToken'`` dot path.
+Either or both of those dot paths may be present in the list of auth token
+classes.  If they are both present, then both of those token types may be used
+to prove authentication.
 
 Sliding tokens
 --------------
@@ -244,17 +249,22 @@ Sliding tokens
 Sliding tokens offer a more convenient experience to users of tokens with the
 trade-offs of being less secure and, in the case that the blacklist app is
 being used, less performant.  A sliding token is one which contains both an an
-expiration claim and a refresh expiration claim.  As long as the timestamp in
-a sliding token's expiration claim has not passed, it can be used to prove
+expiration claim and a refresh expiration claim.  As long as the timestamp in a
+sliding token's expiration claim has not passed, it can be used to prove
 authentication.  Additionally, as long as the timestamp in its refresh
 expiration claim has not passed, it may also be submitted to a refresh view to
 get another copy of itself with a renewed expiration claim.
 
-If you want to use sliding tokens, change the value of the ``AUTH_TOKEN_CLASS``
-setting to ``'rest_framework_simplejwt.tokens.SlidingToken'``.  Also, instead
-of defining urls for the ``TokenObtainPairView`` and ``TokenRefreshView``
-views, define urls instead for the ``TokenObtainSlidingView`` and the
-``TokenRefreshSlidingView``::
+If you want to use sliding tokens, change the ``AUTH_TOKEN_CLASSES`` setting to
+``('rest_framework_simplejwt.tokens.SlidingToken',)``.  (Alternatively, the
+``AUTH_TOKEN_CLASSES`` setting may include dot paths to both the
+``AccessToken`` and ``SlidingToken`` token classes in the
+``rest_framework_simplejwt.tokens`` module if you want to allow both token
+types to be used for authentication.)
+
+Also, include urls for the sliding token specific ``TokenObtainSlidingView``
+and ``TokenRefreshSlidingView`` views along side or in place of urls for the
+access token specific ``TokenObtainPairView`` and ``TokenRefreshView`` views::
 
   from rest_framework_simplejwt.views import (
       TokenObtainSlidingView,
@@ -270,7 +280,7 @@ views, define urls instead for the ``TokenObtainSlidingView`` and the
 
 Be aware that, if you are using the blacklist app, Simple JWT will validate all
 sliding tokens against the blacklist for each authenticated request.  This will
-slightly reduce the performance of authenticated API views.
+reduce the performance of authenticated API views.
 
 Blacklist app
 -------------
