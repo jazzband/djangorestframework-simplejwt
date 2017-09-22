@@ -3,7 +3,11 @@ from __future__ import unicode_literals
 from datetime import timedelta
 
 from django.conf import settings
-from rest_framework.settings import APISettings
+from django.test.signals import setting_changed
+from django.utils.translation import ugettext_lazy as _
+from rest_framework.settings import APISettings as _APISettings
+
+from .utils import format_lazy
 
 USER_SETTINGS = getattr(settings, 'SIMPLE_JWT', None)
 
@@ -32,9 +36,36 @@ DEFAULTS = {
     'ALGORITHM': 'HS256',
 }
 
-IMPORT_STRING_SETTINGS = (
+IMPORT_STRINGS = (
     'AUTH_TOKEN_CLASS',
     'TOKEN_BACKEND_CLASS',
 )
 
-api_settings = APISettings(USER_SETTINGS, DEFAULTS, IMPORT_STRING_SETTINGS)
+REMOVED_SETTINGS = tuple()
+
+
+class APISettings(_APISettings):
+    def __check_user_settings(self, user_settings):
+        SETTINGS_DOC = 'https://github.com/davesque/django-rest-framework-simplejwt#settings'
+
+        for setting in REMOVED_SETTINGS:
+            if setting in user_settings:
+                raise RuntimeError(format_lazy(
+                    _("The '{}' setting has been removed. Please refer to '{}' for available settings."),
+                    setting, SETTINGS_DOC,
+                ))
+
+        return user_settings
+
+api_settings = APISettings(USER_SETTINGS, DEFAULTS, IMPORT_STRINGS)
+
+
+def reload_api_settings(*args, **kwargs):
+    global api_settings
+
+    setting, value = kwargs['setting'], kwargs['value']
+
+    if setting == 'SIMPLE_JWT':
+        api_settings = APISettings(value, DEFAULTS, IMPORT_STRINGS)
+
+setting_changed.connect(reload_api_settings)
