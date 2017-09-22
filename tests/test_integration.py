@@ -1,12 +1,10 @@
 from __future__ import unicode_literals
 
-from mock import patch
 from rest_framework_simplejwt.compat import reverse
 from rest_framework_simplejwt.settings import api_settings
 from rest_framework_simplejwt.state import User
-from rest_framework_simplejwt.tokens import AccessToken, SlidingToken
 
-from .utils import APIViewTestCase
+from .utils import APIViewTestCase, override_api_settings
 
 
 class TestTestView(APIViewTestCase):
@@ -56,7 +54,7 @@ class TestTestView(APIViewTestCase):
         token = res.data['token']
         self.authenticate_with_token(api_settings.AUTH_HEADER_TYPE, token)
 
-        with patch('rest_framework_simplejwt.authentication.AuthToken', SlidingToken):
+        with override_api_settings(AUTH_TOKEN_CLASSES=('rest_framework_simplejwt.tokens.SlidingToken',)):
             res = self.view_get()
 
         self.assertEqual(res.status_code, 200)
@@ -76,7 +74,7 @@ class TestTestView(APIViewTestCase):
 
         self.authenticate_with_token(api_settings.AUTH_HEADER_TYPE, access)
 
-        with patch('rest_framework_simplejwt.authentication.AuthToken', AccessToken):
+        with override_api_settings(AUTH_TOKEN_CLASSES=('rest_framework_simplejwt.tokens.AccessToken',)):
             res = self.view_get()
 
         self.assertEqual(res.status_code, 200)
@@ -91,7 +89,7 @@ class TestTestView(APIViewTestCase):
 
         self.authenticate_with_token(api_settings.AUTH_HEADER_TYPE, access)
 
-        with patch('rest_framework_simplejwt.authentication.AuthToken', AccessToken):
+        with override_api_settings(AUTH_TOKEN_CLASSES=('rest_framework_simplejwt.tokens.AccessToken',)):
             res = self.view_get()
 
         self.assertEqual(res.status_code, 200)

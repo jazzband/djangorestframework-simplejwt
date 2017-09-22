@@ -4,7 +4,8 @@ from django.test import TestCase
 from django.utils import six
 from rest_framework_simplejwt.models import TokenUser
 from rest_framework_simplejwt.settings import api_settings
-from rest_framework_simplejwt.state import AuthToken
+
+AuthToken = api_settings.AUTH_TOKEN_CLASSES[0]
 
 
 class TestTokenUser(TestCase):

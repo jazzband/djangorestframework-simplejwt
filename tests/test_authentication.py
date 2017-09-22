@@ -10,11 +10,11 @@ from rest_framework.test import APIRequestFactory
 from rest_framework_simplejwt import authentication
 from rest_framework_simplejwt.models import TokenUser
 from rest_framework_simplejwt.settings import api_settings
-from rest_framework_simplejwt.state import AuthToken
 
 from .utils import override_api_settings
 
 User = get_user_model()
+AuthToken = api_settings.AUTH_TOKEN_CLASSES[0]
 
 
 class TestJWTAuthentication(TestCase):

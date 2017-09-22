@@ -21,7 +21,7 @@ DEFAULTS = {
     'USER_ID_FIELD': 'id',
     'USER_ID_CLAIM': 'user_id',
 
-    'AUTH_TOKEN_CLASS': 'rest_framework_simplejwt.tokens.AccessToken',
+    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
     'TOKEN_TYPE_CLAIM': 'token_type',
 
     'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
@@ -37,11 +37,13 @@ DEFAULTS = {
 }
 
 IMPORT_STRINGS = (
-    'AUTH_TOKEN_CLASS',
+    'AUTH_TOKEN_CLASSES',
     'TOKEN_BACKEND_CLASS',
 )
 
-REMOVED_SETTINGS = tuple()
+REMOVED_SETTINGS = (
+    'AUTH_TOKEN_CLASS',
+)
 
 
 class APISettings(_APISettings):

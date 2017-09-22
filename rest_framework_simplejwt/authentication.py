@@ -8,7 +8,8 @@ from rest_framework.exceptions import AuthenticationFailed
 from .exceptions import TokenError
 from .models import TokenUser
 from .settings import api_settings
-from .state import AuthToken, User
+from .state import User
+from .utils import format_lazy
 
 AUTH_HEADER_TYPE_BYTES = api_settings.AUTH_HEADER_TYPE.encode(HTTP_HEADER_ENCODING)
 
@@ -74,10 +75,22 @@ class JWTAuthentication(authentication.BaseAuthentication):
         Validates an encoded JSON web token and returns a validated token
         wrapper object.
         """
-        try:
-            return AuthToken(raw_token)
-        except TokenError as e:
-            raise AuthenticationFailed(e.args[0])
+        exceptions = []
+
+        for AuthToken in api_settings.AUTH_TOKEN_CLASSES:
+            try:
+                return AuthToken(raw_token)
+            except TokenError as e:
+                exceptions.append((AuthToken, e))
+
+        messages = ', '.join(
+            '{}: {}'.format(AuthToken.__name__, e.args[0]) for AuthToken, e in exceptions
+        )
+
+        raise AuthenticationFailed(format_lazy(
+            _('Given token not valid for any token type -- {}'),
+            messages,
+        ))
 
     def get_user(self, validated_token):
         """
