@@ -10,6 +10,7 @@ from rest_framework.test import APIRequestFactory
 from rest_framework_simplejwt import authentication
 from rest_framework_simplejwt.models import TokenUser
 from rest_framework_simplejwt.settings import api_settings
+from rest_framework_simplejwt.tokens import AccessToken, SlidingToken
 
 from .utils import override_api_settings
 
@@ -65,6 +66,29 @@ class TestJWTAuthentication(TestCase):
         # Otherwise, should return validated token
         token.set_exp()
         self.assertEqual(self.backend.get_validated_token(str(token)).payload, token.payload)
+
+        # Should not accept tokens not included in AUTH_TOKEN_CLASSES
+        sliding_token = SlidingToken()
+        with override_api_settings(AUTH_TOKEN_CLASSES=(
+            'rest_framework_simplejwt.tokens.AccessToken',
+        )):
+            with self.assertRaises(AuthenticationFailed) as e:
+                self.backend.get_validated_token(str(sliding_token))
+            self.assertIn('AccessToken: Token has wrong type', e.exception.args[0])
+
+        # Should accept tokens included in AUTH_TOKEN_CLASSES
+        access_token = AccessToken()
+        sliding_token = SlidingToken()
+
+        with override_api_settings(AUTH_TOKEN_CLASSES=(
+            'rest_framework_simplejwt.tokens.AccessToken',
+            'rest_framework_simplejwt.tokens.SlidingToken',
+        )):
+            validated_access_token = self.backend.get_validated_token(str(access_token))
+            validated_sliding_token = self.backend.get_validated_token(str(sliding_token))
+
+        self.assertEqual(str(access_token), str(validated_access_token))
+        self.assertEqual(str(sliding_token), str(validated_sliding_token))
 
     def test_get_user(self):
         payload = {'some_other_id': 'foo'}
