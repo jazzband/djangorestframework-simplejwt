@@ -74,7 +74,7 @@ class TestJWTAuthentication(TestCase):
         )):
             with self.assertRaises(AuthenticationFailed) as e:
                 self.backend.get_validated_token(str(sliding_token))
-            self.assertIn('AccessToken: Token has wrong type', e.exception.args[0])
+            self.assertIn('AccessToken: Token has wrong type', e.exception.detail)
 
         # Should accept tokens included in AUTH_TOKEN_CLASSES
         access_token = AccessToken()
