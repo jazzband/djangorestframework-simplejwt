@@ -79,16 +79,12 @@ class TestJWTAuthentication(TestCase):
         # Should accept tokens included in AUTH_TOKEN_CLASSES
         access_token = AccessToken()
         sliding_token = SlidingToken()
-
         with override_api_settings(AUTH_TOKEN_CLASSES=(
             'rest_framework_simplejwt.tokens.AccessToken',
             'rest_framework_simplejwt.tokens.SlidingToken',
         )):
-            validated_access_token = self.backend.get_validated_token(str(access_token))
-            validated_sliding_token = self.backend.get_validated_token(str(sliding_token))
-
-        self.assertEqual(str(access_token), str(validated_access_token))
-        self.assertEqual(str(sliding_token), str(validated_sliding_token))
+            self.backend.get_validated_token(str(access_token))
+            self.backend.get_validated_token(str(sliding_token))
 
     def test_get_user(self):
         payload = {'some_other_id': 'foo'}
