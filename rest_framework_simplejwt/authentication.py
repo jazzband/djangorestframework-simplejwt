@@ -9,7 +9,6 @@ from .exceptions import TokenError
 from .models import TokenUser
 from .settings import api_settings
 from .state import User
-from .utils import format_lazy
 
 AUTH_HEADER_TYPE_BYTES = api_settings.AUTH_HEADER_TYPE.encode(HTTP_HEADER_ENCODING)
 
