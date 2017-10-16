@@ -58,3 +58,13 @@ class TokenRefreshSlidingView(TokenViewBase):
     serializer_class = serializers.TokenRefreshSlidingSerializer
 
 token_refresh_sliding = TokenRefreshSlidingView.as_view()
+
+
+class TokenValidationView(TokenViewBase):
+    """
+    Takes a token and checks it's validity, returns the token if valid, shows
+    an error if not.
+    """
+    serializer_class = serializers.TokenValidationSerializer
+
+token_validation = TokenValidationView.as_view()

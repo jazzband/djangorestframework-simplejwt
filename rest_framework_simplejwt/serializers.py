@@ -8,7 +8,7 @@ from rest_framework import serializers
 from .exceptions import TokenError
 from .settings import api_settings
 from .state import User
-from .tokens import RefreshToken, SlidingToken
+from .tokens import RefreshToken, SlidingToken, TOKEN_TYPES
 
 
 class PasswordField(serializers.CharField):
@@ -100,3 +100,28 @@ class TokenRefreshSlidingSerializer(serializers.Serializer):
         token.set_exp()
 
         return {'token': text_type(token)}
+
+
+class TokenValidationSerializer(serializers.Serializer):
+    token = serializers.CharField()
+
+    def __init__(self, *args, **kwargs):
+        """
+        Constructor.
+
+        To dynamically add the field for the token type.
+        """
+        super(TokenValidationSerializer, self).__init__(*args, **kwargs)
+        self.fields[api_settings.TOKEN_TYPE_CLAIM] = serializers.ChoiceField(
+            choices=TOKEN_TYPES.keys()
+        )
+
+    def validate(self, attrs):
+        try:
+            TokenClass = TOKEN_TYPES[attrs[api_settings.TOKEN_TYPE_CLAIM]]
+            TokenClass(attrs['token'])
+        except TokenError as e:
+            raise serializers.ValidationError(e.args[0])
+
+        # Returning attrs['token'] because Token class can reorder the payload keys.
+        return {'token': attrs['token']}

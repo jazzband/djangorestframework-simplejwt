@@ -1,7 +1,7 @@
 from __future__ import unicode_literals
 
 from datetime import timedelta
-
+from django.utils.six import text_type
 from mock import patch
 from rest_framework_simplejwt.settings import api_settings
 from rest_framework_simplejwt.state import User
@@ -91,14 +91,14 @@ class TestTokenRefreshView(APIViewTestCase):
         token = RefreshToken()
         del token['exp']
 
-        res = self.view_post(data={'refresh': str(token)})
+        res = self.view_post(data={'refresh': text_type(token)})
         self.assertEqual(res.status_code, 400)
         self.assertIn('non_field_errors', res.data)
         self.assertIn("has no 'exp' claim", res.data['non_field_errors'][0])
 
         token.set_exp(lifetime=-timedelta(seconds=1))
 
-        res = self.view_post(data={'refresh': str(token)})
+        res = self.view_post(data={'refresh': text_type(token)})
         self.assertEqual(res.status_code, 400)
         self.assertIn('non_field_errors', res.data)
         self.assertIn('invalid or expired', res.data['non_field_errors'][0])
@@ -198,14 +198,14 @@ class TestTokenRefreshSlidingView(APIViewTestCase):
         token = SlidingToken()
         del token['exp']
 
-        res = self.view_post(data={'token': str(token)})
+        res = self.view_post(data={'token': text_type(token)})
         self.assertEqual(res.status_code, 400)
         self.assertIn('non_field_errors', res.data)
         self.assertIn("has no 'exp' claim", res.data['non_field_errors'][0])
 
         token.set_exp(lifetime=-timedelta(seconds=1))
 
-        res = self.view_post(data={'token': str(token)})
+        res = self.view_post(data={'token': text_type(token)})
         self.assertEqual(res.status_code, 400)
         self.assertIn('non_field_errors', res.data)
         self.assertIn('invalid or expired', res.data['non_field_errors'][0])
@@ -214,7 +214,7 @@ class TestTokenRefreshSlidingView(APIViewTestCase):
         token = SlidingToken()
         del token[api_settings.SLIDING_TOKEN_REFRESH_EXP_CLAIM]
 
-        res = self.view_post(data={'token': str(token)})
+        res = self.view_post(data={'token': text_type(token)})
         self.assertEqual(res.status_code, 400)
         self.assertIn('non_field_errors', res.data)
         self.assertIn("has no '{}' claim".format(api_settings.SLIDING_TOKEN_REFRESH_EXP_CLAIM), res.data['non_field_errors'][0])
@@ -223,7 +223,7 @@ class TestTokenRefreshSlidingView(APIViewTestCase):
         token = SlidingToken()
         token.set_exp(api_settings.SLIDING_TOKEN_REFRESH_EXP_CLAIM, lifetime=-timedelta(seconds=1))
 
-        res = self.view_post(data={'token': str(token)})
+        res = self.view_post(data={'token': text_type(token)})
         self.assertEqual(res.status_code, 400)
         self.assertIn('non_field_errors', res.data)
         self.assertIn("'{}' claim has expired".format(api_settings.SLIDING_TOKEN_REFRESH_EXP_CLAIM), res.data['non_field_errors'][0])
@@ -236,7 +236,7 @@ class TestTokenRefreshSlidingView(APIViewTestCase):
         token.set_exp(from_time=now, lifetime=api_settings.SLIDING_TOKEN_LIFETIME - timedelta(seconds=1))
 
         # View returns 200
-        res = self.view_post(data={'token': str(token)})
+        res = self.view_post(data={'token': text_type(token)})
         self.assertEqual(res.status_code, 200)
 
         # Expiration claim has moved into future
@@ -244,3 +244,83 @@ class TestTokenRefreshSlidingView(APIViewTestCase):
         new_exp = datetime_from_epoch(new_token['exp'])
 
         self.assertTrue(exp < new_exp)
+
+
+class TestTokenValidationView(APIViewTestCase):
+    view_name = 'token_validation'
+
+    def setUp(self):
+        self.username = 'test_user'
+        self.password = 'test_password'
+
+        self.user = User.objects.create_user(
+            username=self.username,
+            password=self.password,
+        )
+
+    def test_fields_missing(self):
+        res = self.view_post(data={})
+        self.assertEqual(res.status_code, 400)
+        self.assertIn('token', res.data)
+
+    def test_it_should_return_400_if_token_invalid(self):
+        token = RefreshToken()
+        del token['exp']
+
+        res = self.view_post(
+            data={
+                'token': text_type(token),
+                api_settings.TOKEN_TYPE_CLAIM: token.token_type
+            }
+        )
+        self.assertEqual(res.status_code, 400)
+        self.assertIn('non_field_errors', res.data)
+        self.assertIn("has no 'exp' claim", res.data['non_field_errors'][0])
+
+        token.set_exp(lifetime=-timedelta(seconds=1))
+
+        res = self.view_post(
+            data={
+                'token': text_type(token),
+                api_settings.TOKEN_TYPE_CLAIM: token.token_type
+            }
+        )
+        self.assertEqual(res.status_code, 400)
+        self.assertIn('non_field_errors', res.data)
+        self.assertIn('invalid or expired', res.data['non_field_errors'][0])
+
+    def test_it_should_work_with_refresh_token(self):
+        token = RefreshToken()
+        res = self.view_post(
+            data={
+                'token': text_type(token),
+                api_settings.TOKEN_TYPE_CLAIM: token.token_type
+            }
+        )
+        self.assertEqual(res.status_code, 200, res.data)
+        self.assertIn('token', res.data)
+        self.assertIn(text_type(token), res.data['token'])
+
+    def test_it_should_work_with_access_token(self):
+        token = RefreshToken().access_token
+        res = self.view_post(
+            data={
+                'token': text_type(token),
+                api_settings.TOKEN_TYPE_CLAIM: token.token_type
+            }
+        )
+        self.assertEqual(res.status_code, 200, res.data)
+        self.assertIn('token', res.data)
+        self.assertIn(text_type(token), res.data['token'])
+
+    def test_it_should_work_with_sliding_token(self):
+        token = SlidingToken()
+        res = self.view_post(
+            data={
+                'token': text_type(token),
+                api_settings.TOKEN_TYPE_CLAIM: token.token_type
+            }
+        )
+        self.assertEqual(res.status_code, 200, res.data)
+        self.assertIn('token', res.data)
+        self.assertIn(text_type(token), res.data['token'])
