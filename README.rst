@@ -14,31 +14,10 @@ A JSON Web Token authentication plugin for the `Django REST Framework
 Simple JWT provides a JSON Web Token authentication backend for the Django REST
 Framework.  It aims to provide an out-of-the-box solution for JWT
 authentication which avoids some of the common pitfalls of the JWT
-specification.  Below, we list some of the major goals of the project:
-
-Discourage crypto negotiation
------------------------------
-
-Protocols which allow for negotiation of crypto algorithms (this includes JWT)
-are generally considered to be weak by design.  Simple JWT assumes that most
-use cases will be covered by sha-256 HMAC signing with a shared secret.
-
-Object-oriented API
--------------------
-
-Simple JWT strives to implement its functionality in an object-oriented way.
-Some behavior can be customized through settings variables, but it is expected
-that the rest will be handled through subclassing.  Following from this, people
-wishing to customize the finer details of Simple JWT's behavior are expected to
-become familiar with the library's classes and the relationships there between.
-
-Safe defaults, predictability
------------------------------
-
-Assuming users of the library don't extensively and invasively subclass
-everything, Simple JWT's overall behavior shouldn't be surprising.  Settings
-variable defaults should be safe.  Where authentication and authorization are
-concerned, it should be hard to shoot oneself in the foot.
+specification.  Assuming users of the library don't extensively and invasively
+subclass everything, Simple JWT's overall behavior shouldn't be surprising.
+Settings variable defaults should be safe.  Where authentication and
+authorization are concerned, it should be hard to shoot oneself in the foot.
 
 Requirements
 ------------
@@ -140,7 +119,9 @@ Some of Simple JWT's behavior can be customized through settings variables in
       'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
       'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
 
-      'SECRET_KEY': SECRET_KEY,  # Defaults to django project secret key
+      'ALGORITHM': 'HS256',
+      'SIGNING_KEY': settings.SECRET_KEY,
+      'VERIFYING_KEY': None,
 
       'AUTH_HEADER_TYPE': 'Bearer',
       'USER_ID_FIELD': 'id',
@@ -149,9 +130,9 @@ Some of Simple JWT's behavior can be customized through settings variables in
       'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
       'TOKEN_TYPE_CLAIM': 'token_type',
 
+      'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
       'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
       'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
-      'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
   }
 
 Above, the default values for these settings are shown.
@@ -168,14 +149,39 @@ REFRESH_TOKEN_LIFETIME
   valid.  This ``timedelta`` value is added to the current UTC time during
   token generation to obtain the token's default "exp" claim value.
 
-SECRET_KEY
-  The secret key which is used to sign the content of generated tokens.  This
-  setting defaults to the value of the ``SECRET_KEY`` setting for your django
-  project.  Although this is the most reasonable default that Simple JWT can
-  provide, it is recommended that developers change this setting to a value
-  which is independent from the django project secret key.  This will make
-  changing the secret key used for tokens easier in the event that it is
-  compromised.
+ALGORITHM
+  The algorithm from the PyJWT library which will be used to perform
+  signing/verification operations on tokens.  To use symmetric HMAC signing and
+  verification, the following algorithms may be used: ``'HS256'``, ``'HS384'``,
+  ``'HS512'``.  When an HMAC algorithm is chosen, the ``'SIGNING_KEY'`` setting
+  will be used as both the signing key and the verifying key.  In that case,
+  the ``'VERIFYING_KEY'`` setting may be set to ``None``.  To use asymmetric
+  RSA signing and verification, the following algorithms may be used:
+  ``'RS256'``, ``'RS384'``, ``'RS512'``.  When an RSA algorithm is chosen, the
+  ``'SIGNING_KEY'`` setting must be set to a string which contains an RSA
+  private key.  Likewise, the ``'VERIFYING_KEY'`` setting must be set to a
+  string which contains an RSA public key.
+
+SIGNING_KEY
+  The signing key which is used to sign the content of generated tokens.  For
+  HMAC signing, this should be a random string with at least as many bits of
+  information as is required by the signing protocol.  For RSA signing, this
+  should be a string which contains an RSA private key which is 2048 bits or
+  longer.  Since Simple JWT default to using 256-bit HMAC signing, the
+  ``SIGNING_KEY`` setting defaults to the value of the ``SECRET_KEY`` setting
+  for your django project.  Although this is the most reasonable default that
+  Simple JWT can provide, it is recommended that developers change this setting
+  to a value which is independent from the django project secret key.  This
+  will make changing the signing key used for tokens easier in the event that
+  it is compromised.
+
+VERIFYING_KEY
+  The verifying key which is used to verify the content of generated tokens.
+  If an HMAC algorithm has been specified by the ``'ALGORITHM'`` setting, the
+  ``'VERIFYING_KEY'`` setting will be ignored and the value of the
+  ``'SIGNING_KEY'`` setting will be used.  If an RSA algorithm has been
+  specified by the ``'ALGORITHM'`` setting, the ``'VERIFYING_KEY'`` setting
+  must be set to a string which contains an RSA public key.
 
 AUTH_HEADER_TYPE
   The authorization header type that will be checked for views that require
