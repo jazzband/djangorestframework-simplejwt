@@ -8,11 +8,55 @@ from rest_framework_simplejwt.backends import TokenBackend
 from rest_framework_simplejwt.exceptions import TokenBackendError
 from rest_framework_simplejwt.utils import aware_utcnow, make_utc
 
+SECRET = 'not_secret'
+
+PRIVATE_KEY = '''
+-----BEGIN RSA PRIVATE KEY-----
+MIIEowIBAAKCAQEA3xMJfyl8TOdrsjDLSIodsArJ/NnQB3ZdfbFC5onxATDfRLLA
+CHFo3ye694doBKeSe1NFYbfXPvahl6ODX1a23oQyoRQwlL+M99cLcdCa0gGuJXdb
+AaF6Em8E+7uSb3290mI+rZmjqyc7gMtKVWKL4e5i2PerFFBoYkZ7E90KOp2t0ZAD
+x2uqF4VTOfYLHG0cPgSw9/ptDStJqJVAOiRRqbv0j0GOFMDYNcN0mDlnpryhQFbQ
+iMqn4IJIURZUVBJujFSa45cJPvSmMb6NrzZ1crg5UN6/5Mu2mxQzAi21+vpgGL+E
+EuekUd7sRgEAjTHjLKzotLAGo7EGa8sL1vMSFwIDAQABAoIBAQCGGWabF/BONswq
+CWUazVR9cG7uXm3NHp2jIr1p40CLC7scDCyeprZ5d+PQS4j/S1Ema++Ih8CQbCjG
+BJjD5lf2OhhJdt6hfOkcUBzkJZf8aOAsS6zctRqyHCUtwxuLhFZpM4AkUfjuuZ3u
+lcawv5YBkpG/hltE0fV+Jop0bWtpwiKxVsHXVcS0WEPXic0lsOTBCw8m81JXqjir
+PCBOnkxgNpHSt69S1xnW3l9fPUWVlduO3EIZ5PZG2BxU081eZW31yIlKsDJhfgm6
+R5Vlr5DynqeojAd6SNliCzNXZP28GOpQBrYIeVQWA1yMANvkvd4apz9GmDrjF/Fd
+g8Chah+5AoGBAPc/+zyuDZKVHK7MxwLPlchCm5Zb4eou4ycbwEB+P3gDS7MODGu4
+qvx7cstTZMuMavNRcJsfoiMMrke9JrqGe4rFGiKRFLVBY2Xwr+95pKNC11EWI1lF
+5qDAmreDsj2alVJT5yZ9hsAWTsk2i+xj+/XHWYVkr67pRvOPRAmGMB+NAoGBAOb4
+CBHe184Hn6Ie+gSD4OjewyUVmr3JDJ41s8cjb1kBvDJ/wv9Rvo9yz2imMr2F0YGc
+ytHraM77v8KOJuJWpvGjEg8I0a/rSttxWQ+J0oYJSIPn+eDpAijNWfOp1aKRNALT
+pboCXcnSn+djJFKkNJ2hR7R/vrrM6Jyly1jcVS0zAoGAQpdt4Cr0pt0YS5AFraEh
+Mz2VUArRLtSQA3F69yPJjlY85i3LdJvZGYVaJp8AT74y8/OkQ3NipNP+gH3WV3hu
+/7IUVukCTcsdrVAE4pe9mucevM0cmie0dOlLAlArCmJ/Axxr7jbyuvuHHrRdPT60
+lr6pQr8afh6AKIsWhQYqIeUCgYA+v9IJcN52hhGzjPDl+yJGggbIc3cn6pA4B2UB
+TDo7F0KXAajrjrzT4iBBUS3l2Y5SxVNA9tDxsumlJNOhmGMgsOn+FapKPgWHWuMU
+WqBMdAc0dvinRwakKS4wCcsVsJdN0UxsHap3Y3a3+XJr1VrKHIALpM0fmP31WQHG
+8Y1eiwKBgF6AYXxo0FzZacAommZrAYoxFZT1u4/rE/uvJ2K9HYRxLOVKZe+89ki3
+D7AOmrxe/CAc/D+nNrtUIv3RFGfadfSBWzyLw36ekW76xPdJgqJsSz5XJ/FgzDW+
+WNC5oOtiPOMCymP75oKOjuZJZ2SPLRmiuO/qvI5uAzBHxRC1BKdt
+-----END RSA PRIVATE KEY-----
+'''
+
+PUBLIC_KEY = '''
+-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA3xMJfyl8TOdrsjDLSIod
+sArJ/NnQB3ZdfbFC5onxATDfRLLACHFo3ye694doBKeSe1NFYbfXPvahl6ODX1a2
+3oQyoRQwlL+M99cLcdCa0gGuJXdbAaF6Em8E+7uSb3290mI+rZmjqyc7gMtKVWKL
+4e5i2PerFFBoYkZ7E90KOp2t0ZADx2uqF4VTOfYLHG0cPgSw9/ptDStJqJVAOiRR
+qbv0j0GOFMDYNcN0mDlnpryhQFbQiMqn4IJIURZUVBJujFSa45cJPvSmMb6NrzZ1
+crg5UN6/5Mu2mxQzAi21+vpgGL+EEuekUd7sRgEAjTHjLKzotLAGo7EGa8sL1vMS
+FwIDAQAB
+-----END PUBLIC KEY-----
+'''
+
 
 class TestTokenBackend(TestCase):
     def setUp(self):
-        self.secret = 'not_secret'
-        self.token_backend = TokenBackend('HS256', self.secret)
+        self.hmac_token_backend = TokenBackend('HS256', SECRET)
+        self.rsa_token_backend = TokenBackend('RS256', PRIVATE_KEY, PUBLIC_KEY)
 
     def test_init(self):
         # Should reject unknown algorithms
@@ -21,45 +65,87 @@ class TestTokenBackend(TestCase):
 
         TokenBackend('HS256', 'not_secret')
 
-    def test_encode(self):
+    def test_encode_hmac(self):
         # Should return a JSON web token for the given payload
         payload = {'exp': make_utc(datetime(year=2000, month=1, day=1))}
 
-        token = self.token_backend.encode(payload)
+        hmac_token = self.hmac_token_backend.encode(payload)
 
         # Token could be one of two depending on header dict ordering
         self.assertIn(
-            token,
+            hmac_token,
             (
                 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjk0NjY4NDgwMH0.NHpdD2X8ub4SE_MZLBedWa57FCpntGaN_r6f8kNKdUs',
                 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjk0NjY4NDgwMH0.jvxQgXCSDToR8uKoRJcMT-LmMJJn2-NM76nfSR2FOgs',
             ),
         )
 
-    def test_decode(self):
+    def test_encode_rsa(self):
+        # Should return a JSON web token for the given payload
+        payload = {'exp': make_utc(datetime(year=2000, month=1, day=1))}
+
+        rsa_token = self.rsa_token_backend.encode(payload)
+
+        # Token could be one of two depending on header dict ordering
+        self.assertIn(
+            rsa_token,
+            (
+                'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJleHAiOjk0NjY4NDgwMH0.cuE6ocmdxVHXVrGufzn-_ZbXDV475TPPb5jtSacvJsnR3s3tLIm9yR7MF4vGcCAUGJn2hU_JgSOhs9sxntPPVjdwvC3-sxAwfUQ5AgUCEAF5XC7wTvGhmvufzhAgEG_DNsactCh79P8xRnc0iugtlGNyFp_YK582-ZrlfQEp-7C0L9BNG_JCS2J9DsGR7ojO2xGFkFfzezKRkrVTJMPLwpl0JAiZ0iqbQE-Tex7redCrGI388_mgh52GLsNlSIvW2gQMqCVMYndMuYx32Pd5tuToZmLUQ2PJ9RyAZ4fOMApTzoshItg4lGqtnt9CDYzypHULJZohJIPcxFVZZfHxhw',
+            ),
+        )
+
+    def test_decode_hmac(self):
         # No expiry tokens cause no exception
         payload = {'foo': 'bar'}
-        no_exp_token = jwt.encode(payload, self.secret, algorithm='HS256')
-        self.token_backend.decode(no_exp_token)
+        no_exp_token = jwt.encode(payload, SECRET, algorithm='HS256')
+        self.hmac_token_backend.decode(no_exp_token)
 
         # Expired tokens should cause exception
         payload['exp'] = aware_utcnow() - timedelta(seconds=1)
-        expired_token = jwt.encode(payload, self.secret, algorithm='HS256')
+        expired_token = jwt.encode(payload, SECRET, algorithm='HS256')
         with self.assertRaises(TokenBackendError):
-            self.token_backend.decode(expired_token)
+            self.hmac_token_backend.decode(expired_token)
 
         # Token with invalid signature should cause exception
         payload['exp'] = aware_utcnow() + timedelta(days=1)
-        token = jwt.encode(payload, self.secret, algorithm='HS256').decode('utf-8')
+        token = jwt.encode(payload, SECRET, algorithm='HS256').decode('utf-8')
         payload['foo'] = 'baz'
-        other_token = jwt.encode(payload, self.secret, algorithm='HS256').decode('utf-8')
+        other_token = jwt.encode(payload, SECRET, algorithm='HS256').decode('utf-8')
 
         incorrect_payload = other_token.rsplit('.', 1)[0]
         correct_sig = token.rsplit('.', 1)[-1]
         invalid_token = incorrect_payload + '.' + correct_sig
 
         with self.assertRaises(TokenBackendError):
-            self.token_backend.decode(invalid_token)
+            self.hmac_token_backend.decode(invalid_token)
 
         # Otherwise, should return data payload for token
-        self.assertEqual(self.token_backend.decode(other_token), payload)
+        self.assertEqual(self.hmac_token_backend.decode(other_token), payload)
+
+    def test_decode_rsa(self):
+        # No expiry tokens cause no exception
+        payload = {'foo': 'bar'}
+        no_exp_token = jwt.encode(payload, PRIVATE_KEY, algorithm='RS256')
+        self.rsa_token_backend.decode(no_exp_token)
+
+        # Expired tokens should cause exception
+        payload['exp'] = aware_utcnow() - timedelta(seconds=1)
+        expired_token = jwt.encode(payload, PRIVATE_KEY, algorithm='RS256')
+        with self.assertRaises(TokenBackendError):
+            self.rsa_token_backend.decode(expired_token)
+
+        # Token with invalid signature should cause exception
+        payload['exp'] = aware_utcnow() + timedelta(days=1)
+        token = jwt.encode(payload, PRIVATE_KEY, algorithm='RS256').decode('utf-8')
+        payload['foo'] = 'baz'
+        other_token = jwt.encode(payload, PRIVATE_KEY, algorithm='RS256').decode('utf-8')
+
+        incorrect_payload = other_token.rsplit('.', 1)[0]
+        correct_sig = token.rsplit('.', 1)[-1]
+        invalid_token = incorrect_payload + '.' + correct_sig
+
+        with self.assertRaises(TokenBackendError):
+            self.rsa_token_backend.decode(invalid_token)
+
+        # Otherwise, should return data payload for token
+        self.assertEqual(self.rsa_token_backend.decode(other_token), payload)
