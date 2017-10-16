@@ -155,8 +155,8 @@ ALGORITHM
   verification, the following algorithms may be used: ``'HS256'``, ``'HS384'``,
   ``'HS512'``.  When an HMAC algorithm is chosen, the ``SIGNING_KEY`` setting
   will be used as both the signing key and the verifying key.  In that case,
-  the ``VERIFYING_KEY`` setting may be set to ``None``.  To use asymmetric RSA
-  signing and verification, the following algorithms may be used: ``'RS256'``,
+  the ``VERIFYING_KEY`` setting will be ignored.  To use asymmetric RSA signing
+  and verification, the following algorithms may be used: ``'RS256'``,
   ``'RS384'``, ``'RS512'``.  When an RSA algorithm is chosen, the
   ``SIGNING_KEY`` setting must be set to a string which contains an RSA private
   key.  Likewise, the ``VERIFYING_KEY`` setting must be set to a string which
