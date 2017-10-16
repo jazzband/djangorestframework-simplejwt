@@ -16,8 +16,8 @@ DEFAULTS = {
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
 
     'ALGORITHM': 'HS256',
-    'PRIVATE_KEY': settings.SECRET_KEY,
-    'PUBLIC_KEY': None,
+    'SIGNING_KEY': settings.SECRET_KEY,
+    'VERIFYING_KEY': None,
 
     'AUTH_HEADER_TYPE': 'Bearer',
     'USER_ID_FIELD': 'id',
