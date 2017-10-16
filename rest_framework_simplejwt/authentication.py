@@ -75,22 +75,20 @@ class JWTAuthentication(authentication.BaseAuthentication):
         Validates an encoded JSON web token and returns a validated token
         wrapper object.
         """
-        exceptions = []
-
+        messages = []
         for AuthToken in api_settings.AUTH_TOKEN_CLASSES:
             try:
                 return AuthToken(raw_token)
             except TokenError as e:
-                exceptions.append((AuthToken, e))
+                messages.append({'token_class': AuthToken.__name__,
+                                 'token_type': AuthToken.token_type,
+                                 'message': e.args[0]})
 
-        messages = ', '.join(
-            '{}: {}'.format(AuthToken.__name__, e.args[0]) for AuthToken, e in exceptions
-        )
-
-        raise AuthenticationFailed(format_lazy(
-            _('Given token not valid for any token type -- {}'),
-            messages,
-        ))
+        raise AuthenticationFailed({
+            'detail': _('Given token not valid for any token type'),
+            'code': 'token_not_valid',
+            'messages': messages,
+        })
 
     def get_user(self, validated_token):
         """

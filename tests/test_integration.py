@@ -66,7 +66,7 @@ class TestTestView(APIViewTestCase):
             res = self.view_get()
 
         self.assertEqual(res.status_code, 401)
-        self.assertIn('has expired', res.data['detail'])
+        self.assertEqual('token_not_valid', res.data['code'])
 
     def test_user_can_get_sliding_token_and_use_it(self):
         res = self.client.post(
