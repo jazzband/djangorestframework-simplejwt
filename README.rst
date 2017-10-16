@@ -118,6 +118,8 @@ Some of Simple JWT's behavior can be customized through settings variables in
   SIMPLE_JWT = {
       'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
       'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+      'ROTATE_REFRESH_TOKENS': False,
+      'BLACKLIST_AFTER_ROTATION': True,
 
       'ALGORITHM': 'HS256',
       'SIGNING_KEY': settings.SECRET_KEY,
@@ -148,6 +150,21 @@ REFRESH_TOKEN_LIFETIME
   A ``datetime.timedelta`` object which specifies how long refresh tokens are
   valid.  This ``timedelta`` value is added to the current UTC time during
   token generation to obtain the token's default "exp" claim value.
+
+ROTATE_REFRESH_TOKENS
+  When set to ``True``, if a refresh token is submitted to the
+  ``TokenRefreshView``, a new refresh token will be returned along with the new
+  access token.  This new refresh token will be supplied via a "refresh" key in
+  the JSON response.  New refresh tokens will have a renewed expiration time
+  which is determined by adding the timedelta in the ``REFRESH_TOKEN_LIFETIME``
+  setting to the current time when the request is made.  If the blacklist app
+  is in use and the ``BLACKLIST_AFTER_ROTATION`` setting is set to ``True``,
+  refresh tokens submitted to the refresh view will be added to the blacklist.
+
+BLACKLIST_AFTER_ROTATION
+  When set to ``True``, causes refresh tokens submitted to the
+  ``TokenRefreshView`` to be added to the blacklist if the blacklist app is in
+  use and the ``ROTATE_REFRESH_TOKENS`` setting is set to ``True``.
 
 ALGORITHM
   The algorithm from the PyJWT library which will be used to perform
