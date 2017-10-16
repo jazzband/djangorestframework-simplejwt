@@ -9,7 +9,7 @@
 * Added support for more crypto algorithms.  All HMAC and RSA variants from
   PyJWT now supported.
 * Renamed `SECRET_KEY` setting to `SIGNING_KEY`.
-* Renamed `SIGNING_KEY` setting now acts doubly as a symmetric
+* The renamed `SIGNING_KEY` setting now acts doubly as a symmetric
   signing/verification key for HMAC algorithms and as a private key for RSA
   algorithms.
 * Added `VERIFYING_KEY` setting for use with RSA algorithms.
