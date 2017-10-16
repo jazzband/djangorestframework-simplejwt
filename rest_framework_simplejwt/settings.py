@@ -15,7 +15,9 @@ DEFAULTS = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
 
-    'SECRET_KEY': settings.SECRET_KEY,
+    'ALGORITHM': 'HS256',
+    'PRIVATE_KEY': settings.SECRET_KEY,
+    'PUBLIC_KEY': None,
 
     'AUTH_HEADER_TYPE': 'Bearer',
     'USER_ID_FIELD': 'id',
@@ -27,22 +29,16 @@ DEFAULTS = {
     'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
     'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
-
-    # Undocumented settings.  Changing these may lead to unexpected behavior.
-    # Make sure you know what you're doing.  These might become part of the
-    # public API eventually but that would require some adjustments and better
-    # documentation.
-    'TOKEN_BACKEND_CLASS': 'rest_framework_simplejwt.backends.PyJWTBackend',
-    'ALGORITHM': 'HS256',
 }
 
 IMPORT_STRINGS = (
     'AUTH_TOKEN_CLASSES',
-    'TOKEN_BACKEND_CLASS',
 )
 
 REMOVED_SETTINGS = (
     'AUTH_TOKEN_CLASS',
+    'SECRET_KEY',
+    'TOKEN_BACKEND_CLASS',
 )
 
 

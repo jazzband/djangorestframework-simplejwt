@@ -96,9 +96,9 @@ class TestToken(TestCase):
         # Test backend rejects encoded token (expired or bad signature)
         payload = {'foo': 'bar'}
         payload['exp'] = aware_utcnow() + timedelta(days=1)
-        token = jwt.encode(payload, api_settings.SECRET_KEY, algorithm='HS256')
+        token = jwt.encode(payload, api_settings.PRIVATE_KEY, algorithm='HS256')
         payload['foo'] = 'baz'
-        other_token = jwt.encode(payload, api_settings.SECRET_KEY, algorithm='HS256')
+        other_token = jwt.encode(payload, api_settings.PRIVATE_KEY, algorithm='HS256')
 
         incorrect_payload = other_token.rsplit('.', 1)[0]
         correct_sig = token.rsplit('.', 1)[-1]
