@@ -153,14 +153,14 @@ ALGORITHM
   The algorithm from the PyJWT library which will be used to perform
   signing/verification operations on tokens.  To use symmetric HMAC signing and
   verification, the following algorithms may be used: ``'HS256'``, ``'HS384'``,
-  ``'HS512'``.  When an HMAC algorithm is chosen, the ``'SIGNING_KEY'`` setting
+  ``'HS512'``.  When an HMAC algorithm is chosen, the ``SIGNING_KEY`` setting
   will be used as both the signing key and the verifying key.  In that case,
-  the ``'VERIFYING_KEY'`` setting may be set to ``None``.  To use asymmetric
-  RSA signing and verification, the following algorithms may be used:
-  ``'RS256'``, ``'RS384'``, ``'RS512'``.  When an RSA algorithm is chosen, the
-  ``'SIGNING_KEY'`` setting must be set to a string which contains an RSA
-  private key.  Likewise, the ``'VERIFYING_KEY'`` setting must be set to a
-  string which contains an RSA public key.
+  the ``VERIFYING_KEY`` setting may be set to ``None``.  To use asymmetric RSA
+  signing and verification, the following algorithms may be used: ``'RS256'``,
+  ``'RS384'``, ``'RS512'``.  When an RSA algorithm is chosen, the
+  ``SIGNING_KEY`` setting must be set to a string which contains an RSA private
+  key.  Likewise, the ``VERIFYING_KEY`` setting must be set to a string which
+  contains an RSA public key.
 
 SIGNING_KEY
   The signing key which is used to sign the content of generated tokens.  For
@@ -177,11 +177,11 @@ SIGNING_KEY
 
 VERIFYING_KEY
   The verifying key which is used to verify the content of generated tokens.
-  If an HMAC algorithm has been specified by the ``'ALGORITHM'`` setting, the
-  ``'VERIFYING_KEY'`` setting will be ignored and the value of the
-  ``'SIGNING_KEY'`` setting will be used.  If an RSA algorithm has been
-  specified by the ``'ALGORITHM'`` setting, the ``'VERIFYING_KEY'`` setting
-  must be set to a string which contains an RSA public key.
+  If an HMAC algorithm has been specified by the ``ALGORITHM`` setting, the
+  ``VERIFYING_KEY`` setting will be ignored and the value of the
+  ``SIGNING_KEY`` setting will be used.  If an RSA algorithm has been specified
+  by the ``ALGORITHM`` setting, the ``VERIFYING_KEY`` setting must be set to a
+  string which contains an RSA public key.
 
 AUTH_HEADER_TYPE
   The authorization header type that will be checked for views that require
