@@ -1,6 +1,6 @@
 from __future__ import unicode_literals
 
-from uuid import UUID, uuid4
+from uuid import uuid4
 
 from django.conf import settings
 from django.utils.six import python_2_unicode_compatible, text_type
@@ -164,7 +164,7 @@ class BlacklistMixin(object):
             Check if this token is present in the token blacklist.  Raise
             `TokenError` if so.
             """
-            jti = UUID(hex=self.payload['jti'])
+            jti = self.payload['jti']
 
             try:
                 BlacklistedToken.objects.get(token__jti=jti)
@@ -179,12 +179,12 @@ class BlacklistMixin(object):
             """
             token = super(BlacklistMixin, cls).for_user(user)
 
-            exp = token['exp']
             jti = token['jti']
+            exp = token['exp']
 
             OutstandingToken.objects.create(
                 user=user,
-                jti=UUID(hex=jti),
+                jti=jti,
                 token=str(token),
                 created_at=token.current_time,
                 expires_at=datetime_from_epoch(exp),

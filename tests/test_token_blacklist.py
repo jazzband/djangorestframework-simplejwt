@@ -1,5 +1,3 @@
-from uuid import UUID
-
 from django.contrib.auth.models import User
 from django.core.management import call_command
 from django.test import TestCase
@@ -30,7 +28,7 @@ class TestTokenBlacklist(TestCase):
 
         self.assertEqual(qs.count(), 1)
         self.assertEqual(outstanding_token.user, self.user)
-        self.assertEqual(outstanding_token.jti, UUID(hex=token['jti']))
+        self.assertEqual(outstanding_token.jti, token['jti'])
         self.assertEqual(outstanding_token.token, str(token))
         self.assertEqual(outstanding_token.created_at, token.current_time)
         self.assertEqual(outstanding_token.expires_at, datetime_from_epoch(token['exp']))
@@ -43,7 +41,7 @@ class TestTokenBlacklist(TestCase):
 
         self.assertEqual(qs.count(), 1)
         self.assertEqual(outstanding_token.user, self.user)
-        self.assertEqual(outstanding_token.jti, UUID(hex=token['jti']))
+        self.assertEqual(outstanding_token.jti, token['jti'])
         self.assertEqual(outstanding_token.token, str(token))
         self.assertEqual(outstanding_token.created_at, token.current_time)
         self.assertEqual(outstanding_token.expires_at, datetime_from_epoch(token['exp']))
@@ -84,7 +82,7 @@ class TestTokenBlacklistFlushExpiredTokens(TestCase):
         not_expired_2 = RefreshToken.for_user(self.user)
 
         # Blacklist a fresh token
-        token = OutstandingToken.objects.get(jti=UUID(hex=not_expired_2['jti']))
+        token = OutstandingToken.objects.get(jti=not_expired_2['jti'])
         BlacklistedToken.objects.create(token=token)
 
         # Make tokens with fake exp time that will expire soon
@@ -97,7 +95,7 @@ class TestTokenBlacklistFlushExpiredTokens(TestCase):
             expired = RefreshToken.for_user(self.user)
 
         # Blacklist an expired token
-        token = OutstandingToken.objects.get(jti=UUID(hex=expired['jti']))
+        token = OutstandingToken.objects.get(jti=expired['jti'])
         BlacklistedToken.objects.create(token=token)
 
         # Make another token that won't expire soon
@@ -114,10 +112,10 @@ class TestTokenBlacklistFlushExpiredTokens(TestCase):
         self.assertEqual(BlacklistedToken.objects.count(), 1)
 
         self.assertEqual(
-            [i.jti.hex for i in OutstandingToken.objects.all()],
+            [i.jti for i in OutstandingToken.objects.all()],
             [not_expired_1['jti'], not_expired_2['jti'], not_expired_3['jti']],
         )
         self.assertEqual(
-            BlacklistedToken.objects.first().token.jti.hex,
+            BlacklistedToken.objects.first().token.jti,
             not_expired_2['jti'],
         )

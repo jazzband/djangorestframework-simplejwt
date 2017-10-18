@@ -1,5 +1,7 @@
 ## Development
 
+* In token blacklist app, changed `OutstandingToken.jti` field to char field to
+  better reflect JWT spec.
 * Renamed `AUTH_TOKEN_CLASS` setting to `AUTH_TOKEN_CLASSES`.  This setting now
   specifies a list of token classes (or class paths) which are used to verify
   tokens which are submitted for authorization.  This will hopefully help

@@ -9,7 +9,7 @@ from django.utils.six import python_2_unicode_compatible
 class OutstandingToken(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
-    jti = models.UUIDField(unique=True)
+    jti = models.CharField(unique=True, max_length=255)
     token = models.TextField()
 
     created_at = models.DateTimeField()
