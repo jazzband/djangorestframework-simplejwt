@@ -2,6 +2,9 @@ from __future__ import unicode_literals
 
 import contextlib
 
+from django.apps import apps
+from django.db import connection
+from django.db.migrations.executor import MigrationExecutor
 from django.test import TestCase
 from rest_framework.test import APIClient
 from rest_framework_simplejwt.compat import reverse
@@ -78,3 +81,28 @@ def override_api_settings(**settings):
             delattr(api_settings, k)
         except AttributeError:
             pass
+
+
+class MigrationTestCase(TestCase):
+    migrate_from = None
+    migrate_to = None
+
+    def setUp(self):
+        self.migrate_from = [self.migrate_from]
+        self.migrate_to = [self.migrate_to]
+
+        # Reverse to the original migration
+        executor = MigrationExecutor(connection)
+        executor.migrate(self.migrate_from)
+
+        old_apps = executor.loader.project_state(self.migrate_from).apps
+        self.setUpBeforeMigration(old_apps)
+
+        # Run the migration to test
+        executor.loader.build_graph()
+        executor.migrate(self.migrate_to)
+
+        self.apps = executor.loader.project_state(self.migrate_to).apps
+
+    def setUpBeforeMigration(self, apps):
+        pass

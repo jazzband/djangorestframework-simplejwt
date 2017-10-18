@@ -12,6 +12,8 @@ from rest_framework_simplejwt.tokens import (
 )
 from rest_framework_simplejwt.utils import aware_utcnow, datetime_from_epoch
 
+from .utils import MigrationTestCase
+
 
 class TestTokenBlacklist(TestCase):
     def setUp(self):
@@ -157,3 +159,32 @@ class TestTokenBlacklistFlushExpiredTokens(TestCase):
             [i.token.jti for i in BlacklistedToken.objects.order_by('id')],
             [not_expired_2['jti'], not_expired_3['jti']],
         )
+
+
+class TestPopulateJtiHexMigration(MigrationTestCase):
+    migrate_from = ('token_blacklist', '0002_outstandingtoken_jti_hex')
+    migrate_to = ('token_blacklist', '0003_auto_20171017_2007')
+
+    def setUp(self):
+        self.user = User.objects.create(
+            username='test_user',
+            password='test_password',
+        )
+
+        super(TestPopulateJtiHexMigration, self).setUp()
+
+    def setUpBeforeMigration(self, apps):
+        # Ensure some tokens are present in the outstanding list
+        RefreshToken.for_user(self.user)
+        RefreshToken.for_user(self.user)
+
+        OutstandingToken = apps.get_model('token_blacklist', 'OutstandingToken')
+
+        self.expected_hexes = [i.jti.hex for i in OutstandingToken.objects.all()]
+
+    def test_jti_field_should_contain_uuid_hex_strings(self):
+        OutstandingToken = self.apps.get_model('token_blacklist', 'OutstandingToken')
+
+        actual_hexes = [i.jti_hex for i in OutstandingToken.objects.all()]
+
+        self.assertEqual(actual_hexes, self.expected_hexes)
