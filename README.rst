@@ -15,9 +15,8 @@ Simple JWT provides a JSON Web Token authentication backend for the Django REST
 Framework.  It aims to provide an out-of-the-box solution for JWT
 authentication which avoids some of the common pitfalls of the JWT
 specification.  Assuming users of the library don't extensively and invasively
-subclass everything, Simple JWT's overall behavior shouldn't be surprising.
-Settings variable defaults should be safe.  Where authentication and
-authorization are concerned, it should be hard to shoot oneself in the foot.
+subclass everything, Simple JWT's behavior shouldn't be surprising.  Settings
+variable defaults should be safe.
 
 Requirements
 ------------
