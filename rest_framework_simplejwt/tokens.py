@@ -172,6 +172,34 @@ class BlacklistMixin(object):
             except BlacklistedToken.DoesNotExist:
                 pass
 
+        def blacklist(self):
+            """
+            Ensure this token is included in the outstanding token list and
+            add it to the blacklist.
+            """
+            jti = self.payload['jti']
+            exp = self.payload['exp']
+
+            try:
+                # If token with given jti already exists, fetch it
+                token = OutstandingToken.objects.get(jti=jti)
+            except OutstandingToken.DoesNotExist:
+                # Create token with given jti
+                token = OutstandingToken.objects.create(
+                    jti=jti,
+                    token=str(self),
+                    expires_at=datetime_from_epoch(exp),
+                )
+
+            try:
+                # If already blacklisted, return blacklist record and
+                # boolean which indicates no record was created
+                return BlacklistedToken.objects.get(token=token), False
+            except BlacklistedToken.DoesNotExist:
+                # Create blacklist record and return boolean which
+                # indicates a record was created
+                return BlacklistedToken.objects.create(token=token), True
+
         @classmethod
         def for_user(cls, user):
             """

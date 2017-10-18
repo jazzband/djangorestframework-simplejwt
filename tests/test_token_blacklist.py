@@ -68,6 +68,43 @@ class TestTokenBlacklist(TestCase):
             RefreshToken(str(token))
             self.assertIn('blacklisted', e.exception.args[0])
 
+    def test_tokens_can_be_manually_blacklisted(self):
+        token = RefreshToken.for_user(self.user)
+
+        # Should raise no exception
+        RefreshToken(str(token))
+
+        self.assertEqual(OutstandingToken.objects.count(), 1)
+
+        # Add token to blacklist
+        blacklisted_token, created = token.blacklist()
+
+        # Should not add token to outstanding list if already present
+        self.assertEqual(OutstandingToken.objects.count(), 1)
+
+        # Should return blacklist record and boolean to indicate creation
+        self.assertEqual(blacklisted_token.token.jti, token['jti'])
+        self.assertTrue(created)
+
+        with self.assertRaises(TokenError) as e:
+            # Should raise exception
+            RefreshToken(str(token))
+            self.assertIn('blacklisted', e.exception.args[0])
+
+        # If blacklisted token already exists, indicate no creation through
+        # boolean
+        blacklisted_token, created = token.blacklist()
+        self.assertEqual(blacklisted_token.token.jti, token['jti'])
+        self.assertFalse(created)
+
+        # Should add token to outstanding list if not already present
+        new_token = RefreshToken()
+        blacklisted_token, created = new_token.blacklist()
+        self.assertEqual(blacklisted_token.token.jti, new_token['jti'])
+        self.assertTrue(created)
+
+        self.assertEqual(OutstandingToken.objects.count(), 2)
+
 
 class TestTokenBlacklistFlushExpiredTokens(TestCase):
     def setUp(self):
@@ -80,42 +117,43 @@ class TestTokenBlacklistFlushExpiredTokens(TestCase):
         # Make some tokens that won't expire soon
         not_expired_1 = RefreshToken.for_user(self.user)
         not_expired_2 = RefreshToken.for_user(self.user)
+        not_expired_3 = RefreshToken()
 
-        # Blacklist a fresh token
-        token = OutstandingToken.objects.get(jti=not_expired_2['jti'])
-        BlacklistedToken.objects.create(token=token)
+        # Blacklist fresh tokens
+        not_expired_2.blacklist()
+        not_expired_3.blacklist()
 
         # Make tokens with fake exp time that will expire soon
         fake_now = aware_utcnow() - api_settings.REFRESH_TOKEN_LIFETIME
 
         with patch('rest_framework_simplejwt.tokens.aware_utcnow') as fake_aware_utcnow:
             fake_aware_utcnow.return_value = fake_now
+            expired_1 = RefreshToken.for_user(self.user)
+            expired_2 = RefreshToken()
 
-            RefreshToken.for_user(self.user)
-            expired = RefreshToken.for_user(self.user)
-
-        # Blacklist an expired token
-        token = OutstandingToken.objects.get(jti=expired['jti'])
-        BlacklistedToken.objects.create(token=token)
+        # Blacklist expired tokens
+        expired_1.blacklist()
+        expired_2.blacklist()
 
         # Make another token that won't expire soon
-        not_expired_3 = RefreshToken.for_user(self.user)
+        not_expired_4 = RefreshToken.for_user(self.user)
 
-        # Should be 5 outstanding tokens and 2 blacklisted tokens
-        self.assertEqual(OutstandingToken.objects.count(), 5)
-        self.assertEqual(BlacklistedToken.objects.count(), 2)
+        # Should be certain number of outstanding tokens and blacklisted
+        # tokens
+        self.assertEqual(OutstandingToken.objects.count(), 6)
+        self.assertEqual(BlacklistedToken.objects.count(), 4)
 
         call_command('flushexpiredtokens')
 
         # Expired outstanding *and* blacklisted tokens should be gone
-        self.assertEqual(OutstandingToken.objects.count(), 3)
-        self.assertEqual(BlacklistedToken.objects.count(), 1)
+        self.assertEqual(OutstandingToken.objects.count(), 4)
+        self.assertEqual(BlacklistedToken.objects.count(), 2)
 
         self.assertEqual(
-            [i.jti for i in OutstandingToken.objects.all()],
-            [not_expired_1['jti'], not_expired_2['jti'], not_expired_3['jti']],
+            [i.jti for i in OutstandingToken.objects.order_by('id')],
+            [not_expired_1['jti'], not_expired_2['jti'], not_expired_3['jti'], not_expired_4['jti']],
         )
         self.assertEqual(
-            BlacklistedToken.objects.first().token.jti,
-            not_expired_2['jti'],
+            [i.token.jti for i in BlacklistedToken.objects.order_by('id')],
+            [not_expired_2['jti'], not_expired_3['jti']],
         )
