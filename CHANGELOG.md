@@ -1,5 +1,7 @@
 ## Development
 
+* Added support for refresh token rotation via ``ROTATE_REFRESH_TOKENS`` and
+  ``BLACKLIST_AFTER_ROTATION`` settings.  See README for details.
 * Added `BlacklistMixin.blacklist` method to make it easier to blacklist tokens
   regardless of whether or not they are present in the outstanding token list.
 * In token blacklist app, changed `OutstandingToken.jti` field to char field to
