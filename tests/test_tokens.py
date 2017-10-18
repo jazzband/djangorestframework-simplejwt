@@ -181,6 +181,15 @@ class TestToken(TestCase):
     def test_contains(self):
         self.assertIn('exp', self.token)
 
+    def test_set_jti(self):
+        token = MyToken()
+        old_jti = token['jti']
+
+        token.set_jti()
+
+        self.assertIn('jti', token)
+        self.assertNotEqual(old_jti, token['jti'])
+
     def test_set_exp(self):
         now = make_utc(datetime(year=2000, month=1, day=1))
 

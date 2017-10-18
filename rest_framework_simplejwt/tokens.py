@@ -66,12 +66,11 @@ class Token(object):
                 raise TokenError(_('Token has no id'))
 
         else:
-            # This is a new token.  Skip all the validation steps.  Set token
-            # type and token id claims.
-            self.payload = {
-                api_settings.TOKEN_TYPE_CLAIM: self.token_type,
-                'jti': uuid4().hex,
-            }
+            # This is a new token.  Skip all the validation steps.
+            self.payload = {api_settings.TOKEN_TYPE_CLAIM: self.token_type}
+
+            # Set "jti" claim
+            self.set_jti()
 
             # Set "exp" claim with default value
             self.set_exp(from_time=self.current_time, lifetime=self.lifetime)
@@ -98,6 +97,17 @@ class Token(object):
         from .state import token_backend
 
         return token_backend.encode(self.payload)
+
+    def set_jti(self):
+        """
+        Populates the "jti" claim of a token with a string where there is a
+        negligible probability that the same string will be chosen at a
+        later time.
+
+        See here:
+        https://tools.ietf.org/html/rfc7519#section-4.1.7
+        """
+        self.payload['jti'] = uuid4().hex
 
     def set_exp(self, claim='exp', from_time=None, lifetime=None):
         """
