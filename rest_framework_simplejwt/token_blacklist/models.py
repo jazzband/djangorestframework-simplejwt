@@ -7,12 +7,12 @@ from django.utils.six import python_2_unicode_compatible
 
 @python_2_unicode_compatible
 class OutstandingToken(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
 
     jti = models.CharField(unique=True, max_length=255)
     token = models.TextField()
 
-    created_at = models.DateTimeField()
+    created_at = models.DateTimeField(null=True, blank=True)
     expires_at = models.DateTimeField()
 
     class Meta:
