@@ -1,5 +1,7 @@
 ## Development
 
+* Added `BlacklistMixin.blacklist` method to make it easier to blacklist tokens
+  regardless of whether or not they are present in the outstanding token list.
 * In token blacklist app, changed `OutstandingToken.jti` field to char field to
   better reflect JWT spec.
 * Renamed `AUTH_TOKEN_CLASS` setting to `AUTH_TOKEN_CLASSES`.  This setting now

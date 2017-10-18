@@ -319,6 +319,17 @@ find its corresponding ``OutstandingToken`` record in the admin and use the
 admin again to create a ``BlacklistedToken`` record that points to the
 ``OutstandingToken`` record.
 
+Alternatively, you can blacklist a token by creating a ``BlacklistMixin``
+subclass instance and calling the instance's ``blacklist`` method::
+
+  from rest_framework_simplejwt.tokens import RefreshToken
+
+  token = RefreshToken(base64_encoded_token_string)
+  token.blacklist()
+
+This will create unique outstanding token and blacklist records for the token's
+"jti" claim.
+
 The blacklist app also provides a management command, ``flushexpiredtokens``,
 which will delete any tokens from the outstanding list and blacklist that have
 expired.  You should set up a cron job on your server or hosting platform which
