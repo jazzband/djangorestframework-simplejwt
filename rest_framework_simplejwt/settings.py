@@ -42,7 +42,7 @@ REMOVED_SETTINGS = (
 )
 
 
-class APISettings(_APISettings):
+class APISettings(_APISettings):  # pragma: no cover
     def __check_user_settings(self, user_settings):
         SETTINGS_DOC = 'https://github.com/davesque/django-rest-framework-simplejwt#settings'
 
@@ -58,7 +58,7 @@ class APISettings(_APISettings):
 api_settings = APISettings(USER_SETTINGS, DEFAULTS, IMPORT_STRINGS)
 
 
-def reload_api_settings(*args, **kwargs):
+def reload_api_settings(*args, **kwargs):  # pragma: no cover
     global api_settings
 
     setting, value = kwargs['setting'], kwargs['value']
