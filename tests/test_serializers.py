@@ -12,12 +12,17 @@ from rest_framework_simplejwt.serializers import (
 )
 from rest_framework_simplejwt.settings import api_settings
 from rest_framework_simplejwt.state import User
+from rest_framework_simplejwt.token_blacklist.models import (
+    BlacklistedToken, OutstandingToken
+)
 from rest_framework_simplejwt.tokens import (
     AccessToken, RefreshToken, SlidingToken
 )
 from rest_framework_simplejwt.utils import (
     aware_utcnow, datetime_from_epoch, datetime_to_epoch
 )
+
+from .utils import override_api_settings
 
 
 class TestTokenObtainSerializer(TestCase):
@@ -228,3 +233,72 @@ class TestTokenRefreshSerializer(TestCase):
 
         self.assertEqual(refresh['test_claim'], access['test_claim'])
         self.assertEqual(access['exp'], datetime_to_epoch(now + api_settings.ACCESS_TOKEN_LIFETIME))
+
+    def test_it_should_return_refresh_token_if_tokens_should_be_rotated(self):
+        refresh = RefreshToken()
+
+        refresh['test_claim'] = 'arst'
+
+        old_jti = refresh['jti']
+        old_exp = refresh['exp']
+
+        # Serializer validates
+        ser = TokenRefreshSerializer(data={'refresh': text_type(refresh)})
+
+        now = aware_utcnow() - api_settings.ACCESS_TOKEN_LIFETIME / 2
+
+        with override_api_settings(ROTATE_REFRESH_TOKENS=True, BLACKLIST_AFTER_ROTATION=False):
+            with patch('rest_framework_simplejwt.tokens.aware_utcnow') as fake_aware_utcnow:
+                fake_aware_utcnow.return_value = now
+                self.assertTrue(ser.is_valid())
+
+        access = AccessToken(ser.validated_data['access'])
+        new_refresh = RefreshToken(ser.validated_data['refresh'])
+
+        self.assertEqual(refresh['test_claim'], access['test_claim'])
+        self.assertEqual(refresh['test_claim'], new_refresh['test_claim'])
+
+        self.assertNotEqual(old_jti, new_refresh['jti'])
+        self.assertNotEqual(old_exp, new_refresh['exp'])
+
+        self.assertEqual(access['exp'], datetime_to_epoch(now + api_settings.ACCESS_TOKEN_LIFETIME))
+        self.assertEqual(new_refresh['exp'], datetime_to_epoch(now + api_settings.REFRESH_TOKEN_LIFETIME))
+
+    def test_it_should_blacklist_refresh_token_if_tokens_should_be_rotated_and_blacklisted(self):
+        self.assertEqual(OutstandingToken.objects.count(), 0)
+        self.assertEqual(BlacklistedToken.objects.count(), 0)
+
+        refresh = RefreshToken()
+
+        refresh['test_claim'] = 'arst'
+
+        old_jti = refresh['jti']
+        old_exp = refresh['exp']
+
+        # Serializer validates
+        ser = TokenRefreshSerializer(data={'refresh': text_type(refresh)})
+
+        now = aware_utcnow() - api_settings.ACCESS_TOKEN_LIFETIME / 2
+
+        with override_api_settings(ROTATE_REFRESH_TOKENS=True, BLACKLIST_AFTER_ROTATION=True):
+            with patch('rest_framework_simplejwt.tokens.aware_utcnow') as fake_aware_utcnow:
+                fake_aware_utcnow.return_value = now
+                self.assertTrue(ser.is_valid())
+
+        access = AccessToken(ser.validated_data['access'])
+        new_refresh = RefreshToken(ser.validated_data['refresh'])
+
+        self.assertEqual(refresh['test_claim'], access['test_claim'])
+        self.assertEqual(refresh['test_claim'], new_refresh['test_claim'])
+
+        self.assertNotEqual(old_jti, new_refresh['jti'])
+        self.assertNotEqual(old_exp, new_refresh['exp'])
+
+        self.assertEqual(access['exp'], datetime_to_epoch(now + api_settings.ACCESS_TOKEN_LIFETIME))
+        self.assertEqual(new_refresh['exp'], datetime_to_epoch(now + api_settings.REFRESH_TOKEN_LIFETIME))
+
+        self.assertEqual(OutstandingToken.objects.count(), 1)
+        self.assertEqual(BlacklistedToken.objects.count(), 1)
+
+        # Assert old refresh token is blacklisted
+        self.assertEqual(BlacklistedToken.objects.first().token.jti, old_jti)
