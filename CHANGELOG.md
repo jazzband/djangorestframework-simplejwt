@@ -1,4 +1,4 @@
-## Development
+## Version 3.0
 
 * Added support for refresh token rotation via ``ROTATE_REFRESH_TOKENS`` and
   ``BLACKLIST_AFTER_ROTATION`` settings.  See README for details.
