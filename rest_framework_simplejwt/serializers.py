@@ -5,7 +5,6 @@ from django.utils.six import text_type
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 
-from .exceptions import TokenError
 from .settings import api_settings
 from .state import User
 from .tokens import RefreshToken, SlidingToken
@@ -76,10 +75,7 @@ class TokenRefreshSerializer(serializers.Serializer):
     refresh = serializers.CharField()
 
     def validate(self, attrs):
-        try:
-            refresh = RefreshToken(attrs['refresh'])
-        except TokenError as e:
-            raise serializers.ValidationError(e.args[0])
+        refresh = RefreshToken(attrs['refresh'])
 
         data = {'access': text_type(refresh.access_token)}
 
@@ -105,13 +101,11 @@ class TokenRefreshSlidingSerializer(serializers.Serializer):
     token = serializers.CharField()
 
     def validate(self, attrs):
-        try:
-            token = SlidingToken(attrs['token'])
-            # Check that the timestamp in the "refresh_exp" claim has not
-            # passed
-            token.check_exp(api_settings.SLIDING_TOKEN_REFRESH_EXP_CLAIM)
-        except TokenError as e:
-            raise serializers.ValidationError(e.args[0])
+        token = SlidingToken(attrs['token'])
+
+        # Check that the timestamp in the "refresh_exp" claim has not
+        # passed
+        token.check_exp(api_settings.SLIDING_TOKEN_REFRESH_EXP_CLAIM)
 
         # Update the "exp" claim
         token.set_exp()

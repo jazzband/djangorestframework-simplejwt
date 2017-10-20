@@ -5,6 +5,7 @@ from datetime import timedelta
 from django.test import TestCase
 from django.utils.six import text_type
 from mock import patch
+from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.serializers import (
     TokenObtainPairSerializer, TokenObtainSerializer,
     TokenObtainSlidingSerializer, TokenRefreshSerializer,
@@ -133,43 +134,53 @@ class TestTokenRefreshSlidingSerializer(TestCase):
         del token['exp']
 
         s = TokenRefreshSlidingSerializer(data={'token': text_type(token)})
-        self.assertFalse(s.is_valid())
-        self.assertIn('non_field_errors', s.errors)
-        self.assertIn("has no 'exp' claim", s.errors['non_field_errors'][0])
+
+        with self.assertRaises(TokenError) as e:
+            s.is_valid()
+
+        self.assertIn("has no 'exp' claim", e.exception.args[0])
 
         token.set_exp(lifetime=-timedelta(days=1))
 
         s = TokenRefreshSlidingSerializer(data={'token': text_type(token)})
-        self.assertFalse(s.is_valid())
-        self.assertIn('non_field_errors', s.errors)
-        self.assertIn('invalid or expired', s.errors['non_field_errors'][0])
 
-    def test_it_should_not_validate_if_token_has_no_refresh_exp_claim(self):
+        with self.assertRaises(TokenError) as e:
+            s.is_valid()
+
+        self.assertIn('invalid or expired', e.exception.args[0])
+
+    def test_it_should_raise_token_error_if_token_has_no_refresh_exp_claim(self):
         token = SlidingToken()
         del token[api_settings.SLIDING_TOKEN_REFRESH_EXP_CLAIM]
 
         s = TokenRefreshSlidingSerializer(data={'token': text_type(token)})
-        self.assertFalse(s.is_valid())
-        self.assertIn('non_field_errors', s.errors)
-        self.assertIn("has no '{}' claim".format(api_settings.SLIDING_TOKEN_REFRESH_EXP_CLAIM), s.errors['non_field_errors'][0])
 
-    def test_it_should_not_validate_if_token_has_refresh_period_expired(self):
+        with self.assertRaises(TokenError) as e:
+            s.is_valid()
+
+        self.assertIn("has no '{}' claim".format(api_settings.SLIDING_TOKEN_REFRESH_EXP_CLAIM), e.exception.args[0])
+
+    def test_it_should_raise_token_error_if_token_has_refresh_period_expired(self):
         token = SlidingToken()
         token.set_exp(api_settings.SLIDING_TOKEN_REFRESH_EXP_CLAIM, lifetime=-timedelta(days=1))
 
         s = TokenRefreshSlidingSerializer(data={'token': text_type(token)})
-        self.assertFalse(s.is_valid())
-        self.assertIn('non_field_errors', s.errors)
-        self.assertIn("'{}' claim has expired".format(api_settings.SLIDING_TOKEN_REFRESH_EXP_CLAIM), s.errors['non_field_errors'][0])
 
-    def test_it_should_not_validate_if_token_has_wrong_type(self):
+        with self.assertRaises(TokenError) as e:
+            s.is_valid()
+
+        self.assertIn("'{}' claim has expired".format(api_settings.SLIDING_TOKEN_REFRESH_EXP_CLAIM), e.exception.args[0])
+
+    def test_it_should_raise_token_error_if_token_has_wrong_type(self):
         token = SlidingToken()
         token[api_settings.TOKEN_TYPE_CLAIM] = 'wrong_type'
 
         s = TokenRefreshSlidingSerializer(data={'token': text_type(token)})
-        self.assertFalse(s.is_valid())
-        self.assertIn('non_field_errors', s.errors)
-        self.assertIn("wrong type", s.errors['non_field_errors'][0])
+
+        with self.assertRaises(TokenError) as e:
+            s.is_valid()
+
+        self.assertIn("wrong type", e.exception.args[0])
 
     def test_it_should_update_token_exp_claim_if_everything_ok(self):
         old_token = SlidingToken()
@@ -191,30 +202,36 @@ class TestTokenRefreshSlidingSerializer(TestCase):
 
 
 class TestTokenRefreshSerializer(TestCase):
-    def test_it_should_not_validate_if_token_invalid(self):
+    def test_it_should_raise_token_error_if_token_invalid(self):
         token = RefreshToken()
         del token['exp']
 
         s = TokenRefreshSerializer(data={'refresh': text_type(token)})
-        self.assertFalse(s.is_valid())
-        self.assertIn('non_field_errors', s.errors)
-        self.assertIn("has no 'exp' claim", s.errors['non_field_errors'][0])
+
+        with self.assertRaises(TokenError) as e:
+            s.is_valid()
+
+        self.assertIn("has no 'exp' claim", e.exception.args[0])
 
         token.set_exp(lifetime=-timedelta(days=1))
 
         s = TokenRefreshSerializer(data={'refresh': text_type(token)})
-        self.assertFalse(s.is_valid())
-        self.assertIn('non_field_errors', s.errors)
-        self.assertIn('invalid or expired', s.errors['non_field_errors'][0])
 
-    def test_it_should_not_validate_if_token_has_wrong_type(self):
+        with self.assertRaises(TokenError) as e:
+            s.is_valid()
+
+        self.assertIn('invalid or expired', e.exception.args[0])
+
+    def test_it_should_raise_token_error_if_token_has_wrong_type(self):
         token = RefreshToken()
         token[api_settings.TOKEN_TYPE_CLAIM] = 'wrong_type'
 
         s = TokenRefreshSerializer(data={'refresh': text_type(token)})
-        self.assertFalse(s.is_valid())
-        self.assertIn('non_field_errors', s.errors)
-        self.assertIn("wrong type", s.errors['non_field_errors'][0])
+
+        with self.assertRaises(TokenError) as e:
+            s.is_valid()
+
+        self.assertIn("wrong type", e.exception.args[0])
 
     def test_it_should_return_access_token_if_everything_ok(self):
         refresh = RefreshToken()

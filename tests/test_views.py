@@ -87,21 +87,19 @@ class TestTokenRefreshView(APIViewTestCase):
         self.assertEqual(res.status_code, 400)
         self.assertIn('refresh', res.data)
 
-    def test_it_should_return_400_if_token_invalid(self):
+    def test_it_should_return_401_if_token_invalid(self):
         token = RefreshToken()
         del token['exp']
 
         res = self.view_post(data={'refresh': str(token)})
-        self.assertEqual(res.status_code, 400)
-        self.assertIn('non_field_errors', res.data)
-        self.assertIn("has no 'exp' claim", res.data['non_field_errors'][0])
+        self.assertEqual(res.status_code, 401)
+        self.assertEqual(res.data['code'], 'token_not_valid')
 
         token.set_exp(lifetime=-timedelta(seconds=1))
 
         res = self.view_post(data={'refresh': str(token)})
-        self.assertEqual(res.status_code, 400)
-        self.assertIn('non_field_errors', res.data)
-        self.assertIn('invalid or expired', res.data['non_field_errors'][0])
+        self.assertEqual(res.status_code, 401)
+        self.assertEqual(res.data['code'], 'token_not_valid')
 
     def test_it_should_return_access_token_if_everything_ok(self):
         refresh = RefreshToken()
@@ -194,39 +192,35 @@ class TestTokenRefreshSlidingView(APIViewTestCase):
         self.assertEqual(res.status_code, 400)
         self.assertIn('token', res.data)
 
-    def test_it_should_return_400_if_token_invalid(self):
+    def test_it_should_return_401_if_token_invalid(self):
         token = SlidingToken()
         del token['exp']
 
         res = self.view_post(data={'token': str(token)})
-        self.assertEqual(res.status_code, 400)
-        self.assertIn('non_field_errors', res.data)
-        self.assertIn("has no 'exp' claim", res.data['non_field_errors'][0])
+        self.assertEqual(res.status_code, 401)
+        self.assertEqual(res.data['code'], 'token_not_valid')
 
         token.set_exp(lifetime=-timedelta(seconds=1))
 
         res = self.view_post(data={'token': str(token)})
-        self.assertEqual(res.status_code, 400)
-        self.assertIn('non_field_errors', res.data)
-        self.assertIn('invalid or expired', res.data['non_field_errors'][0])
+        self.assertEqual(res.status_code, 401)
+        self.assertEqual(res.data['code'], 'token_not_valid')
 
-    def test_it_should_return_400_if_token_has_no_refresh_exp_claim(self):
+    def test_it_should_return_401_if_token_has_no_refresh_exp_claim(self):
         token = SlidingToken()
         del token[api_settings.SLIDING_TOKEN_REFRESH_EXP_CLAIM]
 
         res = self.view_post(data={'token': str(token)})
-        self.assertEqual(res.status_code, 400)
-        self.assertIn('non_field_errors', res.data)
-        self.assertIn("has no '{}' claim".format(api_settings.SLIDING_TOKEN_REFRESH_EXP_CLAIM), res.data['non_field_errors'][0])
+        self.assertEqual(res.status_code, 401)
+        self.assertEqual(res.data['code'], 'token_not_valid')
 
-    def test_it_should_return_400_if_token_has_refresh_period_expired(self):
+    def test_it_should_return_401_if_token_has_refresh_period_expired(self):
         token = SlidingToken()
         token.set_exp(api_settings.SLIDING_TOKEN_REFRESH_EXP_CLAIM, lifetime=-timedelta(seconds=1))
 
         res = self.view_post(data={'token': str(token)})
-        self.assertEqual(res.status_code, 400)
-        self.assertIn('non_field_errors', res.data)
-        self.assertIn("'{}' claim has expired".format(api_settings.SLIDING_TOKEN_REFRESH_EXP_CLAIM), res.data['non_field_errors'][0])
+        self.assertEqual(res.status_code, 401)
+        self.assertEqual(res.data['code'], 'token_not_valid')
 
     def test_it_should_update_token_exp_claim_if_everything_ok(self):
         now = aware_utcnow()
