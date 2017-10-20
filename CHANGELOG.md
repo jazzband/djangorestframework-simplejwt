@@ -1,4 +1,4 @@
-## Development
+## Version 3.1
 
 * Moved handling of TokenError exceptions from inside of serializer `validate`
   methods into token view `post` methods.
