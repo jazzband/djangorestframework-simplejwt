@@ -1,3 +1,8 @@
+## Development
+
+* Moved handling of TokenError exceptions from inside of serializer `validate`
+  methods into token view `post` methods.
+
 ## Version 3.0
 
 * Added support for refresh token rotation via ``ROTATE_REFRESH_TOKENS`` and
