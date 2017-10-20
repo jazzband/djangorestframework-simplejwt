@@ -5,9 +5,11 @@ from datetime import timedelta
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.utils.six.moves import reload_module
-from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.test import APIRequestFactory
 from rest_framework_simplejwt import authentication
+from rest_framework_simplejwt.exceptions import (
+    AuthenticationFailed, InvalidToken
+)
 from rest_framework_simplejwt.models import TokenUser
 from rest_framework_simplejwt.settings import api_settings
 from rest_framework_simplejwt.tokens import AccessToken, SlidingToken
@@ -57,10 +59,10 @@ class TestJWTAuthentication(TestCase):
         self.assertEqual(self.backend.get_raw_token(self.fake_header), self.fake_token)
 
     def test_get_validated_token(self):
-        # Should raise AuthenticationFailed if token not valid
+        # Should raise InvalidToken if token not valid
         token = AuthToken()
         token.set_exp(lifetime=-timedelta(days=1))
-        with self.assertRaises(AuthenticationFailed):
+        with self.assertRaises(InvalidToken):
             self.backend.get_validated_token(str(token))
 
         # Otherwise, should return validated token
@@ -72,7 +74,7 @@ class TestJWTAuthentication(TestCase):
         with override_api_settings(AUTH_TOKEN_CLASSES=(
             'rest_framework_simplejwt.tokens.AccessToken',
         )):
-            with self.assertRaises(AuthenticationFailed) as e:
+            with self.assertRaises(InvalidToken) as e:
                 self.backend.get_validated_token(str(sliding_token))
 
             messages = e.exception.detail['messages']
@@ -100,7 +102,7 @@ class TestJWTAuthentication(TestCase):
         payload = {'some_other_id': 'foo'}
 
         # Should raise error if no recognizable user identification
-        with self.assertRaises(AuthenticationFailed):
+        with self.assertRaises(InvalidToken):
             self.backend.get_user(payload)
 
         payload[api_settings.USER_ID_CLAIM] = 42
@@ -134,7 +136,7 @@ class TestJWTTokenUserAuthentication(TestCase):
         payload = {'some_other_id': 'foo'}
 
         # Should raise error if no recognizable user identification
-        with self.assertRaises(AuthenticationFailed):
+        with self.assertRaises(InvalidToken):
             self.backend.get_user(payload)
 
         payload[api_settings.USER_ID_CLAIM] = 42

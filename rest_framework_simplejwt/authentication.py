@@ -3,9 +3,8 @@ from __future__ import unicode_literals
 from django.utils.six import text_type
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import HTTP_HEADER_ENCODING, authentication
-from rest_framework.exceptions import AuthenticationFailed
 
-from .exceptions import TokenError
+from .exceptions import AuthenticationFailed, InvalidToken, TokenError
 from .models import TokenUser
 from .settings import api_settings
 from .state import User
@@ -65,6 +64,7 @@ class JWTAuthentication(authentication.BaseAuthentication):
         if len(parts) != 2:
             raise AuthenticationFailed(
                 _('Authorization header must contain two space-delimited values'),
+                code='bad_authorization_header',
             )
 
         return parts[1]
@@ -83,9 +83,8 @@ class JWTAuthentication(authentication.BaseAuthentication):
                                  'token_type': AuthToken.token_type,
                                  'message': e.args[0]})
 
-        raise AuthenticationFailed({
+        raise InvalidToken({
             'detail': _('Given token not valid for any token type'),
-            'code': 'token_not_valid',
             'messages': messages,
         })
 
@@ -96,15 +95,15 @@ class JWTAuthentication(authentication.BaseAuthentication):
         try:
             user_id = validated_token[api_settings.USER_ID_CLAIM]
         except KeyError:
-            raise AuthenticationFailed(_('Token contained no recognizable user identification'))
+            raise InvalidToken(_('Token contained no recognizable user identification'))
 
         try:
             user = User.objects.get(**{api_settings.USER_ID_FIELD: user_id})
         except User.DoesNotExist:
-            raise AuthenticationFailed(_('User not found'))
+            raise AuthenticationFailed(_('User not found'), code='user_not_found')
 
         if not user.is_active:
-            raise AuthenticationFailed(_('User is inactive'))
+            raise AuthenticationFailed(_('User is inactive'), code='user_inactive')
 
         return user
 
@@ -118,6 +117,6 @@ class JWTTokenUserAuthentication(JWTAuthentication):
         if api_settings.USER_ID_CLAIM not in validated_token:
             # The TokenUser class assumes tokens will have a recognizable user
             # identifier claim.
-            raise AuthenticationFailed(_('Token contained no recognizable user identification'))
+            raise InvalidToken(_('Token contained no recognizable user identification'))
 
         return TokenUser(validated_token)
