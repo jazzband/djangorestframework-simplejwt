@@ -49,7 +49,7 @@ class TestToken(TestCase):
         MyTestToken.token_type = 'test'
         MyTestToken()
 
-    def test_init_no_encoded_token_given(self):
+    def test_init_no_token_given(self):
         now = make_utc(datetime(year=2000, month=1, day=1))
 
         with patch('rest_framework_simplejwt.tokens.aware_utcnow') as fake_aware_utcnow:
@@ -64,7 +64,7 @@ class TestToken(TestCase):
         self.assertIn('jti', t.payload)
         self.assertEqual(t.payload[api_settings.TOKEN_TYPE_CLAIM], MyToken.token_type)
 
-    def test_init_encoded_token_given(self):
+    def test_init_token_given(self):
         # Test successful instantiation
         original_now = aware_utcnow()
 
@@ -93,42 +93,43 @@ class TestToken(TestCase):
         self.assertEqual(t[api_settings.TOKEN_TYPE_CLAIM], MyToken.token_type)
         self.assertIn('jti', t.payload)
 
+    def test_init_bad_sig_token_given(self):
         # Test backend rejects encoded token (expired or bad signature)
         payload = {'foo': 'bar'}
         payload['exp'] = aware_utcnow() + timedelta(days=1)
-        token = jwt.encode(payload, api_settings.SIGNING_KEY, algorithm='HS256')
+        token_1 = jwt.encode(payload, api_settings.SIGNING_KEY, algorithm='HS256')
         payload['foo'] = 'baz'
-        other_token = jwt.encode(payload, api_settings.SIGNING_KEY, algorithm='HS256')
+        token_2 = jwt.encode(payload, api_settings.SIGNING_KEY, algorithm='HS256')
 
-        incorrect_payload = other_token.rsplit('.', 1)[0]
-        correct_sig = token.rsplit('.', 1)[-1]
-        invalid_token = incorrect_payload + '.' + correct_sig
+        token_2_payload = token_2.rsplit('.', 1)[0]
+        token_1_sig = token_1.rsplit('.', 1)[-1]
+        invalid_token = token_2_payload + '.' + token_1_sig
 
         with self.assertRaises(TokenError):
             t = MyToken(invalid_token)
 
-        # Test encoded token has expired
+    def test_init_expired_token_given(self):
         t = MyToken()
         t.set_exp(lifetime=-timedelta(seconds=1))
 
         with self.assertRaises(TokenError):
             MyToken(str(t))
 
-        # Test encoded token has no token type
+    def test_init_no_type_token_given(self):
         t = MyToken()
         del t[api_settings.TOKEN_TYPE_CLAIM]
 
         with self.assertRaises(TokenError):
             MyToken(str(t))
 
-        # Test encoded token has no wrong type
+    def test_init_wrong_type_token_given(self):
         t = MyToken()
         t[api_settings.TOKEN_TYPE_CLAIM] = 'wrong_type'
 
         with self.assertRaises(TokenError):
             MyToken(str(t))
 
-        # Test token has id
+    def test_init_no_jti_token_given(self):
         t = MyToken()
         del t['jti']
 
