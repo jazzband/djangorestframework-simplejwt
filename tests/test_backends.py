@@ -123,9 +123,9 @@ class TestTokenBackend(TestCase):
         self.payload['foo'] = 'baz'
         token_2 = jwt.encode(self.payload, SECRET, algorithm='HS256').decode('utf-8')
 
-        token_1_payload = token_2.rsplit('.', 1)[0]
-        token_2_sig = token_1.rsplit('.', 1)[-1]
-        invalid_token = token_1_payload + '.' + token_2_sig
+        token_2_payload = token_2.rsplit('.', 1)[0]
+        token_1_sig = token_1.rsplit('.', 1)[-1]
+        invalid_token = token_2_payload + '.' + token_1_sig
 
         with self.assertRaises(TokenBackendError):
             self.hmac_token_backend.decode(invalid_token)
@@ -136,9 +136,9 @@ class TestTokenBackend(TestCase):
         self.payload['foo'] = 'baz'
         token_2 = jwt.encode(self.payload, SECRET, algorithm='HS256').decode('utf-8')
 
-        token_1_payload = token_2.rsplit('.', 1)[0]
-        token_2_sig = token_1.rsplit('.', 1)[-1]
-        invalid_token = token_1_payload + '.' + token_2_sig
+        token_2_payload = token_2.rsplit('.', 1)[0]
+        token_1_sig = token_1.rsplit('.', 1)[-1]
+        invalid_token = token_2_payload + '.' + token_1_sig
 
         self.assertEqual(
             self.hmac_token_backend.decode(invalid_token, verify=False),
@@ -180,9 +180,9 @@ class TestTokenBackend(TestCase):
         self.payload['foo'] = 'baz'
         token_2 = jwt.encode(self.payload, PRIVATE_KEY, algorithm='RS256').decode('utf-8')
 
-        token_1_payload = token_2.rsplit('.', 1)[0]
-        token_2_sig = token_1.rsplit('.', 1)[-1]
-        invalid_token = token_1_payload + '.' + token_2_sig
+        token_2_payload = token_2.rsplit('.', 1)[0]
+        token_1_sig = token_1.rsplit('.', 1)[-1]
+        invalid_token = token_2_payload + '.' + token_1_sig
 
         with self.assertRaises(TokenBackendError):
             self.rsa_token_backend.decode(invalid_token)
@@ -193,9 +193,9 @@ class TestTokenBackend(TestCase):
         self.payload['foo'] = 'baz'
         token_2 = jwt.encode(self.payload, PRIVATE_KEY, algorithm='RS256').decode('utf-8')
 
-        token_1_payload = token_2.rsplit('.', 1)[0]
-        token_2_sig = token_1.rsplit('.', 1)[-1]
-        invalid_token = token_1_payload + '.' + token_2_sig
+        token_2_payload = token_2.rsplit('.', 1)[0]
+        token_1_sig = token_1.rsplit('.', 1)[-1]
+        invalid_token = token_2_payload + '.' + token_1_sig
 
         self.assertEqual(
             self.hmac_token_backend.decode(invalid_token, verify=False),
