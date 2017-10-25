@@ -57,6 +57,7 @@ class TestTokenBackend(TestCase):
     def setUp(self):
         self.hmac_token_backend = TokenBackend('HS256', SECRET)
         self.rsa_token_backend = TokenBackend('RS256', PRIVATE_KEY, PUBLIC_KEY)
+        self.payload = {'foo': 'bar'}
 
     def test_init(self):
         # Should reject unknown algorithms
@@ -95,58 +96,70 @@ class TestTokenBackend(TestCase):
             ),
         )
 
-    def test_decode_hmac(self):
-        # No expiry tokens cause no exception
-        payload = {'foo': 'bar'}
-        no_exp_token = jwt.encode(payload, SECRET, algorithm='HS256')
+    def test_decode_hmac_with_no_expiry(self):
+        no_exp_token = jwt.encode(self.payload, SECRET, algorithm='HS256')
+
         self.hmac_token_backend.decode(no_exp_token)
 
-        # Expired tokens should cause exception
-        payload['exp'] = aware_utcnow() - timedelta(seconds=1)
-        expired_token = jwt.encode(payload, SECRET, algorithm='HS256')
+    def test_decode_hmac_with_expiry(self):
+        self.payload['exp'] = aware_utcnow() - timedelta(seconds=1)
+
+        expired_token = jwt.encode(self.payload, SECRET, algorithm='HS256')
+
         with self.assertRaises(TokenBackendError):
             self.hmac_token_backend.decode(expired_token)
 
-        # Token with invalid signature should cause exception
-        payload['exp'] = aware_utcnow() + timedelta(days=1)
-        token = jwt.encode(payload, SECRET, algorithm='HS256').decode('utf-8')
-        payload['foo'] = 'baz'
-        other_token = jwt.encode(payload, SECRET, algorithm='HS256').decode('utf-8')
+    def test_decode_hmac_with_invalid_sig(self):
+        self.payload['exp'] = aware_utcnow() + timedelta(days=1)
+        token_1 = jwt.encode(self.payload, SECRET, algorithm='HS256').decode('utf-8')
+        self.payload['foo'] = 'baz'
+        token_2 = jwt.encode(self.payload, SECRET, algorithm='HS256').decode('utf-8')
 
-        incorrect_payload = other_token.rsplit('.', 1)[0]
-        correct_sig = token.rsplit('.', 1)[-1]
-        invalid_token = incorrect_payload + '.' + correct_sig
+        token_1_payload = token_2.rsplit('.', 1)[0]
+        token_2_sig = token_1.rsplit('.', 1)[-1]
+        invalid_token = token_1_payload + '.' + token_2_sig
 
         with self.assertRaises(TokenBackendError):
             self.hmac_token_backend.decode(invalid_token)
 
-        # Otherwise, should return data payload for token
-        self.assertEqual(self.hmac_token_backend.decode(other_token), payload)
+    def test_decode_hmac_success(self):
+        self.payload['exp'] = aware_utcnow() + timedelta(days=1)
+        self.payload['foo'] = 'baz'
 
-    def test_decode_rsa(self):
-        # No expiry tokens cause no exception
-        payload = {'foo': 'bar'}
-        no_exp_token = jwt.encode(payload, PRIVATE_KEY, algorithm='RS256')
+        token = jwt.encode(self.payload, SECRET, algorithm='HS256').decode('utf-8')
+
+        self.assertEqual(self.hmac_token_backend.decode(token), self.payload)
+
+    def test_decode_rsa_with_no_expiry(self):
+        no_exp_token = jwt.encode(self.payload, PRIVATE_KEY, algorithm='RS256')
+
         self.rsa_token_backend.decode(no_exp_token)
 
-        # Expired tokens should cause exception
-        payload['exp'] = aware_utcnow() - timedelta(seconds=1)
-        expired_token = jwt.encode(payload, PRIVATE_KEY, algorithm='RS256')
+    def test_decode_rsa_with_expiry(self):
+        self.payload['exp'] = aware_utcnow() - timedelta(seconds=1)
+
+        expired_token = jwt.encode(self.payload, PRIVATE_KEY, algorithm='RS256')
+
         with self.assertRaises(TokenBackendError):
             self.rsa_token_backend.decode(expired_token)
 
-        # Token with invalid signature should cause exception
-        payload['exp'] = aware_utcnow() + timedelta(days=1)
-        token = jwt.encode(payload, PRIVATE_KEY, algorithm='RS256').decode('utf-8')
-        payload['foo'] = 'baz'
-        other_token = jwt.encode(payload, PRIVATE_KEY, algorithm='RS256').decode('utf-8')
+    def test_decode_rsa_with_invalid_sig(self):
+        self.payload['exp'] = aware_utcnow() + timedelta(days=1)
+        token_1 = jwt.encode(self.payload, PRIVATE_KEY, algorithm='RS256').decode('utf-8')
+        self.payload['foo'] = 'baz'
+        token_2 = jwt.encode(self.payload, PRIVATE_KEY, algorithm='RS256').decode('utf-8')
 
-        incorrect_payload = other_token.rsplit('.', 1)[0]
-        correct_sig = token.rsplit('.', 1)[-1]
-        invalid_token = incorrect_payload + '.' + correct_sig
+        token_1_payload = token_2.rsplit('.', 1)[0]
+        token_2_sig = token_1.rsplit('.', 1)[-1]
+        invalid_token = token_1_payload + '.' + token_2_sig
 
         with self.assertRaises(TokenBackendError):
             self.rsa_token_backend.decode(invalid_token)
 
-        # Otherwise, should return data payload for token
-        self.assertEqual(self.rsa_token_backend.decode(other_token), payload)
+    def test_decode_rsa_success(self):
+        self.payload['exp'] = aware_utcnow() + timedelta(days=1)
+        self.payload['foo'] = 'baz'
+
+        token = jwt.encode(self.payload, PRIVATE_KEY, algorithm='RS256').decode('utf-8')
+
+        self.assertEqual(self.rsa_token_backend.decode(token), self.payload)
