@@ -171,7 +171,7 @@ class BlacklistMixin(object):
 
         def check_blacklist(self):
             """
-            Check if this token is present in the token blacklist.  Raise
+            Checks if this token is present in the token blacklist.  Raises
             `TokenError` if so.
             """
             jti = self.payload['jti']
@@ -184,8 +184,8 @@ class BlacklistMixin(object):
 
         def blacklist(self):
             """
-            Ensure this token is included in the outstanding token list and
-            add it to the blacklist.
+            Ensures this token is included in the outstanding token list and
+            adds it to the blacklist.
             """
             jti = self.payload['jti']
             exp = self.payload['exp']
@@ -213,7 +213,7 @@ class BlacklistMixin(object):
         @classmethod
         def for_user(cls, user):
             """
-            Add this token to the outstanding token list.
+            Adds this token to the outstanding token list.
             """
             token = super(BlacklistMixin, cls).for_user(user)
 
