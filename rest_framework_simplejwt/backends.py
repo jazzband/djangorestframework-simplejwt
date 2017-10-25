@@ -36,7 +36,7 @@ class TokenBackend(object):
         token = jwt.encode(payload, self.signing_key, algorithm=self.algorithm)
         return token.decode('utf-8')
 
-    def decode(self, token):
+    def decode(self, token, verify=True):
         """
         Performs a validation of the given token and returns its payload
         dictionary.
@@ -45,6 +45,6 @@ class TokenBackend(object):
         signature check fails, or if its 'exp' claim indicates it has expired.
         """
         try:
-            return jwt.decode(token, self.verifying_key, algorithms=[self.algorithm])
+            return jwt.decode(token, self.verifying_key, algorithms=[self.algorithm], verify=verify)
         except InvalidTokenError:
             raise TokenBackendError(_('Token is invalid or expired'))

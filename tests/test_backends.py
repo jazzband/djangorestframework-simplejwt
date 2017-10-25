@@ -101,6 +101,14 @@ class TestTokenBackend(TestCase):
 
         self.hmac_token_backend.decode(no_exp_token)
 
+    def test_decode_hmac_with_no_expiry_no_verify(self):
+        no_exp_token = jwt.encode(self.payload, SECRET, algorithm='HS256')
+
+        self.assertEqual(
+            self.hmac_token_backend.decode(no_exp_token, verify=False),
+            self.payload,
+        )
+
     def test_decode_hmac_with_expiry(self):
         self.payload['exp'] = aware_utcnow() - timedelta(seconds=1)
 
@@ -122,6 +130,21 @@ class TestTokenBackend(TestCase):
         with self.assertRaises(TokenBackendError):
             self.hmac_token_backend.decode(invalid_token)
 
+    def test_decode_hmac_with_invalid_sig_no_verify(self):
+        self.payload['exp'] = aware_utcnow() + timedelta(days=1)
+        token_1 = jwt.encode(self.payload, SECRET, algorithm='HS256').decode('utf-8')
+        self.payload['foo'] = 'baz'
+        token_2 = jwt.encode(self.payload, SECRET, algorithm='HS256').decode('utf-8')
+
+        token_1_payload = token_2.rsplit('.', 1)[0]
+        token_2_sig = token_1.rsplit('.', 1)[-1]
+        invalid_token = token_1_payload + '.' + token_2_sig
+
+        self.assertEqual(
+            self.hmac_token_backend.decode(invalid_token, verify=False),
+            self.payload,
+        )
+
     def test_decode_hmac_success(self):
         self.payload['exp'] = aware_utcnow() + timedelta(days=1)
         self.payload['foo'] = 'baz'
@@ -134,6 +157,14 @@ class TestTokenBackend(TestCase):
         no_exp_token = jwt.encode(self.payload, PRIVATE_KEY, algorithm='RS256')
 
         self.rsa_token_backend.decode(no_exp_token)
+
+    def test_decode_rsa_with_no_expiry_no_verify(self):
+        no_exp_token = jwt.encode(self.payload, PRIVATE_KEY, algorithm='RS256')
+
+        self.assertEqual(
+            self.hmac_token_backend.decode(no_exp_token, verify=False),
+            self.payload,
+        )
 
     def test_decode_rsa_with_expiry(self):
         self.payload['exp'] = aware_utcnow() - timedelta(seconds=1)
@@ -155,6 +186,21 @@ class TestTokenBackend(TestCase):
 
         with self.assertRaises(TokenBackendError):
             self.rsa_token_backend.decode(invalid_token)
+
+    def test_decode_rsa_with_invalid_sig_no_verify(self):
+        self.payload['exp'] = aware_utcnow() + timedelta(days=1)
+        token_1 = jwt.encode(self.payload, PRIVATE_KEY, algorithm='RS256').decode('utf-8')
+        self.payload['foo'] = 'baz'
+        token_2 = jwt.encode(self.payload, PRIVATE_KEY, algorithm='RS256').decode('utf-8')
+
+        token_1_payload = token_2.rsplit('.', 1)[0]
+        token_2_sig = token_1.rsplit('.', 1)[-1]
+        invalid_token = token_1_payload + '.' + token_2_sig
+
+        self.assertEqual(
+            self.hmac_token_backend.decode(invalid_token, verify=False),
+            self.payload,
+        )
 
     def test_decode_rsa_success(self):
         self.payload['exp'] = aware_utcnow() + timedelta(days=1)
