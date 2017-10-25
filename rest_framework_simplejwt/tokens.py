@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 
+from datetime import timedelta
 from uuid import uuid4
 
 from django.conf import settings
@@ -23,7 +24,7 @@ class Token(object):
     token_type = None
     lifetime = None
 
-    def __init__(self, token=None):
+    def __init__(self, token=None, verify=True):
         """
         !!!! IMPORTANT !!!! MUST raise a TokenError with a user-facing error
         message if the given token is invalid, expired, or otherwise not safe
@@ -40,40 +41,23 @@ class Token(object):
             # An encoded token was provided
             from .state import token_backend
 
-            # Ensure token and signature are valid
+            # Decode token
             try:
-                self.payload = token_backend.decode(token)
+                self.payload = token_backend.decode(token, verify=verify)
             except TokenBackendError:
                 raise TokenError(_('Token is invalid or expired'))
 
-            # According to RFC 7519, the "exp" claim is OPTIONAL
-            # (https://tools.ietf.org/html/rfc7519#section-4.1.4).  As a more
-            # correct behavior for authorization tokens, we require an "exp"
-            # claim.  We don't want any zombie tokens walking around.
-            self.check_exp()
-
-            # Ensure token type claim is present and has correct value
-            try:
-                token_type = self.payload[api_settings.TOKEN_TYPE_CLAIM]
-            except KeyError:
-                raise TokenError(_('Token has no type'))
-
-            if self.token_type != token_type:
-                raise TokenError(_('Token has wrong type'))
-
-            # Ensure token id is present
-            if 'jti' not in self.payload:
-                raise TokenError(_('Token has no id'))
-
+            if verify:
+                self.verify()
         else:
-            # This is a new token.  Skip all the validation steps.
+            # New token.  Skip all the verification steps.
             self.payload = {api_settings.TOKEN_TYPE_CLAIM: self.token_type}
-
-            # Set "jti" claim
-            self.set_jti()
 
             # Set "exp" claim with default value
             self.set_exp(from_time=self.current_time, lifetime=self.lifetime)
+
+            # Set "jti" claim
+            self.set_jti()
 
     def __repr__(self):
         return repr(self.payload)
@@ -97,6 +81,36 @@ class Token(object):
         from .state import token_backend
 
         return token_backend.encode(self.payload)
+
+    def verify(self):
+        """
+        Performs additional validation steps which were not performed when this
+        token was decoded.  This method is part of the "public" API to indicate
+        the intention that it may be overridden in subclasses.
+        """
+        # According to RFC 7519, the "exp" claim is OPTIONAL
+        # (https://tools.ietf.org/html/rfc7519#section-4.1.4).  As a more
+        # correct behavior for authorization tokens, we require an "exp"
+        # claim.  We don't want any zombie tokens walking around.
+        self.check_exp()
+
+        # Ensure token id is present
+        if 'jti' not in self.payload:
+            raise TokenError(_('Token has no id'))
+
+        self.verify_token_type()
+
+    def verify_token_type(self):
+        """
+        Ensures that the token type claim is present and has the correct value.
+        """
+        try:
+            token_type = self.payload[api_settings.TOKEN_TYPE_CLAIM]
+        except KeyError:
+            raise TokenError(_('Token has no type'))
+
+        if self.token_type != token_type:
+            raise TokenError(_('Token has wrong type'))
 
     def set_jti(self):
         """
@@ -163,11 +177,10 @@ class BlacklistMixin(object):
     membership in a token blacklist.
     """
     if 'rest_framework_simplejwt.token_blacklist' in settings.INSTALLED_APPS:
-        def __init__(self, *args, **kwargs):
-            super(BlacklistMixin, self).__init__(*args, **kwargs)
+        def verify(self, *args, **kwargs):
+            self.check_blacklist()
 
-            if self.token is not None:
-                self.check_blacklist()
+            super(BlacklistMixin, self).verify(*args, **kwargs)
 
         def check_blacklist(self):
             """
@@ -279,3 +292,16 @@ class RefreshToken(BlacklistMixin, Token):
 class AccessToken(Token):
     token_type = 'access'
     lifetime = api_settings.ACCESS_TOKEN_LIFETIME
+
+
+class UntypedToken(Token):
+    token_type = 'untyped'
+    lifetime = timedelta(seconds=0)
+
+    def verify_token_type(self):
+        """
+        Untyped tokens do not verify the "token_type" claim.  This is useful
+        when performing general validation of a token's signature and other
+        properties which do not relate to the token's intended use.
+        """
+        pass

@@ -10,7 +10,7 @@ from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.settings import api_settings
 from rest_framework_simplejwt.state import User
 from rest_framework_simplejwt.tokens import (
-    AccessToken, RefreshToken, SlidingToken, Token
+    AccessToken, RefreshToken, SlidingToken, Token, UntypedToken
 )
 from rest_framework_simplejwt.utils import (
     aware_utcnow, datetime_to_epoch, make_utc
@@ -107,6 +107,25 @@ class TestToken(TestCase):
 
         with self.assertRaises(TokenError):
             MyToken(invalid_token)
+
+    def test_init_bad_sig_token_given_no_verify(self):
+        # Test backend rejects encoded token (expired or bad signature)
+        payload = {'foo': 'bar'}
+        payload['exp'] = aware_utcnow() + timedelta(days=1)
+        token_1 = jwt.encode(payload, api_settings.SIGNING_KEY, algorithm='HS256')
+        payload['foo'] = 'baz'
+        token_2 = jwt.encode(payload, api_settings.SIGNING_KEY, algorithm='HS256')
+
+        token_2_payload = token_2.rsplit('.', 1)[0]
+        token_1_sig = token_1.rsplit('.', 1)[-1]
+        invalid_token = token_2_payload + '.' + token_1_sig
+
+        t = MyToken(invalid_token, verify=False)
+
+        self.assertEqual(
+            t.payload,
+            payload,
+        )
 
     def test_init_expired_token_given(self):
         t = MyToken()
@@ -315,3 +334,26 @@ class TestRefreshToken(TestCase):
         # Should not copy certain claims from refresh token
         for claim in RefreshToken.no_copy_claims:
             self.assertNotEqual(refresh[claim], access[claim])
+
+
+class TestUntypedToken(TestCase):
+    def test_it_should_accept_and_verify_any_type_of_token(self):
+        access_token = AccessToken()
+        refresh_token = RefreshToken()
+        sliding_token = SlidingToken()
+
+        for t in (access_token, refresh_token, sliding_token):
+            untyped_token = UntypedToken(text_type(t))
+
+            self.assertEqual(
+                t.payload,
+                untyped_token.payload,
+            )
+
+    def test_it_should_expire_immediately_if_made_from_scratch(self):
+        t = UntypedToken()
+
+        self.assertEqual(t[api_settings.TOKEN_TYPE_CLAIM], 'untyped')
+
+        with self.assertRaises(TokenError):
+            t.check_exp()
