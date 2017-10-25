@@ -106,7 +106,7 @@ class TestToken(TestCase):
         invalid_token = token_2_payload + '.' + token_1_sig
 
         with self.assertRaises(TokenError):
-            t = MyToken(invalid_token)
+            MyToken(invalid_token)
 
     def test_init_expired_token_given(self):
         t = MyToken()
