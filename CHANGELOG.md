@@ -1,3 +1,8 @@
+## Development
+
+* Added ``TokenVerifyView`` to allow verification of HMAC-signed tokens by API
+  users who have no access to the signing key.
+
 ## Version 3.1
 
 * Moved handling of TokenError exceptions from inside of serializer `validate`

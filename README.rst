@@ -65,6 +65,16 @@ for Simple JWT's ``TokenObtainPairView`` and ``TokenRefreshView`` views::
       ...
   ]
 
+You can also include a route for Simple JWT's ``TokenVerifyView`` if you wish to
+allow API users to verify HMAC-signed tokens without having access to your
+signing key::
+
+  urlpatterns = [
+      ...
+      url(r'^api/token/verify/$', TokenVerifyView.as_view(), name='token_verify'),
+      ...
+  ]
+
 Usage
 -----
 
