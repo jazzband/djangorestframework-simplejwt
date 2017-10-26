@@ -238,3 +238,50 @@ class TestTokenRefreshSlidingView(APIViewTestCase):
         new_exp = datetime_from_epoch(new_token['exp'])
 
         self.assertTrue(exp < new_exp)
+
+
+class TestTokenVerifyView(APIViewTestCase):
+    view_name = 'token_verify'
+
+    def setUp(self):
+        self.username = 'test_user'
+        self.password = 'test_password'
+
+        self.user = User.objects.create_user(
+            username=self.username,
+            password=self.password,
+        )
+
+    def test_fields_missing(self):
+        res = self.view_post(data={})
+        self.assertEqual(res.status_code, 400)
+        self.assertIn('token', res.data)
+
+    def test_it_should_return_401_if_token_invalid(self):
+        token = SlidingToken()
+        del token['exp']
+
+        res = self.view_post(data={'token': str(token)})
+        self.assertEqual(res.status_code, 401)
+        self.assertEqual(res.data['code'], 'token_not_valid')
+
+        token.set_exp(lifetime=-timedelta(seconds=1))
+
+        res = self.view_post(data={'token': str(token)})
+        self.assertEqual(res.status_code, 401)
+        self.assertEqual(res.data['code'], 'token_not_valid')
+
+    def test_it_should_return_200_if_everything_okay(self):
+        token = RefreshToken()
+
+        res = self.view_post(data={'token': str(token)})
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(len(res.data), 0)
+
+    def test_it_should_ignore_token_type(self):
+        token = RefreshToken()
+        token[api_settings.TOKEN_TYPE_CLAIM] = 'fake_type'
+
+        res = self.view_post(data={'token': str(token)})
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(len(res.data), 0)

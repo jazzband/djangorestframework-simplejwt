@@ -62,3 +62,13 @@ class TokenRefreshSlidingView(TokenViewBase):
     serializer_class = serializers.TokenRefreshSlidingSerializer
 
 token_refresh_sliding = TokenRefreshSlidingView.as_view()
+
+
+class TokenVerifyView(TokenViewBase):
+    """
+    Takes a token and indicates if it is valid.  This view provides no
+    information about a token's fitness for a particular use.
+    """
+    serializer_class = serializers.TokenVerifySerializer
+
+token_verify = TokenVerifyView.as_view()
