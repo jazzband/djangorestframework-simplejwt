@@ -1,5 +1,7 @@
 ## Development
 
+* Added ``TokenObtainSerializer.get_token`` method to facilitate customization
+  of token claims.
 * Added ``TokenVerifyView`` to allow verification of HMAC-signed tokens by API
   users who have no access to the signing key.
 
