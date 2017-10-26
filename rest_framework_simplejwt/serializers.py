@@ -7,7 +7,7 @@ from rest_framework import serializers
 
 from .settings import api_settings
 from .state import User
-from .tokens import RefreshToken, SlidingToken
+from .tokens import RefreshToken, SlidingToken, UntypedToken
 
 
 class PasswordField(serializers.CharField):
@@ -111,3 +111,12 @@ class TokenRefreshSlidingSerializer(serializers.Serializer):
         token.set_exp()
 
         return {'token': text_type(token)}
+
+
+class TokenVerifySerializer(serializers.Serializer):
+    token = serializers.CharField()
+
+    def validate(self, attrs):
+        UntypedToken(attrs['token'])
+
+        return {'token': attrs['token']}

@@ -9,7 +9,7 @@ from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.serializers import (
     TokenObtainPairSerializer, TokenObtainSerializer,
     TokenObtainSlidingSerializer, TokenRefreshSerializer,
-    TokenRefreshSlidingSerializer
+    TokenRefreshSlidingSerializer, TokenVerifySerializer
 )
 from rest_framework_simplejwt.settings import api_settings
 from rest_framework_simplejwt.state import User
@@ -319,3 +319,48 @@ class TestTokenRefreshSerializer(TestCase):
 
         # Assert old refresh token is blacklisted
         self.assertEqual(BlacklistedToken.objects.first().token.jti, old_jti)
+
+
+class TestTokenVerifySerializer(TestCase):
+    def test_it_should_raise_token_error_if_token_invalid(self):
+        token = RefreshToken()
+        del token['exp']
+
+        s = TokenVerifySerializer(data={'token': text_type(token)})
+
+        with self.assertRaises(TokenError) as e:
+            s.is_valid()
+
+        self.assertIn("has no 'exp' claim", e.exception.args[0])
+
+        token.set_exp(lifetime=-timedelta(days=1))
+
+        s = TokenVerifySerializer(data={'token': text_type(token)})
+
+        with self.assertRaises(TokenError) as e:
+            s.is_valid()
+
+        self.assertIn('invalid or expired', e.exception.args[0])
+
+    def test_it_should_not_raise_token_error_if_token_has_wrong_type(self):
+        token = RefreshToken()
+        token[api_settings.TOKEN_TYPE_CLAIM] = 'wrong_type'
+
+        s = TokenVerifySerializer(data={'token': text_type(token)})
+
+        self.assertTrue(s.is_valid())
+
+    def test_it_should_return_given_token_if_everything_ok(self):
+        refresh = RefreshToken()
+        refresh['test_claim'] = 'arst'
+
+        # Serializer validates
+        s = TokenVerifySerializer(data={'token': text_type(refresh)})
+
+        now = aware_utcnow() - api_settings.ACCESS_TOKEN_LIFETIME / 2
+
+        with patch('rest_framework_simplejwt.tokens.aware_utcnow') as fake_aware_utcnow:
+            fake_aware_utcnow.return_value = now
+            self.assertTrue(s.is_valid())
+
+        self.assertEqual(s.validated_data['token'], text_type(refresh))
