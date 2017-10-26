@@ -255,7 +255,7 @@ SLIDING_TOKEN_REFRESH_EXP_CLAIM
   The claim name that is used to store the exipration time of a sliding token's
   refresh period.  More about this in the "Sliding tokens" section below.
 
-Customizing Token Claims
+Customizing token claims
 ------------------------
 
 If you wish to customize the claims contained in web tokens which are generated
