@@ -119,4 +119,4 @@ class TokenVerifySerializer(serializers.Serializer):
     def validate(self, attrs):
         UntypedToken(attrs['token'])
 
-        return {'token': attrs['token']}
+        return {}

@@ -363,4 +363,4 @@ class TestTokenVerifySerializer(TestCase):
             fake_aware_utcnow.return_value = now
             self.assertTrue(s.is_valid())
 
-        self.assertEqual(s.validated_data['token'], text_type(refresh))
+        self.assertEqual(len(s.validated_data), 0)
