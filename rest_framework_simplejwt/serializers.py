@@ -49,12 +49,20 @@ class TokenObtainSerializer(serializers.Serializer):
 
         return {}
 
+    @classmethod
+    def get_token(cls, user):
+        raise NotImplemented('Must implement `get_token` method for `TokenObtainSerializer` subclasses')
+
 
 class TokenObtainPairSerializer(TokenObtainSerializer):
+    @classmethod
+    def get_token(cls, user):
+        return RefreshToken.for_user(user)
+
     def validate(self, attrs):
         data = super(TokenObtainPairSerializer, self).validate(attrs)
 
-        refresh = RefreshToken.for_user(self.user)
+        refresh = self.get_token(self.user)
 
         data['refresh'] = text_type(refresh)
         data['access'] = text_type(refresh.access_token)
@@ -63,10 +71,16 @@ class TokenObtainPairSerializer(TokenObtainSerializer):
 
 
 class TokenObtainSlidingSerializer(TokenObtainSerializer):
+    @classmethod
+    def get_token(cls, user):
+        return SlidingToken.for_user(user)
+
     def validate(self, attrs):
         data = super(TokenObtainSlidingSerializer, self).validate(attrs)
 
-        data['token'] = text_type(SlidingToken.for_user(self.user))
+        token = self.get_token(self.user)
+
+        data['token'] = text_type(token)
 
         return data
 
