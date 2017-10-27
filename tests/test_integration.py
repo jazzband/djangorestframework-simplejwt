@@ -60,7 +60,7 @@ class TestTestView(APIViewTestCase):
             AccessToken.lifetime = old_lifetime
 
         access = res.data['access']
-        self.authenticate_with_token(api_settings.AUTH_HEADER_TYPE, access)
+        self.authenticate_with_token(api_settings.AUTH_HEADER_TYPES[0], access)
 
         with override_api_settings(AUTH_TOKEN_CLASSES=('rest_framework_simplejwt.tokens.AccessToken',)):
             res = self.view_get()
@@ -78,7 +78,7 @@ class TestTestView(APIViewTestCase):
         )
 
         token = res.data['token']
-        self.authenticate_with_token(api_settings.AUTH_HEADER_TYPE, token)
+        self.authenticate_with_token(api_settings.AUTH_HEADER_TYPES[0], token)
 
         with override_api_settings(AUTH_TOKEN_CLASSES=('rest_framework_simplejwt.tokens.SlidingToken',)):
             res = self.view_get()
@@ -98,7 +98,7 @@ class TestTestView(APIViewTestCase):
         access = res.data['access']
         refresh = res.data['refresh']
 
-        self.authenticate_with_token(api_settings.AUTH_HEADER_TYPE, access)
+        self.authenticate_with_token(api_settings.AUTH_HEADER_TYPES[0], access)
 
         with override_api_settings(AUTH_TOKEN_CLASSES=('rest_framework_simplejwt.tokens.AccessToken',)):
             res = self.view_get()
@@ -113,7 +113,7 @@ class TestTestView(APIViewTestCase):
 
         access = res.data['access']
 
-        self.authenticate_with_token(api_settings.AUTH_HEADER_TYPE, access)
+        self.authenticate_with_token(api_settings.AUTH_HEADER_TYPES[0], access)
 
         with override_api_settings(AUTH_TOKEN_CLASSES=('rest_framework_simplejwt.tokens.AccessToken',)):
             res = self.view_get()

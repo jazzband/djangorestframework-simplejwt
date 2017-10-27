@@ -9,7 +9,15 @@ from .models import TokenUser
 from .settings import api_settings
 from .state import User
 
-AUTH_HEADER_TYPE_BYTES = api_settings.AUTH_HEADER_TYPE.encode(HTTP_HEADER_ENCODING)
+AUTH_HEADER_TYPES = api_settings.AUTH_HEADER_TYPES
+
+if not isinstance(api_settings.AUTH_HEADER_TYPES, (list, tuple)):
+    AUTH_HEADER_TYPES = (AUTH_HEADER_TYPES,)
+
+AUTH_HEADER_TYPE_BYTES = set(
+    h.encode(HTTP_HEADER_ENCODING)
+    for h in AUTH_HEADER_TYPES
+)
 
 
 class JWTAuthentication(authentication.BaseAuthentication):
@@ -34,7 +42,7 @@ class JWTAuthentication(authentication.BaseAuthentication):
 
     def authenticate_header(self, request):
         return '{0} realm="{1}"'.format(
-            api_settings.AUTH_HEADER_TYPE,
+            AUTH_HEADER_TYPES[0],
             self.www_authenticate_realm,
         )
 
@@ -53,11 +61,12 @@ class JWTAuthentication(authentication.BaseAuthentication):
 
     def get_raw_token(self, header):
         """
-        Extracts an unvalidated JSON web token from the given header.
+        Extracts an unvalidated JSON web token from the given "Authorization"
+        header value.
         """
         parts = header.split()
 
-        if parts[0] != AUTH_HEADER_TYPE_BYTES:
+        if parts[0] not in AUTH_HEADER_TYPE_BYTES:
             # Assume the header does not contain a JSON web token
             return None
 

@@ -43,7 +43,7 @@ class TestJWTAuthentication(TestCase):
 
     def test_get_raw_token(self):
         # Should return None if header lacks correct type keyword
-        with override_api_settings(AUTH_HEADER_TYPE='JWT'):
+        with override_api_settings(AUTH_HEADER_TYPES='JWT'):
             reload_module(authentication)
             self.assertIsNone(self.backend.get_raw_token(self.fake_header))
         reload_module(authentication)
@@ -57,6 +57,15 @@ class TestJWTAuthentication(TestCase):
 
         # Otherwise, should return unvalidated token in header
         self.assertEqual(self.backend.get_raw_token(self.fake_header), self.fake_token)
+
+        # Should return token if header has one of many valid token types
+        with override_api_settings(AUTH_HEADER_TYPES=('JWT', 'Bearer')):
+            reload_module(authentication)
+            self.assertEqual(
+                self.backend.get_raw_token(self.fake_header),
+                self.fake_token,
+            )
+        reload_module(authentication)
 
     def test_get_validated_token(self):
         # Should raise InvalidToken if token not valid
