@@ -1,4 +1,4 @@
-## Development
+## Version 3.2
 
 * Added ``TokenObtainSerializer.get_token`` method to facilitate customization
   of token claims.
