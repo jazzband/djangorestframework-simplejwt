@@ -4,6 +4,11 @@
   of token claims.
 * Added ``TokenVerifyView`` to allow verification of HMAC-signed tokens by API
   users who have no access to the signing key.
+* Renamed ``AUTH_HEADER_TYPE`` setting to ``AUTH_HEADER_TYPES``.  This setting
+  now contains either a single valid auth header type or a list or tuple of
+  valid auth header types.  If authentication fails, and more than one string is
+  present in this tuple or list, the first item in the list will be used to
+  build the "WWW-Authenticate" header in the response.
 
 ## Version 3.1
 

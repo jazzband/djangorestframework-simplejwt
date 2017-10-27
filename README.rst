@@ -134,7 +134,7 @@ Some of Simple JWT's behavior can be customized through settings variables in
       'SIGNING_KEY': settings.SECRET_KEY,
       'VERIFYING_KEY': None,
 
-      'AUTH_HEADER_TYPE': 'Bearer',
+      'AUTH_HEADER_TYPES': ('Bearer',),
       'USER_ID_FIELD': 'id',
       'USER_ID_CLAIM': 'user_id',
 
@@ -209,11 +209,15 @@ VERIFYING_KEY
   by the ``ALGORITHM`` setting, the ``VERIFYING_KEY`` setting must be set to a
   string which contains an RSA public key.
 
-AUTH_HEADER_TYPE
-  The authorization header type that will be checked for views that require
+AUTH_HEADER_TYPES
+  The authorization header type(s) that will be accepted for views that require
   authentication.  For example, a value of ``'Bearer'`` means that views
   requiring authentication would look for a header with the following format:
-  ``Authorization: Bearer <token>``.
+  ``Authorization: Bearer <token>``.  This setting may also contain a list or
+  tuple of possible header types (e.g. ``('Bearer', 'JWT')``).  If a list or
+  tuple is used in this way, and authentication fails, the first item in the
+  collection will be used to build the "WWW-Authenticate" header in the
+  response.
 
 USER_ID_FIELD
   The database field from the user model that will be included in generated
