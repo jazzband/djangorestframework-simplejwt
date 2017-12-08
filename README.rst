@@ -191,7 +191,7 @@ ALGORITHM
 SIGNING_KEY
   The signing key which is used to sign the content of generated tokens.  For
   HMAC signing, this should be a random string with at least as many bits of
-  information as is required by the signing protocol.  For RSA signing, this
+  data as is required by the signing protocol.  For RSA signing, this
   should be a string which contains an RSA private key which is 2048 bits or
   longer.  Since Simple JWT defaults to using 256-bit HMAC signing, the
   ``SIGNING_KEY`` setting defaults to the value of the ``SECRET_KEY`` setting
