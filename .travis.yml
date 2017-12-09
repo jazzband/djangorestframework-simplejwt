@@ -20,7 +20,7 @@ env:
 matrix:
     fast_finish: true
     include:
-      - python: "2.7"
+      - python: "3.6"
         env: TOXENV="lint"
     exclude:
       - python: "3.6"
