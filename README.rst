@@ -22,8 +22,8 @@ Requirements
 ------------
 
 * Python (2.7, 3.4, 3.5, 3.6)
-* Django (1.8, 1.9, 1.10, 1.11)
-* Django REST Framework (3.5, 3.6)
+* Django (1.11, 2.0)
+* Django REST Framework (3.5, 3.6, 3.7)
 
 These are the officially supported python and package versions.  Other versions
 will probably work.  You're free to modify the tox config and see what is

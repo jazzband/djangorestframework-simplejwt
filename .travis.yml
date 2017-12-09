@@ -11,10 +11,8 @@ python:
 sudo: false
 
 env:
-    - DJANGO=1.8
-    - DJANGO=1.9
-    - DJANGO=1.10
     - DJANGO=1.11
+    - DJANGO=2.0
     - DJANGO=master
 
 matrix:
@@ -23,15 +21,13 @@ matrix:
       - python: "3.6"
         env: TOXENV="lint"
     exclude:
-      - python: "3.6"
-        env: DJANGO=1.8
-      - python: "3.6"
-        env: DJANGO=1.9
-      - python: "3.6"
-        env: DJANGO=1.10
+      - python: "2.7"
+        env: DJANGO=2.0
       - python: "2.7"
         env: DJANGO=master
       - python: "3.4"
+        env: DJANGO=master
+      - python: "3.5"
         env: DJANGO=master
     allow_failures:
       - env: DJANGO=master
