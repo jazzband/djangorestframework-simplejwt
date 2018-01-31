@@ -1,3 +1,8 @@
+## Version 3.2.1
+
+* Simplified some blacklist app code.
+* Resolved possible race condition.
+
 ## Version 3.2
 
 * Added ``TokenObtainSerializer.get_token`` method to facilitate customization
