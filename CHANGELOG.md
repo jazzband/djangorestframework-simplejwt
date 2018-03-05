@@ -1,3 +1,7 @@
+## Version 3.2.2
+
+* Added missing method `get` on `Token` base class.
+
 ## Version 3.2.1
 
 * Simplified some blacklist app code.
