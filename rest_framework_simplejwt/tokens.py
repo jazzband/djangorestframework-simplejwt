@@ -74,6 +74,9 @@ class Token(object):
     def __contains__(self, key):
         return key in self.payload
 
+    def get(self, key, default=None):
+        return self.payload.get(key, default)
+
     def __str__(self):
         """
         Signs and returns a token as a base64 encoded string.

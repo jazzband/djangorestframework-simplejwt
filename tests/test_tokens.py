@@ -201,6 +201,15 @@ class TestToken(TestCase):
     def test_contains(self):
         self.assertIn('exp', self.token)
 
+    def test_get(self):
+        self.token['test'] = 1234
+
+        self.assertEqual(1234, self.token.get('test'))
+        self.assertEqual(1234, self.token.get('test', 2345))
+
+        self.assertIsNone(self.token.get('does_not_exist'))
+        self.assertEqual(1234, self.token.get('does_not_exist', 1234))
+
     def test_set_jti(self):
         token = MyToken()
         old_jti = token['jti']
