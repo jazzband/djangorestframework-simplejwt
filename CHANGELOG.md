@@ -1,3 +1,8 @@
+## Version 3.2.3
+
+* Fixed issue with `WWW-Authenticate` header not being included in 401
+  responses.
+
 ## Version 3.2.2
 
 * Added missing method `get` on `Token` base class.
