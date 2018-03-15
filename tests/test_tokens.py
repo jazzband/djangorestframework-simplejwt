@@ -320,6 +320,14 @@ class TestAccessToken(TestCase):
         token = AccessToken()
         self.assertEqual(token[api_settings.TOKEN_TYPE_CLAIM], 'access')
 
+    def test_init_with_timedelta(self):
+        now = make_utc(datetime(year=2000, month=1, day=1))
+        token = AccessToken(timedelta(minutes=10))
+        token.current_time = now
+        token.set_exp()
+
+        self.assertEqual(token['exp'], datetime_to_epoch(now + timedelta(minutes=10)))
+
 
 class TestRefreshToken(TestCase):
     def test_init(self):
