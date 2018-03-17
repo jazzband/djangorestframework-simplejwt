@@ -282,12 +282,11 @@ class RefreshToken(BlacklistMixin, Token):
 
 class AccessToken(Token):
     token_type = 'access'
-    def __init__(self, lifetime=None):
-        if not lifetime:
-            self.lifetime = api_settings.ACCESS_TOKEN_LIFETIME
-        else:
+    lifetime = api_settings.ACCESS_TOKEN_LIFETIME
+    def __init__(self, token=None, verify=True, lifetime=None):
+        if lifetime:
             self.lifetime = lifetime
-        super(AccessToken, self).__init__()
+        super(AccessToken, self).__init__(token, verify)
 
 
 class UntypedToken(Token):
