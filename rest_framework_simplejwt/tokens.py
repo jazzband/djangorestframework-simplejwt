@@ -283,7 +283,7 @@ class RefreshToken(BlacklistMixin, Token):
 class AccessToken(Token):
     token_type = 'access'
     lifetime = api_settings.ACCESS_TOKEN_LIFETIME
-    
+
     def __init__(self, *args, **kwargs):
         lifetime = kwargs.pop('lifetime', None)
         if lifetime:
