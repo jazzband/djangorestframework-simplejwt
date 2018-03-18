@@ -447,6 +447,46 @@ JWTTokenUserAuthentication backend
         ...
     }
 
+Running the Tests
+-----------------
+
+To run the tests, first `install pyenv
+<https://github.com/pyenv/pyenv#installation>`__.  Next, install the relevant
+Python minor versions and create a ``.python-version`` file in your cloned
+repo's directory:
+
+.. code-block:: bash
+
+  pyenv install 3.6.x
+  pyenv install 3.5.x
+  pyenv install 3.4.x
+  pyenv install 2.7.x
+  cd <repo directory>
+  cat > .python-version <<EOF
+  3.6.x
+  3.5.x
+  3.4.x
+  2.7.x
+  EOF
+
+Above, the ``x`` in each case should be replaced with the latest corresponding
+patch version.  The ``.python-version`` file will tell pyenv and tox that
+you're testing against multiple versions of Python.  Next, install and run tox:
+
+.. code-block:: bash
+
+  pip install tox
+  tox
+
+Alternatively, if you'd like to avoid using tox, you can set up your
+environment and run the tests manually:
+
+.. code-block:: bash
+
+  pip install -r requirements.txt
+  ./setup.py develop
+  ./runtests.py
+
 Acknowledgements
 ----------------
 
