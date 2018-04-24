@@ -115,7 +115,7 @@ class TokenRefreshSlidingSerializer(serializers.Serializer):
     token = serializers.CharField()
 
     def validate(self, attrs):
-        token = SlidingToken(attrs['token'])
+        token = SlidingToken(attrs['token'], verify=False)
 
         # Check that the timestamp in the "refresh_exp" claim has not
         # passed
