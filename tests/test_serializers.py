@@ -5,8 +5,8 @@ from datetime import timedelta
 from django.test import TestCase
 from django.test.client import RequestFactory
 from django.utils.six import text_type
-from rest_framework.exceptions import ValidationError
 from mock import patch
+from rest_framework.exceptions import ValidationError
 from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.serializers import (
     TokenObtainPairSerializer, TokenObtainSerializer,
