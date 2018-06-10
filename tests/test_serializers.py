@@ -5,6 +5,7 @@ from datetime import timedelta
 from django.test import TestCase
 from django.test.client import RequestFactory
 from django.utils.six import text_type
+from rest_framework.exceptions import ValidationError
 from mock import patch
 from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.serializers import (
@@ -77,7 +78,7 @@ class TestTokenObtainSerializer(TestCase):
         self.assertIn('non_field_errors', s.errors)
 
     @patch('rest_framework_simplejwt.serializers.authenticate')
-    def test_calls_authenticate_with_request_object(self, mock_authenticate):
+    def test_it_should_call_authenticate_with_request_object(self, mock_authenticate):
         mock_authenticate.return_value = None
         data = {
             TokenObtainSerializer.username_field: self.username,
@@ -87,6 +88,24 @@ class TestTokenObtainSerializer(TestCase):
         s = TokenObtainSerializer(data=data)
         s.is_valid()
         mock_authenticate.assert_called_once_with(**data)
+
+    def test_it_should_not_validate_if_request_is_not_instance_of_request_class(self):
+        data = {
+            TokenObtainSerializer.username_field: self.username,
+            'password': self.password,
+            'request': {'fake': []}
+        }
+        s = TokenObtainSerializer(data=data)
+        self.assertFalse(s.is_valid())
+
+    def test_it_should_raise_exception_if_request_is_not_instance_of_request_class(self):
+        data = {
+            TokenObtainSerializer.username_field: self.username,
+            'password': self.password,
+            'request': {'fake': []}
+        }
+        s = TokenObtainSerializer(data=data)
+        self.assertRaises(ValidationError, s.is_valid, raise_exception=True)
 
 
 class TestTokenObtainSlidingSerializer(TestCase):

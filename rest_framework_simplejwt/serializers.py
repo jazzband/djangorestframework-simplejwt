@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 
 from django.contrib.auth import authenticate
+from django.http.request import HttpRequest
 from django.utils.six import text_type
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
@@ -31,6 +32,8 @@ class TokenObtainSerializer(serializers.Serializer):
         self.request = kwargs['data'].get('request', None)
 
     def validate(self, attrs):
+        if self.request and not isinstance(self.request, HttpRequest):
+            raise serializers.ValidationError("request argument is not HttpRequest class object")
         self.user = authenticate(**{
             self.username_field: attrs[self.username_field],
             'password': attrs['password'], 'request': self.request
