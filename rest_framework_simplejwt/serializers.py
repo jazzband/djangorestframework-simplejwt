@@ -28,11 +28,12 @@ class TokenObtainSerializer(serializers.Serializer):
 
         self.fields[self.username_field] = serializers.CharField()
         self.fields['password'] = PasswordField()
+        self.request = kwargs['data'].get('request', None)
 
     def validate(self, attrs):
         self.user = authenticate(**{
             self.username_field: attrs[self.username_field],
-            'password': attrs['password'],
+            'password': attrs['password'], 'request': self.request
         })
 
         # Prior to Django 1.10, inactive users could be authenticated with the

@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 from datetime import timedelta
 
 from django.test import TestCase
+from django.test.client import RequestFactory
 from django.utils.six import text_type
 from mock import patch
 from rest_framework_simplejwt.exceptions import TokenError
@@ -75,6 +76,18 @@ class TestTokenObtainSerializer(TestCase):
         self.assertFalse(s.is_valid())
         self.assertIn('non_field_errors', s.errors)
 
+    @patch('rest_framework_simplejwt.serializers.authenticate')
+    def test_calls_authenticate_with_request_object(self, mock_authenticate):
+        mock_authenticate.return_value = None
+        data = {
+            TokenObtainSerializer.username_field: self.username,
+            'password': self.password,
+            'request': RequestFactory().get('')
+        }
+        s = TokenObtainSerializer(data=data)
+        s.is_valid()
+        mock_authenticate.assert_called_once_with(**data)
+
 
 class TestTokenObtainSlidingSerializer(TestCase):
     def setUp(self):
@@ -126,6 +139,18 @@ class TestTokenObtainPairSerializer(TestCase):
         # encoded tokens should not raise an exception.
         AccessToken(s.validated_data['access'])
         RefreshToken(s.validated_data['refresh'])
+
+    @patch('rest_framework_simplejwt.serializers.authenticate')
+    def test_calls_authenticate_with_request_object(self, mock_authenticate):
+        mock_authenticate.return_value = None
+        data = {
+            TokenObtainPairSerializer.username_field: self.username,
+            'password': self.password,
+            'request': RequestFactory().get('')
+        }
+        s = TokenObtainPairSerializer(data=data)
+        s.is_valid()
+        mock_authenticate.assert_called_once_with(**data)
 
 
 class TestTokenRefreshSlidingSerializer(TestCase):
