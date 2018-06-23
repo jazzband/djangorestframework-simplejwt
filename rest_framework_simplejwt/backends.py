@@ -18,16 +18,20 @@ ALLOWED_ALGORITHMS = (
 
 
 class TokenBackend(object):
-    def __init__(self, algorithm, signing_key=None, verifying_key=None):
+    def __init__(self, algorithm, signing_key=None, verifying_key=None, user=None):
         if algorithm not in ALLOWED_ALGORITHMS:
             raise TokenBackendError(format_lazy(_("Unrecognized algorithm type '{}'"), algorithm))
 
+        self.user = user
         self.algorithm = algorithm
-        self.signing_key = signing_key
         if algorithm.startswith('HS'):
             self.verifying_key = signing_key
         else:
             self.verifying_key = verifying_key
+        if callable(signing_key):
+            self.signing_key = str(signing_key(user))
+        else:
+            self.signing_key = signing_key
 
     def encode(self, payload):
         """
