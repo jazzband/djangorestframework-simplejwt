@@ -1,5 +1,5 @@
 from datetime import timedelta
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 from django.test import TestCase
 
@@ -53,7 +53,7 @@ class TestTokenObtainSerializer(TestCase):
         self.assertIn(s.username_field, s.errors)
 
     def test_it_should_not_validate_if_user_not_found(self):
-        s = TokenObtainSerializer(data={
+        s = TokenObtainSerializer(context=MagicMock(), data={
             TokenObtainSerializer.username_field: 'missing',
             'password': 'pass',
         })
@@ -65,7 +65,7 @@ class TestTokenObtainSerializer(TestCase):
         self.user.is_active = False
         self.user.save()
 
-        s = TokenObtainSerializer(data={
+        s = TokenObtainSerializer(context=MagicMock(), data={
             TokenObtainSerializer.username_field: self.username,
             'password': self.password,
         })
@@ -85,7 +85,7 @@ class TestTokenObtainSlidingSerializer(TestCase):
         )
 
     def test_it_should_produce_a_json_web_token_when_valid(self):
-        s = TokenObtainSlidingSerializer(data={
+        s = TokenObtainSlidingSerializer(context=MagicMock(), data={
             TokenObtainSlidingSerializer.username_field: self.username,
             'password': self.password,
         })
@@ -110,7 +110,7 @@ class TestTokenObtainPairSerializer(TestCase):
         )
 
     def test_it_should_produce_a_json_web_token_when_valid(self):
-        s = TokenObtainPairSerializer(data={
+        s = TokenObtainPairSerializer(context=MagicMock(), data={
             TokenObtainPairSerializer.username_field: self.username,
             'password': self.password,
         })
