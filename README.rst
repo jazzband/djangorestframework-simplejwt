@@ -273,6 +273,31 @@ SLIDING_TOKEN_REFRESH_EXP_CLAIM
   The claim name that is used to store the exipration time of a sliding token's
   refresh period.  More about this in the "Sliding tokens" section below.
 
+Creating a new token manually
+-----------------------------
+
+Sometimes you may want to manually generate a token, for example to return a
+token to the user immediately after account creation.
+You can do this as follows:
+
+.. code-block:: python
+
+  from rest_framework_simplejwt.tokens import RefreshToken
+  from django.utils.six import text_type
+
+  def get_simplejwt_tokens(user):
+
+    tokens = RefreshToken.for_user(user)
+    refresh = text_type(tokens)
+    access = text_type(tokens.access_token)
+    data = {
+        "refresh": refresh,
+        "access": access
+    }
+
+    return data
+
+
 Customizing token claims
 ------------------------
 
