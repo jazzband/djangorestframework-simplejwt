@@ -16,6 +16,7 @@ class PasswordField(serializers.CharField):
 
         kwargs['style']['input_type'] = 'password'
         kwargs['write_only'] = True
+        kwargs['trim_whitespace'] = False
 
         super(PasswordField, self).__init__(*args, **kwargs)
 
