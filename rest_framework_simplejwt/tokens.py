@@ -58,6 +58,9 @@ class Token(object):
 
             # Set "jti" claim
             self.set_jti()
+            
+            # set "iat" claim
+            self.set_iat()
 
     def __repr__(self):
         return repr(self.payload)
@@ -125,7 +128,10 @@ class Token(object):
         https://tools.ietf.org/html/rfc7519#section-4.1.7
         """
         self.payload['jti'] = uuid4().hex
-
+    
+    def set_iat(self, claim='iat', current_time=None):
+        self.payload[claim] = current_time or self.current_time
+    
     def set_exp(self, claim='exp', from_time=None, lifetime=None):
         """
         Updates the expiration time of a token.
