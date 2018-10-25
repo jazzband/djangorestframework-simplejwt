@@ -13,9 +13,9 @@ PYTEST_ARGS = {
     'fast': ['tests', '--tb=short', '-q', '-s', '-rw'],
 }
 
-FLAKE8_ARGS = ['--ignore=E501', 'rest_framework_simplejwt', 'tests']
+FLAKE8_ARGS = ['--ignore=E501,W504', 'rest_framework_simplejwt', 'tests']
 
-ISORT_ARGS = ['--recursive', '--check-only', '-p', 'rest_framework_simplejwt', 'tests']
+ISORT_ARGS = ['--recursive', '--check-only', 'rest_framework_simplejwt', 'tests']
 
 sys.path.append(os.path.dirname(__file__))
 

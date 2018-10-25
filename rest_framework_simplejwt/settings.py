@@ -58,6 +58,7 @@ class APISettings(_APISettings):  # pragma: no cover
 
         return user_settings
 
+
 api_settings = APISettings(USER_SETTINGS, DEFAULTS, IMPORT_STRINGS)
 
 
@@ -68,5 +69,6 @@ def reload_api_settings(*args, **kwargs):  # pragma: no cover
 
     if setting == 'SIMPLE_JWT':
         api_settings = APISettings(value, DEFAULTS, IMPORT_STRINGS)
+
 
 setting_changed.connect(reload_api_settings)

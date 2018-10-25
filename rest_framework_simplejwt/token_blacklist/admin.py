@@ -44,6 +44,7 @@ class OutstandingTokenAdmin(admin.ModelAdmin):
             super(OutstandingTokenAdmin, self).has_change_permission(request, obj)
         )
 
+
 admin.site.register(OutstandingToken, OutstandingTokenAdmin)
 
 
@@ -87,5 +88,6 @@ class BlacklistedTokenAdmin(admin.ModelAdmin):
         return obj.token.expires_at
     token_expires_at.short_description = _('expires at')
     token_expires_at.admin_order_field = 'token__expires_at'
+
 
 admin.site.register(BlacklistedToken, BlacklistedTokenAdmin)
