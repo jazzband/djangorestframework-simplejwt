@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 
 from datetime import datetime, timedelta
+from random import randint
 
 import jwt
 from django.test import TestCase
@@ -55,8 +56,9 @@ FwIDAQAB
 
 class TestTokenBackend(TestCase):
     def setUp(self):
-        self.hmac_token_backend = TokenBackend('HS256', SECRET)
-        self.rsa_token_backend = TokenBackend('RS256', PRIVATE_KEY, PUBLIC_KEY)
+        self.hmac_token_backend = TokenBackend('HS256', secret_key=SECRET)
+        self.hmac_custom_user_key_token_backend = TokenBackend('HS256', get_user_secret_key=lambda a: a)
+        self.rsa_token_backend = TokenBackend('RS256', signing_key=PRIVATE_KEY, verifying_key=PUBLIC_KEY)
         self.payload = {'foo': 'bar'}
 
     def test_init(self):
@@ -95,6 +97,31 @@ class TestTokenBackend(TestCase):
                 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjk0NjY4NDgwMH0.pzHTOaVvKJMMkSqksGh-NdeEvQy8Thre3hBM3smUW5Sohtg77KnHpaUYjq30DyRmYQRmPSjEVprh1Yvic_-OeAXPW8WVsF-r4YdJuxWUpuZbIPwJ9E-cMfTZkDkOl18z1zOdlsLtsP2kXyAlptyy9QQsM7AxoqM6cyXoQ5TI0geWccgoahTy3cBtA6pmjm7H0nfeDGqpqYQBhtaFmRuIWn-_XtdN9C6NVmRCcZwyjH-rP3oEm6wtuKJEN25sVWlZm8YRQ-rj7A7SNqBB5tFK2anM_iv4rmBlIEkmr_f2s_WqMxn2EWUSNeqbqiwabR6CZUyJtKx1cPG0B2PqOTcZsg',
             ),
         )
+
+    def test_encode_hmac_custom(self):
+        payload = {
+            'id': '1234'
+        }
+        hmac_token = self.hmac_custom_user_key_token_backend.encode(payload)
+        self.assertIn(
+            hmac_token,
+            (
+                'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjEyMzQifQ.RMZuO9SRBYS0pLh8DVhvknBSs80OfFvzxbl-y9b5pnc'
+                'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEyMzQifQ.1weakZ8seqK0UKjpLrpfJaCEr9B7rJiYLGa1TR64QF4'
+            )
+        )
+
+    def test_decode_hmac_custom_changed_user(self):
+        token_backend = TokenBackend('HS256', get_user_secret_key=lambda a: str(a) + str(randint(0, 1000000000)))
+        payload = {
+            'exp': make_utc(datetime(year=2000, month=1, day=1)),
+            'id': '1234'
+        }
+
+        token = token_backend.encode(payload)
+
+        with self.assertRaises(TokenBackendError):
+            self.hmac_token_backend.decode(token)
 
     def test_decode_hmac_with_no_expiry(self):
         no_exp_token = jwt.encode(self.payload, SECRET, algorithm='HS256')
@@ -162,7 +189,7 @@ class TestTokenBackend(TestCase):
         no_exp_token = jwt.encode(self.payload, PRIVATE_KEY, algorithm='RS256')
 
         self.assertEqual(
-            self.hmac_token_backend.decode(no_exp_token, verify=False),
+            self.rsa_token_backend.decode(no_exp_token, verify=False),
             self.payload,
         )
 
@@ -198,7 +225,7 @@ class TestTokenBackend(TestCase):
         invalid_token = token_2_payload + '.' + token_1_sig
 
         self.assertEqual(
-            self.hmac_token_backend.decode(invalid_token, verify=False),
+            self.rsa_token_backend.decode(invalid_token, verify=False),
             self.payload,
         )
 

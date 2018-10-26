@@ -97,9 +97,9 @@ class TestToken(TestCase):
         # Test backend rejects encoded token (expired or bad signature)
         payload = {'foo': 'bar'}
         payload['exp'] = aware_utcnow() + timedelta(days=1)
-        token_1 = jwt.encode(payload, api_settings.SIGNING_KEY, algorithm='HS256')
+        token_1 = jwt.encode(payload, api_settings.JWT_SECRET_KEY, algorithm='HS256')
         payload['foo'] = 'baz'
-        token_2 = jwt.encode(payload, api_settings.SIGNING_KEY, algorithm='HS256')
+        token_2 = jwt.encode(payload, api_settings.JWT_SECRET_KEY, algorithm='HS256')
 
         token_2_payload = token_2.rsplit('.', 1)[0]
         token_1_sig = token_1.rsplit('.', 1)[-1]
@@ -112,9 +112,9 @@ class TestToken(TestCase):
         # Test backend rejects encoded token (expired or bad signature)
         payload = {'foo': 'bar'}
         payload['exp'] = aware_utcnow() + timedelta(days=1)
-        token_1 = jwt.encode(payload, api_settings.SIGNING_KEY, algorithm='HS256')
+        token_1 = jwt.encode(payload, api_settings.JWT_SECRET_KEY, algorithm='HS256')
         payload['foo'] = 'baz'
-        token_2 = jwt.encode(payload, api_settings.SIGNING_KEY, algorithm='HS256')
+        token_2 = jwt.encode(payload, api_settings.JWT_SECRET_KEY, algorithm='HS256')
 
         token_2_payload = token_2.rsplit('.', 1)[0]
         token_1_sig = token_1.rsplit('.', 1)[-1]
