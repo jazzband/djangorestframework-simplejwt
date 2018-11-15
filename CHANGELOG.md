@@ -1,3 +1,10 @@
+## Version 3.3
+
+* Removed official support for Python 3.4.
+* Added support for Python 3.7.
+* Added support for Django 2.1.
+* Added support for DRF 3.9.
+
 ## Version 3.2.3
 
 * Fixed issue with `WWW-Authenticate` header not being included in 401
