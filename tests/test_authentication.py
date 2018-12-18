@@ -48,6 +48,9 @@ class TestJWTAuthentication(TestCase):
             self.assertIsNone(self.backend.get_raw_token(self.fake_header))
         reload_module(authentication)
 
+        # Should return None if an empty AUTHORIZATION header is sent
+        self.assertIsNone(self.backend.get_raw_token(b''))
+
         # Should raise error if header is malformed
         with self.assertRaises(AuthenticationFailed):
             self.backend.get_raw_token(b'Bearer one two')
