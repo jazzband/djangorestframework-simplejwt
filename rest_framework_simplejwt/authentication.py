@@ -66,7 +66,7 @@ class JWTAuthentication(authentication.BaseAuthentication):
         """
         parts = header.split()
 
-        if not parts:
+        if len(parts) == 0:
             # Empty AUTHORIZATION header sent
             return None
 
