@@ -66,6 +66,10 @@ class JWTAuthentication(authentication.BaseAuthentication):
         """
         parts = header.split()
 
+        if len(parts) == 0:
+            # Empty AUTHORIZATION header sent
+            return None
+
         if parts[0] not in AUTH_HEADER_TYPE_BYTES:
             # Assume the header does not contain a JSON web token
             return None
