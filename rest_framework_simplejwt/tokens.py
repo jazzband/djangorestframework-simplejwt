@@ -97,10 +97,6 @@ class Token(object):
         # claim.  We don't want any zombie tokens walking around.
         self.check_exp()
 
-        # Ensure token id is present
-        if 'jti' not in self.payload:
-            raise TokenError(_('Token has no id'))
-
         self.verify_token_type()
 
     def verify_token_type(self):

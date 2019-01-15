@@ -152,8 +152,8 @@ class TestToken(TestCase):
         t = MyToken()
         del t['jti']
 
-        with self.assertRaises(TokenError):
-            MyToken(str(t))
+        t2 = MyToken(str(t))
+        self.assertEqual(t.payload, t2.payload)
 
     def test_str(self):
         token = MyToken()
