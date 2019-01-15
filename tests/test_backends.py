@@ -51,11 +51,16 @@ FwIDAQAB
 -----END PUBLIC KEY-----
 '''
 
+AUDIENCE = 'openid-client-id'
+
+ISSUER = 'https://www.myoidcprovider.com'
+
 
 class TestTokenBackend(TestCase):
     def setUp(self):
         self.hmac_token_backend = TokenBackend('HS256', SECRET)
         self.rsa_token_backend = TokenBackend('RS256', PRIVATE_KEY, PUBLIC_KEY)
+        self.aud_iss_token_backend = TokenBackend('RS256', PRIVATE_KEY, PUBLIC_KEY, AUDIENCE, ISSUER)
         self.payload = {'foo': 'bar'}
 
     def test_init(self):
@@ -92,6 +97,20 @@ class TestTokenBackend(TestCase):
             (
                 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJleHAiOjk0NjY4NDgwMH0.cuE6ocmdxVHXVrGufzn-_ZbXDV475TPPb5jtSacvJsnR3s3tLIm9yR7MF4vGcCAUGJn2hU_JgSOhs9sxntPPVjdwvC3-sxAwfUQ5AgUCEAF5XC7wTvGhmvufzhAgEG_DNsactCh79P8xRnc0iugtlGNyFp_YK582-ZrlfQEp-7C0L9BNG_JCS2J9DsGR7ojO2xGFkFfzezKRkrVTJMPLwpl0JAiZ0iqbQE-Tex7redCrGI388_mgh52GLsNlSIvW2gQMqCVMYndMuYx32Pd5tuToZmLUQ2PJ9RyAZ4fOMApTzoshItg4lGqtnt9CDYzypHULJZohJIPcxFVZZfHxhw',
                 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjk0NjY4NDgwMH0.pzHTOaVvKJMMkSqksGh-NdeEvQy8Thre3hBM3smUW5Sohtg77KnHpaUYjq30DyRmYQRmPSjEVprh1Yvic_-OeAXPW8WVsF-r4YdJuxWUpuZbIPwJ9E-cMfTZkDkOl18z1zOdlsLtsP2kXyAlptyy9QQsM7AxoqM6cyXoQ5TI0geWccgoahTy3cBtA6pmjm7H0nfeDGqpqYQBhtaFmRuIWn-_XtdN9C6NVmRCcZwyjH-rP3oEm6wtuKJEN25sVWlZm8YRQ-rj7A7SNqBB5tFK2anM_iv4rmBlIEkmr_f2s_WqMxn2EWUSNeqbqiwabR6CZUyJtKx1cPG0B2PqOTcZsg',
+            ),
+        )
+
+    def test_encode_aud_iss(self):
+        # Should return a JSON web token for the given payload
+        payload = {'exp': make_utc(datetime(year=2000, month=1, day=1))}
+
+        rsa_token = self.aud_iss_token_backend.encode(payload)
+
+        # Token could be one of two depending on header dict ordering
+        self.assertIn(
+            rsa_token,
+            (
+                'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJleHAiOjk0NjY4NDgwMCwiYXVkIjoib3BlbmlkLWNsaWVudC1pZCIsImlzcyI6Imh0dHBzOi8vd3d3Lm15b2lkY3Byb3ZpZGVyLmNvbSJ9.kSz7KyUZgpKaeQHYSQlhsE-UFLG2zhBiJ2MFCIvhstA4lSIKj3U1fdP1OhEDg7X66EquRRIZrby6M7RncqCdsjRwKrEIaL74KgC4s5PDXa_HC6dtpi2GhXqaLz8YxfCPaNGZ_9q9rs4Z4O6WpwBLNmMQrTxNno9p0uT93Z2yKj5hGih8a9C_CSf_rKtsHW9AJShWGoKpR6qQFKVNP1GAwQOQ6IeEvZenq_LSEywnrfiWp4Y5UF7xi42wWx7_YPQtM9_Bp5sB-DbrKg_8t0zSc-OHeVDgH0TKqygGEea09W0QkmJcROkaEbxt2LxJg9OuSdXgudVytV8ewpgNtWNE4g'
             ),
         )
 
@@ -208,3 +227,13 @@ class TestTokenBackend(TestCase):
         token = jwt.encode(self.payload, PRIVATE_KEY, algorithm='RS256').decode('utf-8')
 
         self.assertEqual(self.rsa_token_backend.decode(token), self.payload)
+
+    def test_decode_aud_iss_success(self):
+        self.payload['exp'] = aware_utcnow() + timedelta(days=1)
+        self.payload['foo'] = 'baz'
+        self.payload['aud'] = AUDIENCE
+        self.payload['iss'] = ISSUER
+
+        token = jwt.encode(self.payload, PRIVATE_KEY, algorithm='RS256').decode('utf-8')
+
+        self.assertEqual(self.aud_iss_token_backend.decode(token), self.payload)
