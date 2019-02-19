@@ -1,9 +1,6 @@
-from __future__ import unicode_literals
-
 from datetime import timedelta
 
 from django.test import TestCase
-from django.utils.six import text_type
 from mock import patch
 from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.serializers import (
@@ -133,7 +130,7 @@ class TestTokenRefreshSlidingSerializer(TestCase):
         token = SlidingToken()
         del token['exp']
 
-        s = TokenRefreshSlidingSerializer(data={'token': text_type(token)})
+        s = TokenRefreshSlidingSerializer(data={'token': str(token)})
 
         with self.assertRaises(TokenError) as e:
             s.is_valid()
@@ -142,7 +139,7 @@ class TestTokenRefreshSlidingSerializer(TestCase):
 
         token.set_exp(lifetime=-timedelta(days=1))
 
-        s = TokenRefreshSlidingSerializer(data={'token': text_type(token)})
+        s = TokenRefreshSlidingSerializer(data={'token': str(token)})
 
         with self.assertRaises(TokenError) as e:
             s.is_valid()
@@ -153,7 +150,7 @@ class TestTokenRefreshSlidingSerializer(TestCase):
         token = SlidingToken()
         del token[api_settings.SLIDING_TOKEN_REFRESH_EXP_CLAIM]
 
-        s = TokenRefreshSlidingSerializer(data={'token': text_type(token)})
+        s = TokenRefreshSlidingSerializer(data={'token': str(token)})
 
         with self.assertRaises(TokenError) as e:
             s.is_valid()
@@ -164,7 +161,7 @@ class TestTokenRefreshSlidingSerializer(TestCase):
         token = SlidingToken()
         token.set_exp(api_settings.SLIDING_TOKEN_REFRESH_EXP_CLAIM, lifetime=-timedelta(days=1))
 
-        s = TokenRefreshSlidingSerializer(data={'token': text_type(token)})
+        s = TokenRefreshSlidingSerializer(data={'token': str(token)})
 
         with self.assertRaises(TokenError) as e:
             s.is_valid()
@@ -175,7 +172,7 @@ class TestTokenRefreshSlidingSerializer(TestCase):
         token = SlidingToken()
         token[api_settings.TOKEN_TYPE_CLAIM] = 'wrong_type'
 
-        s = TokenRefreshSlidingSerializer(data={'token': text_type(token)})
+        s = TokenRefreshSlidingSerializer(data={'token': str(token)})
 
         with self.assertRaises(TokenError) as e:
             s.is_valid()
@@ -191,7 +188,7 @@ class TestTokenRefreshSlidingSerializer(TestCase):
         old_token.set_exp(lifetime=lifetime)
 
         # Serializer validates
-        s = TokenRefreshSlidingSerializer(data={'token': text_type(old_token)})
+        s = TokenRefreshSlidingSerializer(data={'token': str(old_token)})
         self.assertTrue(s.is_valid())
 
         # Expiration claim has moved into future
@@ -206,7 +203,7 @@ class TestTokenRefreshSerializer(TestCase):
         token = RefreshToken()
         del token['exp']
 
-        s = TokenRefreshSerializer(data={'refresh': text_type(token)})
+        s = TokenRefreshSerializer(data={'refresh': str(token)})
 
         with self.assertRaises(TokenError) as e:
             s.is_valid()
@@ -215,7 +212,7 @@ class TestTokenRefreshSerializer(TestCase):
 
         token.set_exp(lifetime=-timedelta(days=1))
 
-        s = TokenRefreshSerializer(data={'refresh': text_type(token)})
+        s = TokenRefreshSerializer(data={'refresh': str(token)})
 
         with self.assertRaises(TokenError) as e:
             s.is_valid()
@@ -226,7 +223,7 @@ class TestTokenRefreshSerializer(TestCase):
         token = RefreshToken()
         token[api_settings.TOKEN_TYPE_CLAIM] = 'wrong_type'
 
-        s = TokenRefreshSerializer(data={'refresh': text_type(token)})
+        s = TokenRefreshSerializer(data={'refresh': str(token)})
 
         with self.assertRaises(TokenError) as e:
             s.is_valid()
@@ -238,7 +235,7 @@ class TestTokenRefreshSerializer(TestCase):
         refresh['test_claim'] = 'arst'
 
         # Serializer validates
-        s = TokenRefreshSerializer(data={'refresh': text_type(refresh)})
+        s = TokenRefreshSerializer(data={'refresh': str(refresh)})
 
         now = aware_utcnow() - api_settings.ACCESS_TOKEN_LIFETIME / 2
 
@@ -260,7 +257,7 @@ class TestTokenRefreshSerializer(TestCase):
         old_exp = refresh['exp']
 
         # Serializer validates
-        ser = TokenRefreshSerializer(data={'refresh': text_type(refresh)})
+        ser = TokenRefreshSerializer(data={'refresh': str(refresh)})
 
         now = aware_utcnow() - api_settings.ACCESS_TOKEN_LIFETIME / 2
 
@@ -293,7 +290,7 @@ class TestTokenRefreshSerializer(TestCase):
         old_exp = refresh['exp']
 
         # Serializer validates
-        ser = TokenRefreshSerializer(data={'refresh': text_type(refresh)})
+        ser = TokenRefreshSerializer(data={'refresh': str(refresh)})
 
         now = aware_utcnow() - api_settings.ACCESS_TOKEN_LIFETIME / 2
 
@@ -326,7 +323,7 @@ class TestTokenVerifySerializer(TestCase):
         token = RefreshToken()
         del token['exp']
 
-        s = TokenVerifySerializer(data={'token': text_type(token)})
+        s = TokenVerifySerializer(data={'token': str(token)})
 
         with self.assertRaises(TokenError) as e:
             s.is_valid()
@@ -335,7 +332,7 @@ class TestTokenVerifySerializer(TestCase):
 
         token.set_exp(lifetime=-timedelta(days=1))
 
-        s = TokenVerifySerializer(data={'token': text_type(token)})
+        s = TokenVerifySerializer(data={'token': str(token)})
 
         with self.assertRaises(TokenError) as e:
             s.is_valid()
@@ -346,7 +343,7 @@ class TestTokenVerifySerializer(TestCase):
         token = RefreshToken()
         token[api_settings.TOKEN_TYPE_CLAIM] = 'wrong_type'
 
-        s = TokenVerifySerializer(data={'token': text_type(token)})
+        s = TokenVerifySerializer(data={'token': str(token)})
 
         self.assertTrue(s.is_valid())
 
@@ -355,7 +352,7 @@ class TestTokenVerifySerializer(TestCase):
         refresh['test_claim'] = 'arst'
 
         # Serializer validates
-        s = TokenVerifySerializer(data={'token': text_type(refresh)})
+        s = TokenVerifySerializer(data={'token': str(refresh)})
 
         now = aware_utcnow() - api_settings.ACCESS_TOKEN_LIFETIME / 2
 

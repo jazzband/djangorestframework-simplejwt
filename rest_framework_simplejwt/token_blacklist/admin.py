@@ -22,7 +22,7 @@ class OutstandingTokenAdmin(admin.ModelAdmin):
     )
 
     def get_queryset(self, *args, **kwargs):
-        qs = super(OutstandingTokenAdmin, self).get_queryset(*args, **kwargs)
+        qs = super().get_queryset(*args, **kwargs)
 
         return qs.select_related('user')
 
@@ -41,7 +41,7 @@ class OutstandingTokenAdmin(admin.ModelAdmin):
     def has_change_permission(self, request, obj=None):
         return (
             request.method in ['GET', 'HEAD'] and
-            super(OutstandingTokenAdmin, self).has_change_permission(request, obj)
+            super().has_change_permission(request, obj)
         )
 
 admin.site.register(OutstandingToken, OutstandingTokenAdmin)
@@ -64,7 +64,7 @@ class BlacklistedTokenAdmin(admin.ModelAdmin):
     )
 
     def get_queryset(self, *args, **kwargs):
-        qs = super(BlacklistedTokenAdmin, self).get_queryset(*args, **kwargs)
+        qs = super().get_queryset(*args, **kwargs)
 
         return qs.select_related('token__user')
 

@@ -171,7 +171,7 @@ class TestPopulateJtiHexMigration(MigrationTestCase):
             password='test_password',
         )
 
-        super(TestPopulateJtiHexMigration, self).setUp()
+        super().setUp()
 
     def setUpBeforeMigration(self, apps):
         # Ensure some tokens are present in the outstanding list

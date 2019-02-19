@@ -1,10 +1,7 @@
-from __future__ import unicode_literals
-
 from datetime import timedelta
 from uuid import uuid4
 
 from django.conf import settings
-from django.utils.six import python_2_unicode_compatible, text_type
 from django.utils.translation import ugettext_lazy as _
 
 from .exceptions import TokenBackendError, TokenError
@@ -15,8 +12,7 @@ from .utils import (
 )
 
 
-@python_2_unicode_compatible
-class Token(object):
+class Token:
     """
     A class which validates and wraps an existing JWT or can be used to build a
     new JWT.
@@ -164,7 +160,7 @@ class Token(object):
         """
         user_id = getattr(user, api_settings.USER_ID_FIELD)
         if not isinstance(user_id, int):
-            user_id = text_type(user_id)
+            user_id = str(user_id)
 
         token = cls()
         token[api_settings.USER_ID_CLAIM] = user_id
@@ -172,7 +168,7 @@ class Token(object):
         return token
 
 
-class BlacklistMixin(object):
+class BlacklistMixin:
     """
     If the `rest_framework_simplejwt.token_blacklist` app was configured to be
     used, tokens created from `BlacklistMixin` subclasses will insert
@@ -183,7 +179,7 @@ class BlacklistMixin(object):
         def verify(self, *args, **kwargs):
             self.check_blacklist()
 
-            super(BlacklistMixin, self).verify(*args, **kwargs)
+            super().verify(*args, **kwargs)
 
         def check_blacklist(self):
             """
@@ -219,7 +215,7 @@ class BlacklistMixin(object):
             """
             Adds this token to the outstanding token list.
             """
-            token = super(BlacklistMixin, cls).for_user(user)
+            token = super().for_user(user)
 
             jti = token['jti']
             exp = token['exp']
@@ -240,7 +236,7 @@ class SlidingToken(BlacklistMixin, Token):
     lifetime = api_settings.SLIDING_TOKEN_LIFETIME
 
     def __init__(self, *args, **kwargs):
-        super(SlidingToken, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         if self.token is None:
             # Set sliding refresh expiration claim if new token

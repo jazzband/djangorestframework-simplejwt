@@ -1,10 +1,7 @@
-from __future__ import unicode_literals
-
 from calendar import timegm
 from datetime import datetime
 
 from django.conf import settings
-from django.utils import six
 from django.utils.functional import lazy
 from django.utils.timezone import is_naive, make_aware, utc
 
@@ -31,4 +28,4 @@ def datetime_from_epoch(ts):
 def format_lazy(s, *args, **kwargs):
     return s.format(*args, **kwargs)
 
-format_lazy = lazy(format_lazy, six.text_type)
+format_lazy = lazy(format_lazy, str)

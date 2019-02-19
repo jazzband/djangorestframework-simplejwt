@@ -1,7 +1,4 @@
-from __future__ import unicode_literals
-
 from django.test import TestCase
-from django.utils import six
 from rest_framework_simplejwt.models import TokenUser
 from rest_framework_simplejwt.settings import api_settings
 
@@ -23,7 +20,7 @@ class TestTokenUser(TestCase):
         self.assertTrue(self.user.is_active)
 
     def test_str(self):
-        self.assertEqual(six.text_type(self.user), 'TokenUser 42')
+        self.assertEqual(str(self.user), 'TokenUser 42')
 
     def test_id(self):
         self.assertEqual(self.user.id, 42)

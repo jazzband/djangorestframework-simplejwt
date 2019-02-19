@@ -1,10 +1,8 @@
-from __future__ import unicode_literals
-
 from datetime import timedelta
+from importlib import reload
 
 from django.contrib.auth import get_user_model
 from django.test import TestCase
-from django.utils.six.moves import reload_module
 from rest_framework.test import APIRequestFactory
 from rest_framework_simplejwt import authentication
 from rest_framework_simplejwt.exceptions import (
@@ -44,9 +42,9 @@ class TestJWTAuthentication(TestCase):
     def test_get_raw_token(self):
         # Should return None if header lacks correct type keyword
         with override_api_settings(AUTH_HEADER_TYPES='JWT'):
-            reload_module(authentication)
+            reload(authentication)
             self.assertIsNone(self.backend.get_raw_token(self.fake_header))
-        reload_module(authentication)
+        reload(authentication)
 
         # Should return None if an empty AUTHORIZATION header is sent
         self.assertIsNone(self.backend.get_raw_token(b''))
@@ -63,12 +61,12 @@ class TestJWTAuthentication(TestCase):
 
         # Should return token if header has one of many valid token types
         with override_api_settings(AUTH_HEADER_TYPES=('JWT', 'Bearer')):
-            reload_module(authentication)
+            reload(authentication)
             self.assertEqual(
                 self.backend.get_raw_token(self.fake_header),
                 self.fake_token,
             )
-        reload_module(authentication)
+        reload(authentication)
 
     def test_get_validated_token(self):
         # Should raise InvalidToken if token not valid
