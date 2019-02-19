@@ -4,7 +4,7 @@ import contextlib
 
 from django.db import connection
 from django.db.migrations.executor import MigrationExecutor
-from django.test import TestCase
+from django.test import TestCase, TransactionTestCase
 from rest_framework.test import APIClient
 from rest_framework_simplejwt.compat import reverse
 from rest_framework_simplejwt.settings import api_settings
@@ -82,7 +82,7 @@ def override_api_settings(**settings):
             pass
 
 
-class MigrationTestCase(TestCase):
+class MigrationTestCase(TransactionTestCase):
     migrate_from = None
     migrate_to = None
 
