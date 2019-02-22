@@ -145,8 +145,10 @@ Some of Simple JWT's behavior can be customized through settings variables in
       'BLACKLIST_AFTER_ROTATION': True,
 
       'ALGORITHM': 'HS256',
-      'SIGNING_KEY': settings.SECRET_KEY,
+      'JWT_SECRET_KEY': settings.SECRET_KEY,
+      'SIGNING_KEY': None,
       'VERIFYING_KEY': None,
+      'GET_USER_SECRET_KEY': None
 
       'AUTH_HEADER_TYPES': ('Bearer',),
       'USER_ID_FIELD': 'id',
@@ -202,24 +204,34 @@ ALGORITHM
   key.  Likewise, the ``VERIFYING_KEY`` setting must be set to a string which
   contains an RSA public key.
 
-SIGNING_KEY
-  The signing key which is used to sign the content of generated tokens.  For
-  HMAC signing, this should be a random string with at least as many bits of
-  data as is required by the signing protocol.  For RSA signing, this
-  should be a string which contains an RSA private key which is 2048 bits or
-  longer.  Since Simple JWT defaults to using 256-bit HMAC signing, the
-  ``SIGNING_KEY`` setting defaults to the value of the ``SECRET_KEY`` setting
+JWT_SECRET_KEY
+  The signing key which is used to sign the content of generated tokens when HMAC algorithm
+  is chosen, this should be a random string with at least as many bits of
+  data as is required by the signing protocol.
+  Since Simple JWT defaults to using 256-bit HMAC signing, the
+  ``JWT_SECRET_KEY`` setting defaults to the value of the ``SECRET_KEY`` setting
   for your django project.  Although this is the most reasonable default that
   Simple JWT can provide, it is recommended that developers change this setting
-  to a value which is independent from the django project secret key.  This
-  will make changing the signing key used for tokens easier in the event that
+  to a value which is independent from the django project secret key.
+  This will make changing the signing key used for tokens easier in the event that
   it is compromised.
+
+GET_USER_SECRET_KEY
+  A function that will be called with the value of ``USER_ID_FIELD`` when decoding a token.
+  It should return a secret key that is user dependant. This lets you specify a secret key for
+  a user and for instance make the key change once the user changes his password in order to
+  invalidate token created before the password change.
+
+SIGNING_KEY
+  The signing key which is used to sign the content of generated tokens when RSA algorithm
+  is chosen, this should be a string which contains an RSA private key which is 2048 bits or
+  longer.
 
 VERIFYING_KEY
   The verifying key which is used to verify the content of generated tokens.
   If an HMAC algorithm has been specified by the ``ALGORITHM`` setting, the
   ``VERIFYING_KEY`` setting will be ignored and the value of the
-  ``SIGNING_KEY`` setting will be used.  If an RSA algorithm has been specified
+  ``JWT_SECRET_KEY`` setting will be used.  If an RSA algorithm has been specified
   by the ``ALGORITHM`` setting, the ``VERIFYING_KEY`` setting must be set to a
   string which contains an RSA public key.
 
