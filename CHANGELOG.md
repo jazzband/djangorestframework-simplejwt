@@ -1,3 +1,11 @@
+## Version 4.0
+
+* Removed Python 2 support.
+* Fixed crash when empty AUTHORIZATION header is sent.
+* Fixed testing DB transaction issues.
+* Simplified/improved testing and dev setup.
+* Switched to using bumpversion for release process.
+
 ## Version 3.3
 
 * Removed official support for Python 3.4.
