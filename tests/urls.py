@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 from django.conf.urls import url
 from rest_framework_simplejwt import views as jwt_views
 

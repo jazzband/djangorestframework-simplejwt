@@ -1,16 +1,12 @@
-from __future__ import unicode_literals
-
 from django.contrib.auth import models as auth_models
 from django.db.models.manager import EmptyManager
-from django.utils.encoding import python_2_unicode_compatible
 from django.utils.functional import cached_property
 
 from .compat import CallableFalse, CallableTrue
 from .settings import api_settings
 
 
-@python_2_unicode_compatible
-class TokenUser(object):
+class TokenUser:
     """
     A dummy user class modeled after django.contrib.auth.models.AnonymousUser.
     Used in conjunction with the `JWTTokenUserAuthentication` backend to

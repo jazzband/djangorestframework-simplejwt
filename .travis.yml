@@ -6,7 +6,6 @@ sudo: required
 cache: pip
 
 python:
-    - "2.7"
     - "3.5"
     - "3.6"
     - "3.7"
@@ -25,14 +24,8 @@ matrix:
     exclude:
       - python: "3.7"
         env: DJANGO=1.11
-      - python: "2.7"
-        env: DJANGO=2.0
-      - python: "2.7"
-        env: DJANGO=2.1
       - python: "3.5"
         env: DJANGO=2.1
-      - python: "2.7"
-        env: DJANGO=master
       - python: "3.5"
         env: DJANGO=master
       - python: "3.6"

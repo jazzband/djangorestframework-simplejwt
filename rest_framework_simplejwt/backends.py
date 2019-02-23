@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 from django.utils.translation import ugettext_lazy as _
 from jwt import InvalidTokenError
 import jwt
@@ -17,7 +15,7 @@ ALLOWED_ALGORITHMS = (
 )
 
 
-class TokenBackend(object):
+class TokenBackend:
     def __init__(self, algorithm, signing_key=None, verifying_key=None):
         if algorithm not in ALLOWED_ALGORITHMS:
             raise TokenBackendError(format_lazy(_("Unrecognized algorithm type '{}'"), algorithm))

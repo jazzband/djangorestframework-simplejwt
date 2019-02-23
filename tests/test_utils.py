@@ -1,9 +1,7 @@
-from __future__ import unicode_literals
-
 from datetime import datetime, timedelta
 
 from django.test import TestCase
-from django.utils import six, timezone
+from django.utils import timezone
 from mock import patch
 from rest_framework_simplejwt.utils import (
     aware_utcnow, datetime_from_epoch, datetime_to_epoch, format_lazy,
@@ -71,4 +69,4 @@ class TestFormatLazy(TestCase):
         obj = format_lazy('{} {}', 'arst', 'zxcv')
 
         self.assertNotIsInstance(obj, str)
-        self.assertEqual(six.text_type(obj), 'arst zxcv')
+        self.assertEqual(str(obj), 'arst zxcv')
