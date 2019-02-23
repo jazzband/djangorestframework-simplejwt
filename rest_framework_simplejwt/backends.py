@@ -1,6 +1,6 @@
+import jwt
 from django.utils.translation import ugettext_lazy as _
 from jwt import InvalidTokenError
-import jwt
 
 from .exceptions import TokenBackendError
 from .utils import format_lazy

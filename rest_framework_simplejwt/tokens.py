@@ -8,7 +8,7 @@ from .exceptions import TokenBackendError, TokenError
 from .settings import api_settings
 from .token_blacklist.models import BlacklistedToken, OutstandingToken
 from .utils import (
-    aware_utcnow, datetime_from_epoch, datetime_to_epoch, format_lazy
+    aware_utcnow, datetime_from_epoch, datetime_to_epoch, format_lazy,
 )
 
 

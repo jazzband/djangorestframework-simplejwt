@@ -38,6 +38,7 @@ class TokenObtainPairView(TokenViewBase):
     """
     serializer_class = serializers.TokenObtainPairSerializer
 
+
 token_obtain_pair = TokenObtainPairView.as_view()
 
 
@@ -47,6 +48,7 @@ class TokenRefreshView(TokenViewBase):
     token if the refresh token is valid.
     """
     serializer_class = serializers.TokenRefreshSerializer
+
 
 token_refresh = TokenRefreshView.as_view()
 
@@ -58,6 +60,7 @@ class TokenObtainSlidingView(TokenViewBase):
     """
     serializer_class = serializers.TokenObtainSlidingSerializer
 
+
 token_obtain_sliding = TokenObtainSlidingView.as_view()
 
 
@@ -68,6 +71,7 @@ class TokenRefreshSlidingView(TokenViewBase):
     """
     serializer_class = serializers.TokenRefreshSlidingSerializer
 
+
 token_refresh_sliding = TokenRefreshSlidingView.as_view()
 
 
@@ -77,5 +81,6 @@ class TokenVerifyView(TokenViewBase):
     information about a token's fitness for a particular use.
     """
     serializer_class = serializers.TokenVerifySerializer
+
 
 token_verify = TokenVerifyView.as_view()

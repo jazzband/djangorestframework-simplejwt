@@ -28,4 +28,5 @@ def datetime_from_epoch(ts):
 def format_lazy(s, *args, **kwargs):
     return s.format(*args, **kwargs)
 
+
 format_lazy = lazy(format_lazy, str)

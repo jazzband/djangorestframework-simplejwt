@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 
 import jwt
 from django.test import TestCase
+
 from rest_framework_simplejwt.backends import TokenBackend
 from rest_framework_simplejwt.exceptions import TokenBackendError
 from rest_framework_simplejwt.utils import aware_utcnow, make_utc

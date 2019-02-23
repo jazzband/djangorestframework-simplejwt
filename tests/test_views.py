@@ -4,10 +4,10 @@ from unittest.mock import patch
 from rest_framework_simplejwt.settings import api_settings
 from rest_framework_simplejwt.state import User
 from rest_framework_simplejwt.tokens import (
-    AccessToken, RefreshToken, SlidingToken
+    AccessToken, RefreshToken, SlidingToken,
 )
 from rest_framework_simplejwt.utils import (
-    aware_utcnow, datetime_from_epoch, datetime_to_epoch
+    aware_utcnow, datetime_from_epoch, datetime_to_epoch,
 )
 
 from .utils import APIViewTestCase

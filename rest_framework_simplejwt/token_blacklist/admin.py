@@ -40,9 +40,10 @@ class OutstandingTokenAdmin(admin.ModelAdmin):
 
     def has_change_permission(self, request, obj=None):
         return (
-            request.method in ['GET', 'HEAD'] and
+            request.method in ['GET', 'HEAD'] and  # noqa: W504
             super().has_change_permission(request, obj)
         )
+
 
 admin.site.register(OutstandingToken, OutstandingTokenAdmin)
 
@@ -87,5 +88,6 @@ class BlacklistedTokenAdmin(admin.ModelAdmin):
         return obj.token.expires_at
     token_expires_at.short_description = _('expires at')
     token_expires_at.admin_order_field = 'token__expires_at'
+
 
 admin.site.register(BlacklistedToken, BlacklistedTokenAdmin)
