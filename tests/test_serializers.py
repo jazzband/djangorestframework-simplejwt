@@ -1,7 +1,7 @@
 from datetime import timedelta
+from unittest.mock import patch
 
 from django.test import TestCase
-from mock import patch
 from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.serializers import (
     TokenObtainPairSerializer, TokenObtainSerializer,

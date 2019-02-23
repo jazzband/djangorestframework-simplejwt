@@ -1,6 +1,6 @@
 from datetime import timedelta
+from unittest.mock import patch
 
-from mock import patch
 from rest_framework_simplejwt.settings import api_settings
 from rest_framework_simplejwt.state import User
 from rest_framework_simplejwt.tokens import (

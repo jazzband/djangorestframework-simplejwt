@@ -1,4 +1,0 @@
--r requirements/codestyle.txt
--r requirements/packaging.txt
--r requirements/optionals.txt
--r requirements/testing.txt
