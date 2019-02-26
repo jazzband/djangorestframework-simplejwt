@@ -1,3 +1,7 @@
+## Development
+
+* We now return HTTP 401 for user not found or inactive.
+
 ## Version 4.1.5
 
 * Restricted `setup.py` config to Python 3 only.

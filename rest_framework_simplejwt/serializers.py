@@ -1,6 +1,6 @@
 from django.contrib.auth import authenticate
 from django.utils.translation import ugettext_lazy as _
-from rest_framework import serializers
+from rest_framework import exceptions, serializers
 
 from .settings import api_settings
 from .state import User
@@ -50,7 +50,10 @@ class TokenObtainSerializer(serializers.Serializer):
         # users from authenticating to enforce a reasonable policy and provide
         # sensible backwards compatibility with older Django versions.
         if self.user is None or not self.user.is_active:
-            self.fail('no_active_account')
+            raise exceptions.AuthenticationFailed(
+                self.error_messages['no_active_account'],
+                'no_active_account',
+            )
 
         return {}
 

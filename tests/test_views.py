@@ -44,8 +44,8 @@ class TestTokenObtainPairView(APIViewTestCase):
             User.USERNAME_FIELD: self.username,
             'password': 'test_user',
         })
-        self.assertEqual(res.status_code, 400)
-        self.assertIn('non_field_errors', res.data)
+        self.assertEqual(res.status_code, 401)
+        self.assertIn('detail', res.data)
 
     def test_user_inactive(self):
         self.user.is_active = False
@@ -55,8 +55,8 @@ class TestTokenObtainPairView(APIViewTestCase):
             User.USERNAME_FIELD: self.username,
             'password': self.password,
         })
-        self.assertEqual(res.status_code, 400)
-        self.assertIn('non_field_errors', res.data)
+        self.assertEqual(res.status_code, 401)
+        self.assertIn('detail', res.data)
 
     def test_success(self):
         res = self.view_post(data={
@@ -150,8 +150,8 @@ class TestTokenObtainSlidingView(APIViewTestCase):
             User.USERNAME_FIELD: self.username,
             'password': 'test_user',
         })
-        self.assertEqual(res.status_code, 400)
-        self.assertIn('non_field_errors', res.data)
+        self.assertEqual(res.status_code, 401)
+        self.assertIn('detail', res.data)
 
     def test_user_inactive(self):
         self.user.is_active = False
@@ -161,8 +161,8 @@ class TestTokenObtainSlidingView(APIViewTestCase):
             User.USERNAME_FIELD: self.username,
             'password': self.password,
         })
-        self.assertEqual(res.status_code, 400)
-        self.assertIn('non_field_errors', res.data)
+        self.assertEqual(res.status_code, 401)
+        self.assertIn('detail', res.data)
 
     def test_success(self):
         res = self.view_post(data={
