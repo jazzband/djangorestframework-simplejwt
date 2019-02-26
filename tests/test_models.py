@@ -10,12 +10,13 @@ class TestTokenUser(TestCase):
     def setUp(self):
         self.token = AuthToken()
         self.token[api_settings.USER_ID_CLAIM] = 42
+        self.token['username'] = 'deep-thought'
         self.token['some_other_stuff'] = 'arstarst'
 
         self.user = TokenUser(self.token)
 
     def test_username(self):
-        self.assertEqual(self.user.username, '')
+        self.assertEqual(self.user.username, 'deep-thought')
 
     def test_is_active(self):
         self.assertTrue(self.user.is_active)
@@ -103,4 +104,4 @@ class TestTokenUser(TestCase):
         self.assertTrue(self.user.is_authenticated)
 
     def test_get_username(self):
-        self.assertEqual(self.user.get_username(), '')
+        self.assertEqual(self.user.get_username(), 'deep-thought')
