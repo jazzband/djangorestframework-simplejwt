@@ -38,7 +38,7 @@ class JWTAuthentication(authentication.BaseAuthentication):
 
         validated_token = self.get_validated_token(raw_token)
 
-        return self.get_user(validated_token), raw_token
+        return self.get_user(validated_token), validated_token
 
     def authenticate_header(self, request):
         return '{0} realm="{1}"'.format(
