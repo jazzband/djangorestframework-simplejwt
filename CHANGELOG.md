@@ -1,6 +1,7 @@
 ## Version 4.1
 
-* Add language support for Brazilian Portuguese.
+* Added language support for Brazilian Portuguese.
+* Added support for automatic username lookup in `TokenUser`.
 
 ## Version 4.0
 
