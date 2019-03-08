@@ -1,7 +1,7 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# FIRST AUTHOR <sinvalju@gmail.com>, 2019.
 #
 #, fuzzy
 msgid ""
@@ -10,7 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-08 09:03-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Last-Translator: Sinval Júnior <sinvalju@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
@@ -20,31 +20,31 @@ msgstr ""
 
 #: authentication.py:76
 msgid "Authorization header must contain two space-delimited values"
-msgstr ""
+msgstr "header de autorização deve conter dois valores delimitados por espaço"
 
 #: authentication.py:97
 msgid "Given token not valid for any token type"
-msgstr ""
+msgstr "Não é válido para qualquer tipo de token"
 
 #: authentication.py:108 authentication.py:130
 msgid "Token contained no recognizable user identification"
-msgstr ""
+msgstr "Token não continha identificação de usuário reconhecível"
 
 #: authentication.py:113
 msgid "User not found"
-msgstr ""
+msgstr "Usuário não encontrado"
 
 #: authentication.py:116
 msgid "User is inactive"
-msgstr ""
+msgstr "Usuário não está habilitado"
 
 #: backends.py:21
 msgid "Unrecognized algorithm type '{}'"
-msgstr ""
+msgstr "Tipo de algoritmo não reconhecido '{}'"
 
 #: backends.py:48 exceptions.py:38 tokens.py:44
 msgid "Token is invalid or expired"
-msgstr ""
+msgstr "Token inválido ou expirado"
 
 #: serializers.py:44
 msgid "No active account found with the given credentials"
@@ -54,52 +54,53 @@ msgstr "Usuário e/ou senha incorreto(s)"
 msgid ""
 "The '{}' setting has been removed. Please refer to '{}' for available "
 "settings."
-msgstr ""
+msgstr "A configuração '{}' foi removida. Por favor, consulte '{}' para disponível "
+"definições."
 
 #: token_blacklist/admin.py:72
 msgid "jti"
-msgstr ""
+msgstr "jti"
 
 #: token_blacklist/admin.py:77
 msgid "user"
-msgstr ""
+msgstr "Usuário"
 
 #: token_blacklist/admin.py:82
 msgid "created at"
-msgstr ""
+msgstr "criado em"
 
 #: token_blacklist/admin.py:87
-msgid "expires at"
-msgstr ""
+msgid "created at"
+msgstr "expira em"
 
 #: token_blacklist/apps.py:7
 msgid "Token Blacklist"
-msgstr ""
+msgstr "Token Blacklist"
 
 #: tokens.py:30
 msgid "Cannot create token with no type or lifetime"
-msgstr ""
+msgstr "Não é possível criar token sem tipo ou tempo de vida"
 
 #: tokens.py:98
 msgid "Token has no id"
-msgstr ""
+msgstr "Token não tem id"
 
 #: tokens.py:109
 msgid "Token has no type"
-msgstr ""
+msgstr "Token não tem nenhum tipo"
 
 #: tokens.py:112
 msgid "Token has wrong type"
-msgstr ""
+msgstr "Token tem tipo errado"
 
 #: tokens.py:149
 msgid "Token has no '{}' claim"
-msgstr ""
+msgstr "Token não tem'{}' direito"
 
 #: tokens.py:153
 msgid "Token '{}' claim has expired"
-msgstr ""
+msgstr "Token '{}' está expirado"
 
 #: tokens.py:192
 msgid "Token is blacklisted"
-msgstr ""
+msgstr "Token está na blacklist"
