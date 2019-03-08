@@ -1,3 +1,7 @@
+## Version 4.1
+
+* Add language support for Brazilian Portuguese.
+
 ## Version 4.0
 
 * Removed Python 2 support.
