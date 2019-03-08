@@ -1,0 +1,105 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-03-08 09:03-0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: authentication.py:76
+msgid "Authorization header must contain two space-delimited values"
+msgstr ""
+
+#: authentication.py:97
+msgid "Given token not valid for any token type"
+msgstr ""
+
+#: authentication.py:108 authentication.py:130
+msgid "Token contained no recognizable user identification"
+msgstr ""
+
+#: authentication.py:113
+msgid "User not found"
+msgstr ""
+
+#: authentication.py:116
+msgid "User is inactive"
+msgstr ""
+
+#: backends.py:21
+msgid "Unrecognized algorithm type '{}'"
+msgstr ""
+
+#: backends.py:48 exceptions.py:38 tokens.py:44
+msgid "Token is invalid or expired"
+msgstr ""
+
+#: serializers.py:44
+msgid "No active account found with the given credentials"
+msgstr "Usuário e/ou senha incorreto(s)"
+
+#: settings.py:53
+msgid ""
+"The '{}' setting has been removed. Please refer to '{}' for available "
+"settings."
+msgstr ""
+
+#: token_blacklist/admin.py:72
+msgid "jti"
+msgstr ""
+
+#: token_blacklist/admin.py:77
+msgid "user"
+msgstr ""
+
+#: token_blacklist/admin.py:82
+msgid "created at"
+msgstr ""
+
+#: token_blacklist/admin.py:87
+msgid "expires at"
+msgstr ""
+
+#: token_blacklist/apps.py:7
+msgid "Token Blacklist"
+msgstr ""
+
+#: tokens.py:30
+msgid "Cannot create token with no type or lifetime"
+msgstr ""
+
+#: tokens.py:98
+msgid "Token has no id"
+msgstr ""
+
+#: tokens.py:109
+msgid "Token has no type"
+msgstr ""
+
+#: tokens.py:112
+msgid "Token has wrong type"
+msgstr ""
+
+#: tokens.py:149
+msgid "Token has no '{}' claim"
+msgstr ""
+
+#: tokens.py:153
+msgid "Token '{}' claim has expired"
+msgstr ""
+
+#: tokens.py:192
+msgid "Token is blacklisted"
+msgstr ""
