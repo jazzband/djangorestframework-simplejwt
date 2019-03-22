@@ -1,9 +1,8 @@
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, get_user_model
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 
 from .settings import api_settings
-from .state import User
 from .tokens import RefreshToken, SlidingToken, UntypedToken
 
 
@@ -18,7 +17,7 @@ class PasswordField(serializers.CharField):
 
 
 class TokenObtainSerializer(serializers.Serializer):
-    username_field = User.USERNAME_FIELD
+    username_field = get_user_model().USERNAME_FIELD
 
     default_error_messages = {
         'no_active_account': _('No active account found with the given credentials')

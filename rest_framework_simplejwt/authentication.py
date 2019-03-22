@@ -1,10 +1,10 @@
+from django.contrib.auth import get_user_model
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import HTTP_HEADER_ENCODING, authentication
 
 from .exceptions import AuthenticationFailed, InvalidToken, TokenError
 from .models import TokenUser
 from .settings import api_settings
-from .state import User
 
 AUTH_HEADER_TYPES = api_settings.AUTH_HEADER_TYPES
 
@@ -23,6 +23,8 @@ class JWTAuthentication(authentication.BaseAuthentication):
     token provided in a request header.
     """
     www_authenticate_realm = 'api'
+
+    user_class = get_user_model()
 
     def authenticate(self, request):
         header = self.get_header(request)
@@ -108,8 +110,8 @@ class JWTAuthentication(authentication.BaseAuthentication):
             raise InvalidToken(_('Token contained no recognizable user identification'))
 
         try:
-            user = User.objects.get(**{api_settings.USER_ID_FIELD: user_id})
-        except User.DoesNotExist:
+            user = self.user_class.objects.get(**{api_settings.USER_ID_FIELD: user_id})
+        except self.user_class.DoesNotExist:
             raise AuthenticationFailed(_('User not found'), code='user_not_found')
 
         if not user.is_active:
