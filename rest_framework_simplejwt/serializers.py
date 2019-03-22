@@ -20,6 +20,10 @@ class PasswordField(serializers.CharField):
 class TokenObtainSerializer(serializers.Serializer):
     username_field = User.USERNAME_FIELD
 
+    default_error_messages = {
+        'no_active_account': _('No active account found with the given credentials')
+    }
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -41,9 +45,7 @@ class TokenObtainSerializer(serializers.Serializer):
         # users from authenticating to enforce a reasonable policy and provide
         # sensible backwards compatibility with older Django versions.
         if self.user is None or not self.user.is_active:
-            raise serializers.ValidationError(
-                _('No active account found with the given credentials'),
-            )
+            self.fail('no_active_account')
 
         return {}
 
