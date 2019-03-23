@@ -157,3 +157,87 @@ class TestJWTTokenUserAuthentication(TestCase):
 
         self.assertIsInstance(user, TokenUser)
         self.assertEqual(user.id, 42)
+
+
+class CustomUserManager:
+    def __init__(self, *users):
+        self._users = users
+
+    def _check(self, user, params):
+        for fname, fval in params.items():
+            if fname not in user or user[fname] != fval:
+                return False
+        return True
+
+    def get(self, **params):
+        matches = [user for index, user in enumerate(self._users)
+                   if self._check(user, params)]
+        if len(matches) == 0:
+            raise CustomUser.DoesNotExist()
+        return CustomUser(**matches[0])
+
+
+class CustomUser:
+    def __init__(self, **kwargs):
+        self.id = kwargs["id"]
+        self.username = kwargs["username"]
+        self.is_active = kwargs["is_active"]
+
+    def save(self):
+        record = self.objects._users[self.id - 1]
+        record['username'] = self.username
+        record['is_active'] = self.is_active
+
+    class DoesNotExist(Exception):
+        pass
+
+
+CustomUser.objects = CustomUserManager(
+    {
+        'id': 1,
+        'username': 'markhamill',
+        'is_active': False
+    }
+)
+
+
+class CustomJWTAuthentication(authentication.JWTAuthentication):
+    user_class = CustomUser
+
+
+class TestCustomJWTAuthentication(TestJWTAuthentication):
+    def setUp(self):
+        self.factory = APIRequestFactory()
+        self.backend = CustomJWTAuthentication()
+
+        self.fake_token = b'TokenMcTokenface'
+        self.fake_header = b'Bearer ' + self.fake_token
+
+    def test_get_user(self):
+        payload = {'some_other_id': 'foo'}
+
+        # Should raise error if no recognizable user identification
+        with self.assertRaises(InvalidToken):
+            self.backend.get_user(payload)
+
+        payload[api_settings.USER_ID_CLAIM] = 42
+
+        # Should raise exception if user not found
+        with self.assertRaises(AuthenticationFailed):
+            self.backend.get_user(payload)
+
+        u = CustomUser.objects.get(username='markhamill')
+        u.is_active = False
+        u.save()
+
+        payload[api_settings.USER_ID_CLAIM] = getattr(u, api_settings.USER_ID_FIELD)
+
+        # Should raise exception if user is inactive
+        with self.assertRaises(AuthenticationFailed):
+            self.backend.get_user(payload)
+
+        u.is_active = True
+        u.save()
+
+        # Otherwise, should return correct user
+        self.assertEqual(self.backend.get_user(payload).id, u.id)

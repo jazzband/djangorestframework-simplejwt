@@ -10,6 +10,7 @@ from .utils import APIViewTestCase, override_api_settings
 
 User = get_user_model()
 
+
 class TestTestView(APIViewTestCase):
     view_name = 'test_view'
 

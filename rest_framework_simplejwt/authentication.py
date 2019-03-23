@@ -23,8 +23,15 @@ class JWTAuthentication(authentication.BaseAuthentication):
     token provided in a request header.
     """
     www_authenticate_realm = 'api'
-
     user_class = get_user_model()
+    user_id_claim = api_settings.USER_ID_CLAIM
+    user_id_field = api_settings.USER_ID_FIELD
+
+    @property
+    def auth_token_classes(self):
+        # Tests require `api_settings.AUTH_TOKEN_CLASSES` to be mutable
+        # in a backend during runtime.
+        return api_settings.AUTH_TOKEN_CLASSES
 
     def authenticate(self, request):
         header = self.get_header(request)
@@ -87,7 +94,7 @@ class JWTAuthentication(authentication.BaseAuthentication):
         wrapper object.
         """
         messages = []
-        for AuthToken in api_settings.AUTH_TOKEN_CLASSES:
+        for AuthToken in self.auth_token_classes:
             try:
                 return AuthToken(raw_token)
             except TokenError as e:
@@ -100,17 +107,9 @@ class JWTAuthentication(authentication.BaseAuthentication):
             'messages': messages,
         })
 
-    def get_user(self, validated_token):
-        """
-        Attempts to find and return a user using the given validated token.
-        """
+    def user_get_by_id(self, user_id):
         try:
-            user_id = validated_token[api_settings.USER_ID_CLAIM]
-        except KeyError:
-            raise InvalidToken(_('Token contained no recognizable user identification'))
-
-        try:
-            user = self.user_class.objects.get(**{api_settings.USER_ID_FIELD: user_id})
+            user = self.user_class.objects.get(**{self.user_id_field: user_id})
         except self.user_class.DoesNotExist:
             raise AuthenticationFailed(_('User not found'), code='user_not_found')
 
@@ -119,6 +118,17 @@ class JWTAuthentication(authentication.BaseAuthentication):
 
         return user
 
+    def get_user(self, validated_token):
+        """
+        Attempts to find and return a user using the given validated token.
+        """
+        try:
+            user_id = validated_token[self.user_id_claim]
+        except KeyError:
+            raise InvalidToken(_('Token contained no recognizable user identification'))
+
+        return self.user_get_by_id(user_id)
+
 
 class JWTTokenUserAuthentication(JWTAuthentication):
     def get_user(self, validated_token):
@@ -126,7 +136,7 @@ class JWTTokenUserAuthentication(JWTAuthentication):
         Returns a stateless user object which is backed by the given validated
         token.
         """
-        if api_settings.USER_ID_CLAIM not in validated_token:
+        if self.user_id_claim not in validated_token:
             # The TokenUser class assumes tokens will have a recognizable user
             # identifier claim.
             raise InvalidToken(_('Token contained no recognizable user identification'))
