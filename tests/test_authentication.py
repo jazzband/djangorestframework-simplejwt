@@ -43,7 +43,9 @@ class TestJWTAuthentication(TestCase):
     def test_get_custom_named_header(self):
 
         # override authorization header name
-        with override_api_settings(AUTH_HEADER_NAME='X-Authorization'):
+        with override_api_settings(AUTH_HEADER_NAME='CustomAuthorization'):
+
+            reload(authentication)
 
             # Should return None if no authorization header with custom name specified in settings
             # event if a "Authorization" header is given
@@ -51,8 +53,10 @@ class TestJWTAuthentication(TestCase):
             self.assertIsNone(self.backend.get_header(request))
 
             # Should pull correct header off request
-            request = self.factory.get('/test-url/', HTTP_X_AUTHORIZATION=self.fake_header)
+            request = self.factory.get('/test-url/', HTTP_CUSTOMAUTHORIZATION=self.fake_header)
             self.assertEqual(self.backend.get_header(request), self.fake_header)
+
+        reload(authentication)
 
     def test_get_raw_token(self):
         # Should return None if header lacks correct type keyword
