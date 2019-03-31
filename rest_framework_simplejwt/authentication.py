@@ -7,6 +7,7 @@ from .settings import api_settings
 from .state import User
 
 AUTH_HEADER_TYPES = api_settings.AUTH_HEADER_TYPES
+AUTH_HEADER_NAME = api_settings.AUTH_HEADER_NAME
 
 if not isinstance(api_settings.AUTH_HEADER_TYPES, (list, tuple)):
     AUTH_HEADER_TYPES = (AUTH_HEADER_TYPES,)
@@ -48,7 +49,7 @@ class JWTAuthentication(authentication.BaseAuthentication):
         Extracts the header containing the JSON web token from the given
         request.
         """
-        header = request.META.get('HTTP_AUTHORIZATION')
+        header = request.META.get('HTTP_{0}'.format(AUTH_HEADER_NAME.upper()))
 
         if isinstance(header, str):
             # Work around django test client oddness
