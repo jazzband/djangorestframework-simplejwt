@@ -148,6 +148,7 @@ Some of Simple JWT's behavior can be customized through settings variables in
       'SIGNING_KEY': settings.SECRET_KEY,
       'VERIFYING_KEY': None,
 
+      'AUTH_HEADER_NAME': 'Authorization',
       'AUTH_HEADER_TYPES': ('Bearer',),
       'USER_ID_FIELD': 'id',
       'USER_ID_CLAIM': 'user_id',
@@ -222,6 +223,14 @@ VERIFYING_KEY
   ``SIGNING_KEY`` setting will be used.  If an RSA algorithm has been specified
   by the ``ALGORITHM`` setting, the ``VERIFYING_KEY`` setting must be set to a
   string which contains an RSA public key.
+
+AUTH_HEADER_NAME
+  Name of the header used to get authentication token. For example, a value of
+  ``Authorization`` means that the client will send its ``JWT`` token in a
+  header named ``Authorization``. This option permit to specify another token
+  name that the standard in case of conflict with another authentication system
+  which use the ``Authorization`` token too. Note: HTTP headers are
+  case-insensitive.
 
 AUTH_HEADER_TYPES
   The authorization header type(s) that will be accepted for views that require
