@@ -27,6 +27,10 @@ class TestJWTAuthentication(TestCase):
         self.fake_token = b'TokenMcTokenface'
         self.fake_header = b'Bearer ' + self.fake_token
 
+    def tearDown(self):
+        # reload configuration after each test
+        reload(authentication)
+
     def test_get_header(self):
         # Should return None if no authorization header
         request = self.factory.get('/test-url/')
@@ -55,8 +59,6 @@ class TestJWTAuthentication(TestCase):
             # Should pull correct header off request
             request = self.factory.get('/test-url/', HTTP_CUSTOMAUTHORIZATION=self.fake_header)
             self.assertEqual(self.backend.get_header(request), self.fake_header)
-
-        reload(authentication)
 
     def test_get_raw_token(self):
         # Should return None if header lacks correct type keyword
