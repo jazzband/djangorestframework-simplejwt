@@ -31,11 +31,16 @@ class TokenObtainSerializer(serializers.Serializer):
         self.fields['password'] = PasswordField()
 
     def validate(self, attrs):
-        self.user = authenticate(**{
-            'request': self.context['request'],
+        authenticate_kwargs = {
             self.username_field: attrs[self.username_field],
             'password': attrs['password'],
-        })
+        }
+        try:
+            authenticate_kwargs['request'] = self.context['request']
+        except KeyError:
+            pass
+
+        self.user = authenticate(**authenticate_kwargs)
 
         # Prior to Django 1.10, inactive users could be authenticated with the
         # default `ModelBackend`.  As of Django 1.10, the `ModelBackend`

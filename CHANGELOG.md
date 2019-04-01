@@ -1,3 +1,7 @@
+## Version 4.1.2
+
+* Fixed `KeyError` in `TokenObtainSerializer.validate`.
+
 ## Version 4.1.1
 
 * Added request pass-through on `django.contrib.auth.authenticate` call in
