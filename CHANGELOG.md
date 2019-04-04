@@ -1,3 +1,7 @@
+## Version 4.1.3
+
+* Updated `python-jose` version requirement.
+
 ## Version 4.1.2
 
 * Fixed `KeyError` in `TokenObtainSerializer.validate`.
