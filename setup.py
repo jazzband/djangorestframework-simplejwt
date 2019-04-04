@@ -30,7 +30,7 @@ extras_require = {
         'ipython',
     ],
     'python-jose': [
-        'python-jose==1.4.0',
+        'python-jose==3.0.0',
     ],
 }
 
