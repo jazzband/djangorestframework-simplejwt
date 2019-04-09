@@ -1,3 +1,7 @@
+## Version 4.1.5
+
+* Restricted `setup.py` config to Python 3 only.
+
 ## Version 4.1.4
 
 * Included translation files in release package.
