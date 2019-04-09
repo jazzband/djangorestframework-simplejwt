@@ -1,3 +1,7 @@
+## Version 4.1.4
+
+* Included translation files in release package.
+
 ## Version 4.1.3
 
 * Updated `python-jose` version requirement.
