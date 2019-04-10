@@ -51,6 +51,7 @@ class TokenBackend:
         """
         try:
             return jwt.decode(token, self.verifying_key, algorithms=[self.algorithm], verify=verify,
-                              audience=self.audience, issuer=self.issuer)
+                              audience=self.audience, issuer=self.issuer,
+                              options={'verify_aud': self.audience is not None})
         except InvalidTokenError:
             raise TokenBackendError(_('Token is invalid or expired'))
