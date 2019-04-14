@@ -1,3 +1,8 @@
+## Development
+
+* Added `JTI_CLAIM` setting to allow storing token identifiers under a
+  different claim.
+
 ## Version 4.2
 
 * We now return HTTP 401 for user not found or inactive.

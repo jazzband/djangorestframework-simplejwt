@@ -94,7 +94,7 @@ class Token:
         self.check_exp()
 
         # Ensure token id is present
-        if 'jti' not in self.payload:
+        if api_settings.JTI_CLAIM not in self.payload:
             raise TokenError(_('Token has no id'))
 
         self.verify_token_type()
@@ -113,14 +113,14 @@ class Token:
 
     def set_jti(self):
         """
-        Populates the "jti" claim of a token with a string where there is a
-        negligible probability that the same string will be chosen at a
+        Populates the configured jti claim of a token with a string where there
+        is a negligible probability that the same string will be chosen at a
         later time.
 
         See here:
         https://tools.ietf.org/html/rfc7519#section-4.1.7
         """
-        self.payload['jti'] = uuid4().hex
+        self.payload[api_settings.JTI_CLAIM] = uuid4().hex
 
     def set_exp(self, claim='exp', from_time=None, lifetime=None):
         """
@@ -186,7 +186,7 @@ class BlacklistMixin:
             Checks if this token is present in the token blacklist.  Raises
             `TokenError` if so.
             """
-            jti = self.payload['jti']
+            jti = self.payload[api_settings.JTI_CLAIM]
 
             if BlacklistedToken.objects.filter(token__jti=jti).exists():
                 raise TokenError(_('Token is blacklisted'))
@@ -196,7 +196,7 @@ class BlacklistMixin:
             Ensures this token is included in the outstanding token list and
             adds it to the blacklist.
             """
-            jti = self.payload['jti']
+            jti = self.payload[api_settings.JTI_CLAIM]
             exp = self.payload['exp']
 
             # Ensure outstanding token exists with given jti
@@ -217,7 +217,7 @@ class BlacklistMixin:
             """
             token = super().for_user(user)
 
-            jti = token['jti']
+            jti = token[api_settings.JTI_CLAIM]
             exp = token['exp']
 
             OutstandingToken.objects.create(
@@ -250,7 +250,17 @@ class SlidingToken(BlacklistMixin, Token):
 class RefreshToken(BlacklistMixin, Token):
     token_type = 'refresh'
     lifetime = api_settings.REFRESH_TOKEN_LIFETIME
-    no_copy_claims = (api_settings.TOKEN_TYPE_CLAIM, 'exp', 'jti')
+    no_copy_claims = (
+        api_settings.TOKEN_TYPE_CLAIM,
+        'exp',
+
+        # Both of these claims are included even though they may be the same.
+        # It seems possible that a third party token might have a custom or
+        # namespaced JTI claim as well as a default "jti" claim.  In that case,
+        # we wouldn't want to copy either one.
+        api_settings.JTI_CLAIM,
+        'jti',
+    )
 
     @property
     def access_token(self):
