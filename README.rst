@@ -155,6 +155,8 @@ Some of Simple JWT's behavior can be customized through settings variables in
       'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
       'TOKEN_TYPE_CLAIM': 'token_type',
 
+      'JTI_CLAIM': 'jti',
+
       'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
       'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
       'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
@@ -256,6 +258,12 @@ AUTH_TOKEN_CLASSES
 TOKEN_TYPE_CLAIM
   The claim name that is used to store a token's type.  More about this in the
   "Token types" section below.
+
+JTI_CLAIM
+  The claim name that is used to store a token's unique identifier.  This
+  identifier is used to identify revoked tokens in the blacklist app.  It may
+  be necessary in some cases to use another claim besides the default "jti"
+  claim to store such a value.
 
 SLIDING_TOKEN_LIFETIME
   A ``datetime.timedelta`` object which specifies how long sliding tokens are
