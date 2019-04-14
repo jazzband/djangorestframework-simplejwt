@@ -1,4 +1,4 @@
-## Development
+## Version 4.2
 
 * We now return HTTP 401 for user not found or inactive.
 
