@@ -1,4 +1,4 @@
-## Development
+## Version 4.3
 
 * Added `JTI_CLAIM` setting to allow storing token identifiers under a
   different claim.
