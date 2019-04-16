@@ -445,7 +445,7 @@ subclass instance and calling the instance's ``blacklist`` method:
   token.blacklist()
 
 This will create unique outstanding token and blacklist records for the token's
-"jti" claim.
+"jti" claim or whichever claim is specified by the ``JTI_CLAIM`` setting.
 
 The blacklist app also provides a management command, ``flushexpiredtokens``,
 which will delete any tokens from the outstanding list and blacklist that have
