@@ -428,7 +428,7 @@ also check that any refresh or sliding token does not appear in a blacklist of
 tokens before it considers it as valid.
 
 The Simple JWT blacklist app implements its outstanding and blacklisted token
-lists using two model: ``OutstandingToken`` and ``BlacklistedToken``.  Model
+lists using two models: ``OutstandingToken`` and ``BlacklistedToken``.  Model
 admins are defined for both of these models.  To add a token to the blacklist,
 find its corresponding ``OutstandingToken`` record in the admin and use the
 admin again to create a ``BlacklistedToken`` record that points to the
