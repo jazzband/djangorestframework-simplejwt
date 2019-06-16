@@ -134,7 +134,7 @@ class Token:
 
         self.payload[claim] = datetime_to_epoch(from_time + lifetime)
 
-    def check_exp(self, claim='exp', current_time=None):
+    def check_exp(self, claim='exp', current_time=None, return_result=False):
         """
         Checks whether a timestamp value in the given claim has passed (since
         the given datetime value in `current_time`).  Raises a TokenError with
@@ -150,7 +150,10 @@ class Token:
 
         claim_time = datetime_from_epoch(claim_value)
         if claim_time <= current_time:
-            raise TokenError(format_lazy(_("Token '{}' claim has expired"), claim))
+            if return_result is True:
+                return True
+            else:
+                raise TokenError(format_lazy(_("Token '{}' claim has expired"), claim))
 
     @classmethod
     def for_user(cls, user):
