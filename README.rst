@@ -232,13 +232,14 @@ VERIFYING_KEY
   string which contains an RSA public key.
 
 USER_ID_TO_USER
-  A function that will be called with the value of ``USER_ID_FIELD`` when decoding a token.
+  A function that will be called with the value of ``USER_ID_CLAIM`` when decoding a token.
   It should return a user object or raise User.DoesNotExist. This lets you specify a custom
   behaviour for user_id decoding and object instantiation.
 
 USER_TO_USER_ID
-  A function that will be called with the user object when encoding a token.
-  It should return a user_id to be placed into ``USER_ID_CLAIM`` in the token.
+  A function that will be called with the user object when encoding a token. It should return
+  a user_id to be placed into ``USER_ID_CLAIM`` in the token. This lets you specify a custom
+  behaviour for generation of user_id for user object. 
 
 AUTH_HEADER_TYPES
   The authorization header type(s) that will be accepted for views that require
