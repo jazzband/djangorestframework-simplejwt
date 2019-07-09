@@ -21,8 +21,10 @@ class MyToken(Token):
     token_type = 'test'
     lifetime = timedelta(days=1)
 
+
 def _user2userid(user):
     return "CUSTOM_" + str(getattr(user, api_settings.USER_ID_FIELD))
+
 
 class TestToken(TestCase):
     def setUp(self):

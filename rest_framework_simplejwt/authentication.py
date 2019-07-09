@@ -110,7 +110,8 @@ class JWTAuthentication(authentication.BaseAuthentication):
         try:
             if api_settings.USER_ID_TO_USER:
                 user = api_settings.USER_ID_TO_USER(user_id)
-                if not user: raise User.DoesNotExist()
+                if not user:
+                    raise User.DoesNotExist()
             else:
                 user = User.objects.get(**{api_settings.USER_ID_FIELD: user_id})
         except User.DoesNotExist:
