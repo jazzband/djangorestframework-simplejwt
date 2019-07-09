@@ -151,6 +151,8 @@ Some of Simple JWT's behavior can be customized through settings variables in
       'ALGORITHM': 'HS256',
       'SIGNING_KEY': settings.SECRET_KEY,
       'VERIFYING_KEY': None,
+      'USER_ID_TO_USER': None,
+      'USER_TO_USER_ID': None,
 
       'AUTH_HEADER_TYPES': ('Bearer',),
       'USER_ID_FIELD': 'id',
@@ -228,6 +230,15 @@ VERIFYING_KEY
   ``SIGNING_KEY`` setting will be used.  If an RSA algorithm has been specified
   by the ``ALGORITHM`` setting, the ``VERIFYING_KEY`` setting must be set to a
   string which contains an RSA public key.
+
+USER_ID_TO_USER
+  A function that will be called with the value of ``USER_ID_FIELD`` when decoding a token.
+  It should return a user object or raise User.DoesNotExist. This lets you specify a custom
+  behaviour for user_id decoding and object instantiation.
+
+USER_TO_USER_ID
+  A function that will be called with the user object when encoding a token.
+  It should return a user_id to be placed into ``USER_ID_CLAIM`` in the token.
 
 AUTH_HEADER_TYPES
   The authorization header type(s) that will be accepted for views that require
