@@ -1,4 +1,6 @@
 include README.rst
 include LICENSE.txt
+recursive-include rest_framework_simplejwt/locale *.mo
+recursive-include rest_framework_simplejwt/locale *.po
 recursive-exclude * __pycache__
 recursive-exclude * *.py[co]

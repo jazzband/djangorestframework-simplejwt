@@ -8,6 +8,10 @@ A JSON Web Token authentication plugin for the `Django REST Framework
   :target: https://travis-ci.org/davesque/django-rest-framework-simplejwt
 .. image:: https://codecov.io/gh/davesque/django-rest-framework-simplejwt/branch/master/graph/badge.svg
   :target: https://codecov.io/gh/davesque/django-rest-framework-simplejwt
+.. image:: https://img.shields.io/pypi/v/djangorestframework-simplejwt.svg
+  :target: https://pypi.python.org/pypi/djangorestframework-simplejwt
+.. image:: https://img.shields.io/pypi/pyversions/djangorestframework-simplejwt.svg
+  :target: https://pypi.python.org/pypi/djangorestframework-simplejwt
 
 -------------------------------------------------------------------------------
 
@@ -22,7 +26,7 @@ Requirements
 ------------
 
 * Python (3.5, 3.6, 3.7)
-* Django (1.11, 2.0, 2.1)
+* Django (1.11, 2.0, 2.1, 2.2)
 * Django REST Framework (3.5, 3.6, 3.7, 3.8, 3.9)
 
 These are the officially supported python and package versions.  Other versions
@@ -155,6 +159,8 @@ Some of Simple JWT's behavior can be customized through settings variables in
       'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
       'TOKEN_TYPE_CLAIM': 'token_type',
 
+      'JTI_CLAIM': 'jti',
+
       'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
       'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
       'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
@@ -256,6 +262,12 @@ AUTH_TOKEN_CLASSES
 TOKEN_TYPE_CLAIM
   The claim name that is used to store a token's type.  More about this in the
   "Token types" section below.
+
+JTI_CLAIM
+  The claim name that is used to store a token's unique identifier.  This
+  identifier is used to identify revoked tokens in the blacklist app.  It may
+  be necessary in some cases to use another claim besides the default "jti"
+  claim to store such a value.
 
 SLIDING_TOKEN_LIFETIME
   A ``datetime.timedelta`` object which specifies how long sliding tokens are
@@ -420,7 +432,7 @@ also check that any refresh or sliding token does not appear in a blacklist of
 tokens before it considers it as valid.
 
 The Simple JWT blacklist app implements its outstanding and blacklisted token
-lists using two model: ``OutstandingToken`` and ``BlacklistedToken``.  Model
+lists using two models: ``OutstandingToken`` and ``BlacklistedToken``.  Model
 admins are defined for both of these models.  To add a token to the blacklist,
 find its corresponding ``OutstandingToken`` record in the admin and use the
 admin again to create a ``BlacklistedToken`` record that points to the
@@ -437,7 +449,7 @@ subclass instance and calling the instance's ``blacklist`` method:
   token.blacklist()
 
 This will create unique outstanding token and blacklist records for the token's
-"jti" claim.
+"jti" claim or whichever claim is specified by the ``JTI_CLAIM`` setting.
 
 The blacklist app also provides a management command, ``flushexpiredtokens``,
 which will delete any tokens from the outstanding list and blacklist that have

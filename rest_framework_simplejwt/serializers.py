@@ -1,6 +1,6 @@
 from django.contrib.auth import authenticate
 from django.utils.translation import ugettext_lazy as _
-from rest_framework import serializers
+from rest_framework import exceptions, serializers
 
 from .settings import api_settings
 from .state import User
@@ -31,11 +31,16 @@ class TokenObtainSerializer(serializers.Serializer):
         self.fields['password'] = PasswordField()
 
     def validate(self, attrs):
-        self.user = authenticate(**{
-            'request': self.context['request'],
+        authenticate_kwargs = {
             self.username_field: attrs[self.username_field],
             'password': attrs['password'],
-        })
+        }
+        try:
+            authenticate_kwargs['request'] = self.context['request']
+        except KeyError:
+            pass
+
+        self.user = authenticate(**authenticate_kwargs)
 
         # Prior to Django 1.10, inactive users could be authenticated with the
         # default `ModelBackend`.  As of Django 1.10, the `ModelBackend`
@@ -45,7 +50,10 @@ class TokenObtainSerializer(serializers.Serializer):
         # users from authenticating to enforce a reasonable policy and provide
         # sensible backwards compatibility with older Django versions.
         if self.user is None or not self.user.is_active:
-            self.fail('no_active_account')
+            raise exceptions.AuthenticationFailed(
+                self.error_messages['no_active_account'],
+                'no_active_account',
+            )
 
         return {}
 

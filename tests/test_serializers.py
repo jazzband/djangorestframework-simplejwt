@@ -2,6 +2,7 @@ from datetime import timedelta
 from unittest.mock import MagicMock, patch
 
 from django.test import TestCase
+from rest_framework import exceptions as drf_exceptions
 
 from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.serializers import (
@@ -58,10 +59,10 @@ class TestTokenObtainSerializer(TestCase):
             'password': 'pass',
         })
 
-        self.assertFalse(s.is_valid())
-        self.assertIn('non_field_errors', s.errors)
+        with self.assertRaises(drf_exceptions.AuthenticationFailed):
+            s.is_valid()
 
-    def test_it_should_not_validate_if_user_not_active(self):
+    def test_it_should_raise_if_user_not_active(self):
         self.user.is_active = False
         self.user.save()
 
@@ -70,8 +71,8 @@ class TestTokenObtainSerializer(TestCase):
             'password': self.password,
         })
 
-        self.assertFalse(s.is_valid())
-        self.assertIn('non_field_errors', s.errors)
+        with self.assertRaises(drf_exceptions.AuthenticationFailed):
+            s.is_valid()
 
 
 class TestTokenObtainSlidingSerializer(TestCase):

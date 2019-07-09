@@ -1,3 +1,28 @@
+## Version 4.3
+
+* Added `JTI_CLAIM` setting to allow storing token identifiers under a
+  different claim.
+
+## Version 4.2
+
+* We now return HTTP 401 for user not found or inactive.
+
+## Version 4.1.5
+
+* Restricted `setup.py` config to Python 3 only.
+
+## Version 4.1.4
+
+* Included translation files in release package.
+
+## Version 4.1.3
+
+* Updated `python-jose` version requirement.
+
+## Version 4.1.2
+
+* Fixed `KeyError` in `TokenObtainSerializer.validate`.
+
 ## Version 4.1.1
 
 * Added request pass-through on `django.contrib.auth.authenticate` call in
