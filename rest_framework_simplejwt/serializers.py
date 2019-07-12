@@ -42,7 +42,6 @@ class TokenObtainSerializer(serializers.Serializer):
             pass
 
         self.user = authenticate(**authenticate_kwargs)
-        update_last_login(None, self.user)
 
         # Prior to Django 1.10, inactive users could be authenticated with the
         # default `ModelBackend`.  As of Django 1.10, the `ModelBackend`
@@ -56,6 +55,8 @@ class TokenObtainSerializer(serializers.Serializer):
                 self.error_messages['no_active_account'],
                 'no_active_account',
             )
+            
+        update_last_login(None, self.user)
 
         return {}
 
