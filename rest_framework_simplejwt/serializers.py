@@ -55,7 +55,7 @@ class TokenObtainSerializer(serializers.Serializer):
                 self.error_messages['no_active_account'],
                 'no_active_account',
             )
-            
+
         update_last_login(None, self.user)
 
         return {}
