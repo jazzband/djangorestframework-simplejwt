@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate
+from django.contrib.auth.models import update_last_login
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import exceptions, serializers
 
@@ -41,6 +42,7 @@ class TokenObtainSerializer(serializers.Serializer):
             pass
 
         self.user = authenticate(**authenticate_kwargs)
+        update_last_login(None, self.user)
 
         # Prior to Django 1.10, inactive users could be authenticated with the
         # default `ModelBackend`.  As of Django 1.10, the `ModelBackend`
