@@ -4,8 +4,8 @@ Simple JWT
 A JSON Web Token authentication plugin for the `Django REST Framework
 <http://www.django-rest-framework.org/>`__.
 
-.. image:: https://travis-ci.org/davesque/django-rest-framework-simplejwt.svg?branch=master
-  :target: https://travis-ci.org/davesque/django-rest-framework-simplejwt
+.. image:: https://circleci.com/gh/davesque/django-rest-framework-simplejwt.svg?style=svg
+  :target: https://circleci.com/gh/davesque/django-rest-framework-simplejwt
 .. image:: https://codecov.io/gh/davesque/django-rest-framework-simplejwt/branch/master/graph/badge.svg
   :target: https://codecov.io/gh/davesque/django-rest-framework-simplejwt
 .. image:: https://img.shields.io/pypi/v/djangorestframework-simplejwt.svg
