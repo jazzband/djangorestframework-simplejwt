@@ -482,6 +482,89 @@ JWTTokenUserAuthentication backend
         ...
     }
 
+Custom User Classes in Authentication Models
+  If you want to authenticate against User classes other than Django's
+  ``settings.AUTH_USER_MODEL``, subclass
+  ``rest_framework_simplejwt.authentication.JWTAuthentication`` and either
+  override the ``user_class`` and/or ``user_id_field`` members:
+
+  .. code-block:: python
+
+    from rest_framework_simplejwt.authentication import JWTAuthentication
+    from .models import Customer
+
+    class CustomerJWTAuthentication(JWTAuthentication):
+        user_class = Customer
+        user_id_field = 'guid'
+
+  or override the ``user_get_by_id`` method for finer control:
+
+  .. code-block:: python
+
+    from rest_framework_simplejwt.authentication import JWTAuthentication
+    from .models import Customer
+
+    class CustomerJWTAuthentication(JWTAuthentication):
+        def user_get_by_id(self, user_id):
+            try:
+                return Customer.objects.get(id=user_id, is_staff=True)
+            except Customer.DoesNotExist:
+                raise AuthenticationFailed(_('User not found'),
+                                           code='user_not_found')
+            if user.revoked:
+                raise AuthenticationFailed(_('User is inactive'),
+                                           code='user_inactive')
+            return user
+
+  then you just use ``CustomerJWTAuthentication`` instead of
+  ``JWTAuthentication`` in your ViewSet's ``authentication_classes``.
+
+  ``user_class`` and ``user_id_field`` are not used outside
+  ``JWTAuthentication.user_get_by_id()``. If ``user_get_by_id`` cannot
+  authenticate a user, it should raise ``AuthenticationFailed``.
+
+  ``rest_framework_simplejwt.authentication.JWTTokenUserAuthentication``
+  does not use ``user_class`` or ``user_get_by_id`` at all, and does not
+  require override.
+
+Custom Auth Token Classes in Authentication Models
+  If you want to use token classes different from those in
+  ``settings.SIMPLE_JWT.AUTH_TOKEN_CLASSES``, on a per-authentication-model
+  basis, you can simply subclass
+  ``rest_framework_simplejwt.authentication.JWTAuthentication`` and override
+  the ``auth_token_classes`` member:
+
+  .. code-block:: python
+
+    from rest_framework_simplejwt.authentication import JWTAuthentication
+    from .tokens import MyCustomToken
+
+    class CustomerJWTAuthentication(JWTAuthentication):
+        auth_token_classes = (MyCustomToken,)
+
+  Note that, unlike ``api_settings.AUTH_TOKEN_CLASSES``, class objects must be
+  used, and string class names won't work.
+
+  ``rest_framework_simplejwt.authentication.JWTTokenUserAuthentication``
+  may be subclassed in a similar manner.
+
+Custom User Claim Names in Authentication Models
+  If you want to use user ID claim names other than the global setting in
+  ``settings.SIMPLE_JWT.USER_ID_CLAIM`` on a per-authentication-model
+  basis, you can simply subclass
+  ``rest_framework_simplejwt.authentication.JWTAuthentication`` and override the
+  ``user_id_claim`` member:
+
+  .. code-block:: python
+
+    from rest_framework_simplejwt.authentication import JWTAuthentication
+
+    class CustomJWTAuthentication(JWTAuthentication):
+        user_id_claim = 'guid'
+
+  ``rest_framework_simplejwt.authentication.JWTTokenUserAuthentication``
+  may be subclassed in a similar manner.
+
 Development and Running the Tests
 ---------------------------------
 

@@ -4,6 +4,7 @@ from uuid import uuid4
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 
+from .backends import TokenBackend
 from .exceptions import TokenBackendError, TokenError
 from .settings import api_settings
 from .token_blacklist.models import BlacklistedToken, OutstandingToken
@@ -17,6 +18,10 @@ class Token:
     A class which validates and wraps an existing JWT or can be used to build a
     new JWT.
     """
+    token_backend = TokenBackend(
+        api_settings.ALGORITHM, api_settings.SIGNING_KEY,
+        api_settings.VERIFYING_KEY
+    )
     token_type = None
     lifetime = None
 
@@ -35,11 +40,9 @@ class Token:
         # Set up token
         if token is not None:
             # An encoded token was provided
-            from .state import token_backend
-
             # Decode token
             try:
-                self.payload = token_backend.decode(token, verify=verify)
+                self.payload = self.token_backend.decode(token, verify=verify)
             except TokenBackendError:
                 raise TokenError(_('Token is invalid or expired'))
 
@@ -77,9 +80,7 @@ class Token:
         """
         Signs and returns a token as a base64 encoded string.
         """
-        from .state import token_backend
-
-        return token_backend.encode(self.payload)
+        return self.token_backend.encode(self.payload)
 
     def verify(self):
         """
