@@ -1,7 +1,7 @@
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import HTTP_HEADER_ENCODING, authentication
 
-from .exceptions import AuthenticationFailed, InvalidToken, TokenError
+from .exceptions import AuthenticationFailed, InvalidToken, TokenError, NotAuthenticated
 from .models import TokenUser
 from .settings import api_settings
 from .state import User
@@ -27,11 +27,11 @@ class JWTAuthentication(authentication.BaseAuthentication):
     def authenticate(self, request):
         header = self.get_header(request)
         if header is None:
-            return None
+            raise NotAuthenticated()
 
         raw_token = self.get_raw_token(header)
         if raw_token is None:
-            return None
+            raise NotAuthenticated()
 
         validated_token = self.get_validated_token(raw_token)
 
