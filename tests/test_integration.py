@@ -4,7 +4,6 @@ from rest_framework_simplejwt.compat import reverse
 from rest_framework_simplejwt.settings import api_settings
 from rest_framework_simplejwt.state import User
 from rest_framework_simplejwt.tokens import AccessToken
-
 from .utils import APIViewTestCase, override_api_settings
 
 
@@ -84,6 +83,43 @@ class TestTestView(APIViewTestCase):
         self.assertEqual(res.status_code, 200)
         self.assertEqual(res.data['foo'], 'bar')
 
+    def test_user_can_get_access_refresh_and_delete_sliding_token_cookies_and_use_them(self):
+        with override_api_settings(AUTH_COOKIE='Authorization',
+                                   AUTH_TOKEN_CLASSES=('rest_framework_simplejwt.tokens.SlidingToken',)):
+            res = self.client.post(
+                reverse('token_obtain_sliding'),
+                data={
+                    User.USERNAME_FIELD: self.username,
+                    'password': self.password,
+                },
+            )
+
+            res = self.view_get()
+
+            self.assertEqual(res.status_code, 200)
+            self.assertEqual(res.data['foo'], 'bar')
+
+            res = self.client.post(
+                reverse('token_refresh_sliding'),
+            )
+
+            res = self.view_get()
+
+            self.assertEqual(res.status_code, 200)
+            self.assertEqual(res.data['foo'], 'bar')
+
+            res = self.client.post(
+                reverse('token_delete'),
+            )
+
+            res = self.view_get()
+            self.assertEqual(res.status_code, 401)
+
+            res = self.client.post(
+                reverse('token_refresh_sliding'),
+            )
+            self.assertEqual(res.status_code, 401)
+
     def test_user_can_get_access_and_refresh_tokens_and_use_them(self):
         res = self.client.post(
             reverse('token_obtain_pair'),
@@ -118,3 +154,39 @@ class TestTestView(APIViewTestCase):
 
         self.assertEqual(res.status_code, 200)
         self.assertEqual(res.data['foo'], 'bar')
+
+    def test_user_can_get_access_refresh_and_delete_token_cookies_and_use_them(self):
+        with override_api_settings(AUTH_COOKIE='Authorization', ):
+            res = self.client.post(
+                reverse('token_obtain_pair'),
+                data={
+                    User.USERNAME_FIELD: self.username,
+                    'password': self.password,
+                },
+            )
+
+            res = self.view_get()
+
+            self.assertEqual(res.status_code, 200)
+            self.assertEqual(res.data['foo'], 'bar')
+
+            res = self.client.post(
+                reverse('token_refresh'),
+            )
+
+            res = self.view_get()
+
+            self.assertEqual(res.status_code, 200)
+            self.assertEqual(res.data['foo'], 'bar')
+
+            res = self.client.post(
+                reverse('token_delete'),
+            )
+
+            res = self.view_get()
+            self.assertEqual(res.status_code, 401)
+
+            res = self.client.post(
+                reverse('token_refresh'),
+            )
+            self.assertEqual(res.status_code, 401)

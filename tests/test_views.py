@@ -10,7 +10,7 @@ from rest_framework_simplejwt.utils import (
     aware_utcnow, datetime_from_epoch, datetime_to_epoch,
 )
 
-from .utils import APIViewTestCase
+from .utils import APIViewTestCase, override_api_settings
 
 
 class TestTokenObtainPairView(APIViewTestCase):
@@ -66,6 +66,15 @@ class TestTokenObtainPairView(APIViewTestCase):
         self.assertEqual(res.status_code, 200)
         self.assertIn('access', res.data)
         self.assertIn('refresh', res.data)
+
+        with override_api_settings(AUTH_COOKIE='Authorization'):
+            res = self.view_post(data={
+                User.USERNAME_FIELD: self.username,
+                'password': self.password,
+            })
+            self.assertEqual(res.status_code, 200)
+            self.assertIn('Authorization', res.cookies)
+            self.assertIn('Authorization_refresh', res.cookies)
 
 
 class TestTokenRefreshView(APIViewTestCase):
@@ -171,6 +180,14 @@ class TestTokenObtainSlidingView(APIViewTestCase):
         })
         self.assertEqual(res.status_code, 200)
         self.assertIn('token', res.data)
+
+        with override_api_settings(AUTH_COOKIE='Authorization'):
+            res = self.view_post(data={
+                User.USERNAME_FIELD: self.username,
+                'password': self.password,
+            })
+            self.assertEqual(res.status_code, 200)
+            self.assertIn('Authorization', res.cookies)
 
 
 class TestTokenRefreshSlidingView(APIViewTestCase):

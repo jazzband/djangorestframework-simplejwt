@@ -128,6 +128,33 @@ refresh token to obtain another access token:
   ...
   {"access":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX3BrIjoxLCJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiY29sZF9zdHVmZiI6IuKYgyIsImV4cCI6MTIzNTY3LCJqdGkiOiJjNzE4ZTVkNjgzZWQ0NTQyYTU0NWJkM2VmMGI0ZGQ0ZSJ9.ekxRxgb9OKmHkfy-zs1Ro_xs1eMLXiR17dIDBVxeT-w"}
 
+JWT httpOnly cookie storage
+---------------------------
+
+JWT tokens can be stored in cookies for web applications. Cookies, when used
+with the HttpOnly cookie flag, are not accessible through JavaScript, and are
+immune to XSS. To guarantee the cookie is sent only over HTTPS, set Secure
+cookie flag.
+
+To enable cookie storage set ``AUTH_COOKIE`` name:
+
+.. code-block:: python
+
+    SIMPLE_JWT = {
+        'AUTH_COOKIE': 'Authorization',
+    }
+
+In your root ``urls.py`` file (or any other url config), include routes for
+``TokenCookieDeleteView``:
+
+.. code-block:: python
+
+  urlpatterns = [
+      ...
+      path('api/token/delete/', TokenCookieDeleteView.as_view(), name='token_delete'),
+      ...
+  ]
+
 Settings
 --------
 
@@ -164,6 +191,12 @@ Some of Simple JWT's behavior can be customized through settings variables in
       'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
       'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
       'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
+
+      'AUTH_COOKIE': None,
+      'AUTH_COOKIE_DOMAIN': None,
+      'AUTH_COOKIE_SECURE': False,
+      'AUTH_COOKIE_PATH': '/',
+      'AUTH_COOKIE_SAMESITE': 'Lax',
   }
 
 Above, the default values for these settings are shown.
@@ -284,6 +317,24 @@ SLIDING_TOKEN_REFRESH_LIFETIME
 SLIDING_TOKEN_REFRESH_EXP_CLAIM
   The claim name that is used to store the exipration time of a sliding token's
   refresh period.  More about this in the "Sliding tokens" section below.
+
+AUTH_COOKIE
+  Cookie name. Enables auth cookies if value is set.
+
+AUTH_COOKIE_DOMAIN
+  A string like "example.com", or None for standard domain cookie.
+
+AUTH_COOKIE_SECURE
+  Whether to use a secure cookie for the session cookie. If this is set to
+  True, the cookie will be marked as secure, which means browsers may ensure
+  that the cookie is only sent under an HTTPS connection.
+
+AUTH_COOKIE_PATH
+  The path of the auth cookie.
+
+AUTH_COOKIE_SAMESITE
+  Whether to set the flag restricting cookie leaks on cross-site requests.
+  This can be 'Lax', 'Strict', or None to disable the flag.
 
 Customizing token claims
 ------------------------
