@@ -33,9 +33,9 @@ class TokenBackend:
         """
         Returns an encoded token for the given payload dictionary.
         """
-        if self.audience:
+        if self.audience is not None:
             payload['aud'] = self.audience
-        if self.issuer:
+        if self.issuer is not None:
             payload['iss'] = self.issuer
 
         token = jwt.encode(payload, self.signing_key, algorithm=self.algorithm)
