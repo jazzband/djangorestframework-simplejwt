@@ -102,9 +102,13 @@ class TestTokenBackend(TestCase):
 
     def test_encode_aud_iss(self):
         # Should return a JSON web token for the given payload
-        payload = {'exp': make_utc(datetime(year=2000, month=1, day=1))}
+        original_payload = {'exp': make_utc(datetime(year=2000, month=1, day=1))}
+        payload = original_payload.copy()
 
         rsa_token = self.aud_iss_token_backend.encode(payload)
+
+        # Assert that payload has not been mutated by the encode() function
+        self.assertEqual(payload, original_payload)
 
         # Token could be one of 12 depending on header dict ordering
         self.assertIn(
