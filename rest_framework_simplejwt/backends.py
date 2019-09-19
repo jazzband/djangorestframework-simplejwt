@@ -16,12 +16,14 @@ ALLOWED_ALGORITHMS = (
 
 
 class TokenBackend:
-    def __init__(self, algorithm, signing_key=None, verifying_key=None):
+    def __init__(self, algorithm, signing_key=None, verifying_key=None, audience=None, issuer=None):
         if algorithm not in ALLOWED_ALGORITHMS:
             raise TokenBackendError(format_lazy(_("Unrecognized algorithm type '{}'"), algorithm))
 
         self.algorithm = algorithm
         self.signing_key = signing_key
+        self.audience = audience
+        self.issuer = issuer
         if algorithm.startswith('HS'):
             self.verifying_key = signing_key
         else:
@@ -31,6 +33,11 @@ class TokenBackend:
         """
         Returns an encoded token for the given payload dictionary.
         """
+        if self.audience is not None:
+            payload['aud'] = self.audience
+        if self.issuer is not None:
+            payload['iss'] = self.issuer
+
         token = jwt.encode(payload, self.signing_key, algorithm=self.algorithm)
         return token.decode('utf-8')
 
@@ -43,6 +50,8 @@ class TokenBackend:
         signature check fails, or if its 'exp' claim indicates it has expired.
         """
         try:
-            return jwt.decode(token, self.verifying_key, algorithms=[self.algorithm], verify=verify)
+            return jwt.decode(token, self.verifying_key, algorithms=[self.algorithm], verify=verify,
+                              audience=self.audience, issuer=self.issuer,
+                              options={'verify_aud': self.audience is not None})
         except InvalidTokenError:
             raise TokenBackendError(_('Token is invalid or expired'))
