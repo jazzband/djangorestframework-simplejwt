@@ -68,8 +68,8 @@ for Simple JWT's ``TokenObtainPairView`` and ``TokenRefreshView`` views:
 
   urlpatterns = [
       ...
-      url(r'^api/token/$', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-      url(r'^api/token/refresh/$', TokenRefreshView.as_view(), name='token_refresh'),
+      path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+      path('api/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
       ...
   ]
 
@@ -81,7 +81,7 @@ signing key:
 
   urlpatterns = [
       ...
-      url(r'^api/token/verify/$', TokenVerifyView.as_view(), name='token_verify'),
+      path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
       ...
   ]
 
@@ -396,8 +396,8 @@ access token specific ``TokenObtainPairView`` and ``TokenRefreshView`` views:
 
   urlpatterns = [
       ...
-      url(r'^api/token/$', TokenObtainSlidingView.as_view(), name='token_obtain'),
-      url(r'^api/token/refresh/$', TokenRefreshSlidingView.as_view(), name='token_refresh'),
+      path('api/token/', TokenObtainSlidingView.as_view(), name='token_obtain'),
+      path('api/token/refresh/', TokenRefreshSlidingView.as_view(), name='token_refresh'),
       ...
   ]
 
