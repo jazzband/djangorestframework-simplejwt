@@ -166,6 +166,25 @@ set when issuing the JWT authentication cookie. This works in conjunction with d
 contains another token which should be included in the ``X-CSRFToken`` header (as specified by the ``CSRF_HEADER_NAME``
 setting) on every requests via unsafe methods, such as POST, PUT, PATCH and DELETE.
 
+.. code-block:: bash
+
+  curl \
+    -X POST \
+    -H "Content-Type: application/json" \
+    -d '{"username": "davidattenborough", "password": "boatymcboatface"}' \
+    --cookie-jar cookies.txt \
+    http://localhost:8000/api/token/
+
+Copy csrftoken cookie value from cookies.txt file to X-CSRFToken header
+
+.. code-block:: bash
+
+  curl \
+    -X POST \
+    -H "X-CSRFToken: fUgacGTt55Cq8Gzp9lz1rxSxa9CoSB9mYPIGgne35FuVC2g7doAjQSupZQkFh4H9" \
+    --cookie ./cookies.txt \
+    http://localhost:8000/api/some-protected-view/
+
 Settings
 --------
 
