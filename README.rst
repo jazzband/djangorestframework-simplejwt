@@ -148,6 +148,8 @@ To enable cookie storage set ``AUTH_COOKIE`` name:
         'AUTH_COOKIE': 'Authorization',
     }
 
+Since httpOnly cookies are not accessible via JavaScript, cookies must be deleted by a server request to log out.
+
 In your root ``urls.py`` file (or any other url config), include routes for
 ``TokenCookieDeleteView``:
 
@@ -158,6 +160,11 @@ In your root ``urls.py`` file (or any other url config), include routes for
       path('api/token/delete/', TokenCookieDeleteView.as_view(), name='token_delete'),
       ...
   ]
+
+To prevent Cross-Site Request Forgery, the ``csrftoken`` (specified by ``CSRF_COOKIE_NAME`` setting) cookie will also be
+set when issuing the JWT authentication cookie. This works in conjunction with django csrf middleware. The cookie
+contains another token which should be included in the ``X-CSRFToken`` header (as specified by the ``CSRF_HEADER_NAME``
+setting) on every requests via unsafe methods, such as POST, PUT, PATCH and DELETE.
 
 Settings
 --------
