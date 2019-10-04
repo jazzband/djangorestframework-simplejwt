@@ -74,6 +74,14 @@ class TokenObtainPairSerializer(TokenObtainSerializer):
 
         data['refresh'] = str(refresh)
         data['access'] = str(refresh.access_token)
+        # Added access token expiring timestamp,
+        data['expires'] = refresh.access_token.payload['exp']
+        # Gives meta data about user
+        data['user'] = {
+            'username': self.user.username,
+            'email': self.user.email,
+            'name': self.user.get_full_name().title()
+        }
 
         return data
 
