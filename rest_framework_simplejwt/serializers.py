@@ -69,20 +69,10 @@ class TokenObtainPairSerializer(TokenObtainSerializer):
 
     def validate(self, attrs):
         data = super().validate(attrs)
-
-        refresh = self.get_token(self.user)
-
-        data['refresh'] = str(refresh)
-        data['access'] = str(refresh.access_token)
-        # Added access token expiring timestamp,
-        data['expires'] = refresh.access_token.payload['exp']
-        # Gives meta data about user
-        data['user'] = {
-            'username': self.user.username,
-            'email': self.user.email,
-            'name': self.user.get_full_name().title()
-        }
-
+        refresh_token = self.get_token(self.user)
+        data['refresh'] = str(refresh_token)
+        data['access'] = str(refresh_token.access_token)
+        data['expires'] = refresh_token.access_token.payload['exp']
         return data
 
 

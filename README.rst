@@ -103,12 +103,7 @@ test requests:
   {
     "access":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX3BrIjoxLCJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiY29sZF9zdHVmZiI6IuKYgyIsImV4cCI6MTIzNDU2LCJqdGkiOiJmZDJmOWQ1ZTFhN2M0MmU4OTQ5MzVlMzYyYmNhOGJjYSJ9.NHlztMGER7UADHZJlxNG0WSi22a2KaYSfd1S-AuT7lU",
     "refresh":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX3BrIjoxLCJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImNvbGRfc3R1ZmYiOiLimIMiLCJleHAiOjIzNDU2NywianRpIjoiZGUxMmY0ZTY3MDY4NDI3ODg5ZjE1YWMyNzcwZGEwNTEifQ.aEoAYkSJjoWH1boshQAaTkf8G3yn0kapko6HFRt7Rh4",
-    "expires":1570149020,
-    "user": {
-        "username": "davesque",
-        "name": "David Sanders",
-        "email": "davesque@gmail.com"
-    }
+    "expires":1570149020
   }
 
 You can use the returned access token to prove authentication for a protected
@@ -355,6 +350,7 @@ done as follows:
       return {
           'refresh': str(refresh),
           'access': str(refresh.access_token),
+          'expires': refresh.access_token.payload['exp']
       }
 
 The above function ``get_tokens_for_user`` will return the serialized
