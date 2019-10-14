@@ -43,7 +43,7 @@ msgstr "Token jest niepoprawny lub wygasł"
 #: serializers.py:24
 msgid "No active account found with the given credentials"
 msgstr ""
-"Nie znaleziono aktywnego konto dla podanych danych uwierzytelniających"
+"Nie znaleziono aktywnego konta dla podanych danych uwierzytelniających"
 
 #: settings.py:57
 msgid ""
