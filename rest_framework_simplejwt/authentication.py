@@ -129,4 +129,4 @@ class JWTTokenUserAuthentication(JWTAuthentication):
             # identifier claim.
             raise InvalidToken(_('Token contained no recognizable user identification'))
 
-        return TokenUser(validated_token)
+        return api_settings.TOKEN_USER_CLASS(validated_token)
