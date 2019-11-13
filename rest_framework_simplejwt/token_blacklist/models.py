@@ -5,6 +5,8 @@ from django.db import models
 class OutstandingToken(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
 
+    # notice: jti max_length is 191, when vendor is mysql innodb and version is less than 5.7
+    # caused by issue "Specified key was too long; max key length is 767 bytes"
     jti = models.CharField(unique=True, max_length=255)
     token = models.TextField()
 
