@@ -4,8 +4,8 @@ Simple JWT
 A JSON Web Token authentication plugin for the `Django REST Framework
 <http://www.django-rest-framework.org/>`__.
 
-.. image:: https://travis-ci.org/davesque/django-rest-framework-simplejwt.svg?branch=master
-  :target: https://travis-ci.org/davesque/django-rest-framework-simplejwt
+.. image:: https://circleci.com/gh/davesque/django-rest-framework-simplejwt.svg?style=shield
+  :target: https://circleci.com/gh/davesque/django-rest-framework-simplejwt
 .. image:: https://codecov.io/gh/davesque/django-rest-framework-simplejwt/branch/master/graph/badge.svg
   :target: https://codecov.io/gh/davesque/django-rest-framework-simplejwt
 .. image:: https://img.shields.io/pypi/v/djangorestframework-simplejwt.svg
@@ -25,9 +25,9 @@ variable defaults should be safe.
 Requirements
 ------------
 
-* Python (3.5, 3.6, 3.7)
-* Django (1.11, 2.0, 2.1, 2.2)
-* Django REST Framework (3.5, 3.6, 3.7, 3.8, 3.9)
+* Python (3.6, 3.7)
+* Django (2.0, 2.1, 2.2)
+* Django REST Framework (3.8, 3.9, 3.10)
 
 These are the officially supported python and package versions.  Other versions
 will probably work.  You're free to modify the tox config and see what is
@@ -68,8 +68,8 @@ for Simple JWT's ``TokenObtainPairView`` and ``TokenRefreshView`` views:
 
   urlpatterns = [
       ...
-      url(r'^api/token/$', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-      url(r'^api/token/refresh/$', TokenRefreshView.as_view(), name='token_refresh'),
+      path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+      path('api/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
       ...
   ]
 
@@ -81,7 +81,7 @@ signing key:
 
   urlpatterns = [
       ...
-      url(r'^api/token/verify/$', TokenVerifyView.as_view(), name='token_verify'),
+      path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
       ...
   ]
 
@@ -153,6 +153,8 @@ Some of Simple JWT's behavior can be customized through settings variables in
       'VERIFYING_KEY': None,
       'USER_ID_TO_USER': None,
       'USER_TO_USER_ID': None,
+      'AUDIENCE': None,
+      'ISSUER': None,
 
       'AUTH_HEADER_TYPES': ('Bearer',),
       'USER_ID_FIELD': 'id',
@@ -240,6 +242,16 @@ USER_TO_USER_ID
   A function that will be called with the user object when encoding a token. It should return
   a user_id to be placed into ``USER_ID_CLAIM`` in the token. This lets you specify a custom
   behaviour for generation of user_id for user object. 
+
+AUDIENCE
+  The audience claim to be included in generated tokens and/or validated in
+  decoded tokens. When set to ``None``, this field is excluded from tokens and
+  is not validated.
+
+ISSUER
+  The issuer claim to be included in generated tokens and/or validated in
+  decoded tokens. When set to ``None``, this field is excluded from tokens and
+  is not validated.
 
 AUTH_HEADER_TYPES
   The authorization header type(s) that will be accepted for views that require
@@ -408,8 +420,8 @@ access token specific ``TokenObtainPairView`` and ``TokenRefreshView`` views:
 
   urlpatterns = [
       ...
-      url(r'^api/token/$', TokenObtainSlidingView.as_view(), name='token_obtain'),
-      url(r'^api/token/refresh/$', TokenRefreshSlidingView.as_view(), name='token_refresh'),
+      path('api/token/', TokenObtainSlidingView.as_view(), name='token_obtain'),
+      path('api/token/refresh/', TokenRefreshSlidingView.as_view(), name='token_refresh'),
       ...
   ]
 
