@@ -84,10 +84,11 @@ class JWTAuthentication(authentication.BaseAuthentication):
         Validates an encoded JSON web token and returns a validated token
         wrapper object.
         """
+        signing_key = getattr(self, 'SIGNING_KEY')
         messages = []
         for AuthToken in api_settings.AUTH_TOKEN_CLASSES:
             try:
-                return AuthToken(raw_token)
+                return AuthToken(raw_token, signing_key=signing_key)
             except TokenError as e:
                 messages.append({'token_class': AuthToken.__name__,
                                  'token_type': AuthToken.token_type,
