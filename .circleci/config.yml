@@ -65,7 +65,7 @@ jobs:
     docker:
       - image: circleci/python:3.8
         environment:
-          TOXENV: 'py37-djangomaster-drf310'
+          TOXENV: 'py38-djangomaster-drf310'
   lint:
     <<: *common
     docker:
