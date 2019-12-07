@@ -19,7 +19,7 @@ common: &common
         when: on_fail
     - restore_cache:
         keys:
-          - v4-cache-{{ .Environment.CIRCLE_JOB }}-{{ checksum "setup.py" }}-{{ checksum "tox.ini" }}
+          - v5-cache-{{ .Environment.CIRCLE_JOB }}-{{ checksum "setup.py" }}-{{ checksum "tox.ini" }}
     - run:
         name: install dependencies
         command: pip install --user tox
@@ -33,7 +33,7 @@ common: &common
           - ~/.cache/pip
           - ~/.local
           - ./eggs
-        key: v4-cache-{{ .Environment.CIRCLE_JOB }}-{{ checksum "setup.py" }}-{{ checksum "tox.ini" }}
+        key: v5-cache-{{ .Environment.CIRCLE_JOB }}-{{ checksum "setup.py" }}-{{ checksum "tox.ini" }}
 
 jobs:
   django20:
