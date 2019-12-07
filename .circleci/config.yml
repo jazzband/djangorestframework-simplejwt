@@ -54,24 +54,25 @@ jobs:
       - image: circleci/python:3.7
         environment:
           TOXENV: 'py37-django22-drf{39,310}'
+  django30:
+    <<: *common
+    docker:
+      - image: circleci/python:3.8
+        environment:
+          TOXENV: 'py38-django30-drf310'
   djangomaster:
     <<: *common
     docker:
-      - image: circleci/python:3.7
+      - image: circleci/python:3.8
         environment:
           TOXENV: 'py37-djangomaster-drf310'
   lint:
     <<: *common
     docker:
-      - image: circleci/python:3.6
+      - image: circleci/python:3.7
         environment:
           TOXENV: lint
-  #doctest:
-  #  <<: *common
-  #  docker:
-  #    - image: circleci/python:3.6
-  #      environment:
-  #        TOXENV: doctest
+
 workflows:
   version: 2
   test:
@@ -79,6 +80,6 @@ workflows:
       - django20
       - django21
       - django22
+      - django30
       - djangomaster
       - lint
-      #- doctest

@@ -57,7 +57,7 @@ setup(
         'djangorestframework',
         'pyjwt',
     ],
-    python_requires='>=3.6,<3.8',
+    python_requires='>=3.6,<3.9',
     extras_require=extras_require,
     packages=find_packages(exclude=['tests', 'tests.*', 'licenses', 'requirements']),
     classifiers=[
@@ -72,6 +72,7 @@ setup(
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
         'Topic :: Internet :: WWW/HTTP',
     ]
 )
