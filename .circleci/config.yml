@@ -61,7 +61,38 @@ jobs:
         environment:
           TOXENV: 'py38-django30-drf310'
   djangomaster:
-    <<: *common
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - run:
+          name: merge pull request base
+          command: ./.circleci/merge_pr.sh
+      - run:
+          name: merge pull request base (2nd try)
+          command: ./.circleci/merge_pr.sh
+          when: on_fail
+      - run:
+          name: merge pull request base (3nd try)
+          command: ./.circleci/merge_pr.sh
+          when: on_fail
+      - restore_cache:
+          keys:
+            - v5-cache-{{ .Environment.CIRCLE_JOB }}-{{ checksum "setup.py" }}-{{ checksum "tox.ini" }}
+      - run:
+          name: install dependencies
+          command: pip install --user tox
+      - run:
+          name: run tox
+          # Allow failures for django master tests
+          command: ~/.local/bin/tox -r || true
+      - save_cache:
+          paths:
+            - .hypothesis
+            - .tox
+            - ~/.cache/pip
+            - ~/.local
+            - ./eggs
+          key: v5-cache-{{ .Environment.CIRCLE_JOB }}-{{ checksum "setup.py" }}-{{ checksum "tox.ini" }}
     docker:
       - image: circleci/python:3.8
         environment:
