@@ -1,3 +1,13 @@
+## Version 4.4
+
+* Added official support for Python 3.8 and Django 3.0.
+* Added settings for expected audience and issuer claims.
+* Documentation updates.
+* Updated package/python version support (check the README to see what new
+  versions are supported and what old ones are no longer supported!)
+* Added Chilean Spanish language support.
+* Added Russian language support.
+
 ## Version 4.3
 
 * Added `JTI_CLAIM` setting to allow storing token identifiers under a
