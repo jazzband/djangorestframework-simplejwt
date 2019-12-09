@@ -2,7 +2,7 @@ from datetime import timedelta
 
 from django.conf import settings
 from django.test.signals import setting_changed
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from rest_framework.settings import APISettings as _APISettings
 
 from .utils import format_lazy
