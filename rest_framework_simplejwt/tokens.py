@@ -2,7 +2,7 @@ from datetime import timedelta
 from uuid import uuid4
 
 from django.conf import settings
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from .exceptions import TokenBackendError, TokenError
 from .settings import api_settings
