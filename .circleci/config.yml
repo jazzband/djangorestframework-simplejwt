@@ -19,7 +19,7 @@ common: &common
         when: on_fail
     - restore_cache:
         keys:
-          - v4-cache-{{ .Environment.CIRCLE_JOB }}-{{ checksum "setup.py" }}-{{ checksum "tox.ini" }}
+          - v5-cache-{{ .Environment.CIRCLE_JOB }}-{{ checksum "setup.py" }}-{{ checksum "tox.ini" }}
     - run:
         name: install dependencies
         command: pip install --user tox
@@ -33,7 +33,7 @@ common: &common
           - ~/.cache/pip
           - ~/.local
           - ./eggs
-        key: v4-cache-{{ .Environment.CIRCLE_JOB }}-{{ checksum "setup.py" }}-{{ checksum "tox.ini" }}
+        key: v5-cache-{{ .Environment.CIRCLE_JOB }}-{{ checksum "setup.py" }}-{{ checksum "tox.ini" }}
 
 jobs:
   django20:
@@ -54,24 +54,56 @@ jobs:
       - image: circleci/python:3.7
         environment:
           TOXENV: 'py37-django22-drf{39,310}'
+  django30:
+    <<: *common
+    docker:
+      - image: circleci/python:3.8
+        environment:
+          TOXENV: 'py38-django30-drf310'
   djangomaster:
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - run:
+          name: merge pull request base
+          command: ./.circleci/merge_pr.sh
+      - run:
+          name: merge pull request base (2nd try)
+          command: ./.circleci/merge_pr.sh
+          when: on_fail
+      - run:
+          name: merge pull request base (3nd try)
+          command: ./.circleci/merge_pr.sh
+          when: on_fail
+      - restore_cache:
+          keys:
+            - v5-cache-{{ .Environment.CIRCLE_JOB }}-{{ checksum "setup.py" }}-{{ checksum "tox.ini" }}
+      - run:
+          name: install dependencies
+          command: pip install --user tox
+      - run:
+          name: run tox
+          # Allow failures for django master tests
+          command: ~/.local/bin/tox -r || true
+      - save_cache:
+          paths:
+            - .hypothesis
+            - .tox
+            - ~/.cache/pip
+            - ~/.local
+            - ./eggs
+          key: v5-cache-{{ .Environment.CIRCLE_JOB }}-{{ checksum "setup.py" }}-{{ checksum "tox.ini" }}
+    docker:
+      - image: circleci/python:3.8
+        environment:
+          TOXENV: 'py38-djangomaster-drf310'
+  lint:
     <<: *common
     docker:
       - image: circleci/python:3.7
         environment:
-          TOXENV: 'py37-djangomaster-drf310'
-  lint:
-    <<: *common
-    docker:
-      - image: circleci/python:3.6
-        environment:
           TOXENV: lint
-  #doctest:
-  #  <<: *common
-  #  docker:
-  #    - image: circleci/python:3.6
-  #      environment:
-  #        TOXENV: doctest
+
 workflows:
   version: 2
   test:
@@ -79,6 +111,6 @@ workflows:
       - django20
       - django21
       - django22
+      - django30
       - djangomaster
       - lint
-      #- doctest
