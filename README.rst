@@ -206,20 +206,20 @@ ALGORITHM
   the ``VERIFYING_KEY`` setting will be ignored.  To use asymmetric RSA signing
   and verification, the following algorithms may be used: ``'RS256'``,
   ``'RS384'``, ``'RS512'``.  When an RSA algorithm is chosen, the
-  ``SIGNING_KEY`` setting must be set to a string which contains an RSA private
-  key.  Likewise, the ``VERIFYING_KEY`` setting must be set to a string which
+  ``SIGNING_KEY`` setting must be set to a string that contains an RSA private
+  key.  Likewise, the ``VERIFYING_KEY`` setting must be set to a string that
   contains an RSA public key.
 
 SIGNING_KEY
-  The signing key which is used to sign the content of generated tokens.  For
+  The signing key that is used to sign the content of generated tokens.  For
   HMAC signing, this should be a random string with at least as many bits of
   data as is required by the signing protocol.  For RSA signing, this
-  should be a string which contains an RSA private key which is 2048 bits or
+  should be a string that contains an RSA private key that is 2048 bits or
   longer.  Since Simple JWT defaults to using 256-bit HMAC signing, the
   ``SIGNING_KEY`` setting defaults to the value of the ``SECRET_KEY`` setting
   for your django project.  Although this is the most reasonable default that
   Simple JWT can provide, it is recommended that developers change this setting
-  to a value which is independent from the django project secret key.  This
+  to a value that is independent from the django project secret key.  This
   will make changing the signing key used for tokens easier in the event that
   it is compromised.
 
@@ -229,7 +229,7 @@ VERIFYING_KEY
   ``VERIFYING_KEY`` setting will be ignored and the value of the
   ``SIGNING_KEY`` setting will be used.  If an RSA algorithm has been specified
   by the ``ALGORITHM`` setting, the ``VERIFYING_KEY`` setting must be set to a
-  string which contains an RSA public key.
+  string that contains an RSA public key.
 
 AUDIENCE
   The audience claim to be included in generated tokens and/or validated in
@@ -254,7 +254,7 @@ AUTH_HEADER_TYPES
 USER_ID_FIELD
   The database field from the user model that will be included in generated
   tokens to identify users.  It is recommended that the value of this setting
-  specifies a field which does not normally change once its initial value is
+  specifies a field that does not normally change once its initial value is
   chosen.  For example, specifying a "username" or "email" field would be a
   poor choice since an account's username or email might change depending on
   how account management in a given service is designed.  This could allow a
@@ -267,7 +267,7 @@ USER_ID_CLAIM
   include a "user_id" claim that contains the user's identifier.
 
 AUTH_TOKEN_CLASSES
-  A list of dot paths to classes which specify the types of token that are
+  A list of dot paths to classes that specify the types of token that are
   allowed to prove authentication.  More about this in the "Token types"
   section below.
 
@@ -294,7 +294,7 @@ SLIDING_TOKEN_REFRESH_LIFETIME
   More about this in the "Sliding tokens" section below.
 
 SLIDING_TOKEN_REFRESH_EXP_CLAIM
-  The claim name that is used to store the exipration time of a sliding token's
+  The claim name that is used to store the expiration time of a sliding token's
   refresh period.  More about this in the "Sliding tokens" section below.
 
 Customizing token claims
@@ -359,7 +359,7 @@ can be created in this way.
 Token types
 -----------
 
-Simple JWT provides two different token types which can be used to prove
+Simple JWT provides two different token types that can be used to prove
 authentication.  In a token's payload, its type can be identified by the value
 of its token type claim, which is "token_type" by default.  This may have a
 value of "access", "sliding", or "refresh" however refresh tokens are not
@@ -396,7 +396,7 @@ If you want to use sliding tokens, change the ``AUTH_TOKEN_CLASSES`` setting to
 types to be used for authentication.)
 
 Also, include urls for the sliding token specific ``TokenObtainSlidingView``
-and ``TokenRefreshSlidingView`` views along side or in place of urls for the
+and ``TokenRefreshSlidingView`` views alongside or in place of urls for the
 access token specific ``TokenObtainPairView`` and ``TokenRefreshView`` views:
 
 .. code-block:: python
@@ -536,7 +536,7 @@ you're testing against multiple versions of Python.  Next, run tox:
 
   tox
 
-Acknowledgements
+Acknowledgments
 ----------------
 
 This project borrows code from the `Django REST Framework
