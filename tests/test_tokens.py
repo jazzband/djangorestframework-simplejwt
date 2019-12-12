@@ -153,6 +153,18 @@ class TestToken(TestCase):
         with self.assertRaises(TokenError):
             MyToken(str(t))
 
+    def test_init_no_verify_jti_token_if_speficied(self):
+        t = MyToken()
+        del t['jti']
+        default_jti_claim_is_mendatory = api_settings.JTI_CLAIM_IS_MENDATORY
+        api_settings.JTI_CLAIM_IS_MENDATORY = False
+
+        try:
+            MyToken(str(t))
+        except TokenError:
+            self.fail("Token init raised TokenError unexpectedly!")
+        api_settings.JTI_CLAIM_IS_MENDATORY = default_jti_claim_is_mendatory
+
     def test_str(self):
         token = MyToken()
         token.set_exp(
