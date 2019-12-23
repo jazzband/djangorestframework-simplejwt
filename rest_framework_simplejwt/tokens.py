@@ -93,9 +93,9 @@ class Token:
         # claim.  We don't want any zombie tokens walking around.
         self.check_exp()
 
-        # Ensure token id is present if JTI_CLAIM != None
         # According to RFC 7519, the "jti" claim is OPTIONAL
         # (https://tools.ietf.org/html/rfc7519#section-4.1.7)
+        # Ensure token id is present only if JTI_CLAIM_IS_MENDATORY is set to True (default)
         if api_settings.JTI_CLAIM_IS_MENDATORY and api_settings.JTI_CLAIM not in self.payload:
             raise TokenError(_('Token has no id'))
 
