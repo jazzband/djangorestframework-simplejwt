@@ -67,6 +67,22 @@ class TestTokenObtainPairView(APIViewTestCase):
         self.assertIn('access', res.data)
         self.assertIn('refresh', res.data)
 
+    @patch('django.contrib.auth.signals.user_logged_in.send')
+    def test_login_signal_emitted(self, log_in_signal_send_mock):
+        self.view_post(data={
+            User.USERNAME_FIELD: self.username,
+            'password': self.password,
+        })
+        log_in_signal_send_mock.assert_called()
+
+    @patch('django.contrib.auth.signals.user_login_failed.send')
+    def test_login_failed_signal_emitted(self, log_in_failed_signal_send_mock):
+        self.view_post(data={
+            User.USERNAME_FIELD: self.username,
+            'password': self.password + 'wrong',
+        })
+        log_in_failed_signal_send_mock.assert_called()
+
 
 class TestTokenRefreshView(APIViewTestCase):
     view_name = 'token_refresh'
