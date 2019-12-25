@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate
+from django.contrib.auth.signals import user_logged_in
 from django.utils.translation import gettext_lazy as _
 from rest_framework import exceptions, serializers
 
@@ -55,6 +56,9 @@ class TokenObtainSerializer(serializers.Serializer):
                 'no_active_account',
             )
 
+        user_logged_in.send(
+            sender=self.user.__class__, request=self.context['request'], user=self.user
+        )
         return {}
 
     @classmethod
