@@ -38,7 +38,7 @@ Installation
 
 Simple JWT can be installed with pip::
 
-  pip install djangorestframework_simplejwt
+  pip install djangorestframework-simplejwt
 
 Then, your django project must be configured to use the library.  In
 ``settings.py``, add
