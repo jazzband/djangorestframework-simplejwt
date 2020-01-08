@@ -155,7 +155,7 @@ class Token:
             raise TokenError(format_lazy(_("Token '{}' claim has expired"), claim))
 
     @classmethod
-    def for_user(cls, user):
+    def for_user(cls, user, signing_key=None):
         """
         Returns an authorization token for the given user that will be provided
         after authenticating the user's credentials.
@@ -164,7 +164,7 @@ class Token:
         if not isinstance(user_id, int):
             user_id = str(user_id)
 
-        token = cls()
+        token = cls(signing_key=signing_key)
         token[api_settings.USER_ID_CLAIM] = user_id
 
         return token
@@ -213,11 +213,11 @@ class BlacklistMixin:
             return BlacklistedToken.objects.get_or_create(token=token)
 
         @classmethod
-        def for_user(cls, user):
+        def for_user(cls, user, signing_key=None):
             """
             Adds this token to the outstanding token list.
             """
-            token = super().for_user(user)
+            token = super().for_user(user, signing_key)
 
             jti = token[api_settings.JTI_CLAIM]
             exp = token['exp']
