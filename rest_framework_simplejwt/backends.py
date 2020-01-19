@@ -26,7 +26,7 @@ class TokenBackend:
         self.issuer = issuer
         self.verifying_key = self.get_verifying_key(signing_key, verifying_key)
 
-    def encode(self, payload, signing_key):
+    def encode(self, payload, signing_key=None):
         """
         Returns an encoded token for the given payload dictionary.
         """
