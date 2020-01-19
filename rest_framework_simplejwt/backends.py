@@ -61,7 +61,6 @@ class TokenBackend:
             raise TokenBackendError(_('Token is invalid or expired'))
 
     def get_verifying_key(self, signing_key, verifying_key):
-        """ """
         if self.algorithm.startswith('HS'):
             verifying_key = signing_key or self.signing_key
         else:

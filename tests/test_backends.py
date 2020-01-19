@@ -8,6 +8,7 @@ from rest_framework_simplejwt.exceptions import TokenBackendError
 from rest_framework_simplejwt.utils import aware_utcnow, make_utc
 
 SECRET = 'not_secret'
+OTHER_SECRET = 'other_secret'
 
 PRIVATE_KEY = '''
 -----BEGIN RSA PRIVATE KEY-----
@@ -129,6 +130,14 @@ class TestTokenBackend(TestCase):
             ),
         )
 
+    def test_encode_with_other_signing_key(self):
+        hmac_token = self.hmac_token_backend.encode(self.payload, OTHER_SECRET)
+
+        self.assertEqual(
+            hmac_token,
+            'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmb28iOiJiYXIifQ.oVkvqvuAtFKxPIgrtmy5DpXZwJunmdUOFWgZAa6RqU4'
+        )
+
     def test_decode_hmac_with_no_expiry(self):
         no_exp_token = jwt.encode(self.payload, SECRET, algorithm='HS256')
 
@@ -185,6 +194,15 @@ class TestTokenBackend(TestCase):
         token = jwt.encode(self.payload, SECRET, algorithm='HS256').decode('utf-8')
 
         self.assertEqual(self.hmac_token_backend.decode(token), self.payload)
+
+    def test_decode_hmac_with_other_signing_key(self):
+        self.payload['exp'] = aware_utcnow() + timedelta(days=1)
+        self.payload['foo'] = 'baz'
+
+        token = jwt.encode(self.payload, OTHER_SECRET, algorithm='HS256').decode(
+            'utf-8')
+
+        self.assertEqual(self.hmac_token_backend.decode(token, signing_key=OTHER_SECRET), self.payload)
 
     def test_decode_rsa_with_no_expiry(self):
         no_exp_token = jwt.encode(self.payload, PRIVATE_KEY, algorithm='RS256')
