@@ -196,11 +196,7 @@ class TestTokenBackend(TestCase):
         self.assertEqual(self.hmac_token_backend.decode(token), self.payload)
 
     def test_decode_hmac_with_other_signing_key(self):
-        self.payload['exp'] = aware_utcnow() + timedelta(days=1)
-        self.payload['foo'] = 'baz'
-
-        token = jwt.encode(self.payload, OTHER_SECRET, algorithm='HS256').decode(
-            'utf-8')
+        token = jwt.encode(self.payload, OTHER_SECRET, algorithm='HS256').decode('utf-8')
 
         self.assertEqual(self.hmac_token_backend.decode(token, signing_key=OTHER_SECRET), self.payload)
 
