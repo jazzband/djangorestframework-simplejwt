@@ -17,8 +17,8 @@ A JSON Web Token authentication plugin for the `Django REST Framework
 
 Simple JWT provides a JSON Web Token authentication backend for the Django REST
 Framework.  It aims to cover the most common use cases of JWTs by offering a
-conservative range of default features.  It also aims to be easily extensible
-in case a desired feature is not present.
+conservative set of default features.  It also aims to be easily extensible in
+case a desired feature is not present.
 
 Requirements
 ------------
