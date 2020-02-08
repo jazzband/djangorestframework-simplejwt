@@ -4,6 +4,9 @@ Simple JWT
 A JSON Web Token authentication plugin for the `Django REST Framework
 <http://www.django-rest-framework.org/>`__.
 
+**LOOKING FOR MAINTAINERS:** Please see `here
+<https://github.com/davesque/django-rest-framework-simplejwt/issues/207>`__.
+
 .. image:: https://circleci.com/gh/davesque/django-rest-framework-simplejwt.svg?style=shield
   :target: https://circleci.com/gh/davesque/django-rest-framework-simplejwt
 .. image:: https://codecov.io/gh/davesque/django-rest-framework-simplejwt/branch/master/graph/badge.svg
@@ -535,7 +538,7 @@ you're testing against multiple versions of Python.  Next, run tox:
   tox
 
 Acknowledgments
-----------------
+---------------
 
 This project borrows code from the `Django REST Framework
 <https://github.com/encode/django-rest-framework/>`__ as well as concepts from
