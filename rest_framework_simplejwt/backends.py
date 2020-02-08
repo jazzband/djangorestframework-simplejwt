@@ -49,18 +49,18 @@ class TokenBackend:
         Raises a `TokenBackendError` if the token is malformed, if its
         signature check fails, or if its 'exp' claim indicates it has expired.
         """
-        if signing_key:
-            self.verifying_key = self.get_verifying_key(signing_key,
-                                                        self.verifying_key)
+        verifying_key = self.get_verifying_key(
+            signing_key, self.verifying_key) if signing_key else self.verifying_key
 
         try:
-            return jwt.decode(token, self.verifying_key, algorithms=[self.algorithm], verify=verify,
+            return jwt.decode(token, verifying_key, algorithms=[self.algorithm], verify=verify,
                               audience=self.audience, issuer=self.issuer,
                               options={'verify_aud': self.audience is not None})
         except InvalidTokenError:
             raise TokenBackendError(_('Token is invalid or expired'))
 
     def get_verifying_key(self, signing_key, verifying_key):
+        """Return verifying key depending on the algorithm."""
         if self.algorithm.startswith('HS'):
             verifying_key = signing_key or self.signing_key
         else:
