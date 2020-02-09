@@ -19,6 +19,7 @@ class PasswordField(serializers.CharField):
 
 class TokenObtainSerializer(serializers.Serializer):
     username_field = User.USERNAME_FIELD
+    custom_username_field = api_settings.CUSTOM_USERNAME_FIELD
 
     default_error_messages = {
         'no_active_account': _('No active account found with the given credentials')
@@ -27,12 +28,16 @@ class TokenObtainSerializer(serializers.Serializer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.fields[self.username_field] = serializers.CharField()
+        self.fields[self.username] = serializers.CharField()
         self.fields['password'] = PasswordField()
+
+    @property
+    def username(self):
+        return self.custom_username_field if self.custom_username_field else self.username_field
 
     def validate(self, attrs):
         authenticate_kwargs = {
-            self.username_field: attrs[self.username_field],
+            self.username_field: attrs[self.username],
             'password': attrs['password'],
         }
         try:
