@@ -108,7 +108,12 @@ class JWTAuthentication(authentication.BaseAuthentication):
             raise InvalidToken(_('Token contained no recognizable user identification'))
 
         try:
-            user = User.objects.get(**{api_settings.USER_ID_FIELD: user_id})
+            if api_settings.USER_ID_TO_USER:
+                user = api_settings.USER_ID_TO_USER(user_id)
+                if not user:
+                    raise User.DoesNotExist()
+            else:
+                user = User.objects.get(**{api_settings.USER_ID_FIELD: user_id})
         except User.DoesNotExist:
             raise AuthenticationFailed(_('User not found'), code='user_not_found')
 

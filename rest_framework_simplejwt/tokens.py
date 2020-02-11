@@ -158,7 +158,10 @@ class Token:
         Returns an authorization token for the given user that will be provided
         after authenticating the user's credentials.
         """
-        user_id = getattr(user, api_settings.USER_ID_FIELD)
+        if api_settings.USER_TO_USER_ID:
+            user_id = api_settings.USER_TO_USER_ID(user)
+        else:
+            user_id = getattr(user, api_settings.USER_ID_FIELD)
         if not isinstance(user_id, int):
             user_id = str(user_id)
 

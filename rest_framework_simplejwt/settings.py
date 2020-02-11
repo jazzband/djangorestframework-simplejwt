@@ -20,6 +20,8 @@ DEFAULTS = {
     'VERIFYING_KEY': None,
     'AUDIENCE': None,
     'ISSUER': None,
+    'USER_ID_TO_USER': None,
+    'USER_TO_USER_ID': None,
 
     'AUTH_HEADER_TYPES': ('Bearer',),
     'USER_ID_FIELD': 'id',
@@ -37,6 +39,8 @@ DEFAULTS = {
 
 IMPORT_STRINGS = (
     'AUTH_TOKEN_CLASSES',
+    'USER_ID_TO_USER',
+    'USER_TO_USER_ID',
 )
 
 REMOVED_SETTINGS = (

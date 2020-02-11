@@ -19,6 +19,15 @@ User = get_user_model()
 AuthToken = api_settings.AUTH_TOKEN_CLASSES[0]
 
 
+def _user2userid(user):
+    return "CUSTOM_" + str(getattr(user, api_settings.USER_ID_FIELD))
+
+
+def _userid2user(user_id):
+    user_id = int(str(user_id)[7:])
+    return User.objects.get(**{api_settings.USER_ID_FIELD: user_id})
+
+
 class TestJWTAuthentication(TestCase):
     def setUp(self):
         self.factory = APIRequestFactory()
@@ -137,6 +146,30 @@ class TestJWTAuthentication(TestCase):
 
         # Otherwise, should return correct user
         self.assertEqual(self.backend.get_user(payload).id, u.id)
+
+    def test_user_id_to_user(self):
+        payload = {'some_other_id': 'foo'}
+
+        with override_api_settings(USER_ID_TO_USER=_userid2user):
+            # Should raise error if no recognizable user identification
+            with self.assertRaises(InvalidToken):
+                self.backend.get_user(payload)
+
+            u = User.objects.create_user(username='markhamill')
+            u.is_active = False
+            u.save()
+
+            payload[api_settings.USER_ID_CLAIM] = _user2userid(u)
+
+            # Should raise exception if user is inactive
+            with self.assertRaises(AuthenticationFailed):
+                self.backend.get_user(payload)
+
+            u.is_active = True
+            u.save()
+
+            # Otherwise, should return correct user
+            self.assertEqual(self.backend.get_user(payload).id, u.id)
 
 
 class TestJWTTokenUserAuthentication(TestCase):

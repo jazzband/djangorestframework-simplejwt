@@ -22,6 +22,10 @@ class MyToken(Token):
     lifetime = timedelta(days=1)
 
 
+def _user2userid(user):
+    return "CUSTOM_" + str(getattr(user, api_settings.USER_ID_FIELD))
+
+
 class TestToken(TestCase):
     def setUp(self):
         self.token = MyToken()
@@ -298,6 +302,20 @@ class TestToken(TestCase):
             token = MyToken.for_user(user)
 
         self.assertEqual(token[api_settings.USER_ID_CLAIM], username)
+
+    def test_user_to_user_id(self):
+        username = 'test_user'
+        user = User.objects.create_user(
+            username=username,
+            password='test_password',
+        )
+
+        with override_api_settings(USER_TO_USER_ID=_user2userid):
+            token = MyToken.for_user(user)
+
+        user_id = _user2userid(user)
+
+        self.assertEqual(token[api_settings.USER_ID_CLAIM], user_id)
 
 
 class TestSlidingToken(TestCase):
