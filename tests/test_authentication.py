@@ -157,3 +157,25 @@ class TestJWTTokenUserAuthentication(TestCase):
 
         self.assertIsInstance(user, TokenUser)
         self.assertEqual(user.id, 42)
+
+    def test_custom_tokenuser(self):
+        from django.utils.functional import cached_property
+
+        class BobSaget(TokenUser):
+            @cached_property
+            def username(self):
+                return "bsaget"
+
+        temp = api_settings.TOKEN_USER_CLASS
+        api_settings.TOKEN_USER_CLASS = BobSaget
+
+        # Should return a token user object
+        payload = {api_settings.USER_ID_CLAIM: 42}
+        user = self.backend.get_user(payload)
+
+        self.assertIsInstance(user, api_settings.TOKEN_USER_CLASS)
+        self.assertEqual(user.id, 42)
+        self.assertEqual(user.username, "bsaget")
+
+        # Restore default TokenUser for future tests
+        api_settings.TOKEN_USER_CLASS = temp
