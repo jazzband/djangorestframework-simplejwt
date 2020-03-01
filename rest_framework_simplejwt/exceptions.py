@@ -37,3 +37,7 @@ class InvalidToken(AuthenticationFailed):
     status_code = status.HTTP_401_UNAUTHORIZED
     default_detail = _('Token is invalid or expired')
     default_code = 'token_not_valid'
+
+
+class NotAuthenticated(exceptions.NotAuthenticated):
+    pass
