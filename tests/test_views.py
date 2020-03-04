@@ -71,6 +71,7 @@ class TestTokenObtainPairView(APIViewTestCase):
         self.assertIn('access', res.data)
         self.assertIn('refresh', res.data)
 
+<<<<<<< HEAD
     def test_update_last_login(self):
         self.view_post(data={
             User.USERNAME_FIELD: self.username,
@@ -93,6 +94,16 @@ class TestTokenObtainPairView(APIViewTestCase):
             self.assertGreaterEqual(timezone.now(), user.last_login)
 
         reload(serializers)
+=======
+        with override_api_settings(AUTH_COOKIE='authorization'):
+            res = self.view_post(data={
+                User.USERNAME_FIELD: self.username,
+                'password': self.password,
+            })
+            self.assertEqual(res.status_code, 200)
+            self.assertIn('authorization', res.cookies)
+            self.assertIn('authorization_refresh', res.cookies)
+>>>>>>> Fixes bug: web (using cookie) and mobile (using request.data) did not work at the same time when AUTH_COOKIE is enabled
 
 
 class TestTokenRefreshView(APIViewTestCase):
@@ -199,6 +210,7 @@ class TestTokenObtainSlidingView(APIViewTestCase):
         self.assertEqual(res.status_code, 200)
         self.assertIn('token', res.data)
 
+<<<<<<< HEAD
     def test_update_last_login(self):
         self.view_post(data={
             User.USERNAME_FIELD: self.username,
@@ -221,6 +233,15 @@ class TestTokenObtainSlidingView(APIViewTestCase):
             self.assertGreaterEqual(timezone.now(), user.last_login)
 
         reload(serializers)
+=======
+        with override_api_settings(AUTH_COOKIE='authorization'):
+            res = self.view_post(data={
+                User.USERNAME_FIELD: self.username,
+                'password': self.password,
+            })
+            self.assertEqual(res.status_code, 200)
+            self.assertIn('authorization', res.cookies)
+>>>>>>> Fixes bug: web (using cookie) and mobile (using request.data) did not work at the same time when AUTH_COOKIE is enabled
 
 
 class TestTokenRefreshSlidingView(APIViewTestCase):
