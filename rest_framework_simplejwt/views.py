@@ -60,6 +60,8 @@ class TokenRefreshViewBase(TokenViewBase):
 
 
 class TokenCookieViewMixin:
+    token_refresh_view_name = 'token_refresh'
+
     def extract_token_from_cookie(self, request):
         """Extracts token from cookie and sets it in request.data as it would be sent by the user"""
         if not request.data:
@@ -86,7 +88,7 @@ class TokenCookieViewMixin:
                 '{}_refresh'.format(api_settings.AUTH_COOKIE), data['refresh'],
                 expires=expires,
                 domain=None,
-                path=reverse('token_refresh'),
+                path=reverse(self.token_refresh_view_name),
                 secure=api_settings.AUTH_COOKIE_SECURE or None,
                 httponly=True,
                 samesite='Strict',
@@ -187,6 +189,7 @@ class TokenCookieDeleteView(APIView):
     Deletes httpOnly auth cookies.
     Used as logout view while using AUTH_COOKIE
     """
+    token_refresh_view_name = 'token_refresh'
     authentication_classes = ()
     permission_classes = ()
 
@@ -207,7 +210,7 @@ class TokenCookieDeleteView(APIView):
         response.delete_cookie(
             '{}_refresh'.format(api_settings.AUTH_COOKIE),
             domain=None,
-            path=reverse('token_refresh'),
+            path=reverse(self.token_refresh_view_name),
         )
 
 
