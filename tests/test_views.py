@@ -67,14 +67,14 @@ class TestTokenObtainPairView(APIViewTestCase):
         self.assertIn('access', res.data)
         self.assertIn('refresh', res.data)
 
-        with override_api_settings(AUTH_COOKIE='Authorization'):
+        with override_api_settings(AUTH_COOKIE='authorization'):
             res = self.view_post(data={
                 User.USERNAME_FIELD: self.username,
                 'password': self.password,
             })
             self.assertEqual(res.status_code, 200)
-            self.assertIn('Authorization', res.cookies)
-            self.assertIn('Authorization_refresh', res.cookies)
+            self.assertIn('authorization', res.cookies)
+            self.assertIn('authorization_refresh', res.cookies)
 
 
 class TestTokenRefreshView(APIViewTestCase):
@@ -181,13 +181,13 @@ class TestTokenObtainSlidingView(APIViewTestCase):
         self.assertEqual(res.status_code, 200)
         self.assertIn('token', res.data)
 
-        with override_api_settings(AUTH_COOKIE='Authorization'):
+        with override_api_settings(AUTH_COOKIE='authorization'):
             res = self.view_post(data={
                 User.USERNAME_FIELD: self.username,
                 'password': self.password,
             })
             self.assertEqual(res.status_code, 200)
-            self.assertIn('Authorization', res.cookies)
+            self.assertIn('authorization', res.cookies)
 
 
 class TestTokenRefreshSlidingView(APIViewTestCase):

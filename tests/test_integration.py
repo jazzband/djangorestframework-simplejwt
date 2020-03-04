@@ -86,8 +86,14 @@ class TestTestView(APIViewTestCase):
         self.assertEqual(res.status_code, 200)
         self.assertEqual(res.data['foo'], 'bar')
 
+    def test_user_can_get_sliding_token_and_use_it_when_auth_cookie_enabled(self):
+        # should also work with tokens in request.data when AUTH_COOKIE is enabled
+        with override_api_settings(AUTH_COOKIE='authorization',
+                                   AUTH_TOKEN_CLASSES=('rest_framework_simplejwt.tokens.SlidingToken',)):
+            self.test_user_can_get_sliding_token_and_use_it()
+
     def test_user_can_get_access_refresh_and_delete_sliding_token_cookies_and_use_them(self):
-        with override_api_settings(AUTH_COOKIE='Authorization',
+        with override_api_settings(AUTH_COOKIE='authorization',
                                    AUTH_TOKEN_CLASSES=('rest_framework_simplejwt.tokens.SlidingToken',)):
             client = self.client_class(enforce_csrf_checks=True)
             res = client.post(
@@ -172,8 +178,13 @@ class TestTestView(APIViewTestCase):
         self.assertEqual(res.status_code, 200)
         self.assertEqual(res.data['foo'], 'bar')
 
+    def test_user_can_get_access_and_refresh_tokens_and_use_them_when_auth_cookie_enabled(self):
+        # should also work with tokens in request.data when AUTH_COOKIE is enabled
+        with override_api_settings(AUTH_COOKIE='authorization', ):
+            self.test_user_can_get_access_and_refresh_tokens_and_use_them()
+
     def test_user_can_get_access_refresh_and_delete_token_cookies_and_use_them(self):
-        with override_api_settings(AUTH_COOKIE='Authorization', ):
+        with override_api_settings(AUTH_COOKIE='authorization', ):
             client = self.client_class(enforce_csrf_checks=True)
             res = client.post(
                 reverse('token_obtain_pair'),

@@ -61,11 +61,13 @@ class TokenRefreshViewBase(TokenViewBase):
 
 class TokenCookieViewMixin:
     def extract_token_from_cookie(self, request):
-        token = request.COOKIES.get('{}_refresh'.format(api_settings.AUTH_COOKIE))
-        if not token:
-            raise NotAuthenticated(detail=_('Refresh cookie not set. Try to authenticate first.'))
-        else:
-            request.data['refresh'] = token
+        """Extracts token from cookie and sets it in request.data as it would be sent by the user"""
+        if not request.data:
+            token = request.COOKIES.get('{}_refresh'.format(api_settings.AUTH_COOKIE))
+            if not token:
+                raise NotAuthenticated(detail=_('Refresh cookie not set. Try to authenticate first.'))
+            else:
+                request.data['refresh'] = token
         return request
 
     def set_auth_cookies(self, response, data):
@@ -125,11 +127,13 @@ token_refresh = TokenRefreshView.as_view()
 
 class SlidingTokenCookieViewMixin:
     def extract_token_from_cookie(self, request):
-        token = request.COOKIES.get(api_settings.AUTH_COOKIE)
-        if not token:
-            raise NotAuthenticated(detail=_('Refresh cookie not set. Try to authenticate first.'))
-        else:
-            request.data['token'] = token
+        """Extracts token from cookie and sets it in request.data as it would be sent by the user"""
+        if not request.data:
+            token = request.COOKIES.get(api_settings.AUTH_COOKIE)
+            if not token:
+                raise NotAuthenticated(detail=_('Refresh cookie not set. Try to authenticate first.'))
+            else:
+                request.data['token'] = token
         return request
 
     def set_auth_cookies(self, response, data):
