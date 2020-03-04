@@ -3,7 +3,6 @@ from rest_framework import HTTP_HEADER_ENCODING, authentication, exceptions
 from rest_framework.authentication import CSRFCheck
 
 from .exceptions import AuthenticationFailed, InvalidToken, TokenError
-from .models import TokenUser
 from .settings import api_settings
 from .state import User
 
@@ -153,4 +152,4 @@ class JWTTokenUserAuthentication(JWTAuthentication):
             # identifier claim.
             raise InvalidToken(_('Token contained no recognizable user identification'))
 
-        return TokenUser(validated_token)
+        return api_settings.TOKEN_USER_CLASS(validated_token)
