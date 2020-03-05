@@ -60,6 +60,8 @@ setup(
     python_requires='>=3.6,<3.9',
     extras_require=extras_require,
     packages=find_packages(exclude=['tests', 'tests.*', 'licenses', 'requirements']),
+    include_package_data=True,
+    zip_safe=False,
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Environment :: Web Environment',
