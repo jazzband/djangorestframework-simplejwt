@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate
+from django.contrib.auth.models import update_last_login
 from django.utils.translation import gettext_lazy as _
 from rest_framework import exceptions, serializers
 
@@ -54,6 +55,8 @@ class TokenObtainSerializer(serializers.Serializer):
                 self.error_messages['no_active_account'],
                 'no_active_account',
             )
+
+        update_last_login(None, self.user)
 
         return {}
 

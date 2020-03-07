@@ -116,6 +116,7 @@ class TestTokenObtainPairSerializer(TestCase):
             'password': self.password,
         })
 
+        self.assertIsNone(self.user.last_login)
         self.assertTrue(s.is_valid())
         self.assertIn('access', s.validated_data)
         self.assertIn('refresh', s.validated_data)
@@ -125,6 +126,8 @@ class TestTokenObtainPairSerializer(TestCase):
         # encoded tokens should not raise an exception.
         AccessToken(s.validated_data['access'])
         RefreshToken(s.validated_data['refresh'])
+        self.user.refresh_from_db()
+        self.assertIsNotNone(self.user.last_login)
 
 
 class TestTokenRefreshSlidingSerializer(TestCase):
