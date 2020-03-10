@@ -132,6 +132,64 @@ refresh token to obtain another access token:
   ...
   {"access":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX3BrIjoxLCJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiY29sZF9zdHVmZiI6IuKYgyIsImV4cCI6MTIzNTY3LCJqdGkiOiJjNzE4ZTVkNjgzZWQ0NTQyYTU0NWJkM2VmMGI0ZGQ0ZSJ9.ekxRxgb9OKmHkfy-zs1Ro_xs1eMLXiR17dIDBVxeT-w"}
 
+JWT httpOnly cookie storage
+---------------------------
+
+JWT tokens can be stored in cookies for web applications. Cookies, when used
+with the HttpOnly cookie flag, are not accessible through JavaScript, and are
+immune to XSS. To guarantee the cookie is sent only over HTTPS, set Secure
+cookie flag.
+
+To enable cookie storage set ``AUTH_COOKIE`` name:
+
+.. code-block:: python
+
+    SIMPLE_JWT = {
+        'AUTH_COOKIE': 'Authorization',
+    }
+
+Since httpOnly cookies are not accessible via JavaScript, cookies must be deleted by a server request to log out.
+
+In your root ``urls.py`` file (or any other url config), include routes for
+``TokenCookieDeleteView``:
+
+.. code-block:: python
+
+  urlpatterns = [
+      ...
+      path('api/token/delete/', TokenCookieDeleteView.as_view(), name='token_delete'),
+      ...
+  ]
+
+To prevent Cross-Site Request Forgery, the ``csrftoken`` (specified by ``CSRF_COOKIE_NAME`` setting) cookie will also be
+set when issuing the JWT authentication cookie. This works in conjunction with django csrf middleware. The cookie
+contains another token which should be included in the ``X-CSRFToken`` header (as specified by the ``CSRF_HEADER_NAME``
+setting) on every requests via unsafe methods, such as POST, PUT, PATCH and DELETE.
+
+Usage
+-----
+
+To verify that cookies are working, you can use curl to issue a couple of test requests:
+
+.. code-block:: bash
+
+  curl \
+    -X POST \
+    -H "Content-Type: application/json" \
+    -d '{"username": "davidattenborough", "password": "boatymcboatface"}' \
+    --cookie-jar cookies.txt \
+    http://localhost:8000/api/token/
+
+Copy returned csrftoken cookie value from cookies.txt file (while using curl) to X-CSRFToken header:
+
+.. code-block:: bash
+
+  curl \
+    -X POST \
+    -H "X-CSRFToken: fUgacGTt55Cq8Gzp9lz1rxSxa9CoSB9mYPIGgne35FuVC2g7doAjQSupZQkFh4H9" \
+    --cookie ./cookies.txt \
+    http://localhost:8000/api/some-protected-view/
+
 Settings
 --------
 
@@ -170,6 +228,12 @@ Some of Simple JWT's behavior can be customized through settings variables in
       'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
       'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
       'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
+
+      'AUTH_COOKIE': None,
+      'AUTH_COOKIE_DOMAIN': None,
+      'AUTH_COOKIE_SECURE': False,
+      'AUTH_COOKIE_PATH': '/',
+      'AUTH_COOKIE_SAMESITE': 'Lax',
   }
 
 Above, the default values for these settings are shown.
@@ -300,6 +364,24 @@ SLIDING_TOKEN_REFRESH_LIFETIME
 SLIDING_TOKEN_REFRESH_EXP_CLAIM
   The claim name that is used to store the expiration time of a sliding token's
   refresh period.  More about this in the "Sliding tokens" section below.
+
+AUTH_COOKIE
+  Cookie name. Enables auth cookies if value is set.
+
+AUTH_COOKIE_DOMAIN
+  A string like "example.com", or None for standard domain cookie.
+
+AUTH_COOKIE_SECURE
+  Whether to use a secure cookie for the session cookie. If this is set to
+  True, the cookie will be marked as secure, which means browsers may ensure
+  that the cookie is only sent under an HTTPS connection.
+
+AUTH_COOKIE_PATH
+  The path of the auth cookie.
+
+AUTH_COOKIE_SAMESITE
+  Whether to set the flag restricting cookie leaks on cross-site requests.
+  This can be 'Lax', 'Strict', or None to disable the flag.
 
 Customizing token claims
 ------------------------
