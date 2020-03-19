@@ -12,6 +12,11 @@ Simple JWT
 .. image:: https://readthedocs.org/projects/django-rest-framework-simplejwt/badge/?version=latest
   :target: https://django-rest-framework-simplejwt.readthedocs.io/en/latest/
 
+
+*Disclaimer:* This is a Jyve fork of `David Sanders' (@davesque) Simple JWT <https://github.com/SimpleJWT/django-rest-framework-simplejwt>`__.
+We have merged in `an open PR from @NiyazNz <https://github.com/SimpleJWT/django-rest-framework-simplejwt/pull/157>`__ which adds httpOnly cookie storage.
+
+
 Abstract
 --------
 
