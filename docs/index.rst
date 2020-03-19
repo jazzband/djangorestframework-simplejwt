@@ -46,7 +46,6 @@ Contents
     experimental_features
     development_and_contributing
     rest_framework_simplejwt
-    release_notes
 
 
 Indices and tables
