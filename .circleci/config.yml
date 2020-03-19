@@ -36,30 +36,36 @@ common: &common
         key: v5-cache-{{ .Environment.CIRCLE_JOB }}-{{ checksum "setup.py" }}-{{ checksum "tox.ini" }}
 
 jobs:
+  docs:
+    <<: *common
+    docker:
+      - image: circleci/python:3.7
+        environment:
+          TOXENV: docs
   django20:
     <<: *common
     docker:
       - image: circleci/python:3.6
         environment:
-          TOXENV: 'py36-django20-drf{38,39}'
+          TOXENV: 'py36-django20-drf{38,39}-tests'
   django21:
     <<: *common
     docker:
       - image: circleci/python:3.7
         environment:
-          TOXENV: 'py37-django21-drf{39,310}'
+          TOXENV: 'py37-django21-drf{39,310}-tests'
   django22:
     <<: *common
     docker:
       - image: circleci/python:3.7
         environment:
-          TOXENV: 'py37-django22-drf{39,310}'
+          TOXENV: 'py37-django22-drf{39,310}-tests'
   django30:
     <<: *common
     docker:
       - image: circleci/python:3.8
         environment:
-          TOXENV: 'py38-django30-drf310'
+          TOXENV: 'py38-django30-drf310-tests'
   djangomaster:
     working_directory: ~/repo
     steps:
@@ -96,7 +102,7 @@ jobs:
     docker:
       - image: circleci/python:3.8
         environment:
-          TOXENV: 'py38-djangomaster-drf310'
+          TOXENV: 'py38-djangomaster-drf310-tests'
   lint:
     <<: *common
     docker:
@@ -108,6 +114,7 @@ workflows:
   version: 2
   test:
     jobs:
+      - docs
       - django20
       - django21
       - django22
