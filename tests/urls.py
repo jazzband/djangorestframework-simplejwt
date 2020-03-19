@@ -13,5 +13,7 @@ urlpatterns = [
 
     url(r'^token/verify/$', jwt_views.token_verify, name='token_verify'),
 
+    url(r'^token/delete/$', jwt_views.token_delete, name='token_delete'),
+
     url(r'^test-view/$', views.test_view, name='test_view'),
 ]

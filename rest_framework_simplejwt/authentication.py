@@ -1,5 +1,6 @@
 from django.utils.translation import gettext_lazy as _
-from rest_framework import HTTP_HEADER_ENCODING, authentication
+from rest_framework import HTTP_HEADER_ENCODING, authentication, exceptions
+from rest_framework.authentication import CSRFCheck
 
 from .exceptions import AuthenticationFailed, InvalidToken, TokenError
 from .settings import api_settings
@@ -16,6 +17,19 @@ AUTH_HEADER_TYPE_BYTES = set(
 )
 
 
+def enforce_csrf(request):
+    """
+    Enforce CSRF validation.
+    """
+    check = CSRFCheck()
+    # populates request.META['CSRF_COOKIE'], which is used in process_view()
+    check.process_request(request)
+    reason = check.process_view(request, None, (), {})
+    if reason:
+        # CSRF failed, bail with explicit error message
+        raise exceptions.PermissionDenied('CSRF Failed: %s' % reason)
+
+
 class JWTAuthentication(authentication.BaseAuthentication):
     """
     An authentication plugin that authenticates requests through a JSON web
@@ -26,15 +40,25 @@ class JWTAuthentication(authentication.BaseAuthentication):
     def authenticate(self, request):
         header = self.get_header(request)
         if header is None:
-            return None
-
-        raw_token = self.get_raw_token(header)
+            if not api_settings.AUTH_COOKIE:
+                return None
+            else:
+                raw_token = request.COOKIES.get(api_settings.AUTH_COOKIE) or None
+        else:
+            raw_token = self.get_raw_token(header)
         if raw_token is None:
             return None
 
         validated_token = self.get_validated_token(raw_token)
 
-        return self.get_user(validated_token), validated_token
+        user = self.get_user(validated_token)
+        if not user or not user.is_active:
+            return None
+
+        if api_settings.AUTH_COOKIE:
+            enforce_csrf(request)
+
+        return user, validated_token
 
     def authenticate_header(self, request):
         return '{0} realm="{1}"'.format(
