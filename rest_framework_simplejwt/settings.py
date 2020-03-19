@@ -51,7 +51,7 @@ REMOVED_SETTINGS = (
 
 class APISettings(_APISettings):  # pragma: no cover
     def __check_user_settings(self, user_settings):
-        SETTINGS_DOC = 'https://github.com/davesque/django-rest-framework-simplejwt#settings'
+        SETTINGS_DOC = 'https://github.com/SimpleJWT/django-rest-framework-simplejwt#settings'
 
         for setting in REMOVED_SETTINGS:
             if setting in user_settings:
