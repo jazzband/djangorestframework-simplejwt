@@ -1,6 +1,6 @@
 .. _development_and_contributing:
 
-Development and Contributing
+Development and contributing
 ============================
 
 To do development work for Simple JWT, make your own fork on Github, clone it
