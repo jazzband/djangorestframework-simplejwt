@@ -1,8 +1,7 @@
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from rest_framework import HTTP_HEADER_ENCODING, authentication
 
 from .exceptions import AuthenticationFailed, InvalidToken, TokenError
-from .models import TokenUser
 from .settings import api_settings
 from .state import User
 
@@ -129,4 +128,4 @@ class JWTTokenUserAuthentication(JWTAuthentication):
             # identifier claim.
             raise InvalidToken(_('Token contained no recognizable user identification'))
 
-        return TokenUser(validated_token)
+        return api_settings.TOKEN_USER_CLASS(validated_token)

@@ -1,0 +1,101 @@
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <hirad.daneshvar@gmail.com>, 2020.
+msgid ""
+msgstr ""
+"Project-Id-Version: djangorestframework_simplejwt\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-03-02 10:34+0000\n"
+"Last-Translator: Hirad Daneshvar <hirad.daneshvar@gmail.com>\n"
+"Language: fa_IR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: rest_framework_simplejwt/authentication.py:76
+msgid "Authorization header must contain two space-delimited values"
+msgstr "هدر اعتبارسنجی باید شامل دو مقدار جدا شده با فاصله باشد"
+
+#: rest_framework_simplejwt/authentication.py:97
+msgid "Given token not valid for any token type"
+msgstr "توکن داده شده برای هیچ نوع توکنی معتبر نمی‌باشد"
+
+#: rest_framework_simplejwt/authentication.py:108
+#: rest_framework_simplejwt/authentication.py:130
+msgid "Token contained no recognizable user identification"
+msgstr "توکن شامل هیچ شناسه قابل تشخیصی از کاربر نیست"
+
+#: rest_framework_simplejwt/authentication.py:113
+msgid "User not found"
+msgstr "کاربر یافت نشد"
+
+#: rest_framework_simplejwt/authentication.py:116
+msgid "User is inactive"
+msgstr "کاربر غیرفعال است"
+
+#: rest_framework_simplejwt/backends.py:21
+msgid "Unrecognized algorithm type '{}'"
+msgstr "نوع الگوریتم ناشناخته '{}'"
+
+#: rest_framework_simplejwt/backends.py:58
+#: rest_framework_simplejwt/exceptions.py:38
+#: rest_framework_simplejwt/tokens.py:44
+msgid "Token is invalid or expired"
+msgstr "توکن نامعتبر است یا منقضی شده است"
+
+#: rest_framework_simplejwt/serializers.py:24
+msgid "No active account found with the given credentials"
+msgstr "هیچ اکانت فعالی برای اطلاعات داده شده یافت نشد"
+
+#: rest_framework_simplejwt/settings.py:59
+msgid ""
+"The '{}' setting has been removed. Please refer to '{}' for available "
+"settings."
+msgstr "تنظیمات '{}' حذف شده است. لطفا به '{}' برای تنظیمات موجود مراجعه کنید."
+
+#: rest_framework_simplejwt/token_blacklist/admin.py:72
+msgid "jti"
+msgstr "jti"
+
+#: rest_framework_simplejwt/token_blacklist/admin.py:77
+msgid "user"
+msgstr "کاربر"
+
+#: rest_framework_simplejwt/token_blacklist/admin.py:82
+msgid "created at"
+msgstr "زمان ایجاد"
+
+#: rest_framework_simplejwt/token_blacklist/admin.py:87
+msgid "expires at"
+msgstr "زمان انقضا"
+
+#: rest_framework_simplejwt/token_blacklist/apps.py:7
+msgid "Token Blacklist"
+msgstr "لیست سیاه توکن"
+
+#: rest_framework_simplejwt/tokens.py:30
+msgid "Cannot create token with no type or lifetime"
+msgstr "توکن بدون هیچ نوع و طول عمر قابل ساخت نیست"
+
+#: rest_framework_simplejwt/tokens.py:98
+msgid "Token has no id"
+msgstr "توکن id ندارد"
+
+#: rest_framework_simplejwt/tokens.py:109
+msgid "Token has no type"
+msgstr "توکن نوع ندارد"
+
+#: rest_framework_simplejwt/tokens.py:112
+msgid "Token has wrong type"
+msgstr "توکن نوع اشتباهی دارد"
+
+#: rest_framework_simplejwt/tokens.py:149
+msgid "Token has no '{}' claim"
+msgstr "توکن دارای '{}' claim نمی‌باشد"
+
+#: rest_framework_simplejwt/tokens.py:153
+msgid "Token '{}' claim has expired"
+msgstr "'{}' claim توکن منقضی شده"
+
+#: rest_framework_simplejwt/tokens.py:192
+msgid "Token is blacklisted"
+msgstr "توکن به لیست سیاه رفته است"

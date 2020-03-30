@@ -2,7 +2,7 @@ from datetime import timedelta
 
 from django.conf import settings
 from django.test.signals import setting_changed
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from rest_framework.settings import APISettings as _APISettings
 
 from .utils import format_lazy
@@ -18,6 +18,8 @@ DEFAULTS = {
     'ALGORITHM': 'HS256',
     'SIGNING_KEY': settings.SECRET_KEY,
     'VERIFYING_KEY': None,
+    'AUDIENCE': None,
+    'ISSUER': None,
 
     'AUTH_HEADER_TYPES': ('Bearer',),
     'USER_ID_FIELD': 'id',
@@ -27,6 +29,7 @@ DEFAULTS = {
     'TOKEN_TYPE_CLAIM': 'token_type',
 
     'JTI_CLAIM': 'jti',
+    'TOKEN_USER_CLASS': 'rest_framework_simplejwt.models.TokenUser',
 
     'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
     'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
@@ -35,6 +38,7 @@ DEFAULTS = {
 
 IMPORT_STRINGS = (
     'AUTH_TOKEN_CLASSES',
+    'TOKEN_USER_CLASS',
 )
 
 REMOVED_SETTINGS = (
@@ -47,7 +51,7 @@ REMOVED_SETTINGS = (
 
 class APISettings(_APISettings):  # pragma: no cover
     def __check_user_settings(self, user_settings):
-        SETTINGS_DOC = 'https://github.com/davesque/django-rest-framework-simplejwt#settings'
+        SETTINGS_DOC = 'https://github.com/SimpleJWT/django-rest-framework-simplejwt#settings'
 
         for setting in REMOVED_SETTINGS:
             if setting in user_settings:
