@@ -59,13 +59,13 @@ jobs:
     docker:
       - image: circleci/python:3.7
         environment:
-          TOXENV: 'py37-django22-drf{39,310}-tests'
+          TOXENV: 'py37-django22-drf{39,310,311}-tests'
   django30:
     <<: *common
     docker:
       - image: circleci/python:3.8
         environment:
-          TOXENV: 'py38-django30-drf310-tests'
+          TOXENV: 'py38-django30-drf{310,311}-tests'
   djangomaster:
     working_directory: ~/repo
     steps:
