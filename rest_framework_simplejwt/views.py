@@ -91,7 +91,7 @@ class TokenCookieViewMixin:
                 path=reverse(self.token_refresh_view_name),
                 secure=api_settings.AUTH_COOKIE_SECURE or None,
                 httponly=True,
-                samesite='Strict',
+                samesite=api_settings.AUTH_COOKIE_SAMESITE,
             )
         return response
 
