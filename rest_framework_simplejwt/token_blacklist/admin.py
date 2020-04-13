@@ -1,6 +1,8 @@
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 
+from rest_framework_simplejwt.exceptions import TokenError
+from rest_framework_simplejwt.tokens import RefreshToken
 from .models import BlacklistedToken, OutstandingToken
 
 
@@ -33,7 +35,9 @@ class OutstandingTokenAdmin(admin.ModelAdmin):
     def has_add_permission(self, *args, **kwargs):
         return False
 
-    def has_delete_permission(self, *args, **kwargs):
+    def has_delete_permission(self, request, *args, **kwargs):
+        if request.user.is_superuser:
+            return True
         return False
 
     def has_change_permission(self, request, obj=None):
@@ -41,6 +45,15 @@ class OutstandingTokenAdmin(admin.ModelAdmin):
             request.method in ['GET', 'HEAD'] and  # noqa: W504
             super().has_change_permission(request, obj)
         )
+
+    def delete_queryset(self, request, queryset):
+        for outstanding_token in queryset:
+            try:
+                token = RefreshToken(outstanding_token.token)
+                token.blacklist()
+            except TokenError:
+                pass
+        queryset.delete()
 
 
 admin.site.register(OutstandingToken, OutstandingTokenAdmin)
