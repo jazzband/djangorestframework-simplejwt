@@ -5,6 +5,7 @@ from django.core.management import call_command
 from django.test import TestCase
 
 from rest_framework_simplejwt.exceptions import TokenError
+from rest_framework_simplejwt.serializers import TokenVerifySerializer
 from rest_framework_simplejwt.settings import api_settings
 from rest_framework_simplejwt.token_blacklist.models import (
     BlacklistedToken, OutstandingToken,
@@ -190,3 +191,13 @@ class TestPopulateJtiHexMigration(MigrationTestCase):
         actual_hexes = [i.jti_hex for i in OutstandingToken.objects.all()]
 
         self.assertEqual(actual_hexes, self.expected_hexes)
+
+
+class TokenVerifySerializerShouldHonourBlacklist(TestCase):
+
+    def token_verify_serializer_shouldHonour_blacklist(self):
+        refresh_token = RefreshToken()
+        refresh_token.blacklist()
+
+        serializer = TokenVerifySerializer({"token": refresh_token.payload})
+        self.assertFalse(serializer.is_valid())
