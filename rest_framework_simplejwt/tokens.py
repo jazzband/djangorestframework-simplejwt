@@ -20,7 +20,7 @@ class Token:
     token_type = None
     lifetime = None
 
-    def __init__(self, token=None, verify=True):
+    def __init__(self, token=None, verify=True, signing_key=None):
         """
         !!!! IMPORTANT !!!! MUST raise a TokenError with a user-facing error
         message if the given token is invalid, expired, or otherwise not safe
@@ -32,6 +32,8 @@ class Token:
         self.token = token
         self.current_time = aware_utcnow()
 
+        self.signing_key = signing_key
+
         # Set up token
         if token is not None:
             # An encoded token was provided
@@ -39,7 +41,7 @@ class Token:
 
             # Decode token
             try:
-                self.payload = token_backend.decode(token, verify=verify)
+                self.payload = token_backend.decode(token, verify=verify, signing_key=signing_key)
             except TokenBackendError:
                 raise TokenError(_('Token is invalid or expired'))
 
@@ -79,7 +81,7 @@ class Token:
         """
         from .state import token_backend
 
-        return token_backend.encode(self.payload)
+        return token_backend.encode(self.payload, self.signing_key)
 
     def verify(self):
         """
@@ -153,7 +155,7 @@ class Token:
             raise TokenError(format_lazy(_("Token '{}' claim has expired"), claim))
 
     @classmethod
-    def for_user(cls, user):
+    def for_user(cls, user, signing_key=None):
         """
         Returns an authorization token for the given user that will be provided
         after authenticating the user's credentials.
@@ -162,7 +164,7 @@ class Token:
         if not isinstance(user_id, int):
             user_id = str(user_id)
 
-        token = cls()
+        token = cls(signing_key=signing_key)
         token[api_settings.USER_ID_CLAIM] = user_id
 
         return token
@@ -211,11 +213,11 @@ class BlacklistMixin:
             return BlacklistedToken.objects.get_or_create(token=token)
 
         @classmethod
-        def for_user(cls, user):
+        def for_user(cls, user, signing_key=None):
             """
             Adds this token to the outstanding token list.
             """
-            token = super().for_user(user)
+            token = super().for_user(user, signing_key)
 
             jti = token[api_settings.JTI_CLAIM]
             exp = token['exp']

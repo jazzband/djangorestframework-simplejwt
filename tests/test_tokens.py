@@ -16,6 +16,8 @@ from rest_framework_simplejwt.utils import (
 
 from .utils import override_api_settings
 
+SECRET = 'not_secret'
+
 
 class MyToken(Token):
     token_type = 'test'
@@ -25,6 +27,10 @@ class MyToken(Token):
 class TestToken(TestCase):
     def setUp(self):
         self.token = MyToken()
+        self.user = User.objects.create_user(
+            username='test_user',
+            password='test_password',
+        )
 
     def test_init_no_token_type_or_lifetime(self):
         class MyTestToken(Token):
@@ -123,6 +129,17 @@ class TestToken(TestCase):
         self.assertEqual(
             t.payload,
             payload,
+        )
+
+    def test_decode_with_other_signing_key(self):
+        payload = {'foo': 'bar'}
+
+        token = jwt.encode(payload, SECRET, algorithm='HS256')
+        t = MyToken(token, verify=False, signing_key=SECRET)
+
+        self.assertEqual(
+            str(t),
+            token
         )
 
     def test_init_expired_token_given(self):
@@ -279,15 +296,9 @@ class TestToken(TestCase):
             token.check_exp('refresh_exp', current_time=current_time + timedelta(days=2))
 
     def test_for_user(self):
-        username = 'test_user'
-        user = User.objects.create_user(
-            username=username,
-            password='test_password',
-        )
+        token = MyToken.for_user(self.user)
 
-        token = MyToken.for_user(user)
-
-        user_id = getattr(user, api_settings.USER_ID_FIELD)
+        user_id = getattr(self.user, api_settings.USER_ID_FIELD)
         if not isinstance(user_id, int):
             user_id = str(user_id)
 
@@ -295,9 +306,27 @@ class TestToken(TestCase):
 
         # Test with non-int user id
         with override_api_settings(USER_ID_FIELD='username'):
-            token = MyToken.for_user(user)
+            token = MyToken.for_user(self.user)
 
-        self.assertEqual(token[api_settings.USER_ID_CLAIM], username)
+        self.assertEqual(token[api_settings.USER_ID_CLAIM], self.user.username)
+
+    def test_user_with_invalid_signing_key(self):
+        t = MyToken.for_user(self.user, 'SECRET')
+        token = jwt.encode(t.payload, SECRET, algorithm='HS256')
+
+        self.assertNotEqual(
+            token,
+            str(t)
+        )
+
+    def test_user_with_signing_key(self):
+        t = MyToken.for_user(self.user, SECRET)
+        token = jwt.encode(t.payload, SECRET, algorithm='HS256')
+
+        self.assertEqual(
+            token,
+            str(t)
+        )
 
 
 class TestSlidingToken(TestCase):
@@ -310,6 +339,20 @@ class TestSlidingToken(TestCase):
             datetime_to_epoch(token.current_time + api_settings.SLIDING_TOKEN_REFRESH_LIFETIME),
         )
         self.assertEqual(token[api_settings.TOKEN_TYPE_CLAIM], 'sliding')
+
+    def test_user_with_signing_key(self):
+        user = User.objects.create_user(
+            username='test_user',
+            password='test_password',
+        )
+
+        t = SlidingToken.for_user(user, SECRET)
+        token = jwt.encode(t.payload, SECRET, algorithm='HS256')
+
+        self.assertEqual(
+            token,
+            str(t)
+        )
 
 
 class TestAccessToken(TestCase):
