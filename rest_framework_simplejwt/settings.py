@@ -30,6 +30,7 @@ DEFAULTS = {
 
     'JTI_CLAIM': 'jti',
     'TOKEN_USER_CLASS': 'rest_framework_simplejwt.models.TokenUser',
+    'KEY_ID_CLASS': None,
 
     'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
     'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
@@ -39,6 +40,7 @@ DEFAULTS = {
 IMPORT_STRINGS = (
     'AUTH_TOKEN_CLASSES',
     'TOKEN_USER_CLASS',
+    'KEY_ID_CLASS',
 )
 
 REMOVED_SETTINGS = (

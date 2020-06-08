@@ -6,6 +6,7 @@ from django.test import TestCase
 from rest_framework_simplejwt.backends import TokenBackend
 from rest_framework_simplejwt.exceptions import TokenBackendError
 from rest_framework_simplejwt.utils import aware_utcnow, make_utc
+from rest_framework_simplejwt.key_id import PlainKeyID
 
 SECRET = 'not_secret'
 
@@ -55,12 +56,15 @@ AUDIENCE = 'openid-client-id'
 
 ISSUER = 'https://www.myoidcprovider.com'
 
+KEY_ID_CLASS = PlainKeyID
+
 
 class TestTokenBackend(TestCase):
     def setUp(self):
         self.hmac_token_backend = TokenBackend('HS256', SECRET)
         self.rsa_token_backend = TokenBackend('RS256', PRIVATE_KEY, PUBLIC_KEY)
         self.aud_iss_token_backend = TokenBackend('RS256', PRIVATE_KEY, PUBLIC_KEY, AUDIENCE, ISSUER)
+        self.kid_token_backend = TokenBackend('RS256', PRIVATE_KEY, PUBLIC_KEY, key_id=KEY_ID_CLASS)
         self.payload = {'foo': 'bar'}
 
     def test_init(self):
@@ -126,6 +130,22 @@ class TestTokenBackend(TestCase):
                 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL3d3dy5teW9pZGNwcm92aWRlci5jb20iLCJhdWQiOiJvcGVuaWQtY2xpZW50LWlkIiwiZXhwIjo5NDY2ODQ4MDB9.yDGMBeee4hj8yDtEvVtIsS4tnkPjDMQADTkNh74wtb3oYPgQNqMRWKngXiwjvW2FmnsCUue2cFzLgTbpqlDq0QKcBP0i_UwBiXk9m2wLo0WRFtgw2zNHYSsowu26sFoEjKLgpPZzKrPlU4pnxqa8u3yqg8vIcSTlpX8t3uDqNqhUKP6x-w6wb25h67XDmnORiMwhaOZE_Gs9-H6uWnKdguTIlU1Tj4CjUEnZgZN7dJORiDnO_vHiAyL5yvRjhp5YK0Pq-TtCj5kWoJsjQiKc4laIcgofAKoq_b62Psns8MhxzAxwM7i0rbQZXXYB0VKMUho88uHlpbSWCZxu415lWw',
                 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJvcGVuaWQtY2xpZW50LWlkIiwiaXNzIjoiaHR0cHM6Ly93d3cubXlvaWRjcHJvdmlkZXIuY29tIiwiZXhwIjo5NDY2ODQ4MDB9.BHSCjFeXS6B7KFJi1LpQMEd3ib4Bp9FY3WcB-v7dtP3Ay0SxQZz_gxIbi-tYiNCBQIlfKcfq6vELOjE1WJ5zxPDQM8uV0Pjl41hqYBu3qFv4649a-o2Cd-MaSPUSUogPxzTh2Bk4IdM3sG1Zbd_At4DR_DQwWJDuChA8duA5yG2XPkZr0YF1ZJ326O_jEowvCJiZpzOpH9QsLVPbiX49jtWTwqQGhvpKEj3ztTLFo8VHO-p8bhOGEph2F73F6-GB0XqiWk2Dm1yKAunJCMsM4qXooWfaX6gj-WFhPI9kEXNFfGmPal5i1gb17YoeinbdV2kjN42oxast2Iaa3CMldw',
                 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJvcGVuaWQtY2xpZW50LWlkIiwiZXhwIjo5NDY2ODQ4MDAsImlzcyI6Imh0dHBzOi8vd3d3Lm15b2lkY3Byb3ZpZGVyLmNvbSJ9.s6sElpfKL8WHWfbD_Kbwiy_ip4O082V8ElZqwugvDpS-7yQ3FTvQ3WXqtVAJc-fBZe4ZsBnrXUWwZV0Nhoe6iWKjEjTPjonQWbWL_WUJmIC2HVz18AOISnqReV2rcuLSHQ2ckhsyktlE9K1Rfj-Hi6f3HzzzePEgTsL2ZdBH6GrcmJVDFKqLLrkvOHShoPp7rcwuFBr0J_S1oqYac5O0B-u0OVnxBXTwij0ThrTGMgVCp2rn6Hk0NvtF6CE49Eu4XP8Ue-APT8l5_SjqX9GcrjkJp8Gif_oyBheL-zRg_v-cU60X6qY9wVolO8WodVPSnlE02XyYhLVxvfK-w5129A',
+            ),
+        )
+
+    def test_encode_kid(self):
+        token = self.kid_token_backend.encode(self.payload)
+
+        # Token could be one of 6 depending on header dict ordering
+        self.assertIn(
+            token,
+            (
+                'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IjIwZmQ1Yzc4ZDg2MzBiYjJjOTE2NTgwNjVmMzQ4M2JiOTg4YjcwYWQyMGYzODE0Y2UyZGIwNTY3NWY2ZTg5ODMifQ.eyJmb28iOiJiYXIifQ.B7tFG3VHiO0uMj1yhLh1IRJ1xSZovxta7Vw97PCYbdGwJ2pWVXqDvVznJmRJnUS2YpQqj_c700KrMqR_s88zY1mCx2_n6Le7bmrnsenvOD7Wb9tP6tqttiommQZd0Hfp60DYh1yChy-To_72FODM66Op-5gm7L0km6JFbEnwaN9mJJkVzfqwMLAk3_T1Vs7yRn5-y3gLkIhMgFLsvcvsz6NWPjeUTqMDj5s9VsGaw8eMAuR3ps3c3sI7NV_Q-NCL8n3bnYHkUb_Vo-vsHz4dE71Il_Ae5BLMDoKpBUykd_NQwG_loNP3VDkDSg4RPVL8xsnuY3lHzcA3CKEiYd-dqA',
+                'eyJ0eXAiOiJKV1QiLCJraWQiOiIyMGZkNWM3OGQ4NjMwYmIyYzkxNjU4MDY1ZjM0ODNiYjk4OGI3MGFkMjBmMzgxNGNlMmRiMDU2NzVmNmU4OTgzIiwiYWxnIjoiUlMyNTYifQ.eyJmb28iOiJiYXIifQ.yglz001AbXtMxzmZioDHx4UEMdJuef0fZMpEXvTE36Yo5P5EKblgnXevMTawWq-oFtsiKL8MNaG4xCLWiHfOsisasdaXaa1HxrdfQSOxMS6gqvVZfBVOY8EZQtYzxEG2x2yTQSv3m2R0Wyem5vshRESQzQTT5jMgX-54rz2eeR8sF6J-r7Jqy2ILiBDwJ3TrZXS3uHpuojctyt8vQDb2llbYHLbNtwllM64HHhHqJ116fr0NN4OdzsRt0-zLUUO-SnM3s7359ko_zk5Y7y78ZhBd8p9wYGMQugQPX_hGBIPhiAXca-FaPASksPoIGDpwsl2Rr_YRVdPancIXfiX0DQ',
+                'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjIwZmQ1Yzc4ZDg2MzBiYjJjOTE2NTgwNjVmMzQ4M2JiOTg4YjcwYWQyMGYzODE0Y2UyZGIwNTY3NWY2ZTg5ODMifQ.eyJmb28iOiJiYXIifQ.ybqD6OnY40kosMH-U6foKDOYGm7aFWHk2jNKxrOCVuVszul5RfbkpG_4UFZq5Mb30zERE-bqB4EmpK1jPwHoENA4TBJ93mA2UGwNgIfw3oVopoecCiPnHBbJBLPzcIIhqVGmk8hWcyWm57ec3igfYm6MlT_rHGKg_TSA7QsQprDh_4UvQaAxf0ow6mNyMd8Eqv926KHqhEYXIdaJeaEMmktHZhyVQbubaGaRxMDcwHtoFd3ZiUgFooGeiJACiAoarhAAfTNStT_8NOmHsN2RDCi2ZdL9M4I8466vJNTiEDAFzUe7tQkgYMIZkK7TOqYzFuMEyCkkJf_0afiVRhIDCA',
+                'eyJhbGciOiJSUzI1NiIsImtpZCI6IjIwZmQ1Yzc4ZDg2MzBiYjJjOTE2NTgwNjVmMzQ4M2JiOTg4YjcwYWQyMGYzODE0Y2UyZGIwNTY3NWY2ZTg5ODMiLCJ0eXAiOiJKV1QifQ.eyJmb28iOiJiYXIifQ.WTiFeLMGLu1THEVIZKsmyKEkLHlb5PaYNAbDtCUzcNgoW_whLsx_63nFwBo55j4xI4g26-ocSdxC3LWW7PjR6APxKXSaHNul_hpKuVnOeLshC_Wg4xi-5Bzakb4c16ij7GEA1vCxd7sqK3Ovp8zwk7Thq96yU8T_UA92yMWNPbNtCYwxAuDNveR6I4HvRMRfQ3CEiAuwWkwTaRg4VjJ6Mdqdy-8Gp541OWKZ0kprnHAojW4KjgOH-729XO6885PzWH9zu9snMWqGneWOXqLR_1eTG_njG42KnOKJrz6N4a84CMWd-NkHYaDRVdz31yiPT4otE0rSRfL8ez0O7kN9XQ',
+                'eyJraWQiOiIyMGZkNWM3OGQ4NjMwYmIyYzkxNjU4MDY1ZjM0ODNiYjk4OGI3MGFkMjBmMzgxNGNlMmRiMDU2NzVmNmU4OTgzIiwiYWxnIjoiUlMyNTYiLCJ0eXAiOiJKV1QifQ.eyJmb28iOiJiYXIifQ.KCJ2xEZJumOsJ15iNWOVyJjnXrcr8OeWRq0SCz0xsUBv2e-tQjImBYDiV0n3yh5yUF4dqtMUJJOyfU5NHyUbHiGR0-97Wrcyn0dPdhTT0llCf1M_53qSuUOVi7dWX_DjRnTJYxHbJ_3MdOdxurcFUd2Q4hdRrU-BX-iesFICQJlpsmI9T-8CFCGLdoLLquhUrGb9Xi1t4K0i2d2cloq-VFN_Xl5VI-JAvlw1X_msXsndGfqzPjy9pmbnAhrSeHGyRBrbsCdQkzjoovak-z__Hb2n-STWHtTzICFKDkNDavrH05Q7r62Ku5Dq5sEvyy3D3_C2_2c6DUDYCmCgGgkUXg',
+                'eyJraWQiOiIyMGZkNWM3OGQ4NjMwYmIyYzkxNjU4MDY1ZjM0ODNiYjk4OGI3MGFkMjBmMzgxNGNlMmRiMDU2NzVmNmU4OTgzIiwidHlwIjoiSldUIiwiYWxnIjoiUlMyNTYifQ.eyJmb28iOiJiYXIifQ.ndEaY3QqDKCNMSX16ryrIS-12eE8VRNgM2_URZ35Oj6BRL1LQ25itPRw2HhwmR6-MokAIAvju2p6MaSsnJPOCj6Z_V8Etq1kbyFIGmrS-Kwf9VNEISWifPdVBZl7ng43l4tSjv0OglKhpdSmn2CLR0jbNP3EbRnLcPoIT3I-JchyysFIgAUE5TZCu_TEK3iUiDn4JBv5inC-78_pTsbEivjzY1PgOT4Fa1hYFofCYxnX4q0-fi1XXjXVEvMf8ydaRyzSqCjPTGMRhZrHT8KB-hKKalZyPVbkv6pe16fZXO8J4X0wxcVHEiY6ynumE7uV7CyVQAOsNZglsxb4G58FMQ',
             ),
         )
 

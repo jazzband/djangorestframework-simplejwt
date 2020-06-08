@@ -16,7 +16,7 @@ ALLOWED_ALGORITHMS = (
 
 
 class TokenBackend:
-    def __init__(self, algorithm, signing_key=None, verifying_key=None, audience=None, issuer=None):
+    def __init__(self, algorithm, signing_key=None, verifying_key=None, audience=None, issuer=None, key_id=None):
         if algorithm not in ALLOWED_ALGORITHMS:
             raise TokenBackendError(format_lazy(_("Unrecognized algorithm type '{}'"), algorithm))
 
@@ -24,10 +24,13 @@ class TokenBackend:
         self.signing_key = signing_key
         self.audience = audience
         self.issuer = issuer
+        self.key_id = None
         if algorithm.startswith('HS'):
             self.verifying_key = signing_key
         else:
             self.verifying_key = verifying_key
+            # key_id should be used only with asymmetric encryption keys
+            self.key_id = key_id
 
     def encode(self, payload):
         """
@@ -39,7 +42,11 @@ class TokenBackend:
         if self.issuer is not None:
             jwt_payload['iss'] = self.issuer
 
-        token = jwt.encode(jwt_payload, self.signing_key, algorithm=self.algorithm)
+        jwt_headers = {}
+        if self.key_id is not None:
+            jwt_headers['kid'] = str(self.key_id(self.verifying_key))
+
+        token = jwt.encode(jwt_payload, self.signing_key, algorithm=self.algorithm, headers=jwt_headers)
         return token.decode('utf-8')
 
     def decode(self, token, verify=True):
