@@ -41,14 +41,14 @@ DEFAULTS = {
     # Cookie name. Enables cookies if value is set.
     'AUTH_COOKIE': None,
     # A string like "example.com", or None for standard domain cookie.
-    'AUTH_COOKIE_DOMAIN': None,
+    'AUTH_COOKIE_DOMAIN': settings.CSRF_COOKIE_DOMAIN,
     # Whether the auth cookies should be secure (https:// only).
-    'AUTH_COOKIE_SECURE': False,
+    'AUTH_COOKIE_SECURE': settings.CSRF_COOKIE_SECURE,
     # The path of the auth cookie.
-    'AUTH_COOKIE_PATH': '/',
+    'AUTH_COOKIE_PATH': settings.CSRF_COOKIE_PATH,
     # Whether to set the flag restricting cookie leaks on cross-site requests.
     # This can be 'Lax', 'Strict', or None to disable the flag.
-    'AUTH_COOKIE_SAMESITE': 'Lax',
+    'AUTH_COOKIE_SAMESITE': settings.CSRF_COOKIE_SAMESITE,
 }
 
 IMPORT_STRINGS = (
