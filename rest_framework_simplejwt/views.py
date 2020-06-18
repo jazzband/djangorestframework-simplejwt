@@ -195,7 +195,7 @@ class TokenCookieDeleteView(APIView):
     permission_classes = ()
 
     def post(self, request):
-        response = Response({})
+        response = Response()
 
         if api_settings.AUTH_COOKIE:
             self.delete_auth_cookies(response)
