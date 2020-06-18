@@ -13,6 +13,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from . import serializers
 from .authentication import AUTH_HEADER_TYPES
 from .exceptions import InvalidToken, TokenError
+from .utils import aware_utcnow, datetime_from_epoch
 
 
 class TokenViewBase(generics.GenericAPIView):
@@ -96,7 +97,7 @@ class TokenCookieViewMixin:
         return response
 
     def get_refresh_token_expiration(self):
-        return datetime.utcnow() + api_settings.REFRESH_TOKEN_LIFETIME
+        return aware_utcnow() + api_settings.REFRESH_TOKEN_LIFETIME
 
 
 class TokenObtainPairView(TokenCookieViewMixin, TokenViewBase):
@@ -121,7 +122,7 @@ class TokenRefreshView(TokenCookieViewMixin, TokenRefreshViewBase):
         if api_settings.ROTATE_REFRESH_TOKENS:
             return super().get_refresh_token_expiration()
         token = RefreshToken(self.request.data['refresh'])
-        return datetime.fromtimestamp(token.payload['exp'])
+        return datetime_from_epoch(token.payload['exp'])
 
 
 token_refresh = TokenRefreshView.as_view()
@@ -141,7 +142,7 @@ class SlidingTokenCookieViewMixin:
     def set_auth_cookies(self, response, data):
         response.set_cookie(
             api_settings.AUTH_COOKIE, data['token'],
-            expires=datetime.utcnow() + api_settings.REFRESH_TOKEN_LIFETIME,
+            expires=aware_utcnow() + api_settings.REFRESH_TOKEN_LIFETIME,
             domain=api_settings.AUTH_COOKIE_DOMAIN,
             path=api_settings.AUTH_COOKIE_PATH,
             secure=api_settings.AUTH_COOKIE_SECURE or None,
