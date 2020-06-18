@@ -58,44 +58,49 @@ class TokenRefreshViewBase(TokenViewBase):
         return super().post(request, *args, **kwargs)
 
 
-class TokenCookieViewMixin:
-    token_refresh_view_name = 'token_refresh'
+class BaseTokenCookieViewMixin:
 
     def extract_token_from_cookie(self, request):
         """Extracts token from cookie and sets it in request.data as it would be sent by the user"""
         if not request.data:
-            token = request.COOKIES.get('{}_refresh'.format(api_settings.AUTH_COOKIE))
+            token = request.COOKIES.get(self.token_refresh_cookie_name)
             if not token:
                 raise NotAuthenticated(detail=_('Refresh cookie not set. Try to authenticate first.'))
-            else:
-                request.data['refresh'] = token
+            request.data[self.token_refresh_cookie_name] = token
         return request
 
+    def get_cookie_data(self):
+        return {
+            'expires': self.get_refresh_token_expiration(),
+            'domain': api_settings.AUTH_COOKIE_DOMAIN,
+            'path': api_settings.AUTH_COOKIE_PATH,
+            'secure': api_settings.AUTH_COOKIE_SECURE or None,
+            'httponly': True,
+            'samesite': api_settings.AUTH_COOKIE_SAMESITE
+        }
+
+    @staticmethod
+    def get_refresh_token_expiration():
+        return aware_utcnow() + api_settings.REFRESH_TOKEN_LIFETIME
+
+
+class TokenCookieViewMixin(BaseTokenCookieViewMixin):
+    token_refresh_view_name = 'token_refresh'
+    token_refresh_cookie_name = '{}_refresh'.format(api_settings.AUTH_COOKIE)
+    token_refresh_data_key = 'refresh'
+
     def set_auth_cookies(self, response, data):
-        expires = self.get_refresh_token_expiration()
+        cookie_data = self.get_cookie_data()
         response.set_cookie(
             api_settings.AUTH_COOKIE, data['access'],
-            expires=expires,
-            domain=api_settings.AUTH_COOKIE_DOMAIN,
-            path=api_settings.AUTH_COOKIE_PATH,
-            secure=api_settings.AUTH_COOKIE_SECURE or None,
-            httponly=True,
-            samesite=api_settings.AUTH_COOKIE_SAMESITE,
+            **cookie_data
         )
         if 'refresh' in data:
             response.set_cookie(
                 '{}_refresh'.format(api_settings.AUTH_COOKIE), data['refresh'],
-                expires=expires,
-                domain=None,
-                path=reverse(self.token_refresh_view_name),
-                secure=api_settings.AUTH_COOKIE_SECURE or None,
-                httponly=True,
-                samesite=api_settings.AUTH_COOKIE_SAMESITE,
+                **{**cookie_data, **{'domain': None, 'path': reverse(self.token_refresh_view_name)}}
             )
         return response
-
-    def get_refresh_token_expiration(self):
-        return aware_utcnow() + api_settings.REFRESH_TOKEN_LIFETIME
 
 
 class TokenObtainPairView(TokenCookieViewMixin, TokenViewBase):
@@ -126,26 +131,15 @@ class TokenRefreshView(TokenCookieViewMixin, TokenRefreshViewBase):
 token_refresh = TokenRefreshView.as_view()
 
 
-class SlidingTokenCookieViewMixin:
-    def extract_token_from_cookie(self, request):
-        """Extracts token from cookie and sets it in request.data as it would be sent by the user"""
-        if not request.data:
-            token = request.COOKIES.get(api_settings.AUTH_COOKIE)
-            if not token:
-                raise NotAuthenticated(detail=_('Refresh cookie not set. Try to authenticate first.'))
-            else:
-                request.data['token'] = token
-        return request
+class SlidingTokenCookieViewMixin(BaseTokenCookieViewMixin):
+    token_refresh_cookie_name = api_settings.AUTH_COOKIE
+    token_refresh_data_key = 'token'
 
     def set_auth_cookies(self, response, data):
+        cookie_data = self.get_cookie_data()
         response.set_cookie(
             api_settings.AUTH_COOKIE, data['token'],
-            expires=aware_utcnow() + api_settings.REFRESH_TOKEN_LIFETIME,
-            domain=api_settings.AUTH_COOKIE_DOMAIN,
-            path=api_settings.AUTH_COOKIE_PATH,
-            secure=api_settings.AUTH_COOKIE_SECURE or None,
-            httponly=True,
-            samesite=api_settings.AUTH_COOKIE_SAMESITE,
+            **cookie_data
         )
         return response
 
