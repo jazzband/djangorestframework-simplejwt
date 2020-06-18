@@ -1,11 +1,11 @@
 from datetime import timedelta
 
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.middleware.csrf import REASON_BAD_TOKEN
 
 from rest_framework_simplejwt.compat import reverse
 from rest_framework_simplejwt.settings import api_settings
-from rest_framework_simplejwt.state import User
 from rest_framework_simplejwt.tokens import AccessToken
 from .utils import APIViewTestCase, override_api_settings
 
@@ -17,7 +17,7 @@ class TestTestView(APIViewTestCase):
         self.username = 'test_user'
         self.password = 'test_password'
 
-        self.user = User.objects.create_user(
+        self.user = get_user_model().objects.create_user(
             username=self.username,
             password=self.password,
         )
@@ -32,7 +32,7 @@ class TestTestView(APIViewTestCase):
         res = self.client.post(
             reverse('token_obtain_sliding'),
             data={
-                User.USERNAME_FIELD: self.username,
+                get_user_model().USERNAME_FIELD: self.username,
                 'password': self.password,
             },
         )
@@ -52,7 +52,7 @@ class TestTestView(APIViewTestCase):
             res = self.client.post(
                 reverse('token_obtain_pair'),
                 data={
-                    User.USERNAME_FIELD: self.username,
+                    get_user_model().USERNAME_FIELD: self.username,
                     'password': self.password,
                 },
             )
@@ -72,7 +72,7 @@ class TestTestView(APIViewTestCase):
         res = self.client.post(
             reverse('token_obtain_sliding'),
             data={
-                User.USERNAME_FIELD: self.username,
+                get_user_model().USERNAME_FIELD: self.username,
                 'password': self.password,
             },
         )
@@ -99,7 +99,7 @@ class TestTestView(APIViewTestCase):
             res = client.post(
                 reverse('token_obtain_sliding'),
                 data={
-                    User.USERNAME_FIELD: self.username,
+                    get_user_model().USERNAME_FIELD: self.username,
                     'password': self.password,
                 },
             )
@@ -147,7 +147,7 @@ class TestTestView(APIViewTestCase):
         res = self.client.post(
             reverse('token_obtain_pair'),
             data={
-                User.USERNAME_FIELD: self.username,
+                get_user_model().USERNAME_FIELD: self.username,
                 'password': self.password,
             },
         )
@@ -189,7 +189,7 @@ class TestTestView(APIViewTestCase):
             res = client.post(
                 reverse('token_obtain_pair'),
                 data={
-                    User.USERNAME_FIELD: self.username,
+                    get_user_model().USERNAME_FIELD: self.username,
                     'password': self.password,
                 },
             )

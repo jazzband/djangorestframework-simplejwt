@@ -2,6 +2,8 @@ from datetime import timedelta
 from unittest.mock import MagicMock, patch
 
 from django.test import TestCase
+from django.contrib.auth import get_user_model
+
 from rest_framework import exceptions as drf_exceptions
 
 from rest_framework_simplejwt.exceptions import TokenError
@@ -11,7 +13,6 @@ from rest_framework_simplejwt.serializers import (
     TokenRefreshSlidingSerializer, TokenVerifySerializer,
 )
 from rest_framework_simplejwt.settings import api_settings
-from rest_framework_simplejwt.state import User
 from rest_framework_simplejwt.token_blacklist.models import (
     BlacklistedToken, OutstandingToken,
 )
@@ -30,7 +31,7 @@ class TestTokenObtainSerializer(TestCase):
         self.username = 'test_user'
         self.password = 'test_password'
 
-        self.user = User.objects.create_user(
+        self.user = get_user_model().objects.create_user(
             username=self.username,
             password=self.password,
         )
@@ -80,7 +81,7 @@ class TestTokenObtainSlidingSerializer(TestCase):
         self.username = 'test_user'
         self.password = 'test_password'
 
-        self.user = User.objects.create_user(
+        self.user = get_user_model().objects.create_user(
             username=self.username,
             password=self.password,
         )
@@ -105,7 +106,7 @@ class TestTokenObtainPairSerializer(TestCase):
         self.username = 'test_user'
         self.password = 'test_password'
 
-        self.user = User.objects.create_user(
+        self.user = get_user_model().objects.create_user(
             username=self.username,
             password=self.password,
         )

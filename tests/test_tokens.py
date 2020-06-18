@@ -2,11 +2,11 @@ from datetime import datetime, timedelta
 from unittest.mock import patch
 
 from django.test import TestCase
+from django.contrib.auth import get_user_model
 from jose import jwt
 
 from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.settings import api_settings
-from rest_framework_simplejwt.state import User
 from rest_framework_simplejwt.tokens import (
     AccessToken, RefreshToken, SlidingToken, Token, UntypedToken,
 )
@@ -280,7 +280,7 @@ class TestToken(TestCase):
 
     def test_for_user(self):
         username = 'test_user'
-        user = User.objects.create_user(
+        user = get_user_model().objects.create_user(
             username=username,
             password='test_password',
         )
