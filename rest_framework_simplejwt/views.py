@@ -66,7 +66,7 @@ class BaseTokenCookieViewMixin:
             token = request.COOKIES.get(self.token_refresh_cookie_name)
             if not token:
                 raise NotAuthenticated(detail=_('Refresh cookie not set. Try to authenticate first.'))
-            request.data[self.token_refresh_cookie_name] = token
+            request.data[self.token_refresh_data_key] = token
         return request
 
     def get_cookie_data(self):
