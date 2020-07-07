@@ -1,4 +1,5 @@
 from rest_framework import generics, status
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
 from . import serializers
@@ -7,7 +8,7 @@ from .exceptions import InvalidToken, TokenError
 
 
 class TokenViewBase(generics.GenericAPIView):
-    permission_classes = ()
+    permission_classes = (AllowAny, )
     authentication_classes = ()
 
     serializer_class = None
