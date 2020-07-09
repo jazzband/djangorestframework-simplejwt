@@ -193,11 +193,30 @@ class TestPopulateJtiHexMigration(MigrationTestCase):
         self.assertEqual(actual_hexes, self.expected_hexes)
 
 
-class TokenVerifySerializerShouldHonourBlacklist(TestCase):
+class TokenVerifySerializerShouldHonourBlacklist(MigrationTestCase):
+    migrate_from = ('token_blacklist', '0002_outstandingtoken_jti_hex')
+    migrate_to = ('token_blacklist', '0003_auto_20171017_2007')
 
-    def token_verify_serializer_shouldHonour_blacklist(self):
-        refresh_token = RefreshToken()
-        refresh_token.blacklist()
+    def setUp(self):
+        self.user = User.objects.create(
+            username='test_user',
+            password='test_password',
+        )
 
-        serializer = TokenVerifySerializer({"token": refresh_token.payload})
-        self.assertFalse(serializer.is_valid())
+        super().setUp()
+
+    def test_token_verify_serializer_should_honour_blacklist_if_blacklisting_enabled(self):
+        with self.settings(REST_FRAMEWORK={'BLACKLIST_AFTER_ROTATION': True}):
+            refresh_token = RefreshToken.for_user(self.user)
+            refresh_token.blacklist()
+
+            serializer = TokenVerifySerializer(data={"token": str(refresh_token)})
+            self.assertFalse(serializer.is_valid())
+
+    def test_token_verify_serializer_should_not_honour_blacklist_if_blacklisting_not_enabled(self):
+        with self.settings(REST_FRAMEWORK={'BLACKLIST_AFTER_ROTATION': False}):
+            refresh_token = RefreshToken.for_user(self.user)
+            refresh_token.blacklist()
+
+            serializer = TokenVerifySerializer(data={"token": str(refresh_token)})
+            self.assertTrue(serializer.is_valid())
