@@ -3,23 +3,24 @@
 
 name: Python application
 
-on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
-
+on: [push, pull_request]
 jobs:
   build:
 
     runs-on: ubuntu-latest
 
+    strategy:
+      # You can use PyPy versions in python-version.
+      # For example, pypy2 and pypy3
+      matrix:
+        python-version: [3.6, 3.7, 3.8]
+
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python 3.8
+    - uses: workflows/checkout@v2
+    - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
       with:
-        python-version: 3.8
+        python-version: ${{ matrix.python-version }}
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
