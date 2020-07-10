@@ -15,7 +15,7 @@ from rest_framework_simplejwt.tokens import (
 )
 from rest_framework_simplejwt.utils import aware_utcnow, datetime_from_epoch
 
-from .utils import MigrationTestCase
+from .utils import MigrationTestCase, override_api_settings
 
 
 class TestTokenBlacklist(TestCase):
@@ -206,7 +206,7 @@ class TokenVerifySerializerShouldHonourBlacklist(MigrationTestCase):
         super().setUp()
 
     def test_token_verify_serializer_should_honour_blacklist_if_blacklisting_enabled(self):
-        with self.settings(REST_FRAMEWORK={'BLACKLIST_AFTER_ROTATION': True}):
+        with override_api_settings(BLACKLIST_AFTER_ROTATION=True):
             refresh_token = RefreshToken.for_user(self.user)
             refresh_token.blacklist()
 
@@ -214,7 +214,7 @@ class TokenVerifySerializerShouldHonourBlacklist(MigrationTestCase):
             self.assertFalse(serializer.is_valid())
 
     def test_token_verify_serializer_should_not_honour_blacklist_if_blacklisting_not_enabled(self):
-        with self.settings(REST_FRAMEWORK={'BLACKLIST_AFTER_ROTATION': False}):
+        with override_api_settings(BLACKLIST_AFTER_ROTATION=False):
             refresh_token = RefreshToken.for_user(self.user)
             refresh_token.blacklist()
 

@@ -143,17 +143,11 @@ class TokenVerifySerializer(serializers.Serializer):
     token = serializers.CharField()
 
     def validate(self, attrs):
-        UntypedToken(attrs['token'])
+        token = UntypedToken(attrs['token'])
 
         if api_settings.BLACKLIST_AFTER_ROTATION:
-            try:
-                token = RefreshToken(attrs['token'])
-            # not a refresh token
-            except TokenError:
-                return {}
-
             jti = token.get(api_settings.JTI_CLAIM)
             if BlacklistedToken.objects.filter(token__jti=jti).exists():
-                return {}
+                raise ValidationError("Token is blacklisted")
 
         return {}
