@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.middleware import csrf
 from django.utils.translation import gettext_lazy as _
 from rest_framework import generics, status
@@ -36,15 +37,32 @@ class TokenViewBase(generics.GenericAPIView):
         except TokenError as e:
             raise InvalidToken(e.args[0])
 
-        response = Response(serializer.validated_data, status=status.HTTP_200_OK)
+        data = serializer.validated_data
 
         if api_settings.AUTH_COOKIE:
-            csrf.get_token(self.request)
-            response = self.set_auth_cookies(response, serializer.validated_data)
+            csrf_token = csrf.get_token(self.request)
+            cookie_data = self.get_cookie_data()
+            data['csrf_token'] = csrf_token
+
+        response = Response(data, status=status.HTTP_200_OK)
+
+        if api_settings.AUTH_COOKIE:
+            response = self.set_auth_cookies(
+                response, serializer.validated_data, cookie_data)
 
         return response
 
-    def set_auth_cookies(self, response, data):
+    def get_cookie_data(self):
+        return {
+            'expires': self.get_refresh_token_expiration(),
+            'domain': api_settings.AUTH_COOKIE_DOMAIN,
+            'path': api_settings.AUTH_COOKIE_PATH,
+            'secure': api_settings.AUTH_COOKIE_SECURE or None,
+            'httponly': True,
+            'samesite': api_settings.AUTH_COOKIE_SAMESITE
+        }
+
+    def set_auth_cookies(self, response, data, cookie_data):
         return response
 
 
@@ -69,16 +87,6 @@ class BaseTokenCookieViewMixin:
             request.data[self.token_refresh_data_key] = token
         return request
 
-    def get_cookie_data(self):
-        return {
-            'expires': self.get_refresh_token_expiration(),
-            'domain': api_settings.AUTH_COOKIE_DOMAIN,
-            'path': api_settings.AUTH_COOKIE_PATH,
-            'secure': api_settings.AUTH_COOKIE_SECURE or None,
-            'httponly': True,
-            'samesite': api_settings.AUTH_COOKIE_SAMESITE
-        }
-
     @staticmethod
     def get_refresh_token_expiration():
         return aware_utcnow() + api_settings.REFRESH_TOKEN_LIFETIME
@@ -89,16 +97,23 @@ class TokenCookieViewMixin(BaseTokenCookieViewMixin):
     token_refresh_cookie_name = '{}_refresh'.format(api_settings.AUTH_COOKIE)
     token_refresh_data_key = 'refresh'
 
-    def set_auth_cookies(self, response, data):
-        cookie_data = self.get_cookie_data()
+    def set_auth_cookies(self, response, data, cookie_data):
         response.set_cookie(
-            api_settings.AUTH_COOKIE, data['access'],
+            api_settings.AUTH_COOKIE,
+            data['access'],
             **cookie_data
         )
         if 'refresh' in data:
             response.set_cookie(
-                '{}_refresh'.format(api_settings.AUTH_COOKIE), data['refresh'],
-                **{**cookie_data, **{'domain': None, 'path': reverse(self.token_refresh_view_name)}}
+                '{}_refresh'.format(api_settings.AUTH_COOKIE),
+                data['refresh'],
+                **{
+                    **cookie_data,
+                    **{
+                        'domain': api_settings.AUTH_COOKIE_DOMAIN,
+                        'path': reverse(self.token_refresh_view_name)
+                    }
+                }
             )
         return response
 
@@ -135,10 +150,10 @@ class SlidingTokenCookieViewMixin(BaseTokenCookieViewMixin):
     token_refresh_cookie_name = api_settings.AUTH_COOKIE
     token_refresh_data_key = 'token'
 
-    def set_auth_cookies(self, response, data):
-        cookie_data = self.get_cookie_data()
+    def set_auth_cookies(self, response, data, cookie_data):
         response.set_cookie(
-            api_settings.AUTH_COOKIE, data['token'],
+            api_settings.AUTH_COOKIE,
+            data['token'],
             **cookie_data
         )
         return response
@@ -191,6 +206,7 @@ class TokenCookieDeleteView(APIView):
 
         if api_settings.AUTH_COOKIE:
             self.delete_auth_cookies(response)
+            self.delete_csrf_cookie(response)
 
         return response
 
@@ -202,8 +218,15 @@ class TokenCookieDeleteView(APIView):
         )
         response.delete_cookie(
             '{}_refresh'.format(api_settings.AUTH_COOKIE),
-            domain=None,
+            domain=api_settings.AUTH_COOKIE_DOMAIN,
             path=reverse(self.token_refresh_view_name),
+        )
+
+    def delete_csrf_cookie(self, response):
+        response.delete_cookie(
+            settings.CSRF_COOKIE_NAME,
+            domain=api_settings.AUTH_COOKIE_DOMAIN,
+            path=api_settings.AUTH_COOKIE_PATH
         )
 
 
