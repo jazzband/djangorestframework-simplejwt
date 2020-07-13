@@ -21,6 +21,19 @@ Framework <http://www.django-rest-framework.org/>`__.
 For full documentation, visit `django-rest-framework-simplejwt.readthedocs.io
 <https://django-rest-framework-simplejwt.readthedocs.io/en/latest/>`__.
 
+Visit our template repositories to jumpstart your Django + SimpleJWT project
+with an already-configured frontend:
+
+- `Android <https://github.com/Andrew-Chen-Wang/mobile-auth-example>`__
+- `Angular <https://github.com/SimpleJWT/drf-SimpleJWT-Angular>`__
+- `iOS <https://github.com/Andrew-Chen-Wang/mobile-auth-example>`__
+- `React <https://github.com/SimpleJWT/drf-SimpleJWT-React>`__
+- `Vue.js <https://github.com/SimpleJWT/drf-SimpleJWT-Vue>`__
+
+Don't see your frontend framework? Create an issue in our `server
+template repository <https://github.com/SimpleJWT/drf-SimpleJWT-server-template>`__,
+and we can create a repository for you.
+
 Looking for Maintainers
 -----------------------
 
