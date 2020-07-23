@@ -1,8 +1,5 @@
 #!/usr/bin/env python
-from setuptools import (
-    setup,
-    find_packages,
-)
+from setuptools import find_packages, setup
 
 extras_require = {
     'test': [

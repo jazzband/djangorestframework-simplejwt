@@ -45,10 +45,10 @@ class JWTAuthentication(authentication.BaseAuthentication):
         if header is None:
             if not api_settings.AUTH_COOKIE:
                 return None
-            else:
-                raw_token = request.COOKIES.get(api_settings.AUTH_COOKIE) or None
+            raw_token = request.COOKIES.get(api_settings.AUTH_COOKIE) or None
         else:
             raw_token = self.get_raw_token(header)
+
         if raw_token is None:
             return None
 

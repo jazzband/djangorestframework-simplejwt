@@ -74,10 +74,6 @@ class TokenObtainPairSerializer(TokenObtainSerializer):
         data['access'] = str(access)
         data['refresh'] = str(refresh)
 
-        # Add expiry time as unix timestamp
-        data['access_expiry'] = access.payload['exp'] * 1000
-        data['refresh_expiry'] = refresh.payload['exp'] * 1000
-
         if api_settings.UPDATE_LAST_LOGIN:
             update_last_login(None, self.user)
 
@@ -109,7 +105,7 @@ class TokenRefreshSerializer(serializers.Serializer):
         refresh = RefreshToken(attrs['refresh'])
 
         access = refresh.access_token
-        data = {'access': str(access), 'access_expiry': access.payload['exp'] * 1000}
+        data = {'access': str(access)}
 
         if api_settings.ROTATE_REFRESH_TOKENS:
             if api_settings.BLACKLIST_AFTER_ROTATION:
@@ -125,7 +121,6 @@ class TokenRefreshSerializer(serializers.Serializer):
             refresh.set_exp()
 
             data['refresh'] = str(refresh)
-            data['refresh_expiry'] = refresh.payload['exp'] * 1000
 
         return data
 

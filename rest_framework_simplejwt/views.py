@@ -9,6 +9,7 @@ from rest_framework.views import APIView
 
 from rest_framework_simplejwt.settings import api_settings
 from rest_framework_simplejwt.tokens import RefreshToken
+
 from . import serializers
 from .authentication import AUTH_HEADER_TYPES
 from .exceptions import InvalidToken, TokenError
@@ -39,18 +40,15 @@ class TokenViewBase(generics.GenericAPIView):
 
         data = serializer.validated_data
 
+        # Don't return the token in the response body if the auth tokens are in a httpOnly cookie
+        # Only return the CSRF token
         if api_settings.AUTH_COOKIE:
             csrf_token = csrf.get_token(self.request)
             cookie_data = self.get_cookie_data()
-            data['csrf_token'] = csrf_token
+            response = Response({'csrf_token': csrf_token}, status=status.HTTP_200_OK)
+            return self.set_auth_cookies(response, data, cookie_data)
 
-        response = Response(data, status=status.HTTP_200_OK)
-
-        if api_settings.AUTH_COOKIE:
-            response = self.set_auth_cookies(
-                response, serializer.validated_data, cookie_data)
-
-        return response
+        return Response(data, status=status.HTTP_200_OK)
 
     def get_cookie_data(self):
         return {
@@ -64,6 +62,9 @@ class TokenViewBase(generics.GenericAPIView):
 
     def set_auth_cookies(self, response, data, cookie_data):
         return response
+
+    def get_refresh_token_expiration(self):
+        return aware_utcnow() + api_settings.REFRESH_TOKEN_LIFETIME
 
 
 class TokenRefreshViewBase(TokenViewBase):
@@ -87,15 +88,17 @@ class BaseTokenCookieViewMixin:
             request.data[self.token_refresh_data_key] = token
         return request
 
-    @staticmethod
-    def get_refresh_token_expiration():
+    def get_refresh_token_expiration(self):
         return aware_utcnow() + api_settings.REFRESH_TOKEN_LIFETIME
 
 
 class TokenCookieViewMixin(BaseTokenCookieViewMixin):
     token_refresh_view_name = 'token_refresh'
-    token_refresh_cookie_name = '{}_refresh'.format(api_settings.AUTH_COOKIE)
     token_refresh_data_key = 'refresh'
+
+    @property
+    def token_refresh_cookie_name(self):
+        return '{}_refresh'.format(api_settings.AUTH_COOKIE)
 
     def set_auth_cookies(self, response, data, cookie_data):
         response.set_cookie(
@@ -147,8 +150,11 @@ token_refresh = TokenRefreshView.as_view()
 
 
 class SlidingTokenCookieViewMixin(BaseTokenCookieViewMixin):
-    token_refresh_cookie_name = api_settings.AUTH_COOKIE
     token_refresh_data_key = 'token'
+
+    @property
+    def token_refresh_cookie_name(self):
+        return api_settings.AUTH_COOKIE
 
     def set_auth_cookies(self, response, data, cookie_data):
         response.set_cookie(

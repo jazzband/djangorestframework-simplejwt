@@ -17,6 +17,7 @@
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #sys.path.insert(0, os.path.abspath('.'))
 
+import doctest
 import os
 
 DIR = os.path.dirname('__file__')
@@ -306,7 +307,6 @@ intersphinx_mapping = {
 
 # -- Doctest configuration ----------------------------------------
 
-import doctest
 
 doctest_default_flags = (0
     | doctest.DONT_ACCEPT_TRUE_FOR_1

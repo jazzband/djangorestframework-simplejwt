@@ -1,8 +1,8 @@
 from datetime import datetime, timedelta
 from unittest.mock import patch
 
-from django.test import TestCase
 from django.contrib.auth import get_user_model
+from django.test import TestCase
 from jose import jwt
 
 from rest_framework_simplejwt.exceptions import TokenError
