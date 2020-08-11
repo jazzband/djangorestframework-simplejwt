@@ -1,7 +1,9 @@
 from datetime import datetime, timedelta
+from unittest.mock import patch
 
 import jwt
 from django.test import TestCase
+from jwt import PyJWT
 
 from rest_framework_simplejwt.backends import TokenBackend
 from rest_framework_simplejwt.exceptions import TokenBackendError
@@ -252,3 +254,12 @@ class TestTokenBackend(TestCase):
         token = jwt.encode(self.payload, PRIVATE_KEY, algorithm='RS256').decode('utf-8')
 
         self.assertEqual(self.aud_iss_token_backend.decode(token), self.payload)
+
+    def test_decode_when_algorithm_not_available(self):
+        token = jwt.encode(self.payload, PRIVATE_KEY, algorithm='RS256').decode('utf-8')
+
+        pyjwt_without_rsa = PyJWT()
+        pyjwt_without_rsa.unregister_algorithm('RS256')
+        with patch.object(jwt, 'decode', new=pyjwt_without_rsa.decode):
+            with self.assertRaisesRegex(TokenBackendError, 'Invalid algorithm specified'):
+                self.rsa_token_backend.decode(token)

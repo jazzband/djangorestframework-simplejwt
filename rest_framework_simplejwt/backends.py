@@ -1,6 +1,6 @@
 import jwt
 from django.utils.translation import gettext_lazy as _
-from jwt import InvalidTokenError
+from jwt import InvalidAlgorithmError, InvalidTokenError
 
 from .exceptions import TokenBackendError
 from .utils import format_lazy
@@ -54,5 +54,7 @@ class TokenBackend:
             return jwt.decode(token, self.verifying_key, algorithms=[self.algorithm], verify=verify,
                               audience=self.audience, issuer=self.issuer,
                               options={'verify_aud': self.audience is not None})
+        except InvalidAlgorithmError as ex:
+            raise TokenBackendError(_('Invalid algorithm specified')) from ex
         except InvalidTokenError:
             raise TokenBackendError(_('Token is invalid or expired'))
