@@ -3,7 +3,7 @@ from unittest.mock import patch
 
 import jwt
 from django.test import TestCase
-from jwt import PyJWT
+from jwt import PyJWT, algorithms
 
 from rest_framework_simplejwt.backends import TokenBackend
 from rest_framework_simplejwt.exceptions import TokenBackendError
@@ -71,6 +71,15 @@ class TestTokenBackend(TestCase):
             TokenBackend('oienarst oieanrsto i', 'not_secret')
 
         TokenBackend('HS256', 'not_secret')
+
+    @patch.object(algorithms, 'has_crypto', new=False)
+    def test_init_fails_for_rs_algorithms_when_crypto_not_installed(self):
+        with self.assertRaisesRegex(TokenBackendError, 'You must have cryptography installed to use RS256.'):
+            TokenBackend('RS256', 'not_secret')
+        with self.assertRaisesRegex(TokenBackendError, 'You must have cryptography installed to use RS384.'):
+            TokenBackend('RS384', 'not_secret')
+        with self.assertRaisesRegex(TokenBackendError, 'You must have cryptography installed to use RS512.'):
+            TokenBackend('RS512', 'not_secret')
 
     def test_encode_hmac(self):
         # Should return a JSON web token for the given payload

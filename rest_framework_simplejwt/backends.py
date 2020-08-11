@@ -1,6 +1,6 @@
 import jwt
 from django.utils.translation import gettext_lazy as _
-from jwt import InvalidAlgorithmError, InvalidTokenError
+from jwt import InvalidAlgorithmError, InvalidTokenError, algorithms
 
 from .exceptions import TokenBackendError
 from .utils import format_lazy
@@ -17,8 +17,7 @@ ALLOWED_ALGORITHMS = (
 
 class TokenBackend:
     def __init__(self, algorithm, signing_key=None, verifying_key=None, audience=None, issuer=None):
-        if algorithm not in ALLOWED_ALGORITHMS:
-            raise TokenBackendError(format_lazy(_("Unrecognized algorithm type '{}'"), algorithm))
+        self._validate_algorithm(algorithm)
 
         self.algorithm = algorithm
         self.signing_key = signing_key
@@ -28,6 +27,17 @@ class TokenBackend:
             self.verifying_key = signing_key
         else:
             self.verifying_key = verifying_key
+
+    def _validate_algorithm(self, algorithm):
+        """
+        Ensure that the nominated algorithm is recognized, and that cryptography is installed for those
+        algorithms that require it
+        """
+        if algorithm not in ALLOWED_ALGORITHMS:
+            raise TokenBackendError(format_lazy(_("Unrecognized algorithm type '{}'"), algorithm))
+
+        if algorithm in algorithms.requires_cryptography and not algorithms.has_crypto:
+            raise TokenBackendError(format_lazy(_("You must have cryptography installed to use {}."), algorithm))
 
     def encode(self, payload):
         """
