@@ -263,3 +263,9 @@ class TestTokenBackend(TestCase):
         with patch.object(jwt, 'decode', new=pyjwt_without_rsa.decode):
             with self.assertRaisesRegex(TokenBackendError, 'Invalid algorithm specified'):
                 self.rsa_token_backend.decode(token)
+
+    def test_decode_when_token_algorithm_does_not_match(self):
+        token = jwt.encode(self.payload, PRIVATE_KEY, algorithm='RS256').decode('utf-8')
+
+        with self.assertRaisesRegex(TokenBackendError, 'Invalid algorithm specified'):
+            self.hmac_token_backend.decode(token)
