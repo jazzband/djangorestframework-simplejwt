@@ -19,7 +19,7 @@ common: &common
         when: on_fail
     - restore_cache:
         keys:
-          - v5-cache-{{ .Environment.CIRCLE_JOB }}-{{ checksum "setup.py" }}-{{ checksum "tox.ini" }}
+          - v6-cache-{{ .Environment.CIRCLE_JOB }}-{{ checksum "setup.py" }}-{{ checksum "tox.ini" }}
     - run:
         name: install dependencies
         command: pip install --user tox
@@ -33,7 +33,7 @@ common: &common
           - ~/.cache/pip
           - ~/.local
           - ./eggs
-        key: v5-cache-{{ .Environment.CIRCLE_JOB }}-{{ checksum "setup.py" }}-{{ checksum "tox.ini" }}
+        key: v6-cache-{{ .Environment.CIRCLE_JOB }}-{{ checksum "setup.py" }}-{{ checksum "tox.ini" }}
 
 jobs:
   docs:
@@ -83,7 +83,7 @@ jobs:
           when: on_fail
       - restore_cache:
           keys:
-            - v5-cache-{{ .Environment.CIRCLE_JOB }}-{{ checksum "setup.py" }}-{{ checksum "tox.ini" }}
+            - v6-cache-{{ .Environment.CIRCLE_JOB }}-{{ checksum "setup.py" }}-{{ checksum "tox.ini" }}
       - run:
           name: install dependencies
           command: pip install --user tox
@@ -98,7 +98,7 @@ jobs:
             - ~/.cache/pip
             - ~/.local
             - ./eggs
-          key: v5-cache-{{ .Environment.CIRCLE_JOB }}-{{ checksum "setup.py" }}-{{ checksum "tox.ini" }}
+          key: v6-cache-{{ .Environment.CIRCLE_JOB }}-{{ checksum "setup.py" }}-{{ checksum "tox.ini" }}
     docker:
       - image: circleci/python:3.8
         environment:
