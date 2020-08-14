@@ -27,7 +27,7 @@ lint:
 	tox -e lint
 
 lint-roll:
-	isort --recursive rest_framework_simplejwt tests
+	isort rest_framework_simplejwt tests
 	$(MAKE) lint
 
 test:
