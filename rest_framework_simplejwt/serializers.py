@@ -1,4 +1,5 @@
 import importlib
+
 from django.contrib.auth import authenticate
 from django.utils.translation import gettext_lazy as _
 from rest_framework import exceptions, serializers
@@ -6,7 +7,6 @@ from rest_framework import exceptions, serializers
 from .settings import api_settings
 from .state import User
 from .tokens import RefreshToken, SlidingToken, UntypedToken
-
 
 rule_package, user_eligible_for_login = api_settings.USER_AUTHENTICATION_RULE.rsplit('.', 1)
 login_rule = importlib.import_module(rule_package)
