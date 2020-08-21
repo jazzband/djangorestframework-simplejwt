@@ -1,3 +1,5 @@
+import importlib
+
 from django.contrib.auth import authenticate
 from django.utils.translation import gettext_lazy as _
 from rest_framework import exceptions, serializers
@@ -5,6 +7,9 @@ from rest_framework import exceptions, serializers
 from .settings import api_settings
 from .state import User
 from .tokens import RefreshToken, SlidingToken, UntypedToken
+
+rule_package, user_eligible_for_login = api_settings.USER_AUTHENTICATION_RULE.rsplit('.', 1)
+login_rule = importlib.import_module(rule_package)
 
 
 class PasswordField(serializers.CharField):
@@ -42,14 +47,7 @@ class TokenObtainSerializer(serializers.Serializer):
 
         self.user = authenticate(**authenticate_kwargs)
 
-        # Prior to Django 1.10, inactive users could be authenticated with the
-        # default `ModelBackend`.  As of Django 1.10, the `ModelBackend`
-        # prevents inactive users from authenticating.  App designers can still
-        # allow inactive users to authenticate by opting for the new
-        # `AllowAllUsersModelBackend`.  However, we explicitly prevent inactive
-        # users from authenticating to enforce a reasonable policy and provide
-        # sensible backwards compatibility with older Django versions.
-        if self.user is None or not self.user.is_active:
+        if not getattr(login_rule, user_eligible_for_login)(self.user):
             raise exceptions.AuthenticationFailed(
                 self.error_messages['no_active_account'],
                 'no_active_account',
