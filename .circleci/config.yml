@@ -66,6 +66,12 @@ jobs:
       - image: circleci/python:3.8
         environment:
           TOXENV: 'py38-django30-drf{310,311}-tests'
+  django30:
+    <<: *common
+    docker:
+      - image: circleci/python:3.8
+        environment:
+          TOXENV: 'py38-django31-drf{310,311}-tests'
   djangomaster:
     working_directory: ~/repo
     steps:
@@ -102,7 +108,7 @@ jobs:
     docker:
       - image: circleci/python:3.8
         environment:
-          TOXENV: 'py38-djangomaster-drf310-tests'
+          TOXENV: 'py38-djangomaster-drf311-tests'
   lint:
     <<: *common
     docker:
@@ -119,5 +125,6 @@ workflows:
       - django21
       - django22
       - django30
+      - django31
       - djangomaster
       - lint
