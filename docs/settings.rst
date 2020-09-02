@@ -19,6 +19,7 @@ Some of Simple JWT's behavior can be customized through settings variables in
       'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
       'ROTATE_REFRESH_TOKENS': False,
       'BLACKLIST_AFTER_ROTATION': True,
+      'UPDATE_LAST_LOGIN': False,
 
       'ALGORITHM': 'HS256',
       'SIGNING_KEY': settings.SECRET_KEY,
@@ -74,6 +75,17 @@ tokens submitted to the refresh view will be added to the blacklist.
 When set to ``True``, causes refresh tokens submitted to the
 ``TokenRefreshView`` to be added to the blacklist if the blacklist app is in
 use and the ``ROTATE_REFRESH_TOKENS`` setting is set to ``True``.
+
+``UPDATE_LAST_LOGIN``
+----------------------------
+
+When set to ``True``, last_login field in the auth_user table is updated upon
+login (TokenObtainPairView).
+
+    Warning: Updating last_login will dramatically increase the number of database
+    transactions. People abusing the views could slow the server and this could be
+    a security vulnerability. If you really want this, throttle the endpoint with
+    DRF at the very least.
 
 ``ALGORITHM``
 -------------

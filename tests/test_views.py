@@ -1,6 +1,9 @@
-from datetime import timedelta
+from datetime import timedelta, datetime
+from importlib import reload
+
 from unittest.mock import patch
 
+from rest_framework_simplejwt import serializers
 from rest_framework_simplejwt.settings import api_settings
 from rest_framework_simplejwt.state import User
 from rest_framework_simplejwt.tokens import (
@@ -10,7 +13,7 @@ from rest_framework_simplejwt.utils import (
     aware_utcnow, datetime_from_epoch, datetime_to_epoch,
 )
 
-from .utils import APIViewTestCase
+from .utils import APIViewTestCase, override_api_settings
 
 
 class TestTokenObtainPairView(APIViewTestCase):
@@ -66,6 +69,29 @@ class TestTokenObtainPairView(APIViewTestCase):
         self.assertEqual(res.status_code, 200)
         self.assertIn('access', res.data)
         self.assertIn('refresh', res.data)
+
+    def test_update_last_login(self):
+        self.view_post(data={
+            User.USERNAME_FIELD: self.username,
+            'password': self.password,
+        })
+
+        # verify last_login is not updated
+        user = User.objects.get(username=self.username)
+        self.assertEqual(user.last_login, None)
+
+        # verify last_login is updated
+        with override_api_settings(UPDATE_LAST_LOGIN=True):
+            reload(serializers)
+            self.view_post(data={
+                User.USERNAME_FIELD: self.username,
+                'password': self.password,
+            })
+            user = User.objects.get(username=self.username)
+            self.assertIsNotNone(user.last_login)
+            self.assertGreaterEqual(datetime.now(), user.last_login)
+
+        reload(serializers)
 
 
 class TestTokenRefreshView(APIViewTestCase):
