@@ -1,6 +1,5 @@
-from importlib import reload
 from datetime import datetime, timedelta
-
+from importlib import reload
 from unittest.mock import patch
 
 from rest_framework_simplejwt import serializers
