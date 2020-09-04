@@ -29,6 +29,7 @@ Some of Simple JWT's behavior can be customized through settings variables in
       'AUTH_HEADER_TYPES': ('Bearer',),
       'USER_ID_FIELD': 'id',
       'USER_ID_CLAIM': 'user_id',
+      'USER_AUTHENTICATION_RULE': 'rest_framework_simplejwt.authentication.default_user_authentication_rule',
 
       'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
       'TOKEN_TYPE_CLAIM': 'token_type',
@@ -157,6 +158,15 @@ valid which uses that username as a user identifier.
 The claim in generated tokens which will be used to store user identifiers.
 For example, a setting value of ``'user_id'`` would mean generated tokens
 include a "user_id" claim that contains the user's identifier.
+
+``USER_AUTHENTICATION_RULE``
+----------------------------
+
+Callable to determine if the user is permitted to authenticate. This rule
+is applied after a valid token is processed. The user object is passed
+to the callable as an argument. The default rule is to check that the ``is_active``
+flag is still ``True``. The callable must return a boolean, ``True`` if authorized,
+``False`` otherwise resulting in a 401 status code.
 
 ``AUTH_TOKEN_CLASSES``
 ----------------------
