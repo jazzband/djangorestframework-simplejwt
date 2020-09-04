@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: djangorestframework_simplejwt\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-01-04 10:30-0300\n"
+"POT-Creation-Date: 2020-09-04 09:54-0600\n"
 "Last-Translator: rene <rene@matraxi.ch>\n"
 "Language: de_CH\n"
 "MIME-Version: 1.0\n"
@@ -12,89 +12,102 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: authentication.py:76
+#: rest_framework_simplejwt/authentication.py:75
 msgid "Authorization header must contain two space-delimited values"
-msgstr "Der Authorizationheader muss zwei leerzeichen-getrennte Werte enthalten"
+msgstr ""
+"Der Authorizationheader muss zwei leerzeichen-getrennte Werte enthalten"
 
-#: authentication.py:97
+#: rest_framework_simplejwt/authentication.py:96
 msgid "Given token not valid for any token type"
 msgstr "Der Token ist für keinen Tokentyp gültig"
 
-#: authentication.py:108 authentication.py:130
+#: rest_framework_simplejwt/authentication.py:107
+#: rest_framework_simplejwt/authentication.py:129
 msgid "Token contained no recognizable user identification"
 msgstr "Token enthält keine erkennbare Benutzeridentifikation"
 
-#: authentication.py:113
+#: rest_framework_simplejwt/authentication.py:112
 msgid "User not found"
 msgstr "Benutzer nicht gefunden"
 
-#: authentication.py:116
+#: rest_framework_simplejwt/authentication.py:115
 msgid "User is inactive"
 msgstr "Inaktiver Benutzer"
 
-#: backends.py:21
+#: rest_framework_simplejwt/backends.py:37
 msgid "Unrecognized algorithm type '{}'"
 msgstr "Unerkannter Algorithmustyp '{}'"
 
-#: backends.py:48 exceptions.py:38 tokens.py:44
+#: rest_framework_simplejwt/backends.py:40
+msgid "You must have cryptography installed to use {}."
+msgstr ""
+
+#: rest_framework_simplejwt/backends.py:68
+msgid "Invalid algorithm specified"
+msgstr ""
+
+#: rest_framework_simplejwt/backends.py:70
+#: rest_framework_simplejwt/exceptions.py:38
+#: rest_framework_simplejwt/tokens.py:44
 msgid "Token is invalid or expired"
 msgstr "Ungültiger oder abgelaufener Token"
 
-#: serializers.py:44
+#: rest_framework_simplejwt/serializers.py:29
 msgid "No active account found with the given credentials"
 msgstr "Kein aktiver Account mit diesen Zugangsdaten gefunden"
 
-#: settings.py:53
+#: rest_framework_simplejwt/settings.py:60
 msgid ""
 "The '{}' setting has been removed. Please refer to '{}' for available "
 "settings."
 msgstr ""
-"Die Einstellung '{}' wurde gelöscht. Bitte beachte '{}' für verfügbare Einstellungen."
+"Die Einstellung '{}' wurde gelöscht. Bitte beachte '{}' für verfügbare "
+"Einstellungen."
 
-#: token_blacklist/admin.py:72
+#: rest_framework_simplejwt/token_blacklist/admin.py:72
 msgid "jti"
 msgstr "jti"
 
-#: token_blacklist/admin.py:77
+#: rest_framework_simplejwt/token_blacklist/admin.py:77
 msgid "user"
 msgstr "Benutzer"
 
-#: token_blacklist/admin.py:82
+#: rest_framework_simplejwt/token_blacklist/admin.py:82
 msgid "created at"
 msgstr "erstellt am"
 
-#: token_blacklist/admin.py:87
+#: rest_framework_simplejwt/token_blacklist/admin.py:87
 msgid "expires at"
 msgstr "läuft ab am"
 
-#: token_blacklist/apps.py:7
+#: rest_framework_simplejwt/token_blacklist/apps.py:7
 msgid "Token Blacklist"
 msgstr "Token Blacklist"
 
-#: tokens.py:30
+#: rest_framework_simplejwt/tokens.py:30
 msgid "Cannot create token with no type or lifetime"
 msgstr "Ein Token ohne Typ oder Lebensdauer kann nicht erstellt werden"
 
-#: tokens.py:98
+#: rest_framework_simplejwt/tokens.py:98
 msgid "Token has no id"
 msgstr "Token hat keine Id"
 
-#: tokens.py:109
+#: rest_framework_simplejwt/tokens.py:109
 msgid "Token has no type"
 msgstr "Token hat keinen Typ"
 
-#: tokens.py:112
+#: rest_framework_simplejwt/tokens.py:112
 msgid "Token has wrong type"
 msgstr "Token hat den falschen Typ"
 
-#: tokens.py:149
+#: rest_framework_simplejwt/tokens.py:149
 msgid "Token has no '{}' claim"
 msgstr "Token hat kein '{}' Recht"
 
-#: tokens.py:153
+#: rest_framework_simplejwt/tokens.py:153
 msgid "Token '{}' claim has expired"
 msgstr "Das Tokenrecht '{}' ist abgelaufen"
 
-#: tokens.py:192
+#: rest_framework_simplejwt/tokens.py:192
 msgid "Token is blacklisted"
 msgstr "Token steht auf der Blacklist"
