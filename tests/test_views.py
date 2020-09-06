@@ -197,6 +197,29 @@ class TestTokenObtainSlidingView(APIViewTestCase):
         self.assertEqual(res.status_code, 200)
         self.assertIn('token', res.data)
 
+    def test_update_last_login(self):
+        self.view_post(data={
+            User.USERNAME_FIELD: self.username,
+            'password': self.password,
+        })
+
+        # verify last_login is not updated
+        user = User.objects.get(username=self.username)
+        self.assertEqual(user.last_login, None)
+
+        # verify last_login is updated
+        with override_api_settings(UPDATE_LAST_LOGIN=True):
+            reload(serializers)
+            self.view_post(data={
+                User.USERNAME_FIELD: self.username,
+                'password': self.password,
+            })
+            user = User.objects.get(username=self.username)
+            self.assertIsNotNone(user.last_login)
+            self.assertGreaterEqual(datetime.now(), user.last_login)
+
+        reload(serializers)
+
 
 class TestTokenRefreshSlidingView(APIViewTestCase):
     view_name = 'token_refresh_sliding'

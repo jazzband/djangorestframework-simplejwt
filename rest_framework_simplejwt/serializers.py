@@ -92,6 +92,9 @@ class TokenObtainSlidingSerializer(TokenObtainSerializer):
 
         data['token'] = str(token)
 
+        if api_settings.UPDATE_LAST_LOGIN:
+            update_last_login(None, self.user)
+
         return data
 
 
