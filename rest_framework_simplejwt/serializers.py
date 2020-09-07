@@ -1,6 +1,7 @@
 import importlib
 
 from django.contrib.auth import authenticate
+from django.contrib.auth.models import update_last_login
 from django.utils.translation import gettext_lazy as _
 from rest_framework import exceptions, serializers
 
@@ -73,6 +74,9 @@ class TokenObtainPairSerializer(TokenObtainSerializer):
         data['refresh'] = str(refresh)
         data['access'] = str(refresh.access_token)
 
+        if api_settings.UPDATE_LAST_LOGIN:
+            update_last_login(None, self.user)
+
         return data
 
 
@@ -87,6 +91,9 @@ class TokenObtainSlidingSerializer(TokenObtainSerializer):
         token = self.get_token(self.user)
 
         data['token'] = str(token)
+
+        if api_settings.UPDATE_LAST_LOGIN:
+            update_last_login(None, self.user)
 
         return data
 
