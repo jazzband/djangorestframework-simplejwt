@@ -1,7 +1,8 @@
-from datetime import datetime, timedelta
+from datetime import timedelta
 from importlib import reload
 from unittest.mock import patch
 
+from django.utils import timezone
 from rest_framework_simplejwt import serializers
 from rest_framework_simplejwt.settings import api_settings
 from rest_framework_simplejwt.state import User
@@ -88,7 +89,7 @@ class TestTokenObtainPairView(APIViewTestCase):
             })
             user = User.objects.get(username=self.username)
             self.assertIsNotNone(user.last_login)
-            self.assertGreaterEqual(datetime.now(), user.last_login)
+            self.assertGreaterEqual(timezone.now(), user.last_login)
 
         reload(serializers)
 
@@ -216,7 +217,7 @@ class TestTokenObtainSlidingView(APIViewTestCase):
             })
             user = User.objects.get(username=self.username)
             self.assertIsNotNone(user.last_login)
-            self.assertGreaterEqual(datetime.now(), user.last_login)
+            self.assertGreaterEqual(timezone.now(), user.last_login)
 
         reload(serializers)
 
