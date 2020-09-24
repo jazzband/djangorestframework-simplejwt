@@ -147,3 +147,15 @@ class TokenVerifySerializer(serializers.Serializer):
         UntypedToken(attrs['token'])
 
         return {}
+
+
+class TokenBlacklistSerializer(serializers.Serializer):
+    refresh = serializers.CharField()
+
+    def validate(self, attrs):
+        refresh = RefreshToken(attrs['refresh'])
+        try:
+            refresh.blacklist()
+        except AttributeError:
+            pass
+        return {}
