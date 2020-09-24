@@ -6,10 +6,9 @@ from rest_framework import exceptions as drf_exceptions
 
 from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.serializers import (
-    TokenObtainPairSerializer, TokenObtainSerializer,
+    TokenBlacklistSerializer, TokenObtainPairSerializer, TokenObtainSerializer,
     TokenObtainSlidingSerializer, TokenRefreshSerializer,
     TokenRefreshSlidingSerializer, TokenVerifySerializer,
-    TokenBlacklistSerializer,
 )
 from rest_framework_simplejwt.settings import api_settings
 from rest_framework_simplejwt.state import User
