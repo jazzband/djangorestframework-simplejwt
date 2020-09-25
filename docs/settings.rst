@@ -75,6 +75,10 @@ tokens submitted to the refresh view will be added to the blacklist.
 When set to ``True``, causes refresh tokens submitted to the
 ``TokenRefreshView`` to be added to the blacklist if the blacklist app is in
 use and the ``ROTATE_REFRESH_TOKENS`` setting is set to ``True``.
+You need to add ``'rest_framework_simplejwt.token_blacklist',`` to your 
+``INSTALLED_APPS`` in the settings file to use this settings.
+
+Learn more about :doc:`/blacklist_app`.
 
 ``UPDATE_LAST_LOGIN``
 ----------------------------
