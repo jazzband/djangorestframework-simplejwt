@@ -381,3 +381,24 @@ class TestTokenBlacklistView(APIViewTestCase):
         self.assertEqual(res.status_code, 200)
 
         self.assertDictEqual(res.data, {})
+
+    def test_it_should_return_401_if_token_is_blacklisted(self):
+        refresh = RefreshToken()
+        refresh['test_claim'] = 'arst'
+
+        # View returns 200
+        now = aware_utcnow() - api_settings.ACCESS_TOKEN_LIFETIME / 2
+
+        with patch('rest_framework_simplejwt.tokens.aware_utcnow') as fake_aware_utcnow:
+            fake_aware_utcnow.return_value = now
+
+            res = self.view_post(data={'refresh': str(refresh)})
+
+        self.assertEqual(res.status_code, 200)
+
+        self.view_name = 'token_refresh'
+        res = self.view_post(data={'refresh': str(refresh)})
+        # make sure other tests are not affected
+        del self.view_name
+
+        self.assertEqual(res.status_code, 401)
