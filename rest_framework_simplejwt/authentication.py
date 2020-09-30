@@ -47,7 +47,10 @@ class JWTAuthentication(authentication.BaseAuthentication):
         Extracts the header containing the JSON web token from the given
         request.
         """
-        header = request.META.get('HTTP_AUTHORIZATION')
+        if api_settings.AUTH_USES_X_ACCESS_TOKEN:
+            header = request.META.get('HTTP_X_ACCESS_TOKEN')
+        else:
+            header = request.META.get('HTTP_AUTHORIZATION')
 
         if isinstance(header, str):
             # Work around django test client oddness
