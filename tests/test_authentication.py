@@ -43,13 +43,11 @@ class TestJWTAuthentication(TestCase):
         # Should work with the x_access_token
         with override_api_settings(AUTH_HEADER_NAME='HTTP_X_ACCESS_TOKEN'):
             # Should pull correct header off request when using X_ACCESS_TOKEN
-            request = self.factory.get('/test-url/',
-                                       HTTP_X_ACCESS_TOKEN=self.fake_header)
+            request = self.factory.get('/test-url/', HTTP_X_ACCESS_TOKEN=self.fake_header)
             self.assertEqual(self.backend.get_header(request), self.fake_header)
 
             # Should work for unicode headers when using
-            request = self.factory.get('/test-url/',
-                                      HTTP_X_ACCESS_TOKEN=self.fake_header.decode('utf-8'));
+            request = self.factory.get('/test-url/', HTTP_X_ACCESS_TOKEN=self.fake_header.decode('utf-8'))
             self.assertEqual(self.backend.get_header(request), self.fake_header)
 
     def test_get_raw_token(self):
