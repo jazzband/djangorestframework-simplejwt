@@ -28,7 +28,7 @@ Some of Simple JWT's behavior can be customized through settings variables in
       'ISSUER': None,
 
       'AUTH_HEADER_TYPES': ('Bearer',),
-      'AUTH_USES_X_ACCESS_TOKEN': False,
+      'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
       'USER_ID_FIELD': 'id',
       'USER_ID_CLAIM': 'user_id',
 
@@ -156,12 +156,10 @@ tuple of possible header types (e.g. ``('Bearer', 'JWT')``).  If a list or
 tuple is used in this way, and authentication fails, the first item in the
 collection will be used to build the "WWW-Authenticate" header in the response.
 
-``AUTH_USES_X_ACCESS_TOKEN``
+``AUTH_HEADER_NAME``
 ----------------------------
 
-This option is enabled for authorization using ``X_Access_Token`` header field rather than ``Authorization`` header field. For example the views/requests requiring authentication would look for the ``X-Access-Token: Bearer <token>``.
-The default value is ``False``, so you'll need to explicitly enable this feature.
-
+The authorization header name to be used for authentication. The default is ``HTTP_AUTHORIZATION`` which will accept the ``Authorization`` header in the request. For example if you'd like to use ``X_Access_Token`` in the header of your requests please specify the ``AUTH_HEADER_NAME`` to be ``HTTP_X_ACCESS_TOKEN`` in your settings.
 
 ``USER_ID_FIELD``
 -----------------

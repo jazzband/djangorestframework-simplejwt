@@ -41,7 +41,7 @@ class TestJWTAuthentication(TestCase):
         self.assertEqual(self.backend.get_header(request), self.fake_header)
 
         # Should work with the x_access_token
-        with override_api_settings(AUTH_USES_X_ACCESS_TOKEN=True):
+        with override_api_settings(AUTH_HEADER_NAME='HTTP_X_ACCESS_TOKEN'):
             # Should pull correct header off request when using X_ACCESS_TOKEN
             request = self.factory.get('/test-url/',
                                        HTTP_X_ACCESS_TOKEN=self.fake_header)
