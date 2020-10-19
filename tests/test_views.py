@@ -88,7 +88,7 @@ class TestTokenObtainPairView(APIViewTestCase):
                 self.user_model.USERNAME_FIELD: self.username,
                 'password': self.password,
             })
-            user = self.user_model.USERNAME_FIELD.objects.get(username=self.username)
+            user = self.user_model.objects.get(username=self.username)
             self.assertIsNotNone(user.last_login)
             self.assertGreaterEqual(timezone.now(), user.last_login)
 
