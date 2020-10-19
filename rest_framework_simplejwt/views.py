@@ -51,14 +51,17 @@ class TokenViewBase(generics.GenericAPIView):
         return Response(data, status=status.HTTP_200_OK)
 
     def get_cookie_data(self):
-        return {
+        cookie_data = {
             'expires': self.get_refresh_token_expiration(),
             'domain': api_settings.AUTH_COOKIE_DOMAIN,
             'path': api_settings.AUTH_COOKIE_PATH,
             'secure': api_settings.AUTH_COOKIE_SECURE or None,
-            'httponly': True,
-            'samesite': api_settings.AUTH_COOKIE_SAMESITE
+            'httponly': True
         }
+        # prior to django 2.1 samesite was not supported
+        if hasattr(api_settings, 'AUTH_COOKIE_SAMESITE'):
+            cookie_data['samesite'] = api_settings.AUTH_COOKIE_SAMESITE
+        return cookie_data
 
     def set_auth_cookies(self, response, data, cookie_data):
         return response

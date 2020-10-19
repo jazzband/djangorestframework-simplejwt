@@ -46,10 +46,13 @@ DEFAULTS = {
     'AUTH_COOKIE_SECURE': settings.CSRF_COOKIE_SECURE,
     # The path of the auth cookie.
     'AUTH_COOKIE_PATH': settings.CSRF_COOKIE_PATH,
-    # Whether to set the flag restricting cookie leaks on cross-site requests.
-    # This can be 'Lax', 'Strict', or None to disable the flag.
-    'AUTH_COOKIE_SAMESITE': settings.CSRF_COOKIE_SAMESITE,
 }
+
+# Whether to set the flag restricting cookie leaks on cross-site requests.
+# This can be 'Lax', 'Strict', or None to disable the flag. 'None' is supported in version 3.1 only
+# CSRF_COOKIE_SAMESITE was introduced in django 2.1 https://docs.djangoproject.com/en/3.1/releases/2.1/#csrf
+if hasattr(settings, 'CSRF_COOKIE_SAMESITE'):
+    DEFAULTS['AUTH_COOKIE_SAMESITE'] = settings.CSRF_COOKIE_SAMESITE
 
 IMPORT_STRINGS = (
     'AUTH_TOKEN_CLASSES',
