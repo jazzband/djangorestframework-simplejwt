@@ -39,33 +39,33 @@ jobs:
   docs:
     <<: *common
     docker:
-      - image: circleci/python:3.7
+      - image: circleci/python:3.8
         environment:
           TOXENV: docs
-  django20:
-    <<: *common
-    docker:
-      - image: circleci/python:3.6
-        environment:
-          TOXENV: 'py36-django20-drf{38,39}-tests'
-  django21:
-    <<: *common
-    docker:
-      - image: circleci/python:3.7
-        environment:
-          TOXENV: 'py37-django21-drf{39,310}-tests'
-  django22:
-    <<: *common
-    docker:
-      - image: circleci/python:3.7
-        environment:
-          TOXENV: 'py37-django22-drf{39,310,311}-tests'
-  django30:
+  python38-drf310:
     <<: *common
     docker:
       - image: circleci/python:3.8
         environment:
-          TOXENV: 'py38-django30-drf{310,311}-tests'
+          TOXENV: 'py38-django{22,30}-drf310-tests'
+  python39-drf310:
+    <<: *common
+    docker:
+      - image: circleci/python:3.9
+        environment:
+          TOXENV: 'py39-django{22,30}-drf310-tests'
+  python38-other:
+    <<: *common
+    docker:
+      - image: circleci/python:3.8
+        environment:
+          TOXENV: 'py38-django{22,30,31}-drf{311,312}-tests'
+  python39-other:
+    <<: *common
+    docker:
+      - image: circleci/python:3.9
+        environment:
+          TOXENV: 'py39-django{22,30,31}-drf{311,312}-tests'
   djangomaster:
     working_directory: ~/repo
     steps:
@@ -100,13 +100,13 @@ jobs:
             - ./eggs
           key: v6-cache-{{ .Environment.CIRCLE_JOB }}-{{ checksum "setup.py" }}-{{ checksum "tox.ini" }}
     docker:
-      - image: circleci/python:3.8
+      - image: circleci/python:3.9
         environment:
-          TOXENV: 'py38-djangomaster-drf310-tests'
+          TOXENV: 'py39-djangomaster-drf312-tests'
   lint:
     <<: *common
     docker:
-      - image: circleci/python:3.7
+      - image: circleci/python:3.8
         environment:
           TOXENV: lint
 
@@ -115,9 +115,9 @@ workflows:
   test:
     jobs:
       - docs
-      - django20
-      - django21
-      - django22
-      - django30
+      - python38-drf310
+      - python39-drf310
+      - python38-other
+      - python39-other
       - djangomaster
       - lint
