@@ -1,9 +1,9 @@
 from datetime import timedelta
 from unittest.mock import MagicMock, patch
 
+from django.contrib.auth import get_user_model
 from django.test import TestCase
 from rest_framework import exceptions as drf_exceptions
-
 from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.serializers import (
     TokenObtainPairSerializer, TokenObtainSerializer,
@@ -11,7 +11,6 @@ from rest_framework_simplejwt.serializers import (
     TokenRefreshSlidingSerializer, TokenVerifySerializer,
 )
 from rest_framework_simplejwt.settings import api_settings
-from rest_framework_simplejwt.state import User
 from rest_framework_simplejwt.token_blacklist.models import (
     BlacklistedToken, OutstandingToken,
 )
@@ -23,6 +22,8 @@ from rest_framework_simplejwt.utils import (
 )
 
 from .utils import override_api_settings
+
+User = get_user_model()
 
 
 class TestTokenObtainSerializer(TestCase):
