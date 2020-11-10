@@ -55,6 +55,12 @@ jobs:
       - image: circleci/python:3.8
         environment:
           TOXENV: docs
+  python37-drf310:
+    <<: *common
+    docker:
+      - image: circleci/python:3.7
+        environment:
+          TOXENV: 'py37-django{22,30}-drf310-tests'
   python38-drf310:
     <<: *common
     docker:
@@ -67,6 +73,12 @@ jobs:
       - image: circleci/python:3.9
         environment:
           TOXENV: 'py39-django{22,30}-drf310-tests'
+  python37-other:
+    <<: *common
+    docker:
+      - image: circleci/python:3.7
+        environment:
+          TOXENV: 'py37-django{22,30,31}-drf{311,312}-tests'
   python38-other:
     <<: *common
     docker:
