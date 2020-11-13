@@ -1,7 +1,4 @@
-CURRENT_SIGN_SETTING := $(shell git config commit.gpgSign)
-
-.PHONY: clean-pyc clean-build docs
-
+.PHONY: help
 help:
 	@echo "clean-build - remove build artifacts"
 	@echo "clean-pyc - remove Python file artifacts"
@@ -9,33 +6,40 @@ help:
 	@echo "test - run tests quickly with the default Python"
 	@echo "testall - run tests on every Python version with tox"
 	@echo "release - package and upload a release"
-	@echo "dist - package"
 
+.PHONY: clean
 clean: clean-build clean-pyc
 
+.PHONY: clean-build
 clean-build:
 	rm -fr build/
 	rm -fr dist/
 	rm -fr *.egg-info
 
+.PHONY: clean-pyc
 clean-pyc:
 	find . -name '*.pyc' -exec rm -f {} +
 	find . -name '*.pyo' -exec rm -f {} +
 	find . -name '*~' -exec rm -f {} +
 
+.PHONY: lint
 lint:
 	tox -e lint
 
+.PHONY: lint-roll
 lint-roll:
 	isort rest_framework_simplejwt tests
 	$(MAKE) lint
 
+.PHONY: tests
 test:
 	pytest tests
 
+.PHONY: test-all
 test-all:
 	tox
 
+.PHONY: build-docs
 build-docs:
 	sphinx-apidoc -o docs/ . \
 		setup.py \
@@ -51,18 +55,23 @@ build-docs:
 	$(MAKE) -C docs html
 	$(MAKE) -C docs doctest
 
+.PHONY: docs
 docs: build-docs
 	open docs/_build/html/index.html
 
+.PHONY: linux-docs
 linux-docs: build-docs
 	xdg-open docs/_build/html/index.html
 
-release: clean
+.PHONY: bumpversion
+bumpversion:
 	bumpversion $(bump)
-	git push upstream && git push upstream --tags
-	python setup.py sdist bdist_wheel
-	twine upload dist/*
 
+.PHONY: pushversion
+pushversion:
+	git push upstream && git push upstream --tags
+
+.PHONY: dist
 dist: clean
 	python setup.py sdist bdist_wheel
 	ls -l dist
