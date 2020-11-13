@@ -23,7 +23,8 @@ class JWTAuthentication(authentication.BaseAuthentication):
     """
     www_authenticate_realm = 'api'
 
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.user_model = get_user_model()
 
     def authenticate(self, request):
