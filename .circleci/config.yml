@@ -1,39 +1,52 @@
-version: 2.0
+version: 2.1
 
-# heavily inspired by https://raw.githubusercontent.com/pinax/pinax-wiki/6bd2a99ab6f702e300d708532a6d1d9aa638b9f8/.circleci/config.yml
+commands:
+  merge_pr_base:
+    steps:
+      - run:
+          name: merge pull request base
+          command: ./.circleci/merge_pr.sh
+      - run:
+          name: merge pull request base (2nd try)
+          command: ./.circleci/merge_pr.sh
+          when: on_fail
+      - run:
+          name: merge pull request base (3nd try)
+          command: ./.circleci/merge_pr.sh
+          when: on_fail
+  my_cache_restore:
+    steps:
+      - restore_cache:
+          keys:
+            - v7-cache-{{ .Environment.CIRCLE_JOB }}-{{ checksum "setup.py" }}-{{ checksum "tox.ini" }}
+  install_pip_deps:
+    steps:
+      - run:
+          name: install dependencies
+          command: pip install --user tox
+  my_cache_save:
+    steps:
+      - save_cache:
+          paths:
+            - .hypothesis
+            - .tox
+            - ~/.cache/pip
+            - ~/.local
+            - ./eggs
+          key: v7-cache-{{ .Environment.CIRCLE_JOB }}-{{ checksum "setup.py" }}-{{ checksum "tox.ini" }}
+
 
 common: &common
   working_directory: ~/repo
   steps:
     - checkout
-    - run:
-        name: merge pull request base
-        command: ./.circleci/merge_pr.sh
-    - run:
-        name: merge pull request base (2nd try)
-        command: ./.circleci/merge_pr.sh
-        when: on_fail
-    - run:
-        name: merge pull request base (3nd try)
-        command: ./.circleci/merge_pr.sh
-        when: on_fail
-    - restore_cache:
-        keys:
-          - v7-cache-{{ .Environment.CIRCLE_JOB }}-{{ checksum "setup.py" }}-{{ checksum "tox.ini" }}
-    - run:
-        name: install dependencies
-        command: pip install --user tox
+    - merge_pr_base
+    - my_cache_restore
+    - install_pip_deps
     - run:
         name: run tox
         command: ~/.local/bin/tox -r
-    - save_cache:
-        paths:
-          - .hypothesis
-          - .tox
-          - ~/.cache/pip
-          - ~/.local
-          - ./eggs
-        key: v7-cache-{{ .Environment.CIRCLE_JOB }}-{{ checksum "setup.py" }}-{{ checksum "tox.ini" }}
+    - my_cache_save
 
 jobs:
   docs:
@@ -70,35 +83,14 @@ jobs:
     working_directory: ~/repo
     steps:
       - checkout
-      - run:
-          name: merge pull request base
-          command: ./.circleci/merge_pr.sh
-      - run:
-          name: merge pull request base (2nd try)
-          command: ./.circleci/merge_pr.sh
-          when: on_fail
-      - run:
-          name: merge pull request base (3nd try)
-          command: ./.circleci/merge_pr.sh
-          when: on_fail
-      - restore_cache:
-          keys:
-            - v7-cache-{{ .Environment.CIRCLE_JOB }}-{{ checksum "setup.py" }}-{{ checksum "tox.ini" }}
-      - run:
-          name: install dependencies
-          command: pip install --user tox
+      - merge_pr_base
+      - my_cache_restore
+      - install_pip_deps
       - run:
           name: run tox
           # Allow failures for django master tests
           command: ~/.local/bin/tox -r || true
-      - save_cache:
-          paths:
-            - .hypothesis
-            - .tox
-            - ~/.cache/pip
-            - ~/.local
-            - ./eggs
-          key: v7-cache-{{ .Environment.CIRCLE_JOB }}-{{ checksum "setup.py" }}-{{ checksum "tox.ini" }}
+      - my_cache_save
     docker:
       - image: circleci/python:3.9
         environment:
@@ -111,8 +103,7 @@ jobs:
           TOXENV: lint
 
 workflows:
-  version: 2
-  test:
+  workflow:
     jobs:
       - docs
       - python38-drf310
