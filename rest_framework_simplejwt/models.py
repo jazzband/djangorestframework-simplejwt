@@ -19,11 +19,10 @@ class TokenUser:
     # inactive user
     is_active = True
 
-    _groups = EmptyManager(auth_models.Group)
-    _user_permissions = EmptyManager(auth_models.Permission)
-
     def __init__(self, token):
         self.token = token
+        self._groups = EmptyManager(auth_models.Group)
+        self._user_permissions = EmptyManager(auth_models.Permission)
 
     def __str__(self):
         return 'TokenUser {}'.format(self.id)

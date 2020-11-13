@@ -7,6 +7,7 @@ from . import views
 urlpatterns = [
     re_path(r'^token/pair/$', jwt_views.token_obtain_pair, name='token_obtain_pair'),
     re_path(r'^token/refresh/$', jwt_views.token_refresh, name='token_refresh'),
+    re_path(r'^token/delete/$', jwt_views.token_delete, name='token_delete'),
 
     re_path(r'^token/sliding/$', jwt_views.token_obtain_sliding, name='token_obtain_sliding'),
     re_path(r'^token/sliding/refresh/$', jwt_views.token_refresh_sliding, name='token_refresh_sliding'),

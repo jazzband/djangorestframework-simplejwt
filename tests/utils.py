@@ -42,6 +42,7 @@ class APIViewTestCase(TestCase):
     view_get = client_action_wrapper('get')
 
 
+# Don't nest contexts it won't work!!!
 @contextlib.contextmanager
 def override_api_settings(**settings):
     old_settings = {}

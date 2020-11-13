@@ -1,12 +1,11 @@
 import importlib
 
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.models import update_last_login
 from django.utils.translation import gettext_lazy as _
 from rest_framework import exceptions, serializers
 
 from .settings import api_settings
-from .state import User
 from .tokens import RefreshToken, SlidingToken, UntypedToken
 
 rule_package, user_eligible_for_login = api_settings.USER_AUTHENTICATION_RULE.rsplit('.', 1)
@@ -24,7 +23,7 @@ class PasswordField(serializers.CharField):
 
 
 class TokenObtainSerializer(serializers.Serializer):
-    username_field = User.USERNAME_FIELD
+    username_field = get_user_model().USERNAME_FIELD
 
     default_error_messages = {
         'no_active_account': _('No active account found with the given credentials')
@@ -70,9 +69,10 @@ class TokenObtainPairSerializer(TokenObtainSerializer):
         data = super().validate(attrs)
 
         refresh = self.get_token(self.user)
+        access = refresh.access_token
 
+        data['access'] = str(access)
         data['refresh'] = str(refresh)
-        data['access'] = str(refresh.access_token)
 
         if api_settings.UPDATE_LAST_LOGIN:
             update_last_login(None, self.user)
@@ -104,7 +104,8 @@ class TokenRefreshSerializer(serializers.Serializer):
     def validate(self, attrs):
         refresh = RefreshToken(attrs['refresh'])
 
-        data = {'access': str(refresh.access_token)}
+        access = refresh.access_token
+        data = {'access': str(access)}
 
         if api_settings.ROTATE_REFRESH_TOKENS:
             if api_settings.BLACKLIST_AFTER_ROTATION:
