@@ -62,6 +62,11 @@ bumpversion:
 pushversion:
 	git push upstream && git push upstream --tags
 
+.PHONY: publish
+publish:
+	python setup.py sdist bdist_wheel
+	twine upload dist/*
+
 .PHONY: dist
 dist: clean
 	python setup.py sdist bdist_wheel
