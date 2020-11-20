@@ -118,8 +118,10 @@ workflows:
   workflow:
     jobs:
       - docs
+      - python37-drf310
       - python38-drf310
       - python39-drf310
+      - python37-other
       - python38-other
       - python39-other
       - djangomaster
