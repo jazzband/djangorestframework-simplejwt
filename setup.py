@@ -45,7 +45,7 @@ extras_require['dev'] = (
 
 setup(
     name='djangorestframework_simplejwt',
-    version='4.5.0',
+    version='4.6.0',
     url='https://github.com/SimpleJWT/django-rest-framework-simplejwt',
     license='MIT',
     description='A minimal JSON Web Token authentication plugin for Django REST Framework',
