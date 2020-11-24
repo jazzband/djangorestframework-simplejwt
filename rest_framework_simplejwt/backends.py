@@ -50,7 +50,11 @@ class TokenBackend:
             jwt_payload['iss'] = self.issuer
 
         token = jwt.encode(jwt_payload, self.signing_key, algorithm=self.algorithm)
-        return token.decode('utf-8')
+        if isinstance(token, bytes):
+            # For PyJWT <= 1.7.1
+            return token.decode('utf-8')
+        # For PyJWT >= 2.0.0a1
+        return token
 
     def decode(self, token, verify=True):
         """
