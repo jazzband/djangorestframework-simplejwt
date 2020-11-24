@@ -1,16 +1,10 @@
-import importlib
-
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.models import update_last_login
 from django.utils.translation import gettext_lazy as _
 from rest_framework import exceptions, serializers
 
 from .settings import api_settings
-from .state import User
 from .tokens import RefreshToken, SlidingToken, UntypedToken
-
-rule_package, user_eligible_for_login = api_settings.USER_AUTHENTICATION_RULE.rsplit('.', 1)
-login_rule = importlib.import_module(rule_package)
 
 
 class PasswordField(serializers.CharField):
@@ -24,7 +18,7 @@ class PasswordField(serializers.CharField):
 
 
 class TokenObtainSerializer(serializers.Serializer):
-    username_field = User.USERNAME_FIELD
+    username_field = get_user_model().USERNAME_FIELD
 
     default_error_messages = {
         'no_active_account': _('No active account found with the given credentials')
@@ -48,7 +42,7 @@ class TokenObtainSerializer(serializers.Serializer):
 
         self.user = authenticate(**authenticate_kwargs)
 
-        if not getattr(login_rule, user_eligible_for_login)(self.user):
+        if not api_settings.USER_AUTHENTICATION_RULE(self.user):
             raise exceptions.AuthenticationFailed(
                 self.error_messages['no_active_account'],
                 'no_active_account',
