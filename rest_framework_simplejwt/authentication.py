@@ -1,9 +1,9 @@
+from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
 from rest_framework import HTTP_HEADER_ENCODING, authentication
 
 from .exceptions import AuthenticationFailed, InvalidToken, TokenError
 from .settings import api_settings
-from .state import User
 
 AUTH_HEADER_TYPES = api_settings.AUTH_HEADER_TYPES
 
@@ -22,6 +22,10 @@ class JWTAuthentication(authentication.BaseAuthentication):
     token provided in a request header.
     """
     www_authenticate_realm = 'api'
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.user_model = get_user_model()
 
     def authenticate(self, request):
         header = self.get_header(request)
@@ -47,7 +51,7 @@ class JWTAuthentication(authentication.BaseAuthentication):
         Extracts the header containing the JSON web token from the given
         request.
         """
-        header = request.META.get('HTTP_AUTHORIZATION')
+        header = request.META.get(api_settings.AUTH_HEADER_NAME)
 
         if isinstance(header, str):
             # Work around django test client oddness
@@ -107,8 +111,8 @@ class JWTAuthentication(authentication.BaseAuthentication):
             raise InvalidToken(_('Token contained no recognizable user identification'))
 
         try:
-            user = User.objects.get(**{api_settings.USER_ID_FIELD: user_id})
-        except User.DoesNotExist:
+            user = self.user_model.objects.get(**{api_settings.USER_ID_FIELD: user_id})
+        except self.user_model.DoesNotExist:
             raise AuthenticationFailed(_('User not found'), code='user_not_found')
 
         if not user.is_active:
@@ -129,3 +133,14 @@ class JWTTokenUserAuthentication(JWTAuthentication):
             raise InvalidToken(_('Token contained no recognizable user identification'))
 
         return api_settings.TOKEN_USER_CLASS(validated_token)
+
+
+def default_user_authentication_rule(user):
+    # Prior to Django 1.10, inactive users could be authenticated with the
+    # default `ModelBackend`.  As of Django 1.10, the `ModelBackend`
+    # prevents inactive users from authenticating.  App designers can still
+    # allow inactive users to authenticate by opting for the new
+    # `AllowAllUsersModelBackend`.  However, we explicitly prevent inactive
+    # users from authenticating to enforce a reasonable policy and provide
+    # sensible backwards compatibility with older Django versions.
+    return True if user is not None and user.is_active else False
