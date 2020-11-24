@@ -2,11 +2,11 @@ from datetime import timedelta
 from importlib import reload
 from unittest.mock import patch
 
+from django.contrib.auth import get_user_model
 from django.utils import timezone
 
 from rest_framework_simplejwt import serializers
 from rest_framework_simplejwt.settings import api_settings
-from rest_framework_simplejwt.state import User
 from rest_framework_simplejwt.tokens import (
     AccessToken, RefreshToken, SlidingToken,
 )
@@ -15,6 +15,8 @@ from rest_framework_simplejwt.utils import (
 )
 
 from .utils import APIViewTestCase, override_api_settings
+
+User = get_user_model()
 
 
 class TestTokenObtainPairView(APIViewTestCase):

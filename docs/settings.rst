@@ -28,6 +28,7 @@ Some of Simple JWT's behavior can be customized through settings variables in
       'ISSUER': None,
 
       'AUTH_HEADER_TYPES': ('Bearer',),
+      'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
       'USER_ID_FIELD': 'id',
       'USER_ID_CLAIM': 'user_id',
 
@@ -75,6 +76,10 @@ tokens submitted to the refresh view will be added to the blacklist.
 When set to ``True``, causes refresh tokens submitted to the
 ``TokenRefreshView`` to be added to the blacklist if the blacklist app is in
 use and the ``ROTATE_REFRESH_TOKENS`` setting is set to ``True``.
+You need to add ``'rest_framework_simplejwt.token_blacklist',`` to your 
+``INSTALLED_APPS`` in the settings file to use this settings.
+
+Learn more about :doc:`/blacklist_app`.
 
 ``UPDATE_LAST_LOGIN``
 ----------------------------
@@ -150,6 +155,11 @@ requiring authentication would look for a header with the following format:
 tuple of possible header types (e.g. ``('Bearer', 'JWT')``).  If a list or
 tuple is used in this way, and authentication fails, the first item in the
 collection will be used to build the "WWW-Authenticate" header in the response.
+
+``AUTH_HEADER_NAME``
+----------------------------
+
+The authorization header name to be used for authentication. The default is ``HTTP_AUTHORIZATION`` which will accept the ``Authorization`` header in the request. For example if you'd like to use ``X_Access_Token`` in the header of your requests please specify the ``AUTH_HEADER_NAME`` to be ``HTTP_X_ACCESS_TOKEN`` in your settings.
 
 ``USER_ID_FIELD``
 -----------------
