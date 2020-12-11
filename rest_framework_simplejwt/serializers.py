@@ -4,12 +4,12 @@ from django.utils.translation import gettext_lazy as _
 from rest_framework import exceptions, serializers
 from rest_framework.exceptions import ValidationError
 
-from .exceptions import TokenError
 from .settings import api_settings
 from .tokens import RefreshToken, SlidingToken, UntypedToken
 
 if api_settings.BLACKLIST_AFTER_ROTATION:
     from .token_blacklist.models import BlacklistedToken
+
 
 class PasswordField(serializers.CharField):
     def __init__(self, *args, **kwargs):
