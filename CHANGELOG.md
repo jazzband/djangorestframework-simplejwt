@@ -1,3 +1,42 @@
+## Latest
+
+* Added Italian translations ([#342](https://github.com/SimpleJWT/django-rest-framework-simplejwt/pull/342))
+* Fixed DRF app registry bug, specifically `django.core.exceptions.AppRegistryNotReady`
+  ([#331](https://github.com/SimpleJWT/django-rest-framework-simplejwt/pull/331))
+* Fixed support for PyJWT>=2.0.0 ([#376](https://github.com/SimpleJWT/django-rest-framework-simplejwt/pull/376))
+
+## Version 4.6
+
+* Added support for PyJWT>=2.0.0 ([#329](https://github.com/SimpleJWT/django-rest-framework-simplejwt/pull/329))
+* Restored Python 3.7 support ([#332](https://github.com/SimpleJWT/django-rest-framework-simplejwt/pull/332))
+* Added Indonesian translations ([#316](https://github.com/SimpleJWT/django-rest-framework-simplejwt/pull/316))
+* Fixed Django 4.0 re_path deprecation ([#280](https://github.com/SimpleJWT/django-rest-framework-simplejwt/pull/280))
+
+## Version 4.5
+
+* Added `AUTH_HEADER_NAME` to settings ([#309](https://github.com/SimpleJWT/django-rest-framework-simplejwt/pull/309))
+* Added `USER_AUTHENTICATION_RULE` to settings ([#279](https://github.com/SimpleJWT/django-rest-framework-simplejwt/pull/279))
+* Added `UPDATE_LAST_LOGIN` to settings ([#238](https://github.com/SimpleJWT/django-rest-framework-simplejwt/pull/238))
+* Fixed packaging of locale folder for installation ([#117](https://github.com/SimpleJWT/django-rest-framework-simplejwt/pull/117))
+* Allowed TokenUser to be configurable ([#172](https://github.com/SimpleJWT/django-rest-framework-simplejwt/pull/172))
+* Dropped Python 3.7 and below (restored Python 3.7 but not 3.6 in next version) 
+* Improved error message if cryptography isn't installed
+  when developer tries to use a certain algorithm that needs the package
+  ([#285](https://github.com/SimpleJWT/django-rest-framework-simplejwt/pull/285))
+* Fixed Django 4.0 ugettext_lazy deprecation warnings ([#186](https://github.com/SimpleJWT/django-rest-framework-simplejwt/pull/186))
+* Remove upper bound of Python version ([#225](https://github.com/SimpleJWT/django-rest-framework-simplejwt/pull/225))
+* Added DRF 3.11 support ([#230](https://github.com/SimpleJWT/django-rest-framework-simplejwt/pull/230))
+
+Translations:
+* Added French translations ([#314](https://github.com/SimpleJWT/django-rest-framework-simplejwt/pull/314))
+* Added Spanish translations ([#294](https://github.com/SimpleJWT/django-rest-framework-simplejwt/pull/294))
+* Added Argentinian Spanish translations ([#244](https://github.com/SimpleJWT/django-rest-framework-simplejwt/pull/244))
+* Added Persian translations ([#220](https://github.com/SimpleJWT/django-rest-framework-simplejwt/pull/220))
+* Added German translations ([#198](https://github.com/SimpleJWT/django-rest-framework-simplejwt/pull/198))
+* Added Czech translations ([#188](https://github.com/SimpleJWT/django-rest-framework-simplejwt/pull/188))
+* Added Polish translations ([#166](https://github.com/SimpleJWT/django-rest-framework-simplejwt/pull/166))
+* Fixed incorrect language encoding from de_CH to es_CL ([#299](https://github.com/SimpleJWT/django-rest-framework-simplejwt/pull/299))
+
 ## Version 4.4
 
 * Added official support for Python 3.8 and Django 3.0.
