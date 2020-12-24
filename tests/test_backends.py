@@ -7,7 +7,9 @@ from jwt import PyJWS, algorithms
 
 from rest_framework_simplejwt.backends import TokenBackend
 from rest_framework_simplejwt.exceptions import TokenBackendError
-from rest_framework_simplejwt.utils import aware_utcnow, make_utc, datetime_to_epoch
+from rest_framework_simplejwt.utils import (
+    aware_utcnow, datetime_to_epoch, make_utc,
+)
 
 SECRET = 'not_secret'
 
