@@ -65,9 +65,11 @@ class TokenBackend:
         signature check fails, or if its 'exp' claim indicates it has expired.
         """
         try:
-            return jwt.decode(token, self.verifying_key, algorithms=[self.algorithm], verify=verify,
-                              audience=self.audience, issuer=self.issuer,
-                              options={'verify_aud': self.audience is not None})
+            return jwt.decode(
+                token, self.verifying_key, algorithms=[self.algorithm], verify=verify,
+                audience=self.audience, issuer=self.issuer,
+                options={'verify_aud': self.audience is not None, "verify_signature": verify}
+            )
         except InvalidAlgorithmError as ex:
             raise TokenBackendError(_('Invalid algorithm specified')) from ex
         except InvalidTokenError:
