@@ -21,8 +21,9 @@ class TokenObtainSerializer(serializers.Serializer):
     username_field = get_user_model().USERNAME_FIELD
 
     default_error_messages = {
-        'no_active_account': _('No active account found with the given credentials')
-    }
+        'no_active_account': _('No active account found with the given credentials'),
+        'inactive_account': 'The account is not activated!!'
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -42,11 +43,17 @@ class TokenObtainSerializer(serializers.Serializer):
 
         self.user = authenticate(**authenticate_kwargs)
 
-        if not api_settings.USER_AUTHENTICATION_RULE(self.user):
-            raise exceptions.AuthenticationFailed(
-                self.error_messages['no_active_account'],
-                'no_active_account',
-            )
+        if not getattr(login_rule, user_eligible_for_login)(self.user):
+            if not getattr(login_rule, inactive_user_flag)(self.user):
+                raise exceptions.AuthenticationFailed(
+                    self.error_messages['no_active_account'],
+                    'no_active_account',
+                    )
+            else:
+                raise exceptions.AuthenticationFailed(
+                    self.error_messages['inactive_account'],
+                    'inactive_account',
+                )
 
         return {}
 
