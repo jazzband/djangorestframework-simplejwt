@@ -31,6 +31,7 @@ Some of Simple JWT's behavior can be customized through settings variables in
       'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
       'USER_ID_FIELD': 'id',
       'USER_ID_CLAIM': 'user_id',
+      'USER_AUTHENTICATION_RULE': 'rest_framework_simplejwt.authentication.default_user_authentication_rule',
 
       'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
       'TOKEN_TYPE_CLAIM': 'token_type',
@@ -77,7 +78,7 @@ When set to ``True``, causes refresh tokens submitted to the
 ``TokenRefreshView`` to be added to the blacklist if the blacklist app is in
 use and the ``ROTATE_REFRESH_TOKENS`` setting is set to ``True``.
 You need to add ``'rest_framework_simplejwt.token_blacklist',`` to your 
-``INSTALLED_APPS`` in the settings file to use this settings.
+``INSTALLED_APPS`` in the settings file to use this setting.
 
 Learn more about :doc:`/blacklist_app`.
 
@@ -159,7 +160,12 @@ collection will be used to build the "WWW-Authenticate" header in the response.
 ``AUTH_HEADER_NAME``
 ----------------------------
 
-The authorization header name to be used for authentication. The default is ``HTTP_AUTHORIZATION`` which will accept the ``Authorization`` header in the request. For example if you'd like to use ``X_Access_Token`` in the header of your requests please specify the ``AUTH_HEADER_NAME`` to be ``HTTP_X_ACCESS_TOKEN`` in your settings.
+The authorization header name to be used for authentication.
+The default is ``HTTP_AUTHORIZATION`` which will accept the
+``Authorization`` header in the request. For example if you'd
+like to use ``X_Access_Token`` in the header of your requests
+please specify the ``AUTH_HEADER_NAME`` to be
+``HTTP_X_ACCESS_TOKEN`` in your settings.
 
 ``USER_ID_FIELD``
 -----------------
@@ -179,6 +185,15 @@ valid which uses that username as a user identifier.
 The claim in generated tokens which will be used to store user identifiers.
 For example, a setting value of ``'user_id'`` would mean generated tokens
 include a "user_id" claim that contains the user's identifier.
+
+``USER_AUTHENTICATION_RULE``
+----------------------------
+
+Callable to determine if the user is permitted to authenticate. This rule
+is applied after a valid token is processed. The user object is passed
+to the callable as an argument. The default rule is to check that the ``is_active``
+flag is still ``True``. The callable must return a boolean, ``True`` if authorized,
+``False`` otherwise resulting in a 401 status code.
 
 ``AUTH_TOKEN_CLASSES``
 ----------------------
