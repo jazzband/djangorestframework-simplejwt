@@ -4,32 +4,32 @@ msgid ""
 msgstr ""
 "Project-Id-Version: djangorestframework_simplejwt\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-18 15:35-0500\n"
+"POT-Creation-Date: 2021-02-22 17:30+0100\n"
+"Last-Translator: Bruno Ducraux <bruno.drx@gmail.com>\n"
+"Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"Last-Translator: Bruno Ducraux <bruno.drx@gmail.com>\n"
-"Language: pt_BR\n"
 
-#: authentication.py:75
+#: authentication.py:79
 msgid "Authorization header must contain two space-delimited values"
 msgstr ""
 "Cabeçalho de autorização deve conter dois valores delimitados por espaço"
 
-#: authentication.py:96
+#: authentication.py:100
 msgid "Given token not valid for any token type"
 msgstr "O token informado não é válido para qualquer tipo de token"
 
-#: authentication.py:107 authentication.py:129
+#: authentication.py:111 authentication.py:133
 msgid "Token contained no recognizable user identification"
 msgstr "O token não continha nenhuma identificação reconhecível do usuário"
 
-#: authentication.py:112
+#: authentication.py:116
 msgid "User not found"
 msgstr "Usuário não encontrado"
 
-#: authentication.py:115
+#: authentication.py:119
 msgid "User is inactive"
 msgstr "Usuário está inativo"
 
@@ -41,19 +41,19 @@ msgstr "Tipo de algoritmo '{}' não reconhecido"
 msgid "You must have cryptography installed to use {}."
 msgstr "Você deve ter criptografia instalada para usar {}."
 
-#: backends.py:68
+#: backends.py:74
 msgid "Invalid algorithm specified"
 msgstr "Algoritmo inválido especificado"
 
-#: backends.py:70 exceptions.py:38 tokens.py:44
+#: backends.py:76 exceptions.py:38 tokens.py:44
 msgid "Token is invalid or expired"
 msgstr "O token é inválido ou expirado"
 
-#: serializers.py:29
+#: serializers.py:24
 msgid "No active account found with the given credentials"
 msgstr "Usuário e/ou senha incorreto(s)"
 
-#: settings.py:60
+#: settings.py:63
 msgid ""
 "The '{}' setting has been removed. Please refer to '{}' for available "
 "settings."
