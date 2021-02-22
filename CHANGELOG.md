@@ -1,4 +1,4 @@
-## Latest
+## Version 4.7
 
 * Added Italian translations ([#342](https://github.com/SimpleJWT/django-rest-framework-simplejwt/pull/342))
 * Fixed DRF app registry bug, specifically `django.core.exceptions.AppRegistryNotReady`
