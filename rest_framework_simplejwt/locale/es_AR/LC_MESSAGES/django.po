@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: djangorestframework_simplejwt\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-18 20:47-0300\n"
+"POT-Creation-Date: 2021-02-22 17:30+0100\n"
 "Last-Translator: Ariel Torti <arieltort14@gmail.com>\n"
 "Language: es_AR\n"
 "MIME-Version: 1.0\n"
@@ -17,93 +17,100 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: rest_framework_simplejwt/authentication.py:75
+#: authentication.py:79
 msgid "Authorization header must contain two space-delimited values"
-msgstr "El header de autorización debe contener dos valores delimitados por espacio"
+msgstr ""
+"El header de autorización debe contener dos valores delimitados por espacio"
 
-#: rest_framework_simplejwt/authentication.py:96
+#: authentication.py:100
 msgid "Given token not valid for any token type"
 msgstr "El token dado no es válido para ningún tipo de token"
 
-#: rest_framework_simplejwt/authentication.py:107
-#: rest_framework_simplejwt/authentication.py:129
+#: authentication.py:111 authentication.py:133
 msgid "Token contained no recognizable user identification"
 msgstr "El token no contiene ninguna identificación de usuario"
 
-#: rest_framework_simplejwt/authentication.py:112
+#: authentication.py:116
 msgid "User not found"
 msgstr "Usuario no encontrado"
 
-#: rest_framework_simplejwt/authentication.py:115
+#: authentication.py:119
 msgid "User is inactive"
 msgstr "El usuario está inactivo"
 
-#: rest_framework_simplejwt/backends.py:21
+#: backends.py:37
 msgid "Unrecognized algorithm type '{}'"
 msgstr "Tipo de algoritmo no reconocido '{}'"
 
-#: rest_framework_simplejwt/backends.py:58
-#: rest_framework_simplejwt/exceptions.py:38
-#: rest_framework_simplejwt/tokens.py:44
+#: backends.py:40
+msgid "You must have cryptography installed to use {}."
+msgstr ""
+
+#: backends.py:74
+msgid "Invalid algorithm specified"
+msgstr ""
+
+#: backends.py:76 exceptions.py:38 tokens.py:44
 msgid "Token is invalid or expired"
 msgstr "El token es inválido o ha expirado"
 
-#: rest_framework_simplejwt/serializers.py:24
+#: serializers.py:24
 msgid "No active account found with the given credentials"
-msgstr "No se encontró una cuenta de usuario activa para las credenciales dadas"
+msgstr ""
+"No se encontró una cuenta de usuario activa para las credenciales dadas"
 
-#: rest_framework_simplejwt/settings.py:59
+#: settings.py:63
 msgid ""
 "The '{}' setting has been removed. Please refer to '{}' for available "
 "settings."
 msgstr ""
-"La configuración '{}' fue removida. Por favor, refiérase a '{}' para consultar las "
-"configuraciones disponibles."
+"La configuración '{}' fue removida. Por favor, refiérase a '{}' para "
+"consultar las configuraciones disponibles."
 
-#: rest_framework_simplejwt/token_blacklist/admin.py:72
+#: token_blacklist/admin.py:72
 msgid "jti"
 msgstr "jti"
 
-#: rest_framework_simplejwt/token_blacklist/admin.py:77
+#: token_blacklist/admin.py:77
 msgid "user"
 msgstr "usuario"
 
-#: rest_framework_simplejwt/token_blacklist/admin.py:82
+#: token_blacklist/admin.py:82
 msgid "created at"
 msgstr "creado en"
 
-#: rest_framework_simplejwt/token_blacklist/admin.py:87
+#: token_blacklist/admin.py:87
 msgid "expires at"
 msgstr "expira en"
 
-#: rest_framework_simplejwt/token_blacklist/apps.py:7
+#: token_blacklist/apps.py:7
 msgid "Token Blacklist"
 msgstr "Lista negra de Tokens"
 
-#: rest_framework_simplejwt/tokens.py:30
+#: tokens.py:30
 msgid "Cannot create token with no type or lifetime"
 msgstr "No es posible crear un token sin tipo o tiempo de vida"
 
-#: rest_framework_simplejwt/tokens.py:98
+#: tokens.py:98
 msgid "Token has no id"
 msgstr "El token no tiene id"
 
-#: rest_framework_simplejwt/tokens.py:109
+#: tokens.py:109
 msgid "Token has no type"
 msgstr "El token no tiene tipo"
 
-#: rest_framework_simplejwt/tokens.py:112
+#: tokens.py:112
 msgid "Token has wrong type"
 msgstr "El token tiene un tipo incorrecto"
 
-#: rest_framework_simplejwt/tokens.py:149
+#: tokens.py:149
 msgid "Token has no '{}' claim"
 msgstr "El token no tiene el privilegio '{}'"
 
-#: rest_framewok_simplejwt/tokens.py:153
+#: tokens.py:153
 msgid "Token '{}' claim has expired"
 msgstr "El privilegio '{}' del token ha expirado"
 
-#: rest_framework_simplejwt/tokens.py:192
+#: tokens.py:192
 msgid "Token is blacklisted"
 msgstr "El token está en la lista negra"
