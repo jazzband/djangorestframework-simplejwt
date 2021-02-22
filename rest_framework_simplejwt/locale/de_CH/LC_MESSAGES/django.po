@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: djangorestframework_simplejwt\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-04 15:19-0600\n"
+"POT-Creation-Date: 2021-02-22 17:30+0100\n"
 "Last-Translator: rene <rene@matraxi.ch>\n"
 "Language: de_CH\n"
 "MIME-Version: 1.0\n"
@@ -12,24 +12,24 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: authentication.py:75
+#: authentication.py:79
 msgid "Authorization header must contain two space-delimited values"
 msgstr ""
 "Der Authorizationheader muss zwei leerzeichen-getrennte Werte enthalten"
 
-#: authentication.py:96
+#: authentication.py:100
 msgid "Given token not valid for any token type"
 msgstr "Der Token ist für keinen Tokentyp gültig"
 
-#: authentication.py:107 authentication.py:129
+#: authentication.py:111 authentication.py:133
 msgid "Token contained no recognizable user identification"
 msgstr "Token enthält keine erkennbare Benutzeridentifikation"
 
-#: authentication.py:112
+#: authentication.py:116
 msgid "User not found"
 msgstr "Benutzer nicht gefunden"
 
-#: authentication.py:115
+#: authentication.py:119
 msgid "User is inactive"
 msgstr "Inaktiver Benutzer"
 
@@ -41,19 +41,19 @@ msgstr "Unerkannter Algorithmustyp '{}'"
 msgid "You must have cryptography installed to use {}."
 msgstr ""
 
-#: backends.py:68
+#: backends.py:74
 msgid "Invalid algorithm specified"
 msgstr ""
 
-#: backends.py:70 exceptions.py:38 tokens.py:44
+#: backends.py:76 exceptions.py:38 tokens.py:44
 msgid "Token is invalid or expired"
 msgstr "Ungültiger oder abgelaufener Token"
 
-#: serializers.py:29
+#: serializers.py:24
 msgid "No active account found with the given credentials"
 msgstr "Kein aktiver Account mit diesen Zugangsdaten gefunden"
 
-#: settings.py:60
+#: settings.py:63
 msgid ""
 "The '{}' setting has been removed. Please refer to '{}' for available "
 "settings."
