@@ -1,61 +1,68 @@
 # This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <info@lukasrod.cz>, 2019.
+# FIRST AUTHOR <95adriano@gmail.com>, 2020.
 msgid ""
 msgstr ""
 "Project-Id-Version: djangorestframework_simplejwt\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-22 17:30+0100\n"
-"Last-Translator: Lukáš Rod <info@lukasrod.cz>\n"
-"Language: cs\n"
+"PO-Revision-Date: \n"
+"Last-Translator: Adriano Di Dio <95adriano@gmail.com>\n"
+"Language-Team: \n"
+"Language: it_IT\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.0.6\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: authentication.py:79
 msgid "Authorization header must contain two space-delimited values"
-msgstr "Autorizační hlavička musí obsahovat dvě hodnoty oddělené mezerou"
+msgstr ""
+"L'header di autorizzazione deve contenere due valori delimitati da uno spazio"
 
 #: authentication.py:100
 msgid "Given token not valid for any token type"
-msgstr "Daný token není validní pro žádný typ tokenu"
+msgstr "Il token dato non è valido per qualsiasi tipo di token"
 
 #: authentication.py:111 authentication.py:133
 msgid "Token contained no recognizable user identification"
-msgstr "Token neobsahoval žádnou rozpoznatelnou identifikaci uživatele"
+msgstr "Il token non conteneva nessuna informazione riconoscibile dell'utente"
 
 #: authentication.py:116
 msgid "User not found"
-msgstr "Uživatel nenalezen"
+msgstr "Utente non trovato"
 
 #: authentication.py:119
 msgid "User is inactive"
-msgstr "Uživatel není aktivní"
+msgstr "Utente non attivo"
 
 #: backends.py:37
 msgid "Unrecognized algorithm type '{}'"
-msgstr "Nerozpoznaný typ algoritmu '{}'"
+msgstr "Algoritmo di tipo '{}' non riconosciuto"
 
 #: backends.py:40
 msgid "You must have cryptography installed to use {}."
-msgstr ""
+msgstr "Devi avere installato cryptography per usare '{}'."
 
 #: backends.py:74
 msgid "Invalid algorithm specified"
-msgstr ""
+msgstr "L'algoritmo specificato non è valido"
 
 #: backends.py:76 exceptions.py:38 tokens.py:44
 msgid "Token is invalid or expired"
-msgstr "Token není validní nebo vypršela jeho platnost"
+msgstr "Il token non è valido o è scaduto"
 
 #: serializers.py:24
 msgid "No active account found with the given credentials"
-msgstr "Žádný aktivní účet s danými údaji nebyl nalezen"
+msgstr "Nessun account attivo trovato con queste credenziali"
 
 #: settings.py:63
 msgid ""
 "The '{}' setting has been removed. Please refer to '{}' for available "
 "settings."
-msgstr "Nastavení '{}' bylo odstraněno. Dostupná nastavení jsou v '{}'"
+msgstr ""
+"L'impostazione '{}' è stata rimossa. Per favore utilizza '{}' per "
+"visualizzare le impostazioni valide."
 
 #: token_blacklist/admin.py:72
 msgid "jti"
@@ -63,44 +70,44 @@ msgstr "jti"
 
 #: token_blacklist/admin.py:77
 msgid "user"
-msgstr "uživatel"
+msgstr "utente"
 
 #: token_blacklist/admin.py:82
 msgid "created at"
-msgstr "vytvořený v"
+msgstr "creato il"
 
 #: token_blacklist/admin.py:87
 msgid "expires at"
-msgstr "platí do"
+msgstr "scade il"
 
 #: token_blacklist/apps.py:7
 msgid "Token Blacklist"
-msgstr "Token Blacklist"
+msgstr "Blacklist dei token"
 
 #: tokens.py:30
 msgid "Cannot create token with no type or lifetime"
-msgstr "Nelze vytvořit token bez zadaného typu nebo životnosti"
+msgstr "Impossibile creare un token senza tipo o durata"
 
 #: tokens.py:98
 msgid "Token has no id"
-msgstr "Token nemá žádný identifikátor"
+msgstr "Il token non ha un id"
 
 #: tokens.py:109
 msgid "Token has no type"
-msgstr "Token nemá žádný typ"
+msgstr "Il token non ha un tipo"
 
 #: tokens.py:112
 msgid "Token has wrong type"
-msgstr "Token má špatný typ"
+msgstr "Il token ha un tipo sbagliato"
 
 #: tokens.py:149
 msgid "Token has no '{}' claim"
-msgstr "Token nemá žádnou hodnotu '{}'"
+msgstr "Il token non contiene il parametro '{}'"
 
 #: tokens.py:153
 msgid "Token '{}' claim has expired"
-msgstr "Hodnota tokenu '{}' vypršela"
+msgstr "Il parametro '{}' del token è scaduto"
 
 #: tokens.py:192
 msgid "Token is blacklisted"
-msgstr "Token je na černé listině"
+msgstr "Il token è stato inserito nella blacklist"
