@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: djangorestframework_simplejwt\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-22 09:07+CET\n"
+"POT-Creation-Date: 2021-02-22 17:30+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Adriano Di Dio <95adriano@gmail.com>\n"
 "Language-Team: \n"
@@ -44,11 +44,11 @@ msgstr "Algoritmo di tipo '{}' non riconosciuto"
 msgid "You must have cryptography installed to use {}."
 msgstr "Devi avere installato cryptography per usare '{}'."
 
-#: backends.py:72
+#: backends.py:74
 msgid "Invalid algorithm specified"
 msgstr "L'algoritmo specificato non è valido"
 
-#: backends.py:74 exceptions.py:38 tokens.py:44
+#: backends.py:76 exceptions.py:38 tokens.py:44
 msgid "Token is invalid or expired"
 msgstr "Il token non è valido o è scaduto"
 
