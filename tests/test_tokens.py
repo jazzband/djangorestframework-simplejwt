@@ -7,6 +7,7 @@ from jose import jwt
 
 from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.settings import api_settings
+from rest_framework_simplejwt.state import token_backend
 from rest_framework_simplejwt.tokens import (
     AccessToken, RefreshToken, SlidingToken, Token, UntypedToken,
 )
@@ -300,6 +301,11 @@ class TestToken(TestCase):
             token = MyToken.for_user(user)
 
         self.assertEqual(token[api_settings.USER_ID_CLAIM], username)
+
+    def test_get_token_backend(self):
+        token = MyToken()
+
+        self.assertEqual(token.get_token_backend(), token_backend)
 
 
 class TestSlidingToken(TestCase):
