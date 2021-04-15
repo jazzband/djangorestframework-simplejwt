@@ -1,10 +1,10 @@
 Simple JWT
 ==========
 
-.. image:: https://circleci.com/gh/SimpleJWT/django-rest-framework-simplejwt.svg?style=shield
-  :target: https://circleci.com/gh/SimpleJWT/django-rest-framework-simplejwt
-.. image:: https://codecov.io/gh/SimpleJWT/django-rest-framework-simplejwt/branch/master/graph/badge.svg
-  :target: https://codecov.io/gh/SimpleJWT/django-rest-framework-simplejwt
+.. image:: https://circleci.com/gh/jazzband/django-rest-framework-simplejwt.svg?style=shield
+  :target: https://circleci.com/gh/jazzband/django-rest-framework-simplejwt
+.. image:: https://codecov.io/gh/jazzband/django-rest-framework-simplejwt/branch/master/graph/badge.svg
+  :target: https://codecov.io/gh/jazzband/django-rest-framework-simplejwt
 .. image:: https://img.shields.io/pypi/v/djangorestframework-simplejwt.svg
   :target: https://pypi.python.org/pypi/djangorestframework-simplejwt
 .. image:: https://img.shields.io/pypi/pyversions/djangorestframework-simplejwt.svg
