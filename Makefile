@@ -41,8 +41,7 @@ build-docs:
 		rest_framework_simplejwt/compat.py \
 		rest_framework_simplejwt/exceptions.py \
 		rest_framework_simplejwt/settings.py \
-		rest_framework_simplejwt/state.py \
-		rest_framework_simplejwt/views.py
+		rest_framework_simplejwt/state.py
 	$(MAKE) -C docs clean
 	$(MAKE) -C docs html
 	$(MAKE) -C docs doctest
