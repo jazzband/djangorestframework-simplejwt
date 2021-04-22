@@ -1,6 +1,7 @@
 ## Unreleased
 
 * Drop Django 3.0 support
+* Add Django 3.2 support
 
 ## Version 4.7
 
