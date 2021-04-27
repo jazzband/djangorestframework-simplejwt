@@ -23,7 +23,7 @@ jobs:
         python -m pip install -U flake8 isort
     - name: Lint
       run: |
-        flake8 ./rest_framework_simplejwt ./tests
+        flake8 ./rest_framework_simplejwt ./tests --ignore=E501
         isort --check-only --diff ./rest_framework_simplejwt ./tests
 
   tox:
@@ -38,6 +38,8 @@ jobs:
           - python-version: 3.7
             DJANGO: master
           - python-version: 3.8
+            DJANGO: master
+          - DRF: 310
             DJANGO: master
 
     steps:
