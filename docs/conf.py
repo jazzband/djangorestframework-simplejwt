@@ -33,6 +33,7 @@ def django_configure():
     from django.conf import settings
 
     settings.configure(
+        SECRET_KEY='a random key to use',
         INSTALLED_APPS=(
             'django.contrib.admin',
             'django.contrib.auth',
