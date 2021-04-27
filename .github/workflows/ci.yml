@@ -34,11 +34,11 @@ jobs:
         python-version: [3.7, 3.8, 3.9]
         DJANGO: [22, 30, 31, master]
         DRF: [310, 311, 312]
-      exclude:
-        - python-version: 3.7
-          DJANGO: master
-        - python-version: 3.8
-          DJANGO: master
+        exclude:
+          - python-version: 3.7
+            DJANGO: master
+          - python-version: 3.8
+            DJANGO: master
 
     steps:
     - uses: actions/checkout@v2
@@ -52,7 +52,7 @@ jobs:
         python -m pip install -U tox tox-gh-actions
     - name: Test with tox
       run: tox
-      with:
+      env:
         DJANGO: ${{ matrix.DJANGO }}
         DRF: ${{ matrix.DRF }}
 
