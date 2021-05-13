@@ -1,1 +1,7 @@
-__version__ = '4.7.0'
+from pkg_resources import get_distribution, DistributionNotFound
+
+try:
+    __version__ = get_distribution("django-rest-framework-simplejwt").version
+except DistributionNotFound:
+    # package is not installed
+    __version__ = None

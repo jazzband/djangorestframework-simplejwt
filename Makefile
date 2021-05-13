@@ -54,10 +54,6 @@ docs: build-docs
 linux-docs: build-docs
 	xdg-open docs/_build/html/index.html
 
-.PHONY: bumpversion
-bumpversion:
-	bumpversion $(bump)
-
 .PHONY: pushversion
 pushversion:
 	git push upstream && git push upstream --tags

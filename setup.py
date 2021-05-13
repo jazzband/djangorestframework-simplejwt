@@ -23,7 +23,6 @@ extras_require = {
         'sphinx_rtd_theme>=0.1.9',
     ],
     'dev': [
-        'bumpversion>=0.5.3,<1',
         'pytest-watch',
         'wheel',
         'twine',
@@ -45,7 +44,8 @@ extras_require['dev'] = (
 
 setup(
     name='djangorestframework_simplejwt',
-    version='4.6.0',
+    use_scm_version={"version_scheme": "post-release"},
+    setup_requires=["setuptools_scm"],
     url='https://github.com/SimpleJWT/django-rest-framework-simplejwt',
     license='MIT',
     description='A minimal JSON Web Token authentication plugin for Django REST Framework',
