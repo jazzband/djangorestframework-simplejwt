@@ -4,6 +4,7 @@
 * Fixed DRF app registry bug, specifically `django.core.exceptions.AppRegistryNotReady`
   ([#331](https://github.com/SimpleJWT/django-rest-framework-simplejwt/pull/331))
 * Fixed support for PyJWT>=2.0.0 ([#376](https://github.com/SimpleJWT/django-rest-framework-simplejwt/pull/376))
+* Migrated blacklist app models to use BigAutoField IDs for Django>=3.2. ([#404](https://github.com/jazzband/django-rest-framework-simplejwt/pull/404))
 
 ## Version 4.6
 
