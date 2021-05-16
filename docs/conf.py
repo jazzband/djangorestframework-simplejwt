@@ -82,7 +82,7 @@ copyright = '2020, David Sanders'
 # built documents.
 #
 # The full version, including alpha/beta/rc tags.
-release = get_distribution("django-rest-framework-simplejwt").version
+release = get_distribution("djangorestframework_simplejwt").version
 
 # The short X.Y version.
 version = ".".join(release.split(".")[:2])
