@@ -9,6 +9,8 @@ Simple JWT
   :target: https://pypi.python.org/pypi/djangorestframework-simplejwt
 .. image:: https://img.shields.io/pypi/pyversions/djangorestframework-simplejwt.svg
   :target: https://pypi.python.org/pypi/djangorestframework-simplejwt
+.. image:: https://img.shields.io/pypi/djversions/djangorestframework-simplejwt.svg
+  :target: https://pypi.python.org/pypi/djangorestframework-simplejwt
 
 A JSON Web Token authentication plugin for the `Django REST Framework
 <http://www.django-rest-framework.org/>`__.

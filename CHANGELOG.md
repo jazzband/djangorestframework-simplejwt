@@ -1,4 +1,9 @@
-## Version 4.7.0
+## Unreleased
+
+* Drop Django 3.0 support
+* Add Django 3.2 support
+
+## Version 4.7
 
 * Added support for Django 3.2 ([#404](https://github.com/jazzband/django-rest-framework-simplejwt/pull/404))
 * Added Italian translations ([#342](https://github.com/jazzband/django-rest-framework-simplejwt/pull/342))
