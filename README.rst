@@ -4,11 +4,11 @@ Simple JWT
 .. image:: https://jazzband.co/static/img/badge.svg
    :target: https://jazzband.co/
    :alt: Jazzband
-.. image:: https://github.com/jazzband/django-rest-framework-simplejwt/workflows/Test/badge.svg
-   :target: https://github.com/jazzband/django-rest-framework-simplejwt/actions
+.. image:: https://github.com/jazzband/djangorestframework-simplejwt/workflows/Test/badge.svg
+   :target: https://github.com/jazzband/djangorestframework-simplejwt/actions
    :alt: GitHub Actions
-.. image:: https://codecov.io/gh/jazzband/django-rest-framework-simplejwt/branch/master/graph/badge.svg
-  :target: https://codecov.io/gh/SimpleJWT/django-rest-framework-simplejwt
+.. image:: https://codecov.io/gh/jazzband/djangorestframework-simplejwt/branch/master/graph/badge.svg
+  :target: https://codecov.io/gh/jazzband/djangorestframework-simplejwt
 .. image:: https://img.shields.io/pypi/v/djangorestframework-simplejwt.svg
   :target: https://pypi.python.org/pypi/djangorestframework-simplejwt
 .. image:: https://img.shields.io/pypi/pyversions/djangorestframework-simplejwt.svg
@@ -31,4 +31,4 @@ Looking for Maintainers
 -----------------------
 
 For more information, see `here
-<https://github.com/SimpleJWT/django-rest-framework-simplejwt/issues/207>`__.
+<https://github.com/jazzband/djangorestframework-simplejwt/issues/207>`__.
