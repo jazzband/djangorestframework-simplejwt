@@ -1,11 +1,8 @@
 ## Unreleased
 
-* Drop Django 3.0 support
-* Add Django 3.2 support
-
 ## Version 4.7
 
-* Added support for Django 3.2 ([#404](https://github.com/jazzband/django-rest-framework-simplejwt/pull/404))
+* Added support for Django 3.2 and drop Django 3.0 ([#404](https://github.com/jazzband/django-rest-framework-simplejwt/pull/404))
 * Added Italian translations ([#342](https://github.com/jazzband/django-rest-framework-simplejwt/pull/342))
 * Fixed DRF app registry bug, specifically `django.core.exceptions.AppRegistryNotReady`
   ([#331](https://github.com/jazzband/django-rest-framework-simplejwt/pull/331))
