@@ -19,14 +19,4 @@ class Migration(migrations.Migration):
             self.dependencies.insert(0, ('token_blacklist', os.path.splitext(_m[8])[0]))
 
     operations = [
-        migrations.AlterField(
-            model_name='blacklistedtoken',
-            name='id',
-            field=models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID'),
-        ),
-        migrations.AlterField(
-            model_name='outstandingtoken',
-            name='id',
-            field=models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID'),
-        ),
     ]
