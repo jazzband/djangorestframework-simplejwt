@@ -3,7 +3,7 @@ from django.db import models
 
 
 class OutstandingToken(models.Model):
-    id = models.BigAutoField(primary_key=True)
+    id = models.BigAutoField(primary_key=True, serialize=False)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
 
     jti = models.CharField(unique=True, max_length=255)
@@ -29,7 +29,7 @@ class OutstandingToken(models.Model):
 
 
 class BlacklistedToken(models.Model):
-    id = models.BigAutoField(primary_key=True)
+    id = models.BigAutoField(primary_key=True, serialize=False)
     token = models.OneToOneField(OutstandingToken, on_delete=models.CASCADE)
 
     blacklisted_at = models.DateTimeField(auto_now_add=True)
