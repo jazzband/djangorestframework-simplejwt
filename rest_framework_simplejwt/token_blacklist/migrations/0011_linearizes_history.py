@@ -1,7 +1,8 @@
-import os, fnmatch
+import fnmatch
+import os
 from pathlib import Path
 
-from django.db import migrations
+from django.db import migrations, models
 
 parent_dir = Path(__file__).resolve(strict=True).parent
 
