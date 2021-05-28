@@ -1,6 +1,10 @@
 ## Unreleased
 
-## Version 4.7
+## Version 4.7.1
+
+* Fixed user-generated migration file bug in token_blacklist ([#410]((https://github.com/jazzband/django-rest-framework-simplejwt/pull/411)))
+
+## Version 4.7.0
 
 * Added support for Django 3.2 and drop Django 3.0 ([#404](https://github.com/jazzband/django-rest-framework-simplejwt/pull/404))
 * Added Italian translations ([#342](https://github.com/jazzband/django-rest-framework-simplejwt/pull/342))
