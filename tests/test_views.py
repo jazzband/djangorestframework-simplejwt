@@ -1,4 +1,5 @@
 from datetime import timedelta
+from http import cookies
 from importlib import reload
 from unittest.mock import patch
 
@@ -333,5 +334,123 @@ class TestTokenVerifyView(APIViewTestCase):
         token[api_settings.TOKEN_TYPE_CLAIM] = 'fake_type'
 
         res = self.view_post(data={'token': str(token)})
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(len(res.data), 0)
+
+
+class TestTokenObtainPairCookieView(TestTokenObtainPairView):
+    view_name = 'token_obtain_pair_cookie'
+
+    def test_success(self):
+        res = self.view_post(data={
+            User.USERNAME_FIELD: self.username,
+            'password': self.password,
+        })
+        self.assertEqual(res.status_code, 200)
+        self.assertIn('access', res.data)
+        self.assertIn('refresh', res.cookies)
+
+
+class TestTokenRefreshCookieView(TestTokenRefreshView):
+    view_name = 'token_refresh_cookie'
+
+    def test_it_should_return_401_if_token_invalid(self):
+        token = RefreshToken()
+        del token['exp']
+
+        client_cookies = cookies.SimpleCookie()
+        client_cookies['refresh'] = str(token)
+        client_cookies['refresh']['path'] = '/api/cookie/'
+        self.client.cookies = client_cookies
+
+        res = self.view_post(data={})
+        self.assertEqual(res.status_code, 401)
+        self.assertEqual(res.data['code'], 'token_not_valid')
+
+        token.set_exp(lifetime=-timedelta(seconds=1))
+
+        client_cookies = cookies.SimpleCookie()
+        client_cookies['refresh'] = str(token)
+        client_cookies['refresh']['path'] = '/api/cookie/'
+        self.client.cookies = client_cookies
+
+        res = self.view_post(data={})
+        self.assertEqual(res.status_code, 401)
+        self.assertEqual(res.data['code'], 'token_not_valid')
+
+    def test_it_should_return_access_token_if_everything_ok(self):
+        refresh = RefreshToken()
+        refresh['test_claim'] = 'arst'
+
+        # View returns 200
+        now = aware_utcnow() - api_settings.ACCESS_TOKEN_LIFETIME / 2
+
+        with patch('rest_framework_simplejwt.tokens.aware_utcnow') as fake_aware_utcnow:
+            fake_aware_utcnow.return_value = now
+
+            client_cookies = cookies.SimpleCookie()
+            client_cookies['refresh'] = str(refresh)
+            client_cookies['refresh']['path'] = '/api/cookie/'
+            self.client.cookies = client_cookies
+
+            res = self.view_post(data={})
+
+        self.assertEqual(res.status_code, 200)
+
+        access = AccessToken(res.data['access'])
+
+        self.assertEqual(refresh['test_claim'], access['test_claim'])
+        self.assertEqual(access['exp'], datetime_to_epoch(now + api_settings.ACCESS_TOKEN_LIFETIME))
+
+
+class TestTokenVerifyView(TestTokenVerifyView):
+    view_name = 'token_verify_cookie'
+
+    def test_it_should_return_401_if_token_invalid(self):
+        token = SlidingToken()
+        del token['exp']
+
+        client_cookies = cookies.SimpleCookie()
+        client_cookies['refresh'] = str(token)
+        client_cookies['refresh']['path'] = '/api/cookie/'
+        self.client.cookies = client_cookies
+
+        res = self.view_post(data={})
+        self.assertEqual(res.status_code, 401)
+        self.assertEqual(res.data['code'], 'token_not_valid')
+
+        token.set_exp(lifetime=-timedelta(seconds=1))
+
+        client_cookies = cookies.SimpleCookie()
+        client_cookies['refresh'] = str(token)
+        client_cookies['refresh']['path'] = '/api/cookie/'
+        self.client.cookies = client_cookies
+
+        res = self.view_post(data={})
+        self.assertEqual(res.status_code, 401)
+        self.assertEqual(res.data['code'], 'token_not_valid')
+
+    def test_it_should_return_200_if_everything_okay(self):
+        token = RefreshToken()
+
+        client_cookies = cookies.SimpleCookie()
+        client_cookies['refresh'] = str(token)
+        client_cookies['refresh']['path'] = '/api/cookie/'
+        self.client.cookies = client_cookies
+
+        res = self.view_post(data={})
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(len(res.data), 0)
+
+    def test_it_should_ignore_token_type(self):
+        token = RefreshToken()
+        token[api_settings.TOKEN_TYPE_CLAIM] = 'fake_type'
+
+        client_cookies = cookies.SimpleCookie()
+        client_cookies['refresh'] = str(token)
+        client_cookies['refresh']['path'] = '/api/cookie/'
+        self.client.cookies = client_cookies
+
+        res = self.view_post(data={})
         self.assertEqual(res.status_code, 200)
         self.assertEqual(len(res.data), 0)

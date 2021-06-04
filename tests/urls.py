@@ -14,4 +14,9 @@ urlpatterns = [
     re_path(r'^token/verify/$', jwt_views.token_verify, name='token_verify'),
 
     re_path(r'^test-view/$', views.test_view, name='test_view'),
+
+    re_path(r'^api/cookietoken/pair/$', jwt_views.token_obtain_pair_cookie, name='token_obtain_pair_cookie'),
+    re_path(r'^api/cookie/cookietoken/refresh/$', jwt_views.token_refresh_cookie, name='token_refresh_cookie'),
+
+    re_path(r'^api/cookie/cookietoken/verify/$', jwt_views.token_verify_cookie, name='token_verify_cookie'),
 ]
