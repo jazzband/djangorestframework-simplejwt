@@ -41,6 +41,10 @@ Some of Simple JWT's behavior can be customized through settings variables in
       'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
       'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
       'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
+
+      'TOKEN_COOKIE_PATH': '/',
+      'TOKEN_COOKIE_DOMAIN': None,
+      'TOKEN_COOKIE_SAMESITE': None,
   }
 
 Above, the default values for these settings are shown.
@@ -236,3 +240,24 @@ More about this in the "Sliding tokens" section below.
 
 The claim name that is used to store the expiration time of a sliding token's
 refresh period.  More about this in the "Sliding tokens" section below.
+
+``TOKEN_COOKIE_PATH``
+-----------------------------------
+
+The value for the ``Path`` attribute of the token carrying cookie. Defaults to ``'/'``.
+
+``TOKEN_COOKIE_DOMAIN``
+-----------------------------------
+
+The value for the ``Domain`` attribute of the token carrying cookie. Defaults to ``None``.
+
+``TOKEN_COOKIE_SAMESITE``
+-----------------------------------
+
+The value for the ``SameSite`` attribute of the token carrying cookie. Defaults to ``'Lax'``.
+
+``TOKEN_COOKIE_SECURE``
+-----------------------------------
+
+The value for the ``Secure` attribute of the token carrying cookie. Defaults to ``False``.
+

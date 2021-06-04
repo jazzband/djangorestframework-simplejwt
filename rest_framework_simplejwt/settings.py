@@ -37,6 +37,11 @@ DEFAULTS = {
     'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
     'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
+
+    'TOKEN_COOKIE_PATH': '/',
+    'TOKEN_COOKIE_DOMAIN': None,
+    'TOKEN_COOKIE_SAMESITE': 'Lax',
+    'TOKEN_COOKIE_SECURE': False,
 }
 
 IMPORT_STRINGS = (
