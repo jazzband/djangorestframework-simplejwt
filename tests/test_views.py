@@ -403,7 +403,7 @@ class TestTokenRefreshCookieView(TestTokenRefreshView):
         self.assertEqual(access['exp'], datetime_to_epoch(now + api_settings.ACCESS_TOKEN_LIFETIME))
 
 
-class TestTokenVerifyView(TestTokenVerifyView):
+class TestTokenVerifyCookieView(TestTokenVerifyView):
     view_name = 'token_verify_cookie'
 
     def test_it_should_return_401_if_token_invalid(self):
