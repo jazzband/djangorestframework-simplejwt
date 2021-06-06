@@ -16,7 +16,7 @@ this app, include it in your list of installed apps in ``settings.py``:
       ...
       'rest_framework_simplejwt.token_blacklist',
       ...
-  }
+  )
 
 Also, make sure to run ``python manage.py migrate`` to run the app's
 migrations.
