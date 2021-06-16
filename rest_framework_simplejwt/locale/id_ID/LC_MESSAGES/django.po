@@ -4,31 +4,31 @@ msgid ""
 msgstr ""
 "Project-Id-Version: djangorestframework_simplejwt\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-18 15:35-0500\n"
+"POT-Creation-Date: 2021-02-22 17:30+0100\n"
+"Last-Translator: oon arfiandwi <oon.arfiandwi@gmail.com>\n"
+"Language: id_ID\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"Last-Translator: oon arfiandwi <oon.arfiandwi@gmail.com>\n"
-"Language: id_ID\n"
 
-#: authentication.py:75
+#: authentication.py:79
 msgid "Authorization header must contain two space-delimited values"
 msgstr "Header otorisasi harus berisi dua nilai yang dipisahkan spasi"
 
-#: authentication.py:96
+#: authentication.py:100
 msgid "Given token not valid for any token type"
 msgstr "Token yang diberikan tidak valid untuk semua jenis token"
 
-#: authentication.py:107 authentication.py:129
+#: authentication.py:111 authentication.py:133
 msgid "Token contained no recognizable user identification"
 msgstr "Token tidak mengandung identifikasi pengguna yang dapat dikenali"
 
-#: authentication.py:112
+#: authentication.py:116
 msgid "User not found"
 msgstr "Pengguna tidak ditemukan"
 
-#: authentication.py:115
+#: authentication.py:119
 msgid "User is inactive"
 msgstr "Pengguna tidak aktif"
 
@@ -40,19 +40,19 @@ msgstr "Jenis algoritma tidak dikenal '{}'"
 msgid "You must have cryptography installed to use {}."
 msgstr "Anda harus memasang kriptografi untuk menggunakan {}."
 
-#: backends.py:68
+#: backends.py:74
 msgid "Invalid algorithm specified"
 msgstr "Algoritma yang ditentukan tidak valid"
 
-#: backends.py:70 exceptions.py:38 tokens.py:44
+#: backends.py:76 exceptions.py:38 tokens.py:44
 msgid "Token is invalid or expired"
 msgstr "Token tidak valid atau kedaluwarsa"
 
-#: serializers.py:29
+#: serializers.py:24
 msgid "No active account found with the given credentials"
 msgstr "Tidak ada akun aktif yang ditemukan dengan kredensial yang diberikan"
 
-#: settings.py:60
+#: settings.py:63
 msgid ""
 "The '{}' setting has been removed. Please refer to '{}' for available "
 "settings."

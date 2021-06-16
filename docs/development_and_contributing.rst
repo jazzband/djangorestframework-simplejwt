@@ -12,6 +12,12 @@ directory:
   pip install --upgrade pip setuptools
   pip install -e .[dev]
 
+If you're running a Mac and/or with zsh, you need to escape the brackets:
+
+.. code-block:: bash
+
+  pip install -e .\[dev\]
+
 To run the tests:
 
 .. code-block:: bash
