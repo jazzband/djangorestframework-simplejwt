@@ -77,9 +77,7 @@ class Token:
         """
         Signs and returns a token as a base64 encoded string.
         """
-        token_backend = self.get_token_backend()
-
-        return token_backend.encode(self.payload)
+        return self.get_token_backend().encode(self.payload)
 
     def verify(self):
         """
