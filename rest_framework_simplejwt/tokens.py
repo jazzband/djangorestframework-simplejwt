@@ -34,12 +34,9 @@ class Token:
 
         # Set up token
         if token is not None:
-            # An encoded token was provided
-            token_backend = self.get_token_backend()
-
             # Decode token
             try:
-                self.payload = token_backend.decode(token, verify=verify)
+                self.payload = self.get_token_backend().decode(token, verify=verify)
             except TokenBackendError:
                 raise TokenError(_('Token is invalid or expired'))
 
