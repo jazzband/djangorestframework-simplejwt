@@ -23,12 +23,12 @@ msgstr "Авторизаційний заголовок має містити д
 
 #: rest_framework_simplejwt/authentication.py:100
 msgid "Given token not valid for any token type"
-msgstr "Наданий ключ доступу не відповідає жодному типу ключа"
+msgstr "Наданий токен не відповідає жодному типу ключа"
 
 #: rest_framework_simplejwt/authentication.py:111
 #: rest_framework_simplejwt/authentication.py:133
 msgid "Token contained no recognizable user identification"
-msgstr "Наданий ключ доступу не мітить жодної ідентифікаційної інформації"
+msgstr "Наданий токен не мітить жодної ідентифікаційної інформації"
 
 #: rest_framework_simplejwt/authentication.py:116
 msgid "User not found"
@@ -54,7 +54,7 @@ msgstr "Вказаний невірний алгоритм"
 #: rest_framework_simplejwt/exceptions.py:38
 #: rest_framework_simplejwt/tokens.py:44
 msgid "Token is invalid or expired"
-msgstr "Ключ доступу некоректний або термін його дії вичерпаний"
+msgstr "токен некоректний або термін його дії вичерпаний"
 
 #: rest_framework_simplejwt/serializers.py:24
 msgid "No active account found with the given credentials"
@@ -84,11 +84,11 @@ msgstr "дійстний по"
 
 #: rest_framework_simplejwt/token_blacklist/apps.py:7
 msgid "Token Blacklist"
-msgstr "Чорний список ключів доступу"
+msgstr "Чорний список токенів"
 
 #: rest_framework_simplejwt/tokens.py:30
 msgid "Cannot create token with no type or lifetime"
-msgstr "Неможливо створити ключ доступу без типу або строку дії"
+msgstr "Неможливо створити токен без типу або строку дії"
 
 #: rest_framework_simplejwt/tokens.py:98
 msgid "Token has no id"
@@ -100,16 +100,16 @@ msgstr "У ключі доступу не міститься тип"
 
 #: rest_framework_simplejwt/tokens.py:112
 msgid "Token has wrong type"
-msgstr "Ключ доступу позначений невірним типом"
+msgstr "токен позначений невірним типом"
 
 #: rest_framework_simplejwt/tokens.py:149
 msgid "Token has no '{}' claim"
-msgstr "У ключі допступу не міститься '{}' заголовку"
+msgstr "У токені не міститься '{}' заголовку"
 
 #: rest_framework_simplejwt/tokens.py:153
 msgid "Token '{}' claim has expired"
-msgstr "Заголовок '{}' ключа доступу не дійсний"
+msgstr "Заголовок '{}' токена не дійсний"
 
 #: rest_framework_simplejwt/tokens.py:192
 msgid "Token is blacklisted"
-msgstr "Ключ доступу занесений у чорний список"
+msgstr "токен занесений у чорний список"
