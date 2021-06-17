@@ -54,7 +54,7 @@ msgstr "Вказаний невірний алгоритм"
 #: rest_framework_simplejwt/exceptions.py:38
 #: rest_framework_simplejwt/tokens.py:44
 msgid "Token is invalid or expired"
-msgstr "токен некоректний або термін його дії вичерпаний"
+msgstr "Токен некоректний або термін його дії вичерпаний"
 
 #: rest_framework_simplejwt/serializers.py:24
 msgid "No active account found with the given credentials"
@@ -112,4 +112,4 @@ msgstr "Заголовок '{}' токена не дійсний"
 
 #: rest_framework_simplejwt/tokens.py:192
 msgid "Token is blacklisted"
-msgstr "токен занесений у чорний список"
+msgstr "Токен занесений у чорний список"
