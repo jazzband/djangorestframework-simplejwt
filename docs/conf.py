@@ -38,7 +38,6 @@ def django_configure():
             'rest_framework_simplejwt',
             'rest_framework_simplejwt.token_blacklist',
         ),
-        SECRET_KEY='not very secret',
     )
 
     try:
