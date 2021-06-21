@@ -66,7 +66,7 @@ signing key:
       ...
   ]
 
-If you wish to use localizations/translations you simple needs to add 
+If you wish to use localizations/translations, simply add 
 ``rest_framework_simplejwt`` to ``INSTALLED_APPS``.
 
 .. code-block:: python
