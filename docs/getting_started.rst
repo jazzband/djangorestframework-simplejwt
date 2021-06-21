@@ -22,17 +22,11 @@ Simple JWT can be installed with pip::
   pip install djangorestframework-simplejwt
 
 Then, your django project must be configured to use the library.  In
-``settings.py``, add ``rest_framework_simplejwt`` to the list of apps and
+``settings.py``, add
 ``rest_framework_simplejwt.authentication.JWTAuthentication`` to the list of
 authentication classes:
 
 .. code-block:: python
-
-  INSTALLED_APPS = [
-      ...
-      'rest_framework_simplejwt',
-      ...
-  ]
 
   REST_FRAMEWORK = {
       ...
@@ -71,6 +65,18 @@ signing key:
       path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
       ...
   ]
+
+If you wish to use localizations/translations you simple needs to add 
+``rest_framework_simplejwt`` to ``INSTALLED_APPS``.
+
+.. code-block:: python
+
+  INSTALLED_APPS = [
+      ...
+      'rest_framework_simplejwt',
+      ...
+  ]
+
 
 Usage
 -----
