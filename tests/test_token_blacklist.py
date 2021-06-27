@@ -204,4 +204,3 @@ class TestBigAutoFieldIDMigration(MigrationTestCase):
     def test_blacklistedtoken_id_field_is_biagauto_field(self):
         BlacklistedToken = self.apps.get_model('token_blacklist', 'BlacklistedToken')
         assert isinstance(BlacklistedToken._meta.get_field('id'), BigAutoField)
-
