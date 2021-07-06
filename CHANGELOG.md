@@ -1,8 +1,22 @@
 ## Unreleased
 
+## Version 4.7.2
+
+* Fix BrowsableAPIRenderer needing `media_type` ([#426](https://github.com/jazzband/django-rest-framework-simplejwt/pull/426))
+* Fix blacklist migrations for multiple databases ([#429](https://github.com/jazzband/django-rest-framework-simplejwt/pull/429))
+* Fix Django 3.2 `default_app_config` deprecation ([#415](https://github.com/jazzband/django-rest-framework-simplejwt/pull/415))
+* Fix docs specifying `INSTALLED_APPS` for SimpleJWT iff you want translations ([#420](https://github.com/jazzband/django-rest-framework-simplejwt/pull/420))
+* Fix drf-yasg API Schema generation for `TokenRefreshSerializer` ([#396](https://github.com/jazzband/django-rest-framework-simplejwt/pull/396))
+* Fix invalid syntax in docs for `INSTALLED_APPS` ([#416](https://github.com/jazzband/django-rest-framework-simplejwt/pull/416))
+
+Translations:
+* Added Dutch translations ([#422](https://github.com/jazzband/django-rest-framework-simplejwt/pull/422))
+* Added Ukrainian translations ([#423](https://github.com/jazzband/django-rest-framework-simplejwt/pull/423))
+* Added Simplified Chinese translations ([#427](https://github.com/jazzband/django-rest-framework-simplejwt/pull/427))
+
 ## Version 4.7.1
 
-* Fixed user-generated migration file bug in token_blacklist ([#410]((https://github.com/jazzband/django-rest-framework-simplejwt/pull/411)))
+* Fixed user-generated migration file bug in token_blacklist ([#411](https://github.com/jazzband/django-rest-framework-simplejwt/pull/411))
 
 ## Version 4.7.0
 
@@ -17,8 +31,10 @@
 
 * Added support for PyJWT>=2.0.0 ([#329](https://github.com/jazzband/django-rest-framework-simplejwt/pull/329))
 * Restored Python 3.7 support ([#332](https://github.com/jazzband/django-rest-framework-simplejwt/pull/332))
-* Added Indonesian translations ([#316](https://github.com/jazzband/django-rest-framework-simplejwt/pull/316))
 * Fixed Django 4.0 re_path deprecation ([#280](https://github.com/jazzband/django-rest-framework-simplejwt/pull/280))
+
+Translations:
+* Added Indonesian translations ([#316](https://github.com/jazzband/django-rest-framework-simplejwt/pull/316))
 
 ## Version 4.5
 
