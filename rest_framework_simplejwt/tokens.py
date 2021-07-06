@@ -35,7 +35,7 @@ class Token:
         # Set up token
         if token is not None:
             # An encoded token was provided
-            from .state import token_backend
+            token_backend = self.get_token_backend()
 
             # Decode token
             try:
@@ -77,9 +77,7 @@ class Token:
         """
         Signs and returns a token as a base64 encoded string.
         """
-        from .state import token_backend
-
-        return token_backend.encode(self.payload)
+        return self.get_token_backend().encode(self.payload)
 
     def verify(self):
         """
@@ -166,6 +164,10 @@ class Token:
         token[api_settings.USER_ID_CLAIM] = user_id
 
         return token
+
+    def get_token_backend(self):
+        from .state import token_backend
+        return token_backend
 
 
 class BlacklistMixin:

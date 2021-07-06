@@ -23,7 +23,6 @@ extras_require = {
         'sphinx_rtd_theme>=0.1.9',
     ],
     'dev': [
-        'bumpversion>=0.5.3,<1',
         'pytest-watch',
         'wheel',
         'twine',
@@ -45,8 +44,9 @@ extras_require['dev'] = (
 
 setup(
     name='djangorestframework_simplejwt',
-    version='4.6.0',
-    url='https://github.com/SimpleJWT/django-rest-framework-simplejwt',
+    use_scm_version={"version_scheme": "post-release"},
+    setup_requires=["setuptools_scm"],
+    url='https://github.com/jazzband/djangorestframework-simplejwt',
     license='MIT',
     description='A minimal JSON Web Token authentication plugin for Django REST Framework',
     long_description=open('README.rst', 'r', encoding='utf-8').read(),
@@ -66,6 +66,9 @@ setup(
         'Development Status :: 5 - Production/Stable',
         'Environment :: Web Environment',
         'Framework :: Django',
+        "Framework :: Django :: 2.2",
+        "Framework :: Django :: 3.1",
+        "Framework :: Django :: 3.2",
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',

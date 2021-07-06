@@ -22,6 +22,7 @@ class JWTAuthentication(authentication.BaseAuthentication):
     token provided in a request header.
     """
     www_authenticate_realm = 'api'
+    media_type = 'application/json'
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
