@@ -6,6 +6,7 @@ from django.db.models import BigAutoField
 from django.test import TestCase
 
 from rest_framework_simplejwt.exceptions import TokenError
+from rest_framework_simplejwt.serializers import TokenVerifySerializer
 from rest_framework_simplejwt.settings import api_settings
 from rest_framework_simplejwt.token_blacklist.models import (
     BlacklistedToken, OutstandingToken,
@@ -15,7 +16,7 @@ from rest_framework_simplejwt.tokens import (
 )
 from rest_framework_simplejwt.utils import aware_utcnow, datetime_from_epoch
 
-from .utils import MigrationTestCase
+from .utils import MigrationTestCase, override_api_settings
 
 
 class TestTokenBlacklist(TestCase):
@@ -193,6 +194,35 @@ class TestPopulateJtiHexMigration(MigrationTestCase):
         self.assertEqual(actual_hexes, self.expected_hexes)
 
 
+class TokenVerifySerializerShouldHonourBlacklist(MigrationTestCase):
+    migrate_from = ('token_blacklist', '0002_outstandingtoken_jti_hex')
+    migrate_to = ('token_blacklist', '0003_auto_20171017_2007')
+
+    def setUp(self):
+        self.user = User.objects.create(
+            username='test_user',
+            password='test_password',
+        )
+
+        super().setUp()
+
+    def test_token_verify_serializer_should_honour_blacklist_if_blacklisting_enabled(self):
+        with override_api_settings(BLACKLIST_AFTER_ROTATION=True):
+            refresh_token = RefreshToken.for_user(self.user)
+            refresh_token.blacklist()
+
+            serializer = TokenVerifySerializer(data={"token": str(refresh_token)})
+            self.assertFalse(serializer.is_valid())
+
+    def test_token_verify_serializer_should_not_honour_blacklist_if_blacklisting_not_enabled(self):
+        with override_api_settings(BLACKLIST_AFTER_ROTATION=False):
+            refresh_token = RefreshToken.for_user(self.user)
+            refresh_token.blacklist()
+
+            serializer = TokenVerifySerializer(data={"token": str(refresh_token)})
+            self.assertTrue(serializer.is_valid())
+
+            
 class TestBigAutoFieldIDMigration(MigrationTestCase):
     migrate_from = ('token_blacklist', '0007_auto_20171017_2214')
     migrate_to = ('token_blacklist', '0008_migrate_to_bigautofield')
@@ -204,3 +234,4 @@ class TestBigAutoFieldIDMigration(MigrationTestCase):
     def test_blacklistedtoken_id_field_is_biagauto_field(self):
         BlacklistedToken = self.apps.get_model('token_blacklist', 'BlacklistedToken')
         assert isinstance(BlacklistedToken._meta.get_field('id'), BigAutoField)
+

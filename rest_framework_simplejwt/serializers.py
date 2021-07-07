@@ -2,9 +2,13 @@ from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.models import update_last_login
 from django.utils.translation import gettext_lazy as _
 from rest_framework import exceptions, serializers
+from rest_framework.exceptions import ValidationError
 
 from .settings import api_settings
 from .tokens import RefreshToken, SlidingToken, UntypedToken
+
+if api_settings.BLACKLIST_AFTER_ROTATION:
+    from .token_blacklist.models import BlacklistedToken
 
 
 class PasswordField(serializers.CharField):
@@ -139,6 +143,11 @@ class TokenVerifySerializer(serializers.Serializer):
     token = serializers.CharField()
 
     def validate(self, attrs):
-        UntypedToken(attrs['token'])
+        token = UntypedToken(attrs['token'])
+
+        if api_settings.BLACKLIST_AFTER_ROTATION:
+            jti = token.get(api_settings.JTI_CLAIM)
+            if BlacklistedToken.objects.filter(token__jti=jti).exists():
+                raise ValidationError("Token is blacklisted")
 
         return {}
