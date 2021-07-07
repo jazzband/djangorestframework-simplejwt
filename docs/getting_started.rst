@@ -61,11 +61,7 @@ signing key:
 .. code-block:: python
   # add `TokenVerifyView` to your import
   
-  from rest_framework_simplejwt.views import (
-    ...
-    TokenVerifyView,
-    ...
-  )
+  from rest_framework_simplejwt.views import TokenVerifyView
   
   # and define it in your `urlpatterns`
   urlpatterns = [
