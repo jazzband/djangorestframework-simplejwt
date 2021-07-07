@@ -2,6 +2,7 @@ from unittest.mock import patch
 
 from django.contrib.auth.models import User
 from django.core.management import call_command
+from django.db.models import BigAutoField
 from django.test import TestCase
 
 from rest_framework_simplejwt.exceptions import TokenError
@@ -220,3 +221,17 @@ class TokenVerifySerializerShouldHonourBlacklist(MigrationTestCase):
 
             serializer = TokenVerifySerializer(data={"token": str(refresh_token)})
             self.assertTrue(serializer.is_valid())
+
+            
+class TestBigAutoFieldIDMigration(MigrationTestCase):
+    migrate_from = ('token_blacklist', '0007_auto_20171017_2214')
+    migrate_to = ('token_blacklist', '0008_migrate_to_bigautofield')
+
+    def test_outstandingtoken_id_field_is_biagauto_field(self):
+        OutstandingToken = self.apps.get_model('token_blacklist', 'OutstandingToken')
+        assert isinstance(OutstandingToken._meta.get_field('id'), BigAutoField)
+
+    def test_blacklistedtoken_id_field_is_biagauto_field(self):
+        BlacklistedToken = self.apps.get_model('token_blacklist', 'BlacklistedToken')
+        assert isinstance(BlacklistedToken._meta.get_field('id'), BigAutoField)
+

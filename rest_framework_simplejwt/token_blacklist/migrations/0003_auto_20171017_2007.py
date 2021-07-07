@@ -6,7 +6,8 @@ from django.db import migrations
 def populate_jti_hex(apps, schema_editor):
     OutstandingToken = apps.get_model('token_blacklist', 'OutstandingToken')
 
-    for token in OutstandingToken.objects.all():
+    db_alias = schema_editor.connection.alias
+    for token in OutstandingToken.objects.using(db_alias).all():
         token.jti_hex = token.jti.hex
         token.save()
 
@@ -14,7 +15,8 @@ def populate_jti_hex(apps, schema_editor):
 def reverse_populate_jti_hex(apps, schema_editor):  # pragma: no cover
     OutstandingToken = apps.get_model('token_blacklist', 'OutstandingToken')
 
-    for token in OutstandingToken.objects.all():
+    db_alias = schema_editor.connection.alias
+    for token in OutstandingToken.objects.using(db_alias).all():
         token.jti = UUID(hex=token.jti_hex)
         token.save()
 
