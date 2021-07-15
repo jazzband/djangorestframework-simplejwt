@@ -169,7 +169,7 @@ class Token:
     _token_backend = None
     
     def get_token_backend(self):
-        if self._token_backend = None:
+        if self._token_backend is None:
             self._token_backend = import_string(
                 "rest_framework_simplejwt.state.token_backend"
             )
