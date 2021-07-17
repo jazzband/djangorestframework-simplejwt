@@ -1,5 +1,12 @@
 ## Unreleased
 
+## Version 4.7.3
+
+* Add integration instructions for drf-yasg ([#145](https://github.com/jazzband/djangorestframework-simplejwt/pull/145))
+* Verify Serializer Should Honour Blacklist ([#239](https://github.com/jazzband/djangorestframework-simplejwt/pull/239))
+* Added missing import in getting_started docs ([#431](https://github.com/jazzband/djangorestframework-simplejwt/pull/431))
+* Use import_string for token_backend ([#435](https://github.com/jazzband/djangorestframework-simplejwt/pull/435))
+
 ## Version 4.7.2
 
 * Fix BrowsableAPIRenderer needing `media_type` ([#426](https://github.com/jazzband/django-rest-framework-simplejwt/pull/426))
