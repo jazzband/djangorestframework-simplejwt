@@ -23,7 +23,7 @@ class TokenBackend:
         verifying_key=None,
         audience=None,
         issuer=None,
-        jwk_url=None,
+        jwk_url: str = None,
     ):
         self._validate_algorithm(algorithm)
 
@@ -32,7 +32,7 @@ class TokenBackend:
         self.audience = audience
         self.issuer = issuer
 
-        self.jwks_client = PyJWKClient(jwk_url) if jwk_url is not None else None
+        self.jwks_client = PyJWKClient(jwk_url) if jwk_url else None
 
         if algorithm.startswith("HS"):
             self.verifying_key = signing_key
@@ -54,7 +54,7 @@ class TokenBackend:
         if self.algorithm.startswith("HS"):
             return self.signing_key
 
-        if self.jwks_client is not None:
+        if self.jwks_client:
             return self.jwks_client.get_signing_key_from_jwt(token).key
 
         return self.verifying_key
