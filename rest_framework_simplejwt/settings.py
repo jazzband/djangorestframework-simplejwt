@@ -21,6 +21,7 @@ DEFAULTS = {
     'VERIFYING_KEY': None,
     'AUDIENCE': None,
     'ISSUER': None,
+    'JWK_URL': None,
 
     'AUTH_HEADER_TYPES': ('Bearer',),
     'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
