@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from unittest import mock
 from unittest.mock import patch
 
 import jwt
@@ -237,6 +238,37 @@ class TestTokenBackend(TestCase):
         self.payload["exp"] = datetime_to_epoch(self.payload["exp"])
 
         self.assertEqual(self.aud_iss_token_backend.decode(token), self.payload)
+
+    def test_decode_rsa_aud_iss_jwk_success(self):
+        self.payload["exp"] = aware_utcnow() + timedelta(days=1)
+        self.payload["foo"] = "baz"
+        self.payload["aud"] = AUDIENCE
+        self.payload["iss"] = ISSUER
+
+        token = jwt.encode(
+            self.payload,
+            PRIVATE_KEY_2,
+            algorithm="RS256",
+            headers={"kid": "230498151c214b788dd97f22b85410a5"},
+        )
+        # Payload copied
+        self.payload["exp"] = datetime_to_epoch(self.payload["exp"])
+
+        mock_jwk_module = mock.MagicMock()
+        with patch("rest_framework_simplejwt.backends.PyJWKClient") as mock_jwk_module:
+            mock_jwk_client = mock.MagicMock()
+            mock_signing_key = mock.MagicMock()
+
+            mock_jwk_module.return_value = mock_jwk_client
+            mock_jwk_client.get_signing_key_from_jwt.return_value = mock_signing_key
+            type(mock_signing_key).key = mock.PropertyMock(return_value=PUBLIC_KEY_2)
+
+            # Note the PRIV,PUB care is intentially the original pairing
+            jwk_token_backend = TokenBackend(
+                "RS256", PRIVATE_KEY, PUBLIC_KEY, AUDIENCE, ISSUER, JWK_URL
+            )
+
+            self.assertEqual(jwk_token_backend.decode(token), self.payload)
 
     def test_decode_when_algorithm_not_available(self):
         token = jwt.encode(self.payload, PRIVATE_KEY, algorithm='RS256')
