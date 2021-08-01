@@ -1,6 +1,6 @@
-import jwt
 from django.utils.translation import gettext_lazy as _
-from jwt import InvalidAlgorithmError, InvalidTokenError, algorithms, PyJWKClient
+import jwt
+from jwt import InvalidAlgorithmError, InvalidTokenError, PyJWKClient, algorithms
 
 from .exceptions import TokenBackendError
 from .utils import format_lazy
@@ -58,7 +58,6 @@ class TokenBackend:
             return self.jwks_client.get_signing_key_from_jwt(token).key
 
         return self.verifying_key
-
 
     def encode(self, payload):
         """
