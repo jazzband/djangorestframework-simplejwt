@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+from pathlib import Path
 from setuptools import (
     setup,
     find_packages,
@@ -49,7 +50,7 @@ setup(
     url='https://github.com/jazzband/djangorestframework-simplejwt',
     license='MIT',
     description='A minimal JSON Web Token authentication plugin for Django REST Framework',
-    long_description=open('README.rst', 'r', encoding='utf-8').read(),
+    long_description=Path('README.rst').read_text(encoding='utf-8'),
     author='David Sanders',
     author_email='davesque@gmail.com',
     install_requires=[
