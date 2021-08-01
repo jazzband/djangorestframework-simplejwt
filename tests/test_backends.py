@@ -11,7 +11,6 @@ from rest_framework_simplejwt.exceptions import TokenBackendError
 from rest_framework_simplejwt.utils import (
     aware_utcnow, datetime_to_epoch, make_utc,
 )
-
 from tests.keys import PRIVATE_KEY, PRIVATE_KEY_2, PUBLIC_KEY, PUBLIC_KEY_2
 
 SECRET = 'not_secret'
