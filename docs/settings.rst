@@ -26,6 +26,7 @@ Some of Simple JWT's behavior can be customized through settings variables in
       'VERIFYING_KEY': None,
       'AUDIENCE': None,
       'ISSUER': None,
+      'JWK_URL': None,
 
       'AUTH_HEADER_TYPES': ('Bearer',),
       'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
@@ -145,6 +146,15 @@ not validated.
 The issuer claim to be included in generated tokens and/or validated in decoded
 tokens. When set to ``None``, this field is excluded from tokens and is not
 validated.
+
+``JWK_URL``
+----------
+
+The JWK_URL is used to dynamically resolve the public keys needed to verify the
+signing of tokens. When using Auth0 for example you might set this to
+'https://yourdomain.auth0.com/.well-known/jwks.json'. When set to ``None``,
+this field is excluded from the token backend and is not used during
+validation.
 
 ``AUTH_HEADER_TYPES``
 ---------------------

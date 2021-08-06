@@ -1,6 +1,6 @@
-import jwt
 from django.utils.translation import gettext_lazy as _
-from jwt import InvalidAlgorithmError, InvalidTokenError, algorithms
+import jwt
+from jwt import InvalidAlgorithmError, InvalidTokenError, PyJWKClient, algorithms
 
 from .exceptions import TokenBackendError
 from .utils import format_lazy
@@ -16,14 +16,25 @@ ALLOWED_ALGORITHMS = (
 
 
 class TokenBackend:
-    def __init__(self, algorithm, signing_key=None, verifying_key=None, audience=None, issuer=None):
+    def __init__(
+        self,
+        algorithm,
+        signing_key=None,
+        verifying_key=None,
+        audience=None,
+        issuer=None,
+        jwk_url: str = None,
+    ):
         self._validate_algorithm(algorithm)
 
         self.algorithm = algorithm
         self.signing_key = signing_key
         self.audience = audience
         self.issuer = issuer
-        if algorithm.startswith('HS'):
+
+        self.jwks_client = PyJWKClient(jwk_url) if jwk_url else None
+
+        if algorithm.startswith("HS"):
             self.verifying_key = signing_key
         else:
             self.verifying_key = verifying_key
@@ -38,6 +49,15 @@ class TokenBackend:
 
         if algorithm in algorithms.requires_cryptography and not algorithms.has_crypto:
             raise TokenBackendError(format_lazy(_("You must have cryptography installed to use {}."), algorithm))
+
+    def get_verifying_key(self, token):
+        if self.algorithm.startswith("HS"):
+            return self.signing_key
+
+        if self.jwks_client:
+            return self.jwks_client.get_signing_key_from_jwt(token).key
+
+        return self.verifying_key
 
     def encode(self, payload):
         """
@@ -66,9 +86,16 @@ class TokenBackend:
         """
         try:
             return jwt.decode(
-                token, self.verifying_key, algorithms=[self.algorithm], verify=verify,
-                audience=self.audience, issuer=self.issuer,
-                options={'verify_aud': self.audience is not None, "verify_signature": verify}
+                token,
+                self.get_verifying_key(token),
+                algorithms=[self.algorithm],
+                verify=verify,
+                audience=self.audience,
+                issuer=self.issuer,
+                options={
+                    'verify_aud': self.audience is not None,
+                    'verify_signature': verify,
+                },
             )
         except InvalidAlgorithmError as ex:
             raise TokenBackendError(_('Invalid algorithm specified')) from ex

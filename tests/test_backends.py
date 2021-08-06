@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from unittest import mock
 from unittest.mock import patch
 
 import jwt
@@ -10,54 +11,15 @@ from rest_framework_simplejwt.exceptions import TokenBackendError
 from rest_framework_simplejwt.utils import (
     aware_utcnow, datetime_to_epoch, make_utc,
 )
+from tests.keys import PRIVATE_KEY, PRIVATE_KEY_2, PUBLIC_KEY, PUBLIC_KEY_2
 
 SECRET = 'not_secret'
-
-PRIVATE_KEY = '''
------BEGIN RSA PRIVATE KEY-----
-MIIEowIBAAKCAQEA3xMJfyl8TOdrsjDLSIodsArJ/NnQB3ZdfbFC5onxATDfRLLA
-CHFo3ye694doBKeSe1NFYbfXPvahl6ODX1a23oQyoRQwlL+M99cLcdCa0gGuJXdb
-AaF6Em8E+7uSb3290mI+rZmjqyc7gMtKVWKL4e5i2PerFFBoYkZ7E90KOp2t0ZAD
-x2uqF4VTOfYLHG0cPgSw9/ptDStJqJVAOiRRqbv0j0GOFMDYNcN0mDlnpryhQFbQ
-iMqn4IJIURZUVBJujFSa45cJPvSmMb6NrzZ1crg5UN6/5Mu2mxQzAi21+vpgGL+E
-EuekUd7sRgEAjTHjLKzotLAGo7EGa8sL1vMSFwIDAQABAoIBAQCGGWabF/BONswq
-CWUazVR9cG7uXm3NHp2jIr1p40CLC7scDCyeprZ5d+PQS4j/S1Ema++Ih8CQbCjG
-BJjD5lf2OhhJdt6hfOkcUBzkJZf8aOAsS6zctRqyHCUtwxuLhFZpM4AkUfjuuZ3u
-lcawv5YBkpG/hltE0fV+Jop0bWtpwiKxVsHXVcS0WEPXic0lsOTBCw8m81JXqjir
-PCBOnkxgNpHSt69S1xnW3l9fPUWVlduO3EIZ5PZG2BxU081eZW31yIlKsDJhfgm6
-R5Vlr5DynqeojAd6SNliCzNXZP28GOpQBrYIeVQWA1yMANvkvd4apz9GmDrjF/Fd
-g8Chah+5AoGBAPc/+zyuDZKVHK7MxwLPlchCm5Zb4eou4ycbwEB+P3gDS7MODGu4
-qvx7cstTZMuMavNRcJsfoiMMrke9JrqGe4rFGiKRFLVBY2Xwr+95pKNC11EWI1lF
-5qDAmreDsj2alVJT5yZ9hsAWTsk2i+xj+/XHWYVkr67pRvOPRAmGMB+NAoGBAOb4
-CBHe184Hn6Ie+gSD4OjewyUVmr3JDJ41s8cjb1kBvDJ/wv9Rvo9yz2imMr2F0YGc
-ytHraM77v8KOJuJWpvGjEg8I0a/rSttxWQ+J0oYJSIPn+eDpAijNWfOp1aKRNALT
-pboCXcnSn+djJFKkNJ2hR7R/vrrM6Jyly1jcVS0zAoGAQpdt4Cr0pt0YS5AFraEh
-Mz2VUArRLtSQA3F69yPJjlY85i3LdJvZGYVaJp8AT74y8/OkQ3NipNP+gH3WV3hu
-/7IUVukCTcsdrVAE4pe9mucevM0cmie0dOlLAlArCmJ/Axxr7jbyuvuHHrRdPT60
-lr6pQr8afh6AKIsWhQYqIeUCgYA+v9IJcN52hhGzjPDl+yJGggbIc3cn6pA4B2UB
-TDo7F0KXAajrjrzT4iBBUS3l2Y5SxVNA9tDxsumlJNOhmGMgsOn+FapKPgWHWuMU
-WqBMdAc0dvinRwakKS4wCcsVsJdN0UxsHap3Y3a3+XJr1VrKHIALpM0fmP31WQHG
-8Y1eiwKBgF6AYXxo0FzZacAommZrAYoxFZT1u4/rE/uvJ2K9HYRxLOVKZe+89ki3
-D7AOmrxe/CAc/D+nNrtUIv3RFGfadfSBWzyLw36ekW76xPdJgqJsSz5XJ/FgzDW+
-WNC5oOtiPOMCymP75oKOjuZJZ2SPLRmiuO/qvI5uAzBHxRC1BKdt
------END RSA PRIVATE KEY-----
-'''
-
-PUBLIC_KEY = '''
------BEGIN PUBLIC KEY-----
-MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA3xMJfyl8TOdrsjDLSIod
-sArJ/NnQB3ZdfbFC5onxATDfRLLACHFo3ye694doBKeSe1NFYbfXPvahl6ODX1a2
-3oQyoRQwlL+M99cLcdCa0gGuJXdbAaF6Em8E+7uSb3290mI+rZmjqyc7gMtKVWKL
-4e5i2PerFFBoYkZ7E90KOp2t0ZADx2uqF4VTOfYLHG0cPgSw9/ptDStJqJVAOiRR
-qbv0j0GOFMDYNcN0mDlnpryhQFbQiMqn4IJIURZUVBJujFSa45cJPvSmMb6NrzZ1
-crg5UN6/5Mu2mxQzAi21+vpgGL+EEuekUd7sRgEAjTHjLKzotLAGo7EGa8sL1vMS
-FwIDAQAB
------END PUBLIC KEY-----
-'''
 
 AUDIENCE = 'openid-client-id'
 
 ISSUER = 'https://www.myoidcprovider.com'
+
+JWK_URL = 'https://randomstring.auth0.com/.well-known/jwks.json'
 
 
 class TestTokenBackend(TestCase):
@@ -275,6 +237,37 @@ class TestTokenBackend(TestCase):
         self.payload["exp"] = datetime_to_epoch(self.payload["exp"])
 
         self.assertEqual(self.aud_iss_token_backend.decode(token), self.payload)
+
+    def test_decode_rsa_aud_iss_jwk_success(self):
+        self.payload["exp"] = aware_utcnow() + timedelta(days=1)
+        self.payload["foo"] = "baz"
+        self.payload["aud"] = AUDIENCE
+        self.payload["iss"] = ISSUER
+
+        token = jwt.encode(
+            self.payload,
+            PRIVATE_KEY_2,
+            algorithm="RS256",
+            headers={"kid": "230498151c214b788dd97f22b85410a5"},
+        )
+        # Payload copied
+        self.payload["exp"] = datetime_to_epoch(self.payload["exp"])
+
+        mock_jwk_module = mock.MagicMock()
+        with patch("rest_framework_simplejwt.backends.PyJWKClient") as mock_jwk_module:
+            mock_jwk_client = mock.MagicMock()
+            mock_signing_key = mock.MagicMock()
+
+            mock_jwk_module.return_value = mock_jwk_client
+            mock_jwk_client.get_signing_key_from_jwt.return_value = mock_signing_key
+            type(mock_signing_key).key = mock.PropertyMock(return_value=PUBLIC_KEY_2)
+
+            # Note the PRIV,PUB care is intentially the original pairing
+            jwk_token_backend = TokenBackend(
+                "RS256", PRIVATE_KEY, PUBLIC_KEY, AUDIENCE, ISSUER, JWK_URL
+            )
+
+            self.assertEqual(jwk_token_backend.decode(token), self.payload)
 
     def test_decode_when_algorithm_not_available(self):
         token = jwt.encode(self.payload, PRIVATE_KEY, algorithm='RS256')
