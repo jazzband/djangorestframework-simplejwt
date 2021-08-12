@@ -3,6 +3,7 @@ from uuid import uuid4
 
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
+from django.utils.module_loading import import_string
 
 from .exceptions import TokenBackendError, TokenError
 from .settings import api_settings
@@ -164,10 +165,15 @@ class Token:
         token[api_settings.USER_ID_CLAIM] = user_id
 
         return token
-
+    
+    _token_backend = None
+    
     def get_token_backend(self):
-        from .state import token_backend
-        return token_backend
+        if self._token_backend is None:
+            self._token_backend = import_string(
+                "rest_framework_simplejwt.state.token_backend"
+            )
+        return self._token_backend
 
 
 class BlacklistMixin:
