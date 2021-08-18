@@ -24,6 +24,7 @@ class TokenBackend:
         audience=None,
         issuer=None,
         jwk_url: str = None,
+        leeway=0,
     ):
         self._validate_algorithm(algorithm)
 
@@ -33,6 +34,7 @@ class TokenBackend:
         self.issuer = issuer
 
         self.jwks_client = PyJWKClient(jwk_url) if jwk_url else None
+        self.leeway = leeway
 
         if algorithm.startswith("HS"):
             self.verifying_key = signing_key
@@ -92,6 +94,7 @@ class TokenBackend:
                 verify=verify,
                 audience=self.audience,
                 issuer=self.issuer,
+                leeway=self.leeway,
                 options={
                     'verify_aud': self.audience is not None,
                     'verify_signature': verify,

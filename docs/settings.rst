@@ -27,6 +27,7 @@ Some of Simple JWT's behavior can be customized through settings variables in
       'AUDIENCE': None,
       'ISSUER': None,
       'JWK_URL': None,
+      'LEEWAY': 0,
 
       'AUTH_HEADER_TYPES': ('Bearer',),
       'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
@@ -155,6 +156,15 @@ signing of tokens. When using Auth0 for example you might set this to
 'https://yourdomain.auth0.com/.well-known/jwks.json'. When set to ``None``,
 this field is excluded from the token backend and is not used during
 validation.
+
+``LEEWAY``
+----------
+
+Leeway is used to give some margin to the expiration time. This can be an
+integer for seconds or a ``datetime.timedelta``. Please reference
+https://pyjwt.readthedocs.io/en/latest/usage.html#expiration-time-claim-exp
+for more information.
+
 
 ``AUTH_HEADER_TYPES``
 ---------------------

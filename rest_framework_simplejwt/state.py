@@ -8,4 +8,5 @@ token_backend = TokenBackend(
     api_settings.AUDIENCE,
     api_settings.ISSUER,
     api_settings.JWK_URL,
+    api_settings.LEEWAY,
 )
