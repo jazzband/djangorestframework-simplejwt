@@ -21,10 +21,12 @@ ISSUER = 'https://www.myoidcprovider.com'
 
 JWK_URL = 'https://randomstring.auth0.com/.well-known/jwks.json'
 
+LEEWAY = 100
 
 class TestTokenBackend(TestCase):
     def setUp(self):
         self.hmac_token_backend = TokenBackend('HS256', SECRET)
+        self.hmac_leeway_token_backend = TokenBackend('HS256', SECRET, leeway=LEEWAY)
         self.rsa_token_backend = TokenBackend('RS256', PRIVATE_KEY, PUBLIC_KEY)
         self.aud_iss_token_backend = TokenBackend('RS256', PRIVATE_KEY, PUBLIC_KEY, AUDIENCE, ISSUER)
         self.payload = {'foo': 'bar'}
@@ -283,3 +285,21 @@ class TestTokenBackend(TestCase):
 
         with self.assertRaisesRegex(TokenBackendError, 'Invalid algorithm specified'):
             self.hmac_token_backend.decode(token)
+
+    def test_decode_leeway_hmac_fail(self):
+        self.payload["exp"] = datetime_to_epoch(aware_utcnow() - timedelta(seconds=LEEWAY * 2))
+
+        expired_token = jwt.encode(self.payload, SECRET, algorithm='HS256')
+
+        with self.assertRaises(TokenBackendError):
+            self.hmac_leeway_token_backend.decode(expired_token)
+
+    def test_decode_leeway_hmac_success(self):
+        self.payload["exp"] = datetime_to_epoch(aware_utcnow() - timedelta(seconds=LEEWAY / 2))
+
+        expired_token = jwt.encode(self.payload, SECRET, algorithm='HS256')
+
+        self.assertEqual(
+            self.hmac_leeway_token_backend.decode(expired_token),
+            self.payload,
+        )
