@@ -98,7 +98,7 @@ class TokenObtainSlidingSerializer(TokenObtainSerializer):
 
 class TokenRefreshSerializer(serializers.Serializer):
     refresh = serializers.CharField()
-    access = serializers.ReadOnlyField()
+    access = serializers.CharField(read_only=True)
 
     def validate(self, attrs):
         refresh = RefreshToken(attrs['refresh'])
