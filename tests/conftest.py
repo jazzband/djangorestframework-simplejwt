@@ -50,6 +50,9 @@ def pytest_configure():
         PASSWORD_HASHERS=(
             'django.contrib.auth.hashers.MD5PasswordHasher',
         ),
+        SIMPLE_JWT={
+            'BLACKLIST_AFTER_ROTATION': True,
+        },
     )
 
     try:
