@@ -11,7 +11,7 @@ Some of Simple JWT's behavior can be customized through settings variables in
   # Django project settings.py
 
   from datetime import timedelta
-
+  from django.conf import settings
   ...
 
   SIMPLE_JWT = {
