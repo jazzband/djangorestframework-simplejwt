@@ -5,14 +5,7 @@ from jwt import InvalidAlgorithmError, InvalidTokenError, PyJWKClient, algorithm
 from .exceptions import TokenBackendError
 from .utils import format_lazy
 
-ALLOWED_ALGORITHMS = (
-    'HS256',
-    'HS384',
-    'HS512',
-    'RS256',
-    'RS384',
-    'RS512',
-)
+ALLOWED_ALGORITHMS = algorithms.get_default_algorithms().keys()
 
 
 class TokenBackend:
