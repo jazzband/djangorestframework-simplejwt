@@ -31,10 +31,10 @@ class OutstandingTokenAdmin(admin.ModelAdmin):
         return [f.name for f in self.model._meta.fields]
 
     def has_add_permission(self, *args, **kwargs):
-        return False
+        return True
 
     def has_delete_permission(self, *args, **kwargs):
-        return False
+        return True
 
     def has_change_permission(self, request, obj=None):
         return (
