@@ -129,9 +129,14 @@ class TestTokenBackend(TestCase):
 
     def test_decode_hmac_with_invalid_sig(self):
         self.payload['exp'] = aware_utcnow() + timedelta(days=1)
-        token_1 = jwt.encode(self.payload, SECRET, algorithm='HS256')
+
+        token_1 = jwt.encode(self.payload.copy(), SECRET, algorithm='HS256')
         self.payload['foo'] = 'baz'
-        token_2 = jwt.encode(self.payload, SECRET, algorithm='HS256')
+        token_2 = jwt.encode(self.payload.copy(), SECRET, algorithm='HS256')
+
+        # jwt<2 needs aditional token decoding
+        token_1 = token_1.decode("utf-8") if type(token_1) == bytes else token_1
+        token_2 = token_2.decode("utf-8") if type(token_2) == bytes else token_2
 
         token_2_payload = token_2.rsplit('.', 1)[0]
         token_1_sig = token_1.rsplit('.', 1)[-1]
@@ -142,11 +147,15 @@ class TestTokenBackend(TestCase):
 
     def test_decode_hmac_with_invalid_sig_no_verify(self):
         self.payload['exp'] = aware_utcnow() + timedelta(days=1)
-        token_1 = jwt.encode(self.payload, SECRET, algorithm='HS256')
+        token_1 = jwt.encode(self.payload.copy(), SECRET, algorithm='HS256')
         self.payload['foo'] = 'baz'
-        token_2 = jwt.encode(self.payload, SECRET, algorithm='HS256')
+        token_2 = jwt.encode(self.payload.copy(), SECRET, algorithm='HS256')
         # Payload copied
         self.payload["exp"] = datetime_to_epoch(self.payload["exp"])
+
+        # jwt<2 needs aditional token decoding
+        token_1 = token_1.decode("utf-8") if type(token_1) == bytes else token_1
+        token_2 = token_2.decode("utf-8") if type(token_2) == bytes else token_2
 
         token_2_payload = token_2.rsplit('.', 1)[0]
         token_1_sig = token_1.rsplit('.', 1)[-1]
@@ -161,7 +170,7 @@ class TestTokenBackend(TestCase):
         self.payload['exp'] = aware_utcnow() + timedelta(days=1)
         self.payload['foo'] = 'baz'
 
-        token = jwt.encode(self.payload, SECRET, algorithm='HS256')
+        token = jwt.encode(self.payload.copy(), SECRET, algorithm='HS256')
         # Payload copied
         self.payload["exp"] = datetime_to_epoch(self.payload["exp"])
 
@@ -190,9 +199,13 @@ class TestTokenBackend(TestCase):
 
     def test_decode_rsa_with_invalid_sig(self):
         self.payload['exp'] = aware_utcnow() + timedelta(days=1)
-        token_1 = jwt.encode(self.payload, PRIVATE_KEY, algorithm='RS256')
+        token_1 = jwt.encode(self.payload.copy(), PRIVATE_KEY, algorithm='RS256')
         self.payload['foo'] = 'baz'
-        token_2 = jwt.encode(self.payload, PRIVATE_KEY, algorithm='RS256')
+        token_2 = jwt.encode(self.payload.copy(), PRIVATE_KEY, algorithm='RS256')
+
+        # jwt<2 needs aditional token decoding
+        token_1 = token_1.decode("utf-8") if type(token_1) == bytes else token_1
+        token_2 = token_2.decode("utf-8") if type(token_2) == bytes else token_2
 
         token_2_payload = token_2.rsplit('.', 1)[0]
         token_1_sig = token_1.rsplit('.', 1)[-1]
@@ -203,9 +216,13 @@ class TestTokenBackend(TestCase):
 
     def test_decode_rsa_with_invalid_sig_no_verify(self):
         self.payload['exp'] = aware_utcnow() + timedelta(days=1)
-        token_1 = jwt.encode(self.payload, PRIVATE_KEY, algorithm='RS256')
+        token_1 = jwt.encode(self.payload.copy(), PRIVATE_KEY, algorithm='RS256')
         self.payload['foo'] = 'baz'
-        token_2 = jwt.encode(self.payload, PRIVATE_KEY, algorithm='RS256')
+        token_2 = jwt.encode(self.payload.copy(), PRIVATE_KEY, algorithm='RS256')
+
+        # jwt<2 needs aditional token decoding
+        token_1 = token_1.decode("utf-8") if type(token_1) == bytes else token_1
+        token_2 = token_2.decode("utf-8") if type(token_2) == bytes else token_2
 
         token_2_payload = token_2.rsplit('.', 1)[0]
         token_1_sig = token_1.rsplit('.', 1)[-1]
@@ -220,9 +237,10 @@ class TestTokenBackend(TestCase):
 
     def test_decode_rsa_success(self):
         self.payload['exp'] = aware_utcnow() + timedelta(days=1)
+
         self.payload['foo'] = 'baz'
 
-        token = jwt.encode(self.payload, PRIVATE_KEY, algorithm='RS256')
+        token = jwt.encode(self.payload.copy(), PRIVATE_KEY, algorithm='RS256')
         # Payload copied
         self.payload["exp"] = datetime_to_epoch(self.payload["exp"])
 
@@ -234,7 +252,7 @@ class TestTokenBackend(TestCase):
         self.payload['aud'] = AUDIENCE
         self.payload['iss'] = ISSUER
 
-        token = jwt.encode(self.payload, PRIVATE_KEY, algorithm='RS256')
+        token = jwt.encode(self.payload.copy(), PRIVATE_KEY, algorithm='RS256')
         # Payload copied
         self.payload["exp"] = datetime_to_epoch(self.payload["exp"])
 
@@ -247,7 +265,7 @@ class TestTokenBackend(TestCase):
         self.payload["iss"] = ISSUER
 
         token = jwt.encode(
-            self.payload,
+            self.payload.copy(),
             PRIVATE_KEY_2,
             algorithm="RS256",
             headers={"kid": "230498151c214b788dd97f22b85410a5"},

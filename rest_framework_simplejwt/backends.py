@@ -1,9 +1,18 @@
 from django.utils.translation import gettext_lazy as _
 import jwt
-from jwt import InvalidAlgorithmError, InvalidTokenError, PyJWKClient, algorithms
+from jwt import InvalidAlgorithmError, InvalidTokenError, algorithms
 
 from .exceptions import TokenBackendError
 from .utils import format_lazy
+
+
+try:
+    # For jwt>=2.0
+    from jwt import PyJWKClient
+    has_pyjwt_client = True
+except ImportError:
+    # For jwt<2.0
+    has_pyjwt_client = False
 
 ALLOWED_ALGORITHMS = (
     'HS256',
