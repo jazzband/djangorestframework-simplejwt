@@ -91,7 +91,6 @@ class TokenBackend:
                 token,
                 self.get_verifying_key(token),
                 algorithms=[self.algorithm],
-                verify=verify,
                 audience=self.audience,
                 issuer=self.issuer,
                 leeway=self.leeway,
