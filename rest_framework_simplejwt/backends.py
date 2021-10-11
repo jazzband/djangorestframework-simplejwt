@@ -35,6 +35,11 @@ class TokenBackend:
 
         self.jwks_client = PyJWKClient(jwk_url) if jwk_url else None
         self.leeway = leeway
+        
+        if algorithm.startswith("HS"):
+            self.verifying_key = signing_key
+        else:
+            self.verifying_key = verifying_key
 
     def _validate_algorithm(self, algorithm):
         """
@@ -48,9 +53,6 @@ class TokenBackend:
             raise TokenBackendError(format_lazy(_("You must have cryptography installed to use {}."), algorithm))
 
     def get_verifying_key(self, token):
-        if self.algorithm.startswith("HS"):
-            return self.signing_key
-
         if self.jwks_client:
             return self.jwks_client.get_signing_key_from_jwt(token).key
 
