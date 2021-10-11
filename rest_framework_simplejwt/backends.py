@@ -35,7 +35,7 @@ class TokenBackend:
 
         self.jwks_client = PyJWKClient(jwk_url) if jwk_url else None
         self.leeway = leeway
-        
+
         if algorithm.startswith("HS"):
             self.verifying_key = signing_key
         else:
@@ -53,6 +53,9 @@ class TokenBackend:
             raise TokenBackendError(format_lazy(_("You must have cryptography installed to use {}."), algorithm))
 
     def get_verifying_key(self, token):
+        if self.algorithm.startswith("HS"):
+            return self.signing_key
+
         if self.jwks_client:
             return self.jwks_client.get_signing_key_from_jwt(token).key
 
@@ -83,21 +86,18 @@ class TokenBackend:
         Raises a `TokenBackendError` if the token is malformed, if its
         signature check fails, or if its 'exp' claim indicates it has expired.
         """
-        _kwargs = {}
-        if not self.jwks_client:
-            _kwargs.update(
-                {"audience": self.audience, "issuer": self.issuer, "leeway": self.leeway}
-            )
         try:
             return jwt.decode(
                 token,
                 self.get_verifying_key(token),
                 algorithms=[self.algorithm],
+                audience=self.audience,
+                issuer=self.issuer,
+                leeway=self.leeway,
                 options={
                     'verify_aud': self.audience is not None,
                     'verify_signature': verify,
                 },
-                **_kwargs,
             )
         except InvalidAlgorithmError as ex:
             raise TokenBackendError(_('Invalid algorithm specified')) from ex
