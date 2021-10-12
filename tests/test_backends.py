@@ -276,7 +276,9 @@ class TestTokenBackend(TestCase):
 
         pyjwt_without_rsa = PyJWS()
         pyjwt_without_rsa.unregister_algorithm('RS256')
-        with patch.object(jwt, 'decode', new=pyjwt_without_rsa.decode):
+        def _decode(jwt, key, algorithms, options, audience, issuer, leeway):
+            return pyjwt_without_rsa.decode(jwt, key, algorithms, options)
+        with patch.object(jwt, 'decode', new=_decode):
             with self.assertRaisesRegex(TokenBackendError, 'Invalid algorithm specified'):
                 self.rsa_token_backend.decode(token)
 
