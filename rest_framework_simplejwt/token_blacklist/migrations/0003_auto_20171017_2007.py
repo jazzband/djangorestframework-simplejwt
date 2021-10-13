@@ -4,7 +4,7 @@ from django.db import migrations
 
 
 def populate_jti_hex(apps, schema_editor):
-    OutstandingToken = apps.get_model('token_blacklist', 'OutstandingToken')
+    OutstandingToken = apps.get_model("token_blacklist", "OutstandingToken")
 
     db_alias = schema_editor.connection.alias
     for token in OutstandingToken.objects.using(db_alias).all():
@@ -13,7 +13,7 @@ def populate_jti_hex(apps, schema_editor):
 
 
 def reverse_populate_jti_hex(apps, schema_editor):  # pragma: no cover
-    OutstandingToken = apps.get_model('token_blacklist', 'OutstandingToken')
+    OutstandingToken = apps.get_model("token_blacklist", "OutstandingToken")
 
     db_alias = schema_editor.connection.alias
     for token in OutstandingToken.objects.using(db_alias).all():
@@ -24,7 +24,7 @@ def reverse_populate_jti_hex(apps, schema_editor):  # pragma: no cover
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('token_blacklist', '0002_outstandingtoken_jti_hex'),
+        ("token_blacklist", "0002_outstandingtoken_jti_hex"),
     ]
 
     operations = [

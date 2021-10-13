@@ -14,6 +14,7 @@ class CallableBool:  # pragma: no cover
     """
     An boolean-like object that is also callable for backwards compatibility.
     """
+
     do_not_call_in_templates = True
 
     def __init__(self, value):
@@ -26,7 +27,8 @@ class CallableBool:  # pragma: no cover
         warnings.warn(
             "Using user.is_authenticated() and user.is_anonymous() as a method "
             "is deprecated. Remove the parentheses to use it as an attribute.",
-            RemovedInDjango20Warning, stacklevel=2
+            RemovedInDjango20Warning,
+            stacklevel=2,
         )
         return self.value
 
@@ -34,7 +36,7 @@ class CallableBool:  # pragma: no cover
         return self.value
 
     def __repr__(self):
-        return 'CallableBool(%r)' % self.value
+        return "CallableBool(%r)" % self.value
 
     def __eq__(self, other):
         return self.value == other

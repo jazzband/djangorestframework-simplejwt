@@ -4,7 +4,9 @@ from django.db import models
 
 class OutstandingToken(models.Model):
     id = models.BigAutoField(primary_key=True, serialize=False)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True
+    )
 
     jti = models.CharField(unique=True, max_length=255)
     token = models.TextField()
@@ -18,11 +20,13 @@ class OutstandingToken(models.Model):
         #
         # Also see corresponding ticket:
         # https://github.com/encode/django-rest-framework/issues/705
-        abstract = 'rest_framework_simplejwt.token_blacklist' not in settings.INSTALLED_APPS
-        ordering = ('user',)
+        abstract = (
+            "rest_framework_simplejwt.token_blacklist" not in settings.INSTALLED_APPS
+        )
+        ordering = ("user",)
 
     def __str__(self):
-        return 'Token for {} ({})'.format(
+        return "Token for {} ({})".format(
             self.user,
             self.jti,
         )
@@ -40,7 +44,9 @@ class BlacklistedToken(models.Model):
         #
         # Also see corresponding ticket:
         # https://github.com/encode/django-rest-framework/issues/705
-        abstract = 'rest_framework_simplejwt.token_blacklist' not in settings.INSTALLED_APPS
+        abstract = (
+            "rest_framework_simplejwt.token_blacklist" not in settings.INSTALLED_APPS
+        )
 
     def __str__(self):
-        return 'Blacklisted token for {}'.format(self.token.user)
+        return f"Blacklisted token for {self.token.user}"
