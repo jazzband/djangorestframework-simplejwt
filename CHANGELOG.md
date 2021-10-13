@@ -1,5 +1,20 @@
 ## Unreleased
 
+## Version 5.0.0
+
+#### Breaking
+
+* Set BLACKLIST_AFTER_ROTATION by default to False ([#455](https://github.com/jazzband/djangorestframework-simplejwt/pull/455))
+
+#### Updates
+
+* Remove verify from jwt.decode to follow PyJWT v2.2.0 ([#472](https://github.com/jazzband/djangorestframework-simplejwt/pull/472))
+* Updated import list ([#459](https://github.com/jazzband/djangorestframework-simplejwt/pull/459))
+* Repair generation of OpenAPI with Spectacular ([#452](https://github.com/jazzband/djangorestframework-simplejwt/pull/452))
+* Add "iat" claim to token ([#192](https://github.com/jazzband/djangorestframework-simplejwt/pull/192))
+* Add blacklist view to log out users ([#306](https://github.com/jazzband/djangorestframework-simplejwt/pull/306))
+* updated import list in docs ([#459](https://github.com/jazzband/djangorestframework-simplejwt/pull/459))
+
 ## Version 4.8.0
 
 * Add integration instructions for drf-yasg ([#145](https://github.com/jazzband/djangorestframework-simplejwt/pull/145))
