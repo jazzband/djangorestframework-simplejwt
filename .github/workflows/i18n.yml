@@ -1,0 +1,53 @@
+name: Autogenerate translation files
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python 
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get install -y gettext
+
+      - name: Get pip cache dir
+        id: pip-cache
+        run: |
+          echo "::set-output name=dir::$(pip cache dir)"
+      - name: Cache
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.pip-cache.outputs.dir }}
+          key:
+            3.9-v1-${{ hashFiles('**/setup.py') }}
+          restore-keys: |
+            3.9-v1-
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e .[dev]
+
+      - name: Run makemessages
+        working-directory: ./rest_framework_simplejwt
+        run: django-admin makemessages -a
+
+      - name: Create PR with updated locales
+        uses: peter-evans/create-pull-request@v3
+        with:
+          base: master
+          branch: i18n-auto-update
+          delete-branch: true
+          commit-message: Generate .po for the state of master branch
+          title: Update translation files
+
