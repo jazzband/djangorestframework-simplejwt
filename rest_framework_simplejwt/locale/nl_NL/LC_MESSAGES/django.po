@@ -4,55 +4,55 @@ msgid ""
 msgstr ""
 "Project-Id-Version: djangorestframework_simplejwt\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-06-17 11:06+0200\n"
+"POT-Creation-Date: 2021-10-14 21:46+0000\n"
 "Last-Translator: rene <rene@roadbearstudios.com>\n"
 "Language: nl_NL\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: authentication.py:79
+#: authentication.py:80
 msgid "Authorization header must contain two space-delimited values"
 msgstr ""
 "Authorisatie header moet twee waarden bevatten, gescheiden door een spatie"
 
-#: authentication.py:100
+#: authentication.py:101
 msgid "Given token not valid for any token type"
 msgstr "Het token is voor geen enkel token-type geldig"
 
-#: authentication.py:111 authentication.py:133
+#: authentication.py:112 authentication.py:134
 msgid "Token contained no recognizable user identification"
 msgstr "Token bevat geen herkenbare gebruikersidentificatie"
 
-#: authentication.py:116
+#: authentication.py:117
 msgid "User not found"
 msgstr "Gebruiker niet gevonden"
 
-#: authentication.py:119
+#: authentication.py:120
 msgid "User is inactive"
 msgstr "Gebruiker is inactief"
 
-#: backends.py:37
+#: backends.py:50
 msgid "Unrecognized algorithm type '{}'"
 msgstr "Niet herkend algoritme type '{}"
 
-#: backends.py:40
+#: backends.py:53
 msgid "You must have cryptography installed to use {}."
 msgstr ""
 
-#: backends.py:74
+#: backends.py:103
 msgid "Invalid algorithm specified"
 msgstr ""
 
-#: backends.py:76 exceptions.py:38 tokens.py:44
+#: backends.py:105 exceptions.py:38 tokens.py:45
 msgid "Token is invalid or expired"
 msgstr "Token is niet geldig of verlopen"
 
-#: serializers.py:24
+#: serializers.py:28
 msgid "No active account found with the given credentials"
 msgstr "Geen actief account gevonden voor deze gegevens"
 
-#: settings.py:63
+#: settings.py:65
 msgid ""
 "The '{}' setting has been removed. Please refer to '{}' for available "
 "settings."
@@ -79,7 +79,7 @@ msgstr "verloopt op"
 msgid "Token Blacklist"
 msgstr "Token Blacklist"
 
-#: tokens.py:30
+#: tokens.py:31
 msgid "Cannot create token with no type or lifetime"
 msgstr "Kan geen token maken zonder type of levensduur"
 
@@ -95,14 +95,14 @@ msgstr "Token heeft geen type"
 msgid "Token has wrong type"
 msgstr "Token heeft het verkeerde type"
 
-#: tokens.py:149
+#: tokens.py:164
 msgid "Token has no '{}' claim"
 msgstr "Token heeft geen '{}' recht"
 
-#: tokens.py:153
+#: tokens.py:168
 msgid "Token '{}' claim has expired"
 msgstr "Token '{}' recht is verlopen"
 
-#: tokens.py:192
+#: tokens.py:216
 msgid "Token is blacklisted"
 msgstr "Token is ge-blacklist"

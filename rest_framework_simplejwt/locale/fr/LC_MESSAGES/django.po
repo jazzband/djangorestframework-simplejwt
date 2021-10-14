@@ -4,56 +4,56 @@ msgid ""
 msgstr ""
 "Project-Id-Version: djangorestframework_simplejwt\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-22 17:30+0100\n"
+"POT-Creation-Date: 2021-10-14 21:46+0000\n"
 "Last-Translator: Stéphane Malta e Sousa <stephane.maltaesousa@ne.ch>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: authentication.py:79
+#: authentication.py:80
 msgid "Authorization header must contain two space-delimited values"
 msgstr ""
 "L'en-tête 'Authorization' doit contenir deux valeurs séparées par des espaces"
 
-#: authentication.py:100
+#: authentication.py:101
 msgid "Given token not valid for any token type"
 msgstr "Le type de jeton fourni n'est pas valide"
 
-#: authentication.py:111 authentication.py:133
+#: authentication.py:112 authentication.py:134
 msgid "Token contained no recognizable user identification"
 msgstr ""
 "Le jeton ne contient aucune information permettant d'identifier l'utilisateur"
 
-#: authentication.py:116
+#: authentication.py:117
 msgid "User not found"
 msgstr "L'utilisateur n'a pas été trouvé"
 
-#: authentication.py:119
+#: authentication.py:120
 msgid "User is inactive"
 msgstr "L'utilisateur est désactivé"
 
-#: backends.py:37
+#: backends.py:50
 msgid "Unrecognized algorithm type '{}'"
 msgstr "Type d'algorithme non reconnu '{}'"
 
-#: backends.py:40
+#: backends.py:53
 msgid "You must have cryptography installed to use {}."
 msgstr "Vous devez installer cryptography afin d'utiliser {}."
 
-#: backends.py:74
+#: backends.py:103
 msgid "Invalid algorithm specified"
 msgstr "L'algorithme spécifié est invalide"
 
-#: backends.py:76 exceptions.py:38 tokens.py:44
+#: backends.py:105 exceptions.py:38 tokens.py:45
 msgid "Token is invalid or expired"
 msgstr "Le jeton est invalide ou expiré"
 
-#: serializers.py:24
+#: serializers.py:28
 msgid "No active account found with the given credentials"
 msgstr "Aucun compte actif n'a été trouvé avec les identifiants fournis"
 
-#: settings.py:63
+#: settings.py:65
 msgid ""
 "The '{}' setting has been removed. Please refer to '{}' for available "
 "settings."
@@ -81,7 +81,7 @@ msgstr "Expire le"
 msgid "Token Blacklist"
 msgstr "Liste des jetons bannis"
 
-#: tokens.py:30
+#: tokens.py:31
 msgid "Cannot create token with no type or lifetime"
 msgstr "Ne peut pas créer de jeton sans type ni durée de vie"
 
@@ -97,14 +97,14 @@ msgstr "Le jeton n'a pas de type"
 msgid "Token has wrong type"
 msgstr "Le jeton a un type erroné"
 
-#: tokens.py:149
+#: tokens.py:164
 msgid "Token has no '{}' claim"
 msgstr "Le jeton n'a pas le privilège '{}'"
 
-#: tokens.py:153
+#: tokens.py:168
 msgid "Token '{}' claim has expired"
 msgstr "Le privilège '{}' du jeton a expiré"
 
-#: tokens.py:192
+#: tokens.py:216
 msgid "Token is blacklisted"
 msgstr "Le jeton a été banni"

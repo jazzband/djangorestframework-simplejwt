@@ -2,12 +2,11 @@
 # Copyright (C) 2021
 # This file is distributed under the same license as the Simple JWT package.
 # zengqiu <zengqiu@qq.com>, 2021.
-
 msgid ""
 msgstr ""
 "Project-Id-Version: djangorestframework_simplejwt\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-06-23 13:29+0800\n"
+"POT-Creation-Date: 2021-10-14 21:46+0000\n"
 "PO-Revision-Date: 2021-06-23 13:29+080\n"
 "Last-Translator: zengqiu <zengqiu@qq.com>\n"
 "Language: zh_Hans\n"
@@ -16,53 +15,51 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: authentication.py:79
+#: authentication.py:80
 msgid "Authorization header must contain two space-delimited values"
 msgstr "授权头必须包含两个用空格分隔的值"
 
-#: authentication.py:100
+#: authentication.py:101
 msgid "Given token not valid for any token type"
 msgstr "此令牌对任何类型的令牌无效"
 
-#: authentication.py:111 authentication.py:133
+#: authentication.py:112 authentication.py:134
 msgid "Token contained no recognizable user identification"
 msgstr "令牌未包含用户标识符"
 
-#: authentication.py:116
+#: authentication.py:117
 msgid "User not found"
 msgstr "未找到该用户"
 
-#: authentication.py:119
+#: authentication.py:120
 msgid "User is inactive"
 msgstr "该用户已禁用"
 
-#: backends.py:37
+#: backends.py:50
 msgid "Unrecognized algorithm type '{}'"
 msgstr "未知算法类型 '{}'"
 
-#: backends.py:40
+#: backends.py:53
 msgid "You must have cryptography installed to use {}."
 msgstr "你必须安装 cryptography 才能使用 {}。"
 
-#: backends.py:74
+#: backends.py:103
 msgid "Invalid algorithm specified"
 msgstr "指定的算法无效"
 
-#: backends.py:76 exceptions.py:38 tokens.py:44
+#: backends.py:105 exceptions.py:38 tokens.py:45
 msgid "Token is invalid or expired"
 msgstr "令牌无效或已过期"
 
-#: serializers.py:24
+#: serializers.py:28
 msgid "No active account found with the given credentials"
 msgstr "找不到指定凭据对应的有效用户"
 
-#: settings.py:63
+#: settings.py:65
 msgid ""
 "The '{}' setting has been removed. Please refer to '{}' for available "
 "settings."
-msgstr ""
-"'{}' 配置已被移除。 请参阅 '{}' 获取可用的"
-"配置。"
+msgstr "'{}' 配置已被移除。 请参阅 '{}' 获取可用的配置。"
 
 #: token_blacklist/admin.py:72
 msgid "jti"
@@ -84,30 +81,30 @@ msgstr "过期时间"
 msgid "Token Blacklist"
 msgstr "令牌黑名单"
 
-#: tokens.py:30
+#: tokens.py:31
 msgid "Cannot create token with no type or lifetime"
 msgstr "无法创建没有类型或生存期的令牌"
 
-#: tokens.py:96
+#: tokens.py:98
 msgid "Token has no id"
 msgstr "令牌没有标识符"
 
-#: tokens.py:107
+#: tokens.py:109
 msgid "Token has no type"
 msgstr "令牌没有类型"
 
-#: tokens.py:110
+#: tokens.py:112
 msgid "Token has wrong type"
 msgstr "令牌类型错误"
 
-#: tokens.py:147
+#: tokens.py:164
 msgid "Token has no '{}' claim"
 msgstr "令牌没有 '{}' 声明"
 
-#: tokens.py:151
+#: tokens.py:168
 msgid "Token '{}' claim has expired"
 msgstr "令牌 '{}' 声明已过期"
 
-#: tokens.py:194
+#: tokens.py:216
 msgid "Token is blacklisted"
 msgstr "令牌已被加入黑名单"

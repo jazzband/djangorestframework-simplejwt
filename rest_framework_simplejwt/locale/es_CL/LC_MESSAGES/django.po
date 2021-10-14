@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: djangorestframework_simplejwt\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-22 17:30+0100\n"
+"POT-Creation-Date: 2021-10-14 21:46+0000\n"
 "Last-Translator: Alfonso Pola <alfonso.pola@gmail.com>\n"
 "Language: es_CL\n"
 "MIME-Version: 1.0\n"
@@ -12,49 +12,49 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: authentication.py:79
+#: authentication.py:80
 msgid "Authorization header must contain two space-delimited values"
 msgstr ""
 "El header de autorización debe contener dos valores delimitados por espacio"
 
-#: authentication.py:100
+#: authentication.py:101
 msgid "Given token not valid for any token type"
 msgstr "El token provisto no es válido para ningún tipo de token"
 
-#: authentication.py:111 authentication.py:133
+#: authentication.py:112 authentication.py:134
 msgid "Token contained no recognizable user identification"
 msgstr "El token no contiene identificación de usuario reconocible"
 
-#: authentication.py:116
+#: authentication.py:117
 msgid "User not found"
 msgstr "Usuario no encontrado"
 
-#: authentication.py:119
+#: authentication.py:120
 msgid "User is inactive"
 msgstr "El usuario está inactivo"
 
-#: backends.py:37
+#: backends.py:50
 msgid "Unrecognized algorithm type '{}'"
 msgstr "Tipo de algoritmo no reconocido '{}'"
 
-#: backends.py:40
+#: backends.py:53
 msgid "You must have cryptography installed to use {}."
 msgstr ""
 
-#: backends.py:74
+#: backends.py:103
 msgid "Invalid algorithm specified"
 msgstr ""
 
-#: backends.py:76 exceptions.py:38 tokens.py:44
+#: backends.py:105 exceptions.py:38 tokens.py:45
 msgid "Token is invalid or expired"
 msgstr "Token inválido o expirado"
 
-#: serializers.py:24
+#: serializers.py:28
 msgid "No active account found with the given credentials"
 msgstr ""
 "No se encontró una cuenta de usuario activa para las credenciales provistas"
 
-#: settings.py:63
+#: settings.py:65
 msgid ""
 "The '{}' setting has been removed. Please refer to '{}' for available "
 "settings."
@@ -82,7 +82,7 @@ msgstr "expira en"
 msgid "Token Blacklist"
 msgstr "Token Blacklist"
 
-#: tokens.py:30
+#: tokens.py:31
 msgid "Cannot create token with no type or lifetime"
 msgstr "No es posible crear un token sin tipo o tiempo de vida"
 
@@ -98,14 +98,14 @@ msgstr "Token no tiene tipo"
 msgid "Token has wrong type"
 msgstr "Token tiene tipo erróneo"
 
-#: tokens.py:149
+#: tokens.py:164
 msgid "Token has no '{}' claim"
 msgstr "Token no tiene privilegio '{}'"
 
-#: tokens.py:153
+#: tokens.py:168
 msgid "Token '{}' claim has expired"
 msgstr "El provilegio '{}' del token está expirado"
 
-#: tokens.py:192
+#: tokens.py:216
 msgid "Token is blacklisted"
 msgstr "Token está en la blacklist"

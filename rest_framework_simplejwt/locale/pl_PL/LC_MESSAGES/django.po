@@ -4,54 +4,54 @@ msgid ""
 msgstr ""
 "Project-Id-Version: djangorestframework_simplejwt\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-22 17:30+0100\n"
+"POT-Creation-Date: 2021-10-14 21:46+0000\n"
 "Last-Translator: Mateusz Slisz <mat.slisz@yahoo.com>\n"
 "Language: pl_PL\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: authentication.py:79
+#: authentication.py:80
 msgid "Authorization header must contain two space-delimited values"
 msgstr "Nagłówek autoryzacji musi zawierać dwie wartości rodzielone spacjami"
 
-#: authentication.py:100
+#: authentication.py:101
 msgid "Given token not valid for any token type"
 msgstr "Podany token jest błędny dla każdego typu tokena"
 
-#: authentication.py:111 authentication.py:133
+#: authentication.py:112 authentication.py:134
 msgid "Token contained no recognizable user identification"
 msgstr "Token nie zawierał rozpoznawalnej identyfikacji użytkownika"
 
-#: authentication.py:116
+#: authentication.py:117
 msgid "User not found"
 msgstr "Użytkownik nie znaleziony"
 
-#: authentication.py:119
+#: authentication.py:120
 msgid "User is inactive"
 msgstr "Użytkownik jest nieaktywny"
 
-#: backends.py:37
+#: backends.py:50
 msgid "Unrecognized algorithm type '{}'"
 msgstr "Nierozpoznany typ algorytmu '{}'"
 
-#: backends.py:40
+#: backends.py:53
 msgid "You must have cryptography installed to use {}."
 msgstr ""
 
-#: backends.py:74
+#: backends.py:103
 msgid "Invalid algorithm specified"
 msgstr ""
 
-#: backends.py:76 exceptions.py:38 tokens.py:44
+#: backends.py:105 exceptions.py:38 tokens.py:45
 msgid "Token is invalid or expired"
 msgstr "Token jest niepoprawny lub wygasł"
 
-#: serializers.py:24
+#: serializers.py:28
 msgid "No active account found with the given credentials"
 msgstr "Nie znaleziono aktywnego konta dla podanych danych uwierzytelniających"
 
-#: settings.py:63
+#: settings.py:65
 msgid ""
 "The '{}' setting has been removed. Please refer to '{}' for available "
 "settings."
@@ -78,7 +78,7 @@ msgstr "wygasa o"
 msgid "Token Blacklist"
 msgstr "Token Blacklist"
 
-#: tokens.py:30
+#: tokens.py:31
 msgid "Cannot create token with no type or lifetime"
 msgstr "Nie można utworzyć tokena bez podanego typu lub żywotności"
 
@@ -94,14 +94,14 @@ msgstr "Token nie posiada typu"
 msgid "Token has wrong type"
 msgstr "Token posiada zły typ"
 
-#: tokens.py:149
+#: tokens.py:164
 msgid "Token has no '{}' claim"
 msgstr "Token nie posiada upoważnienia '{}'"
 
-#: tokens.py:153
+#: tokens.py:168
 msgid "Token '{}' claim has expired"
 msgstr "Upoważnienie tokena '{}' wygasło"
 
-#: tokens.py:192
+#: tokens.py:216
 msgid "Token is blacklisted"
 msgstr "Token znajduję się na czarnej liście"

@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: djangorestframework_simplejwt\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-22 17:30+0100\n"
+"POT-Creation-Date: 2021-10-14 21:46+0000\n"
 "Last-Translator: oon arfiandwi <oon.arfiandwi@gmail.com>\n"
 "Language: id_ID\n"
 "MIME-Version: 1.0\n"
@@ -12,47 +12,47 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: authentication.py:79
+#: authentication.py:80
 msgid "Authorization header must contain two space-delimited values"
 msgstr "Header otorisasi harus berisi dua nilai yang dipisahkan spasi"
 
-#: authentication.py:100
+#: authentication.py:101
 msgid "Given token not valid for any token type"
 msgstr "Token yang diberikan tidak valid untuk semua jenis token"
 
-#: authentication.py:111 authentication.py:133
+#: authentication.py:112 authentication.py:134
 msgid "Token contained no recognizable user identification"
 msgstr "Token tidak mengandung identifikasi pengguna yang dapat dikenali"
 
-#: authentication.py:116
+#: authentication.py:117
 msgid "User not found"
 msgstr "Pengguna tidak ditemukan"
 
-#: authentication.py:119
+#: authentication.py:120
 msgid "User is inactive"
 msgstr "Pengguna tidak aktif"
 
-#: backends.py:37
+#: backends.py:50
 msgid "Unrecognized algorithm type '{}'"
 msgstr "Jenis algoritma tidak dikenal '{}'"
 
-#: backends.py:40
+#: backends.py:53
 msgid "You must have cryptography installed to use {}."
 msgstr "Anda harus memasang kriptografi untuk menggunakan {}."
 
-#: backends.py:74
+#: backends.py:103
 msgid "Invalid algorithm specified"
 msgstr "Algoritma yang ditentukan tidak valid"
 
-#: backends.py:76 exceptions.py:38 tokens.py:44
+#: backends.py:105 exceptions.py:38 tokens.py:45
 msgid "Token is invalid or expired"
 msgstr "Token tidak valid atau kedaluwarsa"
 
-#: serializers.py:24
+#: serializers.py:28
 msgid "No active account found with the given credentials"
 msgstr "Tidak ada akun aktif yang ditemukan dengan kredensial yang diberikan"
 
-#: settings.py:63
+#: settings.py:65
 msgid ""
 "The '{}' setting has been removed. Please refer to '{}' for available "
 "settings."
@@ -80,7 +80,7 @@ msgstr "kedaluwarsa pada"
 msgid "Token Blacklist"
 msgstr "Daftar Hitam Token"
 
-#: tokens.py:30
+#: tokens.py:31
 msgid "Cannot create token with no type or lifetime"
 msgstr "Tidak dapat membuat token tanpa tipe atau masa pakai"
 
@@ -96,14 +96,14 @@ msgstr "Token tidak memiliki tipe"
 msgid "Token has wrong type"
 msgstr "Jenis token salah"
 
-#: tokens.py:149
+#: tokens.py:164
 msgid "Token has no '{}' claim"
 msgstr "Token tidak memiliki klaim '{}'"
 
-#: tokens.py:153
+#: tokens.py:168
 msgid "Token '{}' claim has expired"
 msgstr "Klaim token '{}' telah kedaluwarsa"
 
-#: tokens.py:192
+#: tokens.py:216
 msgid "Token is blacklisted"
 msgstr "Token masuk daftar hitam"

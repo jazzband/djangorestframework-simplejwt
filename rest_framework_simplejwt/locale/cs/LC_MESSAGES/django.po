@@ -4,54 +4,54 @@ msgid ""
 msgstr ""
 "Project-Id-Version: djangorestframework_simplejwt\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-22 17:30+0100\n"
+"POT-Creation-Date: 2021-10-14 21:46+0000\n"
 "Last-Translator: Lukáš Rod <info@lukasrod.cz>\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: authentication.py:79
+#: authentication.py:80
 msgid "Authorization header must contain two space-delimited values"
 msgstr "Autorizační hlavička musí obsahovat dvě hodnoty oddělené mezerou"
 
-#: authentication.py:100
+#: authentication.py:101
 msgid "Given token not valid for any token type"
 msgstr "Daný token není validní pro žádný typ tokenu"
 
-#: authentication.py:111 authentication.py:133
+#: authentication.py:112 authentication.py:134
 msgid "Token contained no recognizable user identification"
 msgstr "Token neobsahoval žádnou rozpoznatelnou identifikaci uživatele"
 
-#: authentication.py:116
+#: authentication.py:117
 msgid "User not found"
 msgstr "Uživatel nenalezen"
 
-#: authentication.py:119
+#: authentication.py:120
 msgid "User is inactive"
 msgstr "Uživatel není aktivní"
 
-#: backends.py:37
+#: backends.py:50
 msgid "Unrecognized algorithm type '{}'"
 msgstr "Nerozpoznaný typ algoritmu '{}'"
 
-#: backends.py:40
+#: backends.py:53
 msgid "You must have cryptography installed to use {}."
 msgstr ""
 
-#: backends.py:74
+#: backends.py:103
 msgid "Invalid algorithm specified"
 msgstr ""
 
-#: backends.py:76 exceptions.py:38 tokens.py:44
+#: backends.py:105 exceptions.py:38 tokens.py:45
 msgid "Token is invalid or expired"
 msgstr "Token není validní nebo vypršela jeho platnost"
 
-#: serializers.py:24
+#: serializers.py:28
 msgid "No active account found with the given credentials"
 msgstr "Žádný aktivní účet s danými údaji nebyl nalezen"
 
-#: settings.py:63
+#: settings.py:65
 msgid ""
 "The '{}' setting has been removed. Please refer to '{}' for available "
 "settings."
@@ -77,7 +77,7 @@ msgstr "platí do"
 msgid "Token Blacklist"
 msgstr "Token Blacklist"
 
-#: tokens.py:30
+#: tokens.py:31
 msgid "Cannot create token with no type or lifetime"
 msgstr "Nelze vytvořit token bez zadaného typu nebo životnosti"
 
@@ -93,14 +93,14 @@ msgstr "Token nemá žádný typ"
 msgid "Token has wrong type"
 msgstr "Token má špatný typ"
 
-#: tokens.py:149
+#: tokens.py:164
 msgid "Token has no '{}' claim"
 msgstr "Token nemá žádnou hodnotu '{}'"
 
-#: tokens.py:153
+#: tokens.py:168
 msgid "Token '{}' claim has expired"
 msgstr "Hodnota tokenu '{}' vypršela"
 
-#: tokens.py:192
+#: tokens.py:216
 msgid "Token is blacklisted"
 msgstr "Token je na černé listině"
