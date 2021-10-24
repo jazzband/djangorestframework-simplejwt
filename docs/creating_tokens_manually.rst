@@ -8,7 +8,7 @@ done as follows:
 
 .. code-block:: python
 
-  from rest_framework_simplejwt.tokens import RefreshToken
+  from ninja_jwt.tokens import RefreshToken
 
   def get_tokens_for_user(user):
       refresh = RefreshToken.for_user(user)
@@ -20,5 +20,5 @@ done as follows:
 
 The above function ``get_tokens_for_user`` will return the serialized
 representations of new refresh and access tokens for the given user.  In
-general, a token for any subclass of ``rest_framework_simplejwt.tokens.Token``
+general, a token for any subclass of ``ninja_jwt.tokens.Token``
 can be created in this way.

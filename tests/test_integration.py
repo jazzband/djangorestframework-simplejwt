@@ -2,9 +2,9 @@ from datetime import timedelta
 
 from django.contrib.auth import get_user_model
 
-from rest_framework_simplejwt.compat import reverse
-from rest_framework_simplejwt.settings import api_settings
-from rest_framework_simplejwt.tokens import AccessToken
+from ninja_jwt.compat import reverse
+from ninja_jwt.settings import api_settings
+from ninja_jwt.tokens import AccessToken
 
 from .utils import APIViewTestCase, override_api_settings
 
@@ -63,7 +63,7 @@ class TestTestView(APIViewTestCase):
         access = res.data['access']
         self.authenticate_with_token(api_settings.AUTH_HEADER_TYPES[0], access)
 
-        with override_api_settings(AUTH_TOKEN_CLASSES=('rest_framework_simplejwt.tokens.AccessToken',)):
+        with override_api_settings(AUTH_TOKEN_CLASSES=('ninja_jwt.tokens.AccessToken',)):
             res = self.view_get()
 
         self.assertEqual(res.status_code, 401)
@@ -81,7 +81,7 @@ class TestTestView(APIViewTestCase):
         token = res.data['token']
         self.authenticate_with_token(api_settings.AUTH_HEADER_TYPES[0], token)
 
-        with override_api_settings(AUTH_TOKEN_CLASSES=('rest_framework_simplejwt.tokens.SlidingToken',)):
+        with override_api_settings(AUTH_TOKEN_CLASSES=('ninja_jwt.tokens.SlidingToken',)):
             res = self.view_get()
 
         self.assertEqual(res.status_code, 200)
@@ -101,7 +101,7 @@ class TestTestView(APIViewTestCase):
 
         self.authenticate_with_token(api_settings.AUTH_HEADER_TYPES[0], access)
 
-        with override_api_settings(AUTH_TOKEN_CLASSES=('rest_framework_simplejwt.tokens.AccessToken',)):
+        with override_api_settings(AUTH_TOKEN_CLASSES=('ninja_jwt.tokens.AccessToken',)):
             res = self.view_get()
 
         self.assertEqual(res.status_code, 200)
@@ -116,7 +116,7 @@ class TestTestView(APIViewTestCase):
 
         self.authenticate_with_token(api_settings.AUTH_HEADER_TYPES[0], access)
 
-        with override_api_settings(AUTH_TOKEN_CLASSES=('rest_framework_simplejwt.tokens.AccessToken',)):
+        with override_api_settings(AUTH_TOKEN_CLASSES=('ninja_jwt.tokens.AccessToken',)):
             res = self.view_get()
 
         self.assertEqual(res.status_code, 200)

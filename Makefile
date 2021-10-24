@@ -1,69 +1,34 @@
-.PHONY: clean
-clean: clean-build clean-pyc
+.PHONY: help docs
+.DEFAULT_GOAL := help
 
-.PHONY: clean-build
-clean-build:
-	rm -fr build/
-	rm -fr dist/
-	rm -fr *.egg-info
+help:
+	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
-.PHONY: clean-pyc
-clean-pyc:
-	find . -name '*.pyc' -exec rm -f {} +
-	find . -name '*.pyo' -exec rm -f {} +
-	find . -name '*~' -exec rm -f {} +
+clean: ## Removing cached python compiled files
+	find . -name \*pyc  | xargs  rm -fv
+	find . -name \*pyo | xargs  rm -fv
+	find . -name \*~  | xargs  rm -fv
+	find . -name __pycache__  | xargs  rm -rfv
 
-.PHONY: lint
-lint:
-	tox -e lint
+install: ## Install dependencies
+	flit install --deps develop --symlink
 
-.PHONY: lint-roll
-lint-roll:
-	isort rest_framework_simplejwt tests
-	$(MAKE) lint
+lint: ## Run code linters
+	make clean
+	black --check ninja_jwt tests
+	isort --check ninja_jwt tests
+	flake8 ninja_jwt tests
+	mypy  ninja_jwt
 
-.PHONY: tests
-test:
-	pytest tests
+fmt format: ## Run code formatters
+	make clean
+	black ninja_jwt tests
+	isort ninja_jwt tests
 
-.PHONY: test-all
-test-all:
-	tox
+test: ## Run tests
+	make clean
+	pytest .
 
-.PHONY: build-docs
-build-docs:
-	sphinx-apidoc -o docs/ . \
-		setup.py \
-		*confest* \
-		tests/* \
-		rest_framework_simplejwt/token_blacklist/* \
-		rest_framework_simplejwt/backends.py \
-		rest_framework_simplejwt/compat.py \
-		rest_framework_simplejwt/exceptions.py \
-		rest_framework_simplejwt/settings.py \
-		rest_framework_simplejwt/state.py
-	$(MAKE) -C docs clean
-	$(MAKE) -C docs html
-	$(MAKE) -C docs doctest
-
-.PHONY: docs
-docs: build-docs
-	open docs/_build/html/index.html
-
-.PHONY: linux-docs
-linux-docs: build-docs
-	xdg-open docs/_build/html/index.html
-
-.PHONY: pushversion
-pushversion:
-	git push upstream && git push upstream --tags
-
-.PHONY: publish
-publish:
-	python setup.py sdist bdist_wheel
-	twine upload dist/*
-
-.PHONY: dist
-dist: clean
-	python setup.py sdist bdist_wheel
-	ls -l dist
+test-cov: ## Run tests with coverage
+	make clean
+	pytest --cov=ninja_jwt --cov-report term-missing tests

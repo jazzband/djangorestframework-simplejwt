@@ -54,7 +54,7 @@ Contents
     experimental_features
     development_and_contributing
     drf_yasg_integration
-    rest_framework_simplejwt
+    ninja_jwt
 
 
 Indices and tables

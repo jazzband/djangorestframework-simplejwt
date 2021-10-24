@@ -33,9 +33,9 @@ Some of Simple JWT's behavior can be customized through settings variables in
       'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
       'USER_ID_FIELD': 'id',
       'USER_ID_CLAIM': 'user_id',
-      'USER_AUTHENTICATION_RULE': 'rest_framework_simplejwt.authentication.default_user_authentication_rule',
+      'USER_AUTHENTICATION_RULE': 'ninja_jwt.authentication.default_user_authentication_rule',
 
-      'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+      'AUTH_TOKEN_CLASSES': ('ninja_jwt.tokens.AccessToken',),
       'TOKEN_TYPE_CLAIM': 'token_type',
 
       'JTI_CLAIM': 'jti',
@@ -79,7 +79,7 @@ tokens submitted to the refresh view will be added to the blacklist.
 When set to ``True``, causes refresh tokens submitted to the
 ``TokenRefreshView`` to be added to the blacklist if the blacklist app is in
 use and the ``ROTATE_REFRESH_TOKENS`` setting is set to ``True``.
-You need to add ``'rest_framework_simplejwt.token_blacklist',`` to your 
+You need to add ``'ninja_jwt.token_blacklist',`` to your
 ``INSTALLED_APPS`` in the settings file to use this setting.
 
 Learn more about :doc:`/blacklist_app`.

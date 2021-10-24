@@ -13,7 +13,7 @@ following code to decorate your JWT ``View`` definitions.
 
     from drf_yasg.utils import swagger_auto_schema
     from rest_framework import serializers, status
-    from rest_framework_simplejwt.views import (
+    from ninja_jwt.views import (
         TokenObtainPairView, TokenRefreshView, TokenVerifyView)
 
 

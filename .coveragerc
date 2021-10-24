@@ -1,4 +1,4 @@
 [run]
 omit =
-        rest_framework_simplejwt/token_blacklist/admin.py
-        rest_framework_simplejwt/token_blacklist/apps.py
+        ninja_jwt/token_blacklist/admin.py
+        ninja_jwt/token_blacklist/apps.py

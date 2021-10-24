@@ -7,7 +7,7 @@ Submodules
 rest\_framework\_simplejwt.authentication module
 ------------------------------------------------
 
-.. automodule:: rest_framework_simplejwt.authentication
+.. automodule:: ninja_jwt.authentication
     :members:
     :undoc-members:
     :show-inheritance:
@@ -15,7 +15,7 @@ rest\_framework\_simplejwt.authentication module
 rest\_framework\_simplejwt.models module
 ----------------------------------------
 
-.. automodule:: rest_framework_simplejwt.models
+.. automodule:: ninja_jwt.models
     :members:
     :undoc-members:
     :show-inheritance:
@@ -23,7 +23,7 @@ rest\_framework\_simplejwt.models module
 rest\_framework\_simplejwt.serializers module
 ---------------------------------------------
 
-.. automodule:: rest_framework_simplejwt.serializers
+.. automodule:: ninja_jwt.serializers
     :members:
     :undoc-members:
     :show-inheritance:
@@ -31,7 +31,7 @@ rest\_framework\_simplejwt.serializers module
 rest\_framework\_simplejwt.tokens module
 ----------------------------------------
 
-.. automodule:: rest_framework_simplejwt.tokens
+.. automodule:: ninja_jwt.tokens
     :members:
     :undoc-members:
     :show-inheritance:
@@ -39,7 +39,7 @@ rest\_framework\_simplejwt.tokens module
 rest\_framework\_simplejwt.utils module
 ---------------------------------------
 
-.. automodule:: rest_framework_simplejwt.utils
+.. automodule:: ninja_jwt.utils
     :members:
     :undoc-members:
     :show-inheritance:
@@ -47,7 +47,7 @@ rest\_framework\_simplejwt.utils module
 rest\_framework\_simplejwt.views module
 ---------------------------------------
 
-.. automodule:: rest_framework_simplejwt.views
+.. automodule:: ninja_jwt.views
     :members:
     :undoc-members:
     :show-inheritance:
@@ -56,7 +56,7 @@ rest\_framework\_simplejwt.views module
 Module contents
 ---------------
 
-.. automodule:: rest_framework_simplejwt
+.. automodule:: ninja_jwt
     :members:
     :undoc-members:
     :show-inheritance:

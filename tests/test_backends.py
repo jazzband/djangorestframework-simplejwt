@@ -6,9 +6,9 @@ import jwt
 from django.test import TestCase
 from jwt import PyJWS, algorithms
 
-from rest_framework_simplejwt.backends import TokenBackend
-from rest_framework_simplejwt.exceptions import TokenBackendError
-from rest_framework_simplejwt.utils import (
+from ninja_jwt.backends import TokenBackend
+from ninja_jwt.exceptions import TokenBackendError
+from ninja_jwt.utils import (
     aware_utcnow, datetime_to_epoch, make_utc,
 )
 from tests.keys import PRIVATE_KEY, PRIVATE_KEY_2, PUBLIC_KEY, PUBLIC_KEY_2
@@ -256,7 +256,7 @@ class TestTokenBackend(TestCase):
         self.payload["exp"] = datetime_to_epoch(self.payload["exp"])
 
         mock_jwk_module = mock.MagicMock()
-        with patch("rest_framework_simplejwt.backends.PyJWKClient") as mock_jwk_module:
+        with patch("ninja_jwt.backends.PyJWKClient") as mock_jwk_module:
             mock_jwk_client = mock.MagicMock()
             mock_signing_key = mock.MagicMock()
 

@@ -1,7 +1,7 @@
 from django.test import TestCase
 
-from rest_framework_simplejwt.models import TokenUser
-from rest_framework_simplejwt.settings import api_settings
+from ninja_jwt.models import TokenUser
+from ninja_jwt.settings import api_settings
 
 AuthToken = api_settings.AUTH_TOKEN_CLASSES[0]
 

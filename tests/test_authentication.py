@@ -5,13 +5,13 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 from rest_framework.test import APIRequestFactory
 
-from rest_framework_simplejwt import authentication
-from rest_framework_simplejwt.exceptions import (
+from ninja_jwt import authentication
+from ninja_jwt.exceptions import (
     AuthenticationFailed, InvalidToken,
 )
-from rest_framework_simplejwt.models import TokenUser
-from rest_framework_simplejwt.settings import api_settings
-from rest_framework_simplejwt.tokens import AccessToken, SlidingToken
+from ninja_jwt.models import TokenUser
+from ninja_jwt.settings import api_settings
+from ninja_jwt.tokens import AccessToken, SlidingToken
 
 from .utils import override_api_settings
 
@@ -93,7 +93,7 @@ class TestJWTAuthentication(TestCase):
         # Should not accept tokens not included in AUTH_TOKEN_CLASSES
         sliding_token = SlidingToken()
         with override_api_settings(AUTH_TOKEN_CLASSES=(
-            'rest_framework_simplejwt.tokens.AccessToken',
+            'ninja_jwt.tokens.AccessToken',
         )):
             with self.assertRaises(InvalidToken) as e:
                 self.backend.get_validated_token(str(sliding_token))
@@ -113,8 +113,8 @@ class TestJWTAuthentication(TestCase):
         access_token = AccessToken()
         sliding_token = SlidingToken()
         with override_api_settings(AUTH_TOKEN_CLASSES=(
-            'rest_framework_simplejwt.tokens.AccessToken',
-            'rest_framework_simplejwt.tokens.SlidingToken',
+            'ninja_jwt.tokens.AccessToken',
+            'ninja_jwt.tokens.SlidingToken',
         )):
             self.backend.get_validated_token(str(access_token))
             self.backend.get_validated_token(str(sliding_token))

@@ -5,12 +5,12 @@ from unittest.mock import patch
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 
-from rest_framework_simplejwt import serializers
-from rest_framework_simplejwt.settings import api_settings
-from rest_framework_simplejwt.tokens import (
+from ninja_jwt import serializers
+from ninja_jwt.settings import api_settings
+from ninja_jwt.tokens import (
     AccessToken, RefreshToken, SlidingToken,
 )
-from rest_framework_simplejwt.utils import (
+from ninja_jwt.utils import (
     aware_utcnow, datetime_from_epoch, datetime_to_epoch,
 )
 
@@ -135,7 +135,7 @@ class TestTokenRefreshView(APIViewTestCase):
         # View returns 200
         now = aware_utcnow() - api_settings.ACCESS_TOKEN_LIFETIME / 2
 
-        with patch('rest_framework_simplejwt.tokens.aware_utcnow') as fake_aware_utcnow:
+        with patch('ninja_jwt.tokens.aware_utcnow') as fake_aware_utcnow:
             fake_aware_utcnow.return_value = now
 
             res = self.view_post(data={'refresh': str(refresh)})
@@ -375,7 +375,7 @@ class TestTokenBlacklistView(APIViewTestCase):
         # View returns 200
         now = aware_utcnow() - api_settings.ACCESS_TOKEN_LIFETIME / 2
 
-        with patch('rest_framework_simplejwt.tokens.aware_utcnow') as fake_aware_utcnow:
+        with patch('ninja_jwt.tokens.aware_utcnow') as fake_aware_utcnow:
             fake_aware_utcnow.return_value = now
 
             res = self.view_post(data={'refresh': str(refresh)})
@@ -391,7 +391,7 @@ class TestTokenBlacklistView(APIViewTestCase):
         # View returns 200
         now = aware_utcnow() - api_settings.ACCESS_TOKEN_LIFETIME / 2
 
-        with patch('rest_framework_simplejwt.tokens.aware_utcnow') as fake_aware_utcnow:
+        with patch('ninja_jwt.tokens.aware_utcnow') as fake_aware_utcnow:
             fake_aware_utcnow.return_value = now
 
             res = self.view_post(data={'refresh': str(refresh)})

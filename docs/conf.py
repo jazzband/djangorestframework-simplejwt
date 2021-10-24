@@ -35,8 +35,8 @@ def django_configure():
             'django.contrib.staticfiles',
 
             'rest_framework',
-            'rest_framework_simplejwt',
-            'rest_framework_simplejwt.token_blacklist',
+            'ninja_jwt',
+            'ninja_jwt.token_blacklist',
         ),
     )
 
@@ -82,7 +82,7 @@ copyright = '2020, David Sanders'
 # built documents.
 #
 # The full version, including alpha/beta/rc tags.
-release = get_distribution("djangorestframework_simplejwt").version
+release = get_distribution("django-ninja-jwt").version
 
 # The short X.Y version.
 version = ".".join(release.split(".")[:2])
@@ -210,7 +210,7 @@ html_static_path = ['_static']
 #html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'rest_framework_simplejwtdoc'
+htmlhelp_basename = 'ninja_jwtdoc'
 
 
 # -- Options for LaTeX output ---------------------------------------------
@@ -230,7 +230,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-  ('index', 'rest_framework_simplejwt.tex', 'Simple JWT Documentation',
+  ('index', 'ninja_jwt.tex', 'Simple JWT Documentation',
    'David Sanders', 'manual'),
 ]
 
@@ -260,7 +260,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'rest_framework_simplejwt', 'Simple JWT Documentation',
+    ('index', 'ninja_jwt', 'Simple JWT Documentation',
      ['David Sanders'], 1)
 ]
 

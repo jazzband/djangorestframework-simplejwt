@@ -5,16 +5,16 @@ from django.core.management import call_command
 from django.db.models import BigAutoField
 from django.test import TestCase
 
-from rest_framework_simplejwt.exceptions import TokenError
-from rest_framework_simplejwt.serializers import TokenVerifySerializer
-from rest_framework_simplejwt.settings import api_settings
-from rest_framework_simplejwt.token_blacklist.models import (
+from ninja_jwt.exceptions import TokenError
+from ninja_jwt.serializers import TokenVerifySerializer
+from ninja_jwt.settings import api_settings
+from ninja_jwt.token_blacklist.models import (
     BlacklistedToken, OutstandingToken,
 )
-from rest_framework_simplejwt.tokens import (
+from ninja_jwt.tokens import (
     AccessToken, RefreshToken, SlidingToken,
 )
-from rest_framework_simplejwt.utils import aware_utcnow, datetime_from_epoch
+from ninja_jwt.utils import aware_utcnow, datetime_from_epoch
 
 from .utils import MigrationTestCase, override_api_settings
 
@@ -132,7 +132,7 @@ class TestTokenBlacklistFlushExpiredTokens(TestCase):
         # Make tokens with fake exp time that will expire soon
         fake_now = aware_utcnow() - api_settings.REFRESH_TOKEN_LIFETIME
 
-        with patch('rest_framework_simplejwt.tokens.aware_utcnow') as fake_aware_utcnow:
+        with patch('ninja_jwt.tokens.aware_utcnow') as fake_aware_utcnow:
             fake_aware_utcnow.return_value = fake_now
             expired_1 = RefreshToken.for_user(self.user)
             expired_2 = RefreshToken()

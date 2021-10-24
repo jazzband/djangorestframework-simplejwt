@@ -4,7 +4,7 @@ from unittest.mock import patch
 from django.test import TestCase
 from django.utils import timezone
 
-from rest_framework_simplejwt.utils import (
+from ninja_jwt.utils import (
     aware_utcnow, datetime_from_epoch, datetime_to_epoch, format_lazy,
     make_utc,
 )
@@ -33,7 +33,7 @@ class TestAwareUtcnow(TestCase):
     def test_it_should_return_the_correct_value(self):
         now = datetime.utcnow()
 
-        with patch('rest_framework_simplejwt.utils.datetime') as fake_datetime:
+        with patch('ninja_jwt.utils.datetime') as fake_datetime:
             fake_datetime.utcnow.return_value = now
 
             # Should return aware utcnow if USE_TZ == True

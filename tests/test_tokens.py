@@ -5,13 +5,13 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 from jose import jwt
 
-from rest_framework_simplejwt.exceptions import TokenError
-from rest_framework_simplejwt.settings import api_settings
-from rest_framework_simplejwt.state import token_backend
-from rest_framework_simplejwt.tokens import (
+from ninja_jwt.exceptions import TokenError
+from ninja_jwt.settings import api_settings
+from ninja_jwt.state import token_backend
+from ninja_jwt.tokens import (
     AccessToken, RefreshToken, SlidingToken, Token, UntypedToken,
 )
-from rest_framework_simplejwt.utils import (
+from ninja_jwt.utils import (
     aware_utcnow, datetime_to_epoch, make_utc,
 )
 
@@ -53,7 +53,7 @@ class TestToken(TestCase):
     def test_init_no_token_given(self):
         now = make_utc(datetime(year=2000, month=1, day=1))
 
-        with patch('rest_framework_simplejwt.tokens.aware_utcnow') as fake_aware_utcnow:
+        with patch('ninja_jwt.tokens.aware_utcnow') as fake_aware_utcnow:
             fake_aware_utcnow.return_value = now
             t = MyToken()
 
@@ -70,7 +70,7 @@ class TestToken(TestCase):
         # Test successful instantiation
         original_now = aware_utcnow()
 
-        with patch('rest_framework_simplejwt.tokens.aware_utcnow') as fake_aware_utcnow:
+        with patch('ninja_jwt.tokens.aware_utcnow') as fake_aware_utcnow:
             fake_aware_utcnow.return_value = original_now
             good_token = MyToken()
 
@@ -80,7 +80,7 @@ class TestToken(TestCase):
         now = aware_utcnow()
 
         # Create new token from encoded token
-        with patch('rest_framework_simplejwt.tokens.aware_utcnow') as fake_aware_utcnow:
+        with patch('ninja_jwt.tokens.aware_utcnow') as fake_aware_utcnow:
             fake_aware_utcnow.return_value = now
             # Should raise no exception
             t = MyToken(encoded_good_token)

@@ -5,8 +5,8 @@ from django.db.migrations.executor import MigrationExecutor
 from django.test import TestCase, TransactionTestCase
 from rest_framework.test import APIClient
 
-from rest_framework_simplejwt.compat import reverse
-from rest_framework_simplejwt.settings import api_settings
+from ninja_jwt.compat import reverse
+from ninja_jwt.settings import api_settings
 
 
 def client_action_wrapper(action):

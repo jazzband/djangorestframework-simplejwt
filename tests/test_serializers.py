@@ -5,20 +5,20 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 from rest_framework import exceptions as drf_exceptions
 
-from rest_framework_simplejwt.exceptions import TokenError
-from rest_framework_simplejwt.serializers import (
+from ninja_jwt.exceptions import TokenError
+from ninja_jwt.serializers import (
     TokenBlacklistSerializer, TokenObtainPairSerializer, TokenObtainSerializer,
     TokenObtainSlidingSerializer, TokenRefreshSerializer,
     TokenRefreshSlidingSerializer, TokenVerifySerializer,
 )
-from rest_framework_simplejwt.settings import api_settings
-from rest_framework_simplejwt.token_blacklist.models import (
+from ninja_jwt.settings import api_settings
+from ninja_jwt.token_blacklist.models import (
     BlacklistedToken, OutstandingToken,
 )
-from rest_framework_simplejwt.tokens import (
+from ninja_jwt.tokens import (
     AccessToken, RefreshToken, SlidingToken,
 )
-from rest_framework_simplejwt.utils import (
+from ninja_jwt.utils import (
     aware_utcnow, datetime_from_epoch, datetime_to_epoch,
 )
 
@@ -243,7 +243,7 @@ class TestTokenRefreshSerializer(TestCase):
 
         now = aware_utcnow() - api_settings.ACCESS_TOKEN_LIFETIME / 2
 
-        with patch('rest_framework_simplejwt.tokens.aware_utcnow') as fake_aware_utcnow:
+        with patch('ninja_jwt.tokens.aware_utcnow') as fake_aware_utcnow:
             fake_aware_utcnow.return_value = now
             self.assertTrue(s.is_valid())
 
@@ -266,7 +266,7 @@ class TestTokenRefreshSerializer(TestCase):
         now = aware_utcnow() - api_settings.ACCESS_TOKEN_LIFETIME / 2
 
         with override_api_settings(ROTATE_REFRESH_TOKENS=True, BLACKLIST_AFTER_ROTATION=False):
-            with patch('rest_framework_simplejwt.tokens.aware_utcnow') as fake_aware_utcnow:
+            with patch('ninja_jwt.tokens.aware_utcnow') as fake_aware_utcnow:
                 fake_aware_utcnow.return_value = now
                 self.assertTrue(ser.is_valid())
 
@@ -299,7 +299,7 @@ class TestTokenRefreshSerializer(TestCase):
         now = aware_utcnow() - api_settings.ACCESS_TOKEN_LIFETIME / 2
 
         with override_api_settings(ROTATE_REFRESH_TOKENS=True, BLACKLIST_AFTER_ROTATION=True):
-            with patch('rest_framework_simplejwt.tokens.aware_utcnow') as fake_aware_utcnow:
+            with patch('ninja_jwt.tokens.aware_utcnow') as fake_aware_utcnow:
                 fake_aware_utcnow.return_value = now
                 self.assertTrue(ser.is_valid())
 
@@ -360,7 +360,7 @@ class TestTokenVerifySerializer(TestCase):
 
         now = aware_utcnow() - api_settings.ACCESS_TOKEN_LIFETIME / 2
 
-        with patch('rest_framework_simplejwt.tokens.aware_utcnow') as fake_aware_utcnow:
+        with patch('ninja_jwt.tokens.aware_utcnow') as fake_aware_utcnow:
             fake_aware_utcnow.return_value = now
             self.assertTrue(s.is_valid())
 
@@ -408,7 +408,7 @@ class TestTokenBlacklistSerializer(TestCase):
 
         now = aware_utcnow() - api_settings.ACCESS_TOKEN_LIFETIME / 2
 
-        with patch('rest_framework_simplejwt.tokens.aware_utcnow') as fake_aware_utcnow:
+        with patch('ninja_jwt.tokens.aware_utcnow') as fake_aware_utcnow:
             fake_aware_utcnow.return_value = now
             self.assertTrue(s.is_valid())
 
@@ -429,7 +429,7 @@ class TestTokenBlacklistSerializer(TestCase):
 
         now = aware_utcnow() - api_settings.ACCESS_TOKEN_LIFETIME / 2
 
-        with patch('rest_framework_simplejwt.tokens.aware_utcnow') as fake_aware_utcnow:
+        with patch('ninja_jwt.tokens.aware_utcnow') as fake_aware_utcnow:
             fake_aware_utcnow.return_value = now
             self.assertTrue(ser.is_valid())
 

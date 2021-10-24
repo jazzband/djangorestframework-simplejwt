@@ -14,8 +14,8 @@ By default, Simple JWT expects an "access" token to prove authentication.  The
 allowed auth token types are determined by the value of the
 ``AUTH_TOKEN_CLASSES`` setting.  This setting contains a list of dot paths to
 token classes.  It includes the
-``'rest_framework_simplejwt.tokens.AccessToken'`` dot path by default but may
-also include the ``'rest_framework_simplejwt.tokens.SlidingToken'`` dot path.
+``'ninja_jwt.tokens.AccessToken'`` dot path by default but may
+also include the ``'ninja_jwt.tokens.SlidingToken'`` dot path.
 Either or both of those dot paths may be present in the list of auth token
 classes.  If they are both present, then both of those token types may be used
 to prove authentication.
@@ -33,10 +33,10 @@ expiration claim has not passed, it may also be submitted to a refresh view to
 get another copy of itself with a renewed expiration claim.
 
 If you want to use sliding tokens, change the ``AUTH_TOKEN_CLASSES`` setting to
-``('rest_framework_simplejwt.tokens.SlidingToken',)``.  (Alternatively, the
+``('ninja_jwt.tokens.SlidingToken',)``.  (Alternatively, the
 ``AUTH_TOKEN_CLASSES`` setting may include dot paths to both the
 ``AccessToken`` and ``SlidingToken`` token classes in the
-``rest_framework_simplejwt.tokens`` module if you want to allow both token
+``ninja_jwt.tokens`` module if you want to allow both token
 types to be used for authentication.)
 
 Also, include urls for the sliding token specific ``TokenObtainSlidingView``
@@ -45,7 +45,7 @@ access token specific ``TokenObtainPairView`` and ``TokenRefreshView`` views:
 
 .. code-block:: python
 
-  from rest_framework_simplejwt.views import (
+  from ninja_jwt.views import (
       TokenObtainSlidingView,
       TokenRefreshSlidingView,
   )
