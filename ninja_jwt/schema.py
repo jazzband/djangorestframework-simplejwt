@@ -27,7 +27,7 @@ class TokenObtainSerializer(ModelSchema):
     }
 
     @root_validator
-    def validate(cls, values):
+    def validate_schema(cls, values):
         authenticate_kwargs = {
             user_name_field: values[user_name_field],
             'password': values['password'],
@@ -42,21 +42,28 @@ class TokenObtainSerializer(ModelSchema):
 
         return values
 
+    def output_schema(self):
+        raise NotImplementedError('Must implement `output_schema` method for `TokenObtainSerializer` subclasses')
+
     @classmethod
     def get_token(cls, user):
         raise NotImplementedError('Must implement `get_token` method for `TokenObtainSerializer` subclasses')
 
 
-class TokenObtainPairSerializer(TokenObtainSerializer):
-    refresh: Optional[str]
-    access: Optional[str]
+class TokenObtainPairOutput(Schema):
+    refresh: str
+    access: str
+    username: str
 
+
+class TokenObtainPairSerializer(TokenObtainSerializer):
     @classmethod
     def get_token(cls, user):
         return RefreshToken.for_user(user)
 
     @root_validator
-    def validate(cls, values):
+    def validate_schema(cls, values):
+        super().validate(values)
         refresh = cls.get_token(cls._user)
 
         values['refresh'] = str(refresh)
@@ -67,6 +74,14 @@ class TokenObtainPairSerializer(TokenObtainSerializer):
 
         return values
 
+    def output_schema(self):
+        return TokenObtainSlidingOutput(**self.dict(exclude={'password'}))
+
+
+class TokenObtainSlidingOutput(Schema):
+    token: str
+    username: str
+
 
 class TokenObtainSlidingSerializer(TokenObtainSerializer):
     @classmethod
@@ -74,7 +89,8 @@ class TokenObtainSlidingSerializer(TokenObtainSerializer):
         return RefreshToken.for_user(user)
 
     @root_validator
-    def validate(cls, values):
+    def validate_schema(cls, values):
+        super().validate(values)
         token = cls.get_token(cls._user)
 
         values['token'] = str(token)
@@ -84,13 +100,16 @@ class TokenObtainSlidingSerializer(TokenObtainSerializer):
 
         return values
 
+    def output_schema(self):
+        return TokenObtainSlidingOutput(**self.dict(exclude={'password'}))
+
 
 class TokenRefreshSerializer(Schema):
     refresh: str
     access: Optional[str]
 
     @root_validator
-    def validate(cls, values):
+    def validate_schema(cls, values):
         refresh = RefreshToken(values['refresh'])
 
         data = {'access': str(refresh.access_token)}
@@ -118,7 +137,7 @@ class TokenRefreshSlidingSerializer(Schema):
     token: str
 
     @root_validator
-    def validate(cls, values):
+    def validate_schema(cls, values):
         token = SlidingToken(values['token'])
 
         # Check that the timestamp in the "refresh_exp" claim has not
@@ -136,7 +155,7 @@ class TokenVerifySerializer(Schema):
     token: str
 
     @root_validator
-    def validate(cls, values):
+    def validate_schema(cls, values):
         token = UntypedToken(values['token'])
 
         if api_settings.BLACKLIST_AFTER_ROTATION:
@@ -151,7 +170,7 @@ class TokenBlacklistSerializer(Schema):
     refresh: str
 
     @root_validator
-    def validate(cls, values):
+    def validate_schema(cls, values):
         refresh = RefreshToken(values['refresh'])
         try:
             refresh.blacklist()
