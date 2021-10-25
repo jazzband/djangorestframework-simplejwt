@@ -73,7 +73,6 @@ class JWTAuth(JWTBaseAuthentication, HttpBearer):
         return api_settings.TOKEN_USER_CLASS(validated_token)
 
 
-
 def default_user_authentication_rule(user):
     # Prior to Django 1.10, inactive users could be authenticated with the
     # default `ModelBackend`.  As of Django 1.10, the `ModelBackend`
