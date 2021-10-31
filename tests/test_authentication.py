@@ -2,7 +2,6 @@ from datetime import timedelta
 
 import pytest
 from django.contrib.auth import get_user_model
-from rest_framework.test import APIRequestFactory
 
 from ninja_jwt import authentication
 from ninja_jwt.exceptions import AuthenticationFailed, InvalidToken
@@ -17,7 +16,6 @@ AuthToken = api_settings.AUTH_TOKEN_CLASSES[0]
 class TestJWTBaseAuthentication:
     @pytest.fixture(autouse=True)
     def setUp(self):
-        self.factory = APIRequestFactory()
         self.backend = authentication.JWTBaseAuthentication()
 
     @pytest.mark.django_db

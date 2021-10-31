@@ -12,7 +12,7 @@ following code to decorate your JWT ``View`` definitions.
 .. code-block:: python
 
     from drf_yasg.utils import swagger_auto_schema
-    from rest_framework import serializers, status
+    from ninja_extra import schema, status
     from ninja_jwt.views import (
         TokenObtainPairView, TokenRefreshView, TokenVerifyView)
 

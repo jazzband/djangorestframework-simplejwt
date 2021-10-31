@@ -34,7 +34,6 @@ def django_configure():
             'django.contrib.sites',
             'django.contrib.staticfiles',
 
-            'rest_framework',
             'ninja_jwt',
             'ninja_jwt.token_blacklist',
         ),
