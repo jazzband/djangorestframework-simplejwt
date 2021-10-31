@@ -7,7 +7,7 @@
 
 ## Abstract
 
-Ninja JWT is JSON Web Token plugin for Django-Ninja. Its clone of [Simple JWT](https://github.com/jazzband/djangorestframework-simplejwt) by Jazzband, a popular  JWT plugin for [Django REST Framework](http://www.django-rest-framework.org).
+Ninja JWT is JSON Web Token plugin for [Django-Ninja](https://django-ninja.rest-framework.com/). Its clone of [Simple JWT](https://github.com/jazzband/djangorestframework-simplejwt) by Jazzband, a popular  JWT plugin for [Django REST Framework](http://www.django-rest-framework.org).
 
 For full documentation, [visit](https://django-rest-framework-simplejwt.readthedocs.io/en/latest).
 
