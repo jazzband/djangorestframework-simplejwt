@@ -46,7 +46,7 @@ requires = [
     "ninja-schema",
     "django-ninja-extra",
 ]
-description-file = "README.rst"
+description-file = "README.md"
 requires-python = ">=3.6"
 
 
