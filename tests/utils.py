@@ -1,87 +1,70 @@
 import contextlib
+import json
 
 from django.db import connection
 from django.db.migrations.executor import MigrationExecutor
-from django.test import TestCase, TransactionTestCase
-from rest_framework.test import APIClient
+from django.test import Client, TestCase
+from django.test.utils import override_settings
 
 from ninja_jwt.compat import reverse
-from ninja_jwt.settings import api_settings
 
 
 def client_action_wrapper(action):
-    def wrapper_method(self, *args, **kwargs):
-        if self.view_name is None:
-            raise ValueError('Must give value for `view_name` property')
+    def wrapper_method(self, *args, url=None, **kwargs):
+        if not url and self.view_name is None:
+            raise ValueError("Must give value for `view_name` property")
 
-        reverse_args = kwargs.pop('reverse_args', tuple())
-        reverse_kwargs = kwargs.pop('reverse_kwargs', dict())
-        query_string = kwargs.pop('query_string', None)
+        reverse_args = kwargs.pop("reverse_args", tuple())
+        reverse_kwargs = kwargs.pop("reverse_kwargs", dict())
+        query_string = kwargs.pop("query_string", None)
 
-        url = reverse(self.view_name, args=reverse_args, kwargs=reverse_kwargs)
+        if self.header:
+            kwargs.update(self.header)
+            self.header.clear()
+
+        _url = url or reverse(self.view_name, args=reverse_args, kwargs=reverse_kwargs)
         if query_string is not None:
-            url = url + '?{0}'.format(query_string)
+            url = _url + "?{0}".format(query_string)
 
-        return getattr(self.client, action)(url, *args, **kwargs)
+        response = getattr(self.client, action)(_url, *args, **kwargs)
+        try:
+            response.data = json.loads(response.content)
+        except (Exception,):
+            pass
+        return response
 
     return wrapper_method
 
 
-class APIViewTestCase(TestCase):
-    client_class = APIClient
+class APIViewTestCase:
+    client_class = Client
+    header = dict()
+
+    def setUp(self):
+        self.client = self.client_class()
 
     def authenticate_with_token(self, type, token):
         """
         Authenticates requests with the given token.
         """
-        self.client.credentials(HTTP_AUTHORIZATION='{} {}'.format(type, token))
+        self.header = dict(HTTP_AUTHORIZATION="{} {}".format(type, token))
 
     view_name = None
 
-    view_post = client_action_wrapper('post')
-    view_get = client_action_wrapper('get')
+    view_post = client_action_wrapper("post")
+    view_get = client_action_wrapper("get")
 
 
-@contextlib.contextmanager
-def override_api_settings(**settings):
-    old_settings = {}
+def override_api_settings(**new_settings):
+    from django.conf import settings
 
-    for k, v in settings.items():
-        # Save settings
-        try:
-            old_settings[k] = api_settings.user_settings[k]
-        except KeyError:
-            pass
-
-        # Install temporary settings
-        api_settings.user_settings[k] = v
-
-        # Delete any cached settings
-        try:
-            delattr(api_settings, k)
-        except AttributeError:
-            pass
-
-    yield
-
-    for k in settings.keys():
-        # Delete temporary settings
-        api_settings.user_settings.pop(k)
-
-        # Restore saved settings
-        try:
-            api_settings.user_settings[k] = old_settings[k]
-        except KeyError:
-            pass
-
-        # Delete any cached settings
-        try:
-            delattr(api_settings, k)
-        except AttributeError:
-            pass
+    old_settings = getattr(settings, "SIMPLE_JWT", {})
+    combined_settings = dict(old_settings)
+    combined_settings.update(new_settings)
+    return override_settings(SIMPLE_JWT=combined_settings)
 
 
-class MigrationTestCase(TransactionTestCase):
+class MigrationTestCase:
     migrate_from = None
     migrate_to = None
 
@@ -91,14 +74,14 @@ class MigrationTestCase(TransactionTestCase):
 
         # Reverse to the original migration
         executor = MigrationExecutor(connection)
-        executor.migrate(self.migrate_from)
+        # executor.migrate(self.migrate_from)
 
         old_apps = executor.loader.project_state(self.migrate_from).apps
         self.setUpBeforeMigration(old_apps)
 
         # Run the migration to test
         executor.loader.build_graph()
-        executor.migrate(self.migrate_to)
+        # executor.migrate(self.migrate_to)
 
         self.apps = executor.loader.project_state(self.migrate_to).apps
 

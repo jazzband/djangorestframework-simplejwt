@@ -18,7 +18,7 @@ lint: ## Run code linters
 	black --check ninja_jwt tests
 	isort --check ninja_jwt tests
 	flake8 ninja_jwt tests
-	mypy  ninja_jwt
+# 	mypy  ninja_jwt
 
 fmt format: ## Run code formatters
 	make clean

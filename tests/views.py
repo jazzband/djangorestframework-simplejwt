@@ -1,16 +1,10 @@
-from rest_framework import permissions
-from rest_framework.response import Response
-from rest_framework.views import APIView
+from ninja_extra import APIController, route, router
 
 from ninja_jwt import authentication
 
 
-class TestView(APIView):
-    permission_classes = (permissions.IsAuthenticated,)
-    authentication_classes = (authentication.JWTAuthentication,)
-
-    def get(self, request):
-        return Response({'foo': 'bar'})
-
-
-test_view = TestView.as_view()
+@router("/test-view", auth=authentication.JWTAuth())
+class TestAPIController(APIController):
+    @route.get("/test", url_name="test_view")
+    def test(self):
+        return {"foo": "bar"}

@@ -1,25 +1,25 @@
-name: Test
+name: Publish
 
 on:
-  push:
-    branches:
-      - master
+  release:
+    types: [published]
+  workflow_dispatch:
 
 jobs:
-  test_coverage:
+  publish:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python
         uses: actions/setup-python@v1
         with:
-          python-version: 3.8
+          python-version: 3.6
       - name: Install Flit
         run: pip install flit
       - name: Install Dependencies
         run: flit install --symlink
-      - name: Test
-        run: pytest --cov=ninja_jwt --cov-report=xml tests
-      - name: Coverage
-        uses: codecov/codecov-action@v1
+      - name: Publish
+        env:
+          FLIT_USERNAME: ${{ secrets.FLIT_USERNAME }}
+          FLIT_PASSWORD: ${{ secrets.FLIT_PASSWORD }}
+        run: flit publish

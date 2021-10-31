@@ -1,16 +1,16 @@
-from datetime import timedelta
+from datetime import datetime, timedelta
+from typing import Any, Optional, Tuple, Type, Union
 from uuid import uuid4
 
 from django.conf import settings
-from django.utils.translation import gettext_lazy as _
+from django.contrib.auth.models import AbstractBaseUser
 from django.utils.module_loading import import_string
+from django.utils.translation import gettext_lazy as _
 
 from .exceptions import TokenBackendError, TokenError
 from .settings import api_settings
 from .token_blacklist.models import BlacklistedToken, OutstandingToken
-from .utils import (
-    aware_utcnow, datetime_from_epoch, datetime_to_epoch, format_lazy,
-)
+from .utils import aware_utcnow, datetime_from_epoch, datetime_to_epoch, format_lazy
 
 
 class Token:
@@ -18,17 +18,18 @@ class Token:
     A class which validates and wraps an existing JWT or can be used to build a
     new JWT.
     """
-    token_type = None
-    lifetime = None
 
-    def __init__(self, token=None, verify=True):
+    token_type: Optional[str] = None
+    lifetime: Optional[datetime] = None
+
+    def __init__(self, token: Optional[Any] = None, verify: bool = True) -> None:
         """
         !!!! IMPORTANT !!!! MUST raise a TokenError with a user-facing error
         message if the given token is invalid, expired, or otherwise not safe
         to use.
         """
         if self.token_type is None or self.lifetime is None:
-            raise TokenError(_('Cannot create token with no type or lifetime'))
+            raise TokenError(_("Cannot create token with no type or lifetime"))
 
         self.token = token
         self.current_time = aware_utcnow()
@@ -42,7 +43,7 @@ class Token:
             try:
                 self.payload = token_backend.decode(token, verify=verify)
             except TokenBackendError:
-                raise TokenError(_('Token is invalid or expired'))
+                raise TokenError(_("Token is invalid or expired"))
 
             if verify:
                 self.verify()
@@ -60,28 +61,28 @@ class Token:
     def __repr__(self):
         return repr(self.payload)
 
-    def __getitem__(self, key):
+    def __getitem__(self, key: str):
         return self.payload[key]
 
-    def __setitem__(self, key, value):
+    def __setitem__(self, key: str, value: Any):
         self.payload[key] = value
 
-    def __delitem__(self, key):
+    def __delitem__(self, key: str):
         del self.payload[key]
 
-    def __contains__(self, key):
+    def __contains__(self, key: str):
         return key in self.payload
 
-    def get(self, key, default=None):
+    def get(self, key: str, default=None):
         return self.payload.get(key, default)
 
-    def __str__(self):
+    def __str__(self) -> str:
         """
         Signs and returns a token as a base64 encoded string.
         """
         return self.get_token_backend().encode(self.payload)
 
-    def verify(self):
+    def verify(self) -> Any:
         """
         Performs additional validation steps which were not performed when this
         token was decoded.  This method is part of the "public" API to indicate
@@ -95,23 +96,23 @@ class Token:
 
         # Ensure token id is present
         if api_settings.JTI_CLAIM not in self.payload:
-            raise TokenError(_('Token has no id'))
+            raise TokenError(_("Token has no id"))
 
         self.verify_token_type()
 
-    def verify_token_type(self):
+    def verify_token_type(self) -> Any:
         """
         Ensures that the token type claim is present and has the correct value.
         """
         try:
             token_type = self.payload[api_settings.TOKEN_TYPE_CLAIM]
         except KeyError:
-            raise TokenError(_('Token has no type'))
+            raise TokenError(_("Token has no type"))
 
         if self.token_type != token_type:
-            raise TokenError(_('Token has wrong type'))
+            raise TokenError(_("Token has wrong type"))
 
-    def set_jti(self):
+    def set_jti(self) -> None:
         """
         Populates the configured jti claim of a token with a string where there
         is a negligible probability that the same string will be chosen at a
@@ -122,7 +123,12 @@ class Token:
         """
         self.payload[api_settings.JTI_CLAIM] = uuid4().hex
 
-    def set_exp(self, claim='exp', from_time=None, lifetime=None):
+    def set_exp(
+        self,
+        claim: str = "exp",
+        from_time: Optional[datetime] = None,
+        lifetime: Optional[datetime] = None,
+    ) -> None:
         """
         Updates the expiration time of a token.
 
@@ -137,7 +143,7 @@ class Token:
 
         self.payload[claim] = datetime_to_epoch(from_time + lifetime)
 
-    def set_iat(self, claim='iat', at_time=None):
+    def set_iat(self, claim: str = "iat", at_time: Optional[datetime] = None) -> None:
         """
         Updates the time at which the token was issued.
 
@@ -149,7 +155,7 @@ class Token:
 
         self.payload[claim] = datetime_to_epoch(at_time)
 
-    def check_exp(self, claim='exp', current_time=None):
+    def check_exp(self, claim: str = "exp", current_time: Optional[datetime] = None):
         """
         Checks whether a timestamp value in the given claim has passed (since
         the given datetime value in `current_time`).  Raises a TokenError with
@@ -168,7 +174,7 @@ class Token:
             raise TokenError(format_lazy(_("Token '{}' claim has expired"), claim))
 
     @classmethod
-    def for_user(cls, user):
+    def for_user(cls, user: Type[AbstractBaseUser]) -> Union["Token", Type["Token"]]:
         """
         Returns an authorization token for the given user that will be provided
         after authenticating the user's credentials.
@@ -181,14 +187,12 @@ class Token:
         token[api_settings.USER_ID_CLAIM] = user_id
 
         return token
-    
+
     _token_backend = None
-    
+
     def get_token_backend(self):
         if self._token_backend is None:
-            self._token_backend = import_string(
-                "ninja_jwt.state.token_backend"
-            )
+            self._token_backend = import_string("ninja_jwt.state.token_backend")
         return self._token_backend
 
 
@@ -199,13 +203,15 @@ class BlacklistMixin:
     themselves into an outstanding token list and also check for their
     membership in a token blacklist.
     """
-    if 'ninja_jwt.token_blacklist' in settings.INSTALLED_APPS:
+
+    if "ninja_jwt.token_blacklist" in settings.INSTALLED_APPS:
+
         def verify(self, *args, **kwargs):
             self.check_blacklist()
 
             super().verify(*args, **kwargs)
 
-        def check_blacklist(self):
+        def check_blacklist(self) -> None:
             """
             Checks if this token is present in the token blacklist.  Raises
             `TokenError` if so.
@@ -213,36 +219,36 @@ class BlacklistMixin:
             jti = self.payload[api_settings.JTI_CLAIM]
 
             if BlacklistedToken.objects.filter(token__jti=jti).exists():
-                raise TokenError(_('Token is blacklisted'))
+                raise TokenError(_("Token is blacklisted"))
 
-        def blacklist(self):
+        def blacklist(self) -> BlacklistedToken:
             """
             Ensures this token is included in the outstanding token list and
             adds it to the blacklist.
             """
             jti = self.payload[api_settings.JTI_CLAIM]
-            exp = self.payload['exp']
+            exp = self.payload["exp"]
 
             # Ensure outstanding token exists with given jti
             token, _ = OutstandingToken.objects.get_or_create(
                 jti=jti,
                 defaults={
-                    'token': str(self),
-                    'expires_at': datetime_from_epoch(exp),
+                    "token": str(self),
+                    "expires_at": datetime_from_epoch(exp),
                 },
             )
 
             return BlacklistedToken.objects.get_or_create(token=token)
 
         @classmethod
-        def for_user(cls, user):
+        def for_user(cls, user: Type["AbstractBaseUser"]) -> Type[Token]:
             """
             Adds this token to the outstanding token list.
             """
             token = super().for_user(user)
 
             jti = token[api_settings.JTI_CLAIM]
-            exp = token['exp']
+            exp = token["exp"]
 
             OutstandingToken.objects.create(
                 user=user,
@@ -256,10 +262,10 @@ class BlacklistMixin:
 
 
 class SlidingToken(BlacklistMixin, Token):
-    token_type = 'sliding'
-    lifetime = api_settings.SLIDING_TOKEN_LIFETIME
+    token_type: str = "sliding"
+    lifetime: timedelta = api_settings.SLIDING_TOKEN_LIFETIME
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
 
         if self.token is None:
@@ -272,22 +278,21 @@ class SlidingToken(BlacklistMixin, Token):
 
 
 class RefreshToken(BlacklistMixin, Token):
-    token_type = 'refresh'
-    lifetime = api_settings.REFRESH_TOKEN_LIFETIME
-    no_copy_claims = (
+    token_type: str = "refresh"
+    lifetime: timedelta = api_settings.REFRESH_TOKEN_LIFETIME
+    no_copy_claims: Tuple = (
         api_settings.TOKEN_TYPE_CLAIM,
-        'exp',
-
+        "exp",
         # Both of these claims are included even though they may be the same.
         # It seems possible that a third party token might have a custom or
         # namespaced JTI claim as well as a default "jti" claim.  In that case,
         # we wouldn't want to copy either one.
         api_settings.JTI_CLAIM,
-        'jti',
+        "jti",
     )
 
     @property
-    def access_token(self):
+    def access_token(self) -> "AccessToken":
         """
         Returns an access token created from this refresh token.  Copies all
         claims present in this refresh token to the new access token except
@@ -311,15 +316,15 @@ class RefreshToken(BlacklistMixin, Token):
 
 
 class AccessToken(Token):
-    token_type = 'access'
-    lifetime = api_settings.ACCESS_TOKEN_LIFETIME
+    token_type: str = "access"
+    lifetime: timedelta = api_settings.ACCESS_TOKEN_LIFETIME
 
 
 class UntypedToken(Token):
-    token_type = 'untyped'
-    lifetime = timedelta(seconds=0)
+    token_type: str = "untyped"
+    lifetime: timedelta = timedelta(seconds=0)
 
-    def verify_token_type(self):
+    def verify_token_type(self) -> None:
         """
         Untyped tokens do not verify the "token_type" claim.  This is useful
         when performing general validation of a token's signature and other

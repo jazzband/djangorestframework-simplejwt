@@ -40,8 +40,10 @@ classifiers = [
 ]
 
 requires = [
-    "Django >=2.1",
+    "Django >= 2.1",
     "pyjwt>=2,<3",
+    "pyjwt[crypto]",
+    "ninja-schema",
 ]
 description-file = "README.rst"
 requires-python = ">=3.6"
@@ -55,11 +57,12 @@ test = [
     "pytest",
     "pytest-cov",
     "pytest-django",
-    "pytest-asyncio",
     "black",
     "isort",
     "flake8",
     "mypy",
     "django-stubs",
+    "python-jose==3.0.0",
+    "pyjwt[crypto]"
 ]
 doc = []
