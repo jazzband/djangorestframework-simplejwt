@@ -44,6 +44,7 @@ requires = [
     "pyjwt>=2,<3",
     "pyjwt[crypto]",
     "ninja-schema",
+    "django-ninja-extra",
 ]
 description-file = "README.rst"
 requires-python = ">=3.6"
