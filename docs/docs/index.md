@@ -1,3 +1,3 @@
 # Django Ninja Extra
 
-**Django Ninja Extra** full documentation in progress
+**Django Ninja JWT** full documentation in progress
