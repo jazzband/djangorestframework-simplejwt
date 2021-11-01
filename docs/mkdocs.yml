@@ -28,12 +28,12 @@ theme:
   icon:
     repo: fontawesome/brands/git-alt
 nav:
-- Ninja JWT: index.rst
-- Getting Started: index.rst
-- Settings: index.rst
-- Customizing Token Claims: index.rst
-- Creating Token Manually: index.rst
-- Token Types: index.rst
-- Blacklist App: index.rst
-- Development and Contributing: index.rst
-- ninja_jwt package: index.rst
+- Ninja JWT: index.md
+- Getting Started: index.md
+- Settings: index.md
+- Customizing Token Claims: index.md
+- Creating Token Manually: index.md
+- Token Types: index.md
+- Blacklist App: index.md
+- Development and Contributing: index.md
+- ninja_jwt package: index.md
