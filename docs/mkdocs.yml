@@ -1,0 +1,31 @@
+site_name: Django Ninja JWT
+site_description: Django Ninja JWT - A Simple JWT plugin for Django-Ninja.
+site_url: https://eadwincode.github.io/django-ninja-jwt/
+repo_name: eadwinCode/django-ninja-jwt
+repo_url: https://github.com/eadwinCode/django-ninja-jwt
+edit_uri: ''
+
+theme:
+  name: material
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: deeppurple
+      accent: deeppurple
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to dark mode
+
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: blue
+      accent: blue
+      toggle:
+        icon: material/toggle-switch-off-outline
+        name: Switch to light mode
+
+  language: en
+  icon:
+    repo: fontawesome/brands/git-alt
+nav:
+- Intro: index.rst

@@ -32,3 +32,7 @@ test: ## Run tests
 test-cov: ## Run tests with coverage
 	make clean
 	pytest --cov=ninja_jwt --cov-report term-missing tests
+
+doc-deploy: ## Run Deploy Documentation
+	make clean
+	mkdocs gh-deploy --force

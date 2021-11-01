@@ -63,7 +63,6 @@ test = [
     "flake8",
     "mypy",
     "django-stubs",
-    "python-jose==3.0.0",
-    "pyjwt[crypto]"
+    "python-jose==3.0.0"
 ]
 doc = []
