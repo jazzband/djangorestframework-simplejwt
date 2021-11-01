@@ -3,6 +3,7 @@ from typing import Dict, Optional, Type, cast
 from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.models import AbstractUser, update_last_login
 from django.utils.translation import gettext_lazy as _
+from django.conf import settings
 from ninja_schema import ModelSchema, Schema
 from pydantic import root_validator
 
@@ -214,7 +215,10 @@ class TokenVerifySerializer(Schema):
             raise exceptions.ValidationError({"token": "token is required"})
         token = UntypedToken(values["token"])
 
-        if api_settings.BLACKLIST_AFTER_ROTATION:
+        if (
+                api_settings.BLACKLIST_AFTER_ROTATION and
+                'ninja_jwt.token_blacklist' in settings.INSTALLED_APPS
+        ):
             jti = token.get(api_settings.JTI_CLAIM)
             if BlacklistedToken.objects.filter(token__jti=jti).exists():
                 raise exceptions.ValidationError("Token is blacklisted")
