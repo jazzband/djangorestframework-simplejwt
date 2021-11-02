@@ -27,13 +27,19 @@ theme:
   language: en
   icon:
     repo: fontawesome/brands/git-alt
+
+plugins:
+- search
+- mkdocstrings
+
 nav:
 - Ninja JWT: index.md
-- Getting Started: index.md
-- Settings: index.md
-- Customizing Token Claims: index.md
-- Creating Token Manually: index.md
-- Token Types: index.md
-- Blacklist App: index.md
-- Development and Contributing: index.md
-- ninja_jwt package: index.md
+- Getting Started: getting_started.md
+- Route Authentication: auth_integration.md
+- Settings: settings.md
+- Customizing Token Claims: customizing_token_claims.md
+- Creating Token Manually: creating_tokens_manually.md
+- Token Types: token_types.md
+- Blacklist App: blacklist_app.md
+- Development and Contributing: development_and_contributing.md
+#- ninja_jwt package: index.md

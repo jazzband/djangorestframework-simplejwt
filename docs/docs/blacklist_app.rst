@@ -3,7 +3,7 @@
 Blacklist app
 =============
 
-Simple JWT includes an app that provides token blacklist functionality.  To use
+Ninja JWT includes an app that provides token blacklist functionality.  To use
 this app, include it in your list of installed apps in ``settings.py``:
 
 .. code-block:: python
@@ -21,12 +21,12 @@ this app, include it in your list of installed apps in ``settings.py``:
 Also, make sure to run ``python manage.py migrate`` to run the app's
 migrations.
 
-If the blacklist app is detected in ``INSTALLED_APPS``, Simple JWT will add any
+If the blacklist app is detected in ``INSTALLED_APPS``, Ninja JWT will add any
 generated refresh or sliding tokens to a list of outstanding tokens.  It will
 also check that any refresh or sliding token does not appear in a blacklist of
 tokens before it considers it as valid.
 
-The Simple JWT blacklist app implements its outstanding and blacklisted token
+The Ninja JWT blacklist app implements its outstanding and blacklisted token
 lists using two models: ``OutstandingToken`` and ``BlacklistedToken``.  Model
 admins are defined for both of these models.  To add a token to the blacklist,
 find its corresponding ``OutstandingToken`` record in the admin and use the
