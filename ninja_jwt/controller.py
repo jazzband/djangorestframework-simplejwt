@@ -6,18 +6,24 @@ from ninja_jwt import schema
 
 
 class TokenVerificationController(APIController):
+    auto_import = False
+
     @route.post("/verify", response={200: Schema}, url_name="token_verify")
     def verify_token(self, token: schema.TokenVerifySerializer):
         return {}
 
 
 class TokenBlackListController(APIController):
+    auto_import = False
+
     @route.post("/blacklist", response={200: Schema}, url_name="token_blacklist")
     def blacklist_token(self, refresh: schema.TokenBlacklistSerializer):
         return {}
 
 
 class TokenObtainPairController(APIController):
+    auto_import = False
+
     @route.post(
         "/pair", response=schema.TokenObtainPairOutput, url_name="token_obtain_pair"
     )
@@ -33,6 +39,8 @@ class TokenObtainPairController(APIController):
 
 
 class TokenObtainSlidingController(TokenObtainPairController):
+    auto_import = False
+
     @route.post(
         "/sliding",
         response=schema.TokenObtainSlidingOutput,

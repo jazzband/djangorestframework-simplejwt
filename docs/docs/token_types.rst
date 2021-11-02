@@ -3,14 +3,14 @@
 Token types
 ===========
 
-Simple JWT provides two different token types that can be used to prove
+Ninja JWT provides two different token types that can be used to prove
 authentication.  In a token's payload, its type can be identified by the value
 of its token type claim, which is "token_type" by default.  This may have a
 value of "access", "sliding", or "refresh" however refresh tokens are not
 considered valid for authentication at this time.  The claim name used to store
 the type can be customized by changing the ``TOKEN_TYPE_CLAIM`` setting.
 
-By default, Simple JWT expects an "access" token to prove authentication.  The
+By default, Ninja JWT expects an "access" token to prove authentication.  The
 allowed auth token types are determined by the value of the
 ``AUTH_TOKEN_CLASSES`` setting.  This setting contains a list of dot paths to
 token classes.  It includes the
@@ -57,6 +57,6 @@ access token specific ``TokenObtainPairView`` and ``TokenRefreshView`` views:
       ...
   ]
 
-Be aware that, if you are using the blacklist app, Simple JWT will validate all
+Be aware that, if you are using the blacklist app, Ninja JWT will validate all
 sliding tokens against the blacklist for each authenticated request.  This will
 reduce the performance of authenticated API views.

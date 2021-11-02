@@ -17,7 +17,7 @@ possible.
 Installation
 ------------
 
-Simple JWT can be installed with pip::
+Ninja JWT can be installed with pip::
 
   pip install djangorestframework-simplejwt
 
@@ -38,7 +38,7 @@ authentication classes:
   }
 
 Also, in your root ``urls.py`` file (or any other url config), include routes
-for Simple JWT's ``TokenObtainPairView`` and ``TokenRefreshView`` views:
+for Ninja JWT's ``TokenObtainPairView`` and ``TokenRefreshView`` views:
 
 .. code-block:: python
 
@@ -54,7 +54,7 @@ for Simple JWT's ``TokenObtainPairView`` and ``TokenRefreshView`` views:
       ...
   ]
 
-You can also include a route for Simple JWT's ``TokenVerifyView`` if you wish to
+You can also include a route for Ninja JWT's ``TokenVerifyView`` if you wish to
 allow API users to verify HMAC-signed tokens without having access to your
 signing key:
 
@@ -85,7 +85,7 @@ If you wish to use localizations/translations, simply add
 Usage
 -----
 
-To verify that Simple JWT is working, you can use curl to issue a couple of
+To verify that Ninja JWT is working, you can use curl to issue a couple of
 test requests:
 
 .. code-block:: bash
