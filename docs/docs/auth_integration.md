@@ -6,7 +6,7 @@ Authenticated user can be found in `request.user` or `request.auth`
 
 ``` {.sourceCode .python}
 from ninja_extra import APIController, router, route
-from ninja_jwt import JWTAuth
+from ninja_jwt.authentication import JWTAuth
 
 @router('')
 class MyController(APIController):
@@ -36,7 +36,7 @@ Please read more on [Django Ninja - Authentication](https://django-ninja.rest-fr
 example:
 ``` {.sourceCode .python}
 from ninja.security import APIKeyHeader
-from ninja_jwt import JWTBaseAuthentication
+from ninja_jwt.authentication import JWTBaseAuthentication
 from ninja import router
 
 class ApiKey(APIKeyHeader):
