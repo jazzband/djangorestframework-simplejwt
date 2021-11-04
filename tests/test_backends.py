@@ -23,6 +23,7 @@ JWK_URL = 'https://randomstring.auth0.com/.well-known/jwks.json'
 
 LEEWAY = 100
 
+
 class TestTokenBackend(TestCase):
     def setUp(self):
         self.hmac_token_backend = TokenBackend('HS256', SECRET)
@@ -276,6 +277,7 @@ class TestTokenBackend(TestCase):
 
         pyjwt_without_rsa = PyJWS()
         pyjwt_without_rsa.unregister_algorithm('RS256')
+
         def _decode(jwt, key, algorithms, options, audience, issuer, leeway):
             return pyjwt_without_rsa.decode(jwt, key, algorithms, options)
         with patch.object(jwt, 'decode', new=_decode):

@@ -61,7 +61,7 @@ class TestToken(TestCase):
         self.assertIsNone(t.token)
 
         self.assertEqual(len(t.payload), 4)
-        self.assertEqual(t.payload['exp'], datetime_to_epoch(now + MyToken.lifetime)) 
+        self.assertEqual(t.payload['exp'], datetime_to_epoch(now + MyToken.lifetime))
         self.assertEqual(t.payload['iat'], datetime_to_epoch(now))
         self.assertIn('jti', t.payload)
         self.assertEqual(t.payload[api_settings.TOKEN_TYPE_CLAIM], MyToken.token_type)

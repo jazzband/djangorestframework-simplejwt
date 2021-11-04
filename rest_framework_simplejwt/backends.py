@@ -1,6 +1,8 @@
-from django.utils.translation import gettext_lazy as _
 import jwt
-from jwt import InvalidAlgorithmError, InvalidTokenError, PyJWKClient, algorithms
+from django.utils.translation import gettext_lazy as _
+from jwt import (
+    InvalidAlgorithmError, InvalidTokenError, PyJWKClient, algorithms,
+)
 
 from .exceptions import TokenBackendError
 from .utils import format_lazy

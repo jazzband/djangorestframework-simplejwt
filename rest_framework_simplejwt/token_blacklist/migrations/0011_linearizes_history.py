@@ -1,8 +1,7 @@
 import fnmatch
 import os
-from pathlib import Path
-
 from django.db import migrations, models  # noqa F401
+from pathlib import Path
 
 parent_dir = Path(__file__).resolve(strict=True).parent
 
