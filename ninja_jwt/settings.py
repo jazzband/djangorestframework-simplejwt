@@ -82,7 +82,9 @@ def reload_api_settings(*args: Any, **kwargs: Any) -> None:
     setting, value = kwargs["setting"], kwargs["value"]
 
     if setting == "NINJA_JWT":
-        api_settings = NinjaJWTSettings.from_orm(NinjaJWTUserDefinedSettingsMapper(value))
+        api_settings = NinjaJWTSettings.from_orm(
+            NinjaJWTUserDefinedSettingsMapper(value)
+        )
 
 
 setting_changed.connect(reload_api_settings)

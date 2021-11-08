@@ -60,9 +60,7 @@ class TokenObtainSlidingController(TokenObtainPairController):
 
 
 @router("/token", permissions=[AllowAny], tags=["token"])
-class NinjaJWTDefaultController(
-    TokenVerificationController, TokenObtainPairController
-):
+class NinjaJWTDefaultController(TokenVerificationController, TokenObtainPairController):
     """NinjaJWT Default controller for obtaining and refreshing tokens"""
 
     auto_import = False
