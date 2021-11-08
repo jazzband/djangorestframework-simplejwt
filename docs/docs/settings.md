@@ -2,7 +2,7 @@
 Some of Ninja JWT's behavior can be customized through settings
 variables in `settings.py`:
 
-``` {.sourceCode .python}
+```python
 # Django project settings.py
 
 from datetime import timedelta

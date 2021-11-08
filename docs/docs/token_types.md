@@ -38,12 +38,12 @@ module if you want to allow both token types to be used for
 authentication.)
 
 Also, register `NinjaJWTSlidingController` to the `api`:
-``` {.sourceCode .python}
+```python
 from ninja_jwt.controller import NinjaJWTSlidingController
 from ninja_extra import NinjaExtraAPI
 
 api = NinjaExtraAPI()
-api.register_controller(NinjaJWTSlidingController)
+api.register_controllers(NinjaJWTSlidingController)
 
 ```
 

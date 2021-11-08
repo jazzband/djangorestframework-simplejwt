@@ -3,7 +3,7 @@ Ninja JWT includes an app that provides token blacklist functionality.
 To use this app, include it in your list of installed apps in
 `settings.py`:
 
-``` {.sourceCode .python}
+```python
 # Django project settings.py
 
 ...
@@ -33,7 +33,7 @@ points to the `OutstandingToken` record.
 Alternatively, you can blacklist a token by creating a `BlacklistMixin`
 subclass instance and calling the instance's `blacklist` method:
 
-``` {.sourceCode .python}
+```python
 from ninja_jwt.tokens import RefreshToken
 
 token = RefreshToken(base64_encoded_token_string)

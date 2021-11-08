@@ -31,12 +31,12 @@ Ninja JWT can be installed with pip:
 Also, you need to register `NinjaJWTDefaultController` controller to you Django-Ninja api.
 The `NinjaJWTDefaultController` comes with three routes `obtain_token`, `refresh_token` and `verify_token`
 
-``` {.sourceCode .python}
+```python
 from ninja_jwt.controller import NinjaJWTDefaultController
 from ninja_extra import NinjaExtraAPI
 
 api = NinjaExtraAPI()
-api.register_controller(NinjaJWTDefaultController)
+api.register_controllers(NinjaJWTDefaultController)
 
 ```
 
@@ -44,20 +44,20 @@ The `NinjaJWTDefaultController` comes with three routes `obtain_token`, `refresh
 It is a combination of two subclass `TokenVerificationController` and `TokenObtainPairController`.
 If you wish to customize these routes, you can inherit from these controllers and change its implementation
 
-``` {.sourceCode .python}
+```python
 from ninja_jwt.controller import TokenObtainPairController, router
 
 @router('token', tags=['Auth']
 class MyCustomController(TokenObtainPairController):
     """obtain_token and refresh_token only"
 ...
-api.register_controller(MyCustomController)
+api.register_controllers(MyCustomController)
 ```
 
 If you wish to use localizations/translations, simply add `ninja_jwt` to
 `INSTALLED_APPS`.
 
-``` {.sourceCode .python}
+```python
 INSTALLED_APPS = [
     ...
     'ninja_jwt',

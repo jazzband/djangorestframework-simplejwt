@@ -13,7 +13,7 @@ same token secret key. To use this feature, add the
 of the default `JWTAuthentication` backend) to the Django REST
 Framework\'s `DEFAULT_AUTHENTICATION_CLASSES` config setting:
 
-``` {.sourceCode .python}
+```python
 REST_FRAMEWORK = {
     ...
     'DEFAULT_AUTHENTICATION_CLASSES': (

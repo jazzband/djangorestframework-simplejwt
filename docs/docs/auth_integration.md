@@ -4,7 +4,7 @@ Authenticated user can be found in `request.user` or `request.auth`
 
 ### Route Authentication - Class Based
 
-``` {.sourceCode .python}
+```python
 from ninja_extra import APIController, router, route
 from ninja_jwt.authentication import JWTAuth
 
@@ -17,7 +17,7 @@ class MyController(APIController):
 
 ### Route Authentication - Function Based
 
-``` {.sourceCode .python}
+```python
 from ninja import router
 from ninja_jwt import JWTAuth
 
@@ -34,7 +34,7 @@ If you wish to use a different implementation of `JWTAuth`, then you need to inh
 Please read more on [Django Ninja - Authentication](https://django-ninja.rest-framework.com/tutorial/authentication/), if you want to use a different approach that is not `bearer`.
 
 example:
-``` {.sourceCode .python}
+```python
 from ninja.security import APIKeyHeader
 from ninja_jwt.authentication import JWTBaseAuthentication
 from ninja import router

@@ -2,7 +2,7 @@
 Sometimes, you may wish to manually create a token for a user. This
 could be done as follows:
 
-``` {.sourceCode .python}
+```python
 from ninja_jwt.tokens import RefreshToken
 
 def get_tokens_for_user(user):
