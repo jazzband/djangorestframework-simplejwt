@@ -7,7 +7,7 @@ from ninja_jwt.compat import reverse
 from ninja_jwt.settings import api_settings
 from ninja_jwt.tokens import AccessToken
 
-from .utils import APIViewTestCase, override_api_settings
+from .utils import APIViewTestCase
 
 User = get_user_model()
 

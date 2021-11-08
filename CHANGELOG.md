@@ -31,7 +31,7 @@
 * Fix BrowsableAPIRenderer needing `media_type` ([#426](https://github.com/jazzband/django-rest-framework-simplejwt/pull/426))
 * Fix blacklist migrations for multiple databases ([#429](https://github.com/jazzband/django-rest-framework-simplejwt/pull/429))
 * Fix Django 3.2 `default_app_config` deprecation ([#415](https://github.com/jazzband/django-rest-framework-simplejwt/pull/415))
-* Fix docs specifying `INSTALLED_APPS` for SimpleJWT iff you want translations ([#420](https://github.com/jazzband/django-rest-framework-simplejwt/pull/420))
+* Fix docs specifying `INSTALLED_APPS` for NinjaJWT if you want translations ([#420](https://github.com/jazzband/django-rest-framework-simplejwt/pull/420))
 * Fix drf-yasg API Schema generation for `TokenRefreshSerializer` ([#396](https://github.com/jazzband/django-rest-framework-simplejwt/pull/396))
 * Fix invalid syntax in docs for `INSTALLED_APPS` ([#416](https://github.com/jazzband/django-rest-framework-simplejwt/pull/416))
 

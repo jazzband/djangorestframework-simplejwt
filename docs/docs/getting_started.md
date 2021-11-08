@@ -7,7 +7,7 @@
 - Django-Ninja-Extra >= 0.11.0
 
 These are the officially supported python and package versions. Other
-versions will probably work. You\'re free to modify the tox config and
+versions will probably work. You 're free to modify the tox config and
 see what is possible.
 
 Installation
@@ -15,21 +15,21 @@ Installation
 
 Ninja JWT can be installed with pip:
 
-    pip install ninja-jwt
+    pip install django-ninja-jwt
 
-Also, you need to register `SimpleJWTDefaultController` controller to you Django-Ninja api.
-The `SimpleJWTDefaultController` comes with three routes `obtain_token`, `refresh_token` and `verify_token`
+Also, you need to register `NinjaJWTDefaultController` controller to you Django-Ninja api.
+The `NinjaJWTDefaultController` comes with three routes `obtain_token`, `refresh_token` and `verify_token`
 
 ``` {.sourceCode .python}
-from ninja_jwt.controller import SimpleJWTDefaultController
+from ninja_jwt.controller import NinjaJWTDefaultController
 from ninja_extra import NinjaExtraAPI
 
 api = NinjaExtraAPI()
-api.register_controller(SimpleJWTDefaultController)
+api.register_controller(NinjaJWTDefaultController)
 
 ```
 
-The `SimpleJWTDefaultController` comes with three routes `obtain_token`, `refresh_token` and `verify_token`. 
+The `NinjaJWTDefaultController` comes with three routes `obtain_token`, `refresh_token` and `verify_token`. 
 It is a combination of two subclass `TokenVerificationController` and `TokenObtainPairController`.
 If you wish to customize these routes, you can inherit from these controllers and change its implementation
 

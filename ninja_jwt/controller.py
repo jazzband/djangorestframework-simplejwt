@@ -60,20 +60,20 @@ class TokenObtainSlidingController(TokenObtainPairController):
 
 
 @router("/token", permissions=[AllowAny], tags=["token"])
-class SimpleJWTDefaultController(
+class NinjaJWTDefaultController(
     TokenVerificationController, TokenObtainPairController
 ):
-    """SimpleJWT Default controller for obtaining and refreshing tokens"""
+    """NinjaJWT Default controller for obtaining and refreshing tokens"""
 
     auto_import = False
 
 
 @router("/token", permissions=[AllowAny], tags=["token"])
-class SimpleJWTSlidingController(
+class NinjaJWTSlidingController(
     TokenVerificationController, TokenObtainSlidingController
 ):
     """
-    SimpleJWT Sliding controller for obtaining and refreshing tokens
+    NinjaJWT Sliding controller for obtaining and refreshing tokens
     Add 'ninja_jwt.tokens.SlidingToken' in AUTH_TOKEN_CLASSES in Settings
     """
 

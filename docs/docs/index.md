@@ -1,7 +1,7 @@
 
 ![Test](https://github.com/eadwinCode/django-ninja-jwt/workflows/Test/badge.svg)
 [![PyPI version](https://badge.fury.io/py/django-ninja-jwt.svg)](https://badge.fury.io/py/django-ninja-jwt)
-[![PyPI version](https://img.shields.io/pypi/v/djangorestframework-simplejwt.svg)](https://pypi.python.org/pypi/django-ninja-jwt)
+[![PyPI version](https://img.shields.io/pypi/v/django-ninja-jwt.svg)](https://pypi.python.org/pypi/django-ninja-jwt)
 [![PyPI version](https://img.shields.io/pypi/pyversions/django-ninja-jwt.svg)](https://pypi.python.org/pypi/django-ninja-jwt)
 [![PyPI version](https://img.shields.io/pypi/djversions/django-ninja-jwt.svg)](https://pypi.python.org/pypi/django-ninja-jwt)
 

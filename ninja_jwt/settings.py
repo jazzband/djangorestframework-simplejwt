@@ -8,23 +8,23 @@ from ninja_schema import Schema
 from pydantic import AnyUrl, Field, root_validator
 
 
-class SimpleJWTUserDefinedSettings:
+class NinjaJWTUserDefinedSettingsMapper:
     def __init__(self, data: dict) -> None:
         self.__dict__ = data
 
 
-SimpleJWT_SETTINGS_DEFAULTS = dict(
+NinjaJWT_SETTINGS_DEFAULTS = dict(
     USER_AUTHENTICATION_RULE="ninja_jwt.authentication.default_user_authentication_rule",
     AUTH_TOKEN_CLASSES=["ninja_jwt.tokens.AccessToken"],
     TOKEN_USER_CLASS="ninja_jwt.models.TokenUser",
 )
 
-USER_SETTINGS = SimpleJWTUserDefinedSettings(
-    getattr(settings, "SIMPLE_JWT", SimpleJWT_SETTINGS_DEFAULTS)
+USER_SETTINGS = NinjaJWTUserDefinedSettingsMapper(
+    getattr(settings, "NINJA_JWT", NinjaJWT_SETTINGS_DEFAULTS)
 )
 
 
-class SimpleJWTSettings(Schema):
+class NinjaJWTSettings(Schema):
     class Config:
         orm_mode = True
         validate_assignment = True
@@ -61,8 +61,8 @@ class SimpleJWTSettings(Schema):
     SLIDING_TOKEN_REFRESH_LIFETIME: timedelta = Field(timedelta(minutes=5))
 
     @root_validator
-    def validate_settings(cls, values):
-        for item in SimpleJWT_SETTINGS_DEFAULTS.keys():
+    def validate_ninja_jwt_settings(cls, values):
+        for item in NinjaJWT_SETTINGS_DEFAULTS.keys():
             if isinstance(values[item], (tuple, list)) and isinstance(
                 values[item][0], str
             ):
@@ -73,7 +73,7 @@ class SimpleJWTSettings(Schema):
 
 
 # convert to lazy object
-api_settings = SimpleJWTSettings.from_orm(USER_SETTINGS)
+api_settings = NinjaJWTSettings.from_orm(USER_SETTINGS)
 
 
 def reload_api_settings(*args: Any, **kwargs: Any) -> None:
@@ -81,8 +81,8 @@ def reload_api_settings(*args: Any, **kwargs: Any) -> None:
 
     setting, value = kwargs["setting"], kwargs["value"]
 
-    if setting == "SIMPLE_JWT":
-        api_settings = SimpleJWTSettings.from_orm(SimpleJWTUserDefinedSettings(value))
+    if setting == "NINJA_JWT":
+        api_settings = NinjaJWTSettings.from_orm(NinjaJWTUserDefinedSettingsMapper(value))
 
 
 setting_changed.connect(reload_api_settings)

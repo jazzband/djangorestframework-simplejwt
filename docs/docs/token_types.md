@@ -37,13 +37,13 @@ setting to `('ninja_jwt.tokens.SlidingToken',)`. (Alternatively, the
 module if you want to allow both token types to be used for
 authentication.)
 
-Also, register `SimpleJWTSlidingController` to the `api`:
+Also, register `NinjaJWTSlidingController` to the `api`:
 ``` {.sourceCode .python}
-from ninja_jwt.controller import SimpleJWTSlidingController
+from ninja_jwt.controller import NinjaJWTSlidingController
 from ninja_extra import NinjaExtraAPI
 
 api = NinjaExtraAPI()
-api.register_controller(SimpleJWTSlidingController)
+api.register_controller(NinjaJWTSlidingController)
 
 ```
 
