@@ -8,8 +8,11 @@ from rest_framework.exceptions import ValidationError
 from .settings import api_settings
 from .tokens import RefreshToken, SlidingToken, UntypedToken
 
+from .authentication import JWTAuthentication
+from .utils import datetime_from_epoch
+
 if api_settings.BLACKLIST_AFTER_ROTATION:
-    from .token_blacklist.models import BlacklistedToken
+    from .token_blacklist.models import BlacklistedToken, OutstandingToken
 
 
 class PasswordField(serializers.CharField):
@@ -57,7 +60,8 @@ class TokenObtainSerializer(serializers.Serializer):
 
     @classmethod
     def get_token(cls, user):
-        raise NotImplementedError('Must implement `get_token` method for `TokenObtainSerializer` subclasses')
+        raise NotImplementedError(
+            'Must implement `get_token` method for `TokenObtainSerializer` subclasses')
 
 
 class TokenObtainPairSerializer(TokenObtainSerializer):
@@ -104,9 +108,12 @@ class TokenRefreshSerializer(serializers.Serializer):
     def validate(self, attrs):
         refresh = RefreshToken(attrs['refresh'])
 
-        data = {'access': str(refresh.access_token)}
+        data = {}
 
         if api_settings.ROTATE_REFRESH_TOKENS:
+            auth = JWTAuthentication()
+            user = auth.get_user(validated_token=refresh)
+
             if api_settings.BLACKLIST_AFTER_ROTATION:
                 try:
                     # Attempt to blacklist the given refresh token
@@ -120,7 +127,20 @@ class TokenRefreshSerializer(serializers.Serializer):
             refresh.set_exp()
             refresh.set_iat()
 
+            OutstandingToken.objects.create(
+                user=user,
+                jti=refresh[api_settings.JTI_CLAIM],
+                token=str(refresh),
+                created_at=refresh.current_time,
+                expires_at=datetime_from_epoch(refresh['exp'])
+            )
+
             data['refresh'] = str(refresh)
+
+            data['access'] = str(refresh.access_token)
+
+        else:
+            data['access'] = str(refresh.access_token)
 
         return data
 

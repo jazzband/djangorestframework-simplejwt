@@ -165,7 +165,8 @@ class Token:
 
         claim_time = datetime_from_epoch(claim_value)
         if claim_time <= current_time:
-            raise TokenError(format_lazy(_("Token '{}' claim has expired"), claim))
+            raise TokenError(format_lazy(
+                _("Token '{}' claim has expired"), claim))
 
     @classmethod
     def for_user(cls, user):
@@ -181,9 +182,9 @@ class Token:
         token[api_settings.USER_ID_CLAIM] = user_id
 
         return token
-    
+
     _token_backend = None
-    
+
     def get_token_backend(self):
         if self._token_backend is None:
             self._token_backend = import_string(
@@ -223,13 +224,9 @@ class BlacklistMixin:
             jti = self.payload[api_settings.JTI_CLAIM]
             exp = self.payload['exp']
 
-            # Ensure outstanding token exists with given jti
-            token, _ = OutstandingToken.objects.get_or_create(
+            # Outstanding token will always exist
+            token = OutstandingToken.objects.get(
                 jti=jti,
-                defaults={
-                    'token': str(self),
-                    'expires_at': datetime_from_epoch(exp),
-                },
             )
 
             return BlacklistedToken.objects.get_or_create(token=token)
