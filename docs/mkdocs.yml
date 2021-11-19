@@ -42,5 +42,5 @@ nav:
 - Token Types: token_types.md
 - Blacklist App: blacklist_app.md
 - Development and Contributing: development_and_contributing.md
-- Experimental Feature: development_and_contributing.md
+- Experimental Feature: experimental_features.md
 #- ninja_jwt package: index.md
