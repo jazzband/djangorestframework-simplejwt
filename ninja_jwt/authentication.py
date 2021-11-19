@@ -73,6 +73,16 @@ class JWTAuth(JWTBaseAuthentication, HttpBearer):
     def authenticate(self, request: HttpRequest, token: str) -> Any:
         return self.jwt_authenticate(request, token)
 
+
+class JWTTokenUserAuth(JWTBaseAuthentication, HttpBearer):
+    """
+    Experimental features
+    JWTTokenUserAuth backend
+    """
+
+    def authenticate(self, request: HttpRequest, token: str) -> Any:
+        return self.jwt_authenticate(request, token)
+
     def get_user(self, validated_token: Any) -> Type[AbstractUser]:
         """
         Returns a stateless user object which is backed by the given validated

@@ -13,10 +13,10 @@ User = get_user_model()
 AuthToken = api_settings.AUTH_TOKEN_CLASSES[0]
 
 
-class TestJWTBaseAuthentication:
+class TestJWTAuth:
     @pytest.fixture(autouse=True)
     def setUp(self):
-        self.backend = authentication.JWTBaseAuthentication()
+        self.backend = authentication.JWTAuth()
 
     @pytest.mark.django_db
     def test_get_validated_token(self, monkeypatch):
@@ -93,10 +93,10 @@ class TestJWTBaseAuthentication:
         assert self.backend.get_user(payload).id == u.id
 
 
-class TestJWTAuth:
+class TestJWTTokenUserAuth:
     @pytest.fixture(autouse=True)
     def setUp(self):
-        self.backend = authentication.JWTAuth()
+        self.backend = authentication.JWTTokenUserAuth()
 
     @pytest.mark.django_db
     def test_get_user(self):

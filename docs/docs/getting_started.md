@@ -36,7 +36,7 @@ If you wish to customize these routes, you can inherit from these controllers an
 ```python
 from ninja_jwt.controller import TokenObtainPairController, router
 
-@router('token', tags=['Auth']
+@router('token', tags=['Auth'])
 class MyCustomController(TokenObtainPairController):
     """obtain_token and refresh_token only"
 ...
