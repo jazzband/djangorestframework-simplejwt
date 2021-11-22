@@ -20,7 +20,11 @@ NinjaJWT_SETTINGS_DEFAULTS = dict(
 )
 
 USER_SETTINGS = NinjaJWTUserDefinedSettingsMapper(
-    getattr(settings, "SIMPLE_JWT", getattr(settings, "NINJA_JWT", NinjaJWT_SETTINGS_DEFAULTS))
+    getattr(
+        settings,
+        "SIMPLE_JWT",
+        getattr(settings, "NINJA_JWT", NinjaJWT_SETTINGS_DEFAULTS),
+    )
 )
 
 
@@ -81,7 +85,7 @@ def reload_api_settings(*args: Any, **kwargs: Any) -> None:
 
     setting, value = kwargs["setting"], kwargs["value"]
 
-    if setting in ['SIMPLE_JWT', "NINJA_JWT"]:
+    if setting in ["SIMPLE_JWT", "NINJA_JWT"]:
         api_settings = NinjaJWTSettings.from_orm(
             NinjaJWTUserDefinedSettingsMapper(value)
         )
