@@ -39,7 +39,7 @@ class TestJWTAuth:
             with pytest.raises(InvalidToken) as e:
                 self.backend.get_validated_token(str(sliding_token))
 
-            details = e.value.message
+            details = e.value.detail
             assert len(details["messages"]) == 1
             assert details["messages"][0] == {
                 "token_class": "AccessToken",

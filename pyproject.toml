@@ -2,11 +2,19 @@
 requires = ["flit_core >=2,<4"]
 build-backend = "flit_core.buildapi"
 
-[tool.flit.metadata]
-module = "ninja_jwt"
-dist-name = "django-ninja-jwt"
-author = "Ezeudoh Tochukwu"
-author-email = "tochukwu.ezeudoh@gmail.com"
+[tool.flit.module]
+name = "ninja_jwt"
+
+
+[project]
+name = "django-ninja-jwt"
+authors = [
+   {name = "David Sanders", email = "davesque@gmail.com"},
+   {name = "Ezeudoh Tochukwu", email = "tochukwu.ezeudoh@gmail.com"},
+]
+dynamic = ["version", "description"]
+requires-python = ">=3.6"
+readme = "README.md"
 home-page = "https://github.com/eadwinCode/django-ninja-jwt"
 classifiers = [
     "Intended Audience :: Information Technology",
@@ -38,21 +46,20 @@ classifiers = [
     "Topic :: Internet :: WWW/HTTP",
 ]
 
-requires = [
+dependencies = [
     "Django >= 2.1",
     "pyjwt>=2,<3",
     "pyjwt[crypto]",
     "ninja-schema",
     "django-ninja-extra",
 ]
-description-file = "README.md"
-requires-python = ">=3.6"
 
 
-[tool.flit.metadata.urls]
+[project.urls]
 Documentation = "https://github.com/eadwinCode/django-ninja-jwt"
+Source = "https://github.com/eadwinCode/django-ninja-jwt"
 
-[tool.flit.metadata.requires-extra]
+[project.optional-dependencies]
 test = [
     "pytest",
     "pytest-cov",
@@ -65,3 +72,4 @@ test = [
     "python-jose==3.0.0"
 ]
 doc = []
+
