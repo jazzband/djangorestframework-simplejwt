@@ -34,9 +34,10 @@ It is a combination of two subclass `TokenVerificationController` and `TokenObta
 If you wish to customize these routes, you can inherit from these controllers and change its implementation
 
 ```python
-from ninja_jwt.controller import TokenObtainPairController, router
+from ninja_extra import api_controller
+from ninja_jwt.controller import TokenObtainPairController
 
-@router('token', tags=['Auth'])
+@api_controller('token', tags=['Auth'])
 class MyCustomController(TokenObtainPairController):
     """obtain_token and refresh_token only"
 ...

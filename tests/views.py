@@ -1,10 +1,10 @@
-from ninja_extra import APIController, route, router
+from ninja_extra import api_controller, http_get
 
 from ninja_jwt import authentication
 
 
-@router("/test-view", auth=authentication.JWTAuth())
-class TestAPIController(APIController):
-    @route.get("/test", url_name="test_view")
+@api_controller("/test-view", auth=authentication.JWTAuth())
+class TestAPIController:
+    @http_get("/test", url_name="test_view")
     def test(self):
         return {"foo": "bar"}

@@ -1,5 +1,5 @@
 from django.urls import path
-from ninja_extra import NinjaExtraAPI, permissions, router
+from ninja_extra import NinjaExtraAPI, api_controller, permissions
 
 from ninja_jwt.controller import (
     NinjaJWTDefaultController,
@@ -9,23 +9,25 @@ from ninja_jwt.controller import (
 
 from .views import TestAPIController
 
-sliding_router = router(
+TokenObtainSlidingController = api_controller(
     "/token",
     permissions=[permissions.AllowAny],
     tags=["token"],
-    controller=TokenObtainSlidingController,
-)
+)(TokenObtainSlidingController)
 
-blacklist_router = router(
+TokenBlackListController = api_controller(
     "/token",
     permissions=[permissions.AllowAny],
     tags=["token"],
-    controller=TokenBlackListController,
-)
+)(TokenBlackListController)
 
 api = NinjaExtraAPI(urls_namespace="jwt")
-api.add_controller_router(sliding_router, blacklist_router)
-api.register_controllers(NinjaJWTDefaultController, TestAPIController)
+api.register_controllers(
+    NinjaJWTDefaultController,
+    TestAPIController,
+    TokenObtainSlidingController,
+    TokenBlackListController,
+)
 
 
 urlpatterns = [

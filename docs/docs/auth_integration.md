@@ -5,11 +5,11 @@ Authenticated user can be found in `request.user` or `request.auth`
 ### Route Authentication - Class Based
 
 ```python
-from ninja_extra import APIController, router, route
+from ninja_extra import api_controller, route
 from ninja_jwt.authentication import JWTAuth
 
-@router('')
-class MyController(APIController):
+@api_controller
+class MyController:
     @route.get('/some-endpoint', auth=JWTAuth())
     def some_endpoint(self):
         ...
@@ -19,7 +19,7 @@ class MyController(APIController):
 
 ```python
 from ninja import router
-from ninja_jwt import JWTAuth
+from ninja_jwt.authentication import JWTAuth
 
 router = router('')
 
@@ -39,18 +39,17 @@ from ninja.security import APIKeyHeader
 from ninja_jwt.authentication import JWTBaseAuthentication
 from ninja import router
 
-class ApiKey(APIKeyHeader):
+class ApiKey(APIKeyHeader, JWTBaseAuthentication):
     param_name = "X-API-Key"
 
     def authenticate(self, request, key):
-        if key == "supersecret":
-            return self.jwt_authenticate(request, token=key)
+        return self.jwt_authenticate(request, token=key)
 
 
 header_key = ApiKey()
 router = router('')
 
-@api.get("/headerkey", auth=header_key)
+@router.get("/headerkey", auth=header_key)
 def apikey(request):
     return f"Token = {request.auth}"
 

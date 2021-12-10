@@ -6,7 +6,8 @@ its corresponding serializer. Here\'s an example :
 
 ```python
 from ninja_jwt.schema import TokenObtainPairSerializer
-from ninja_jwt.controller import TokenObtainPairController, router, route
+from ninja_jwt.controller import TokenObtainPairController
+from ninja_extra import api_controller, route
 from ninja_schema import Schema
 
 
@@ -27,10 +28,10 @@ class MyTokenObtainPairSchema(TokenObtainPairSerializer):
         out_dict.update(user=UserSchema.from_orm(self._user))
         return MyTokenObtainPairOutSchema(**out_dict)
 
-@router('/token', tags=['Auth'])
+@api_controller('/token', tags=['Auth'])
 class MyTokenObtainPairController(TokenObtainPairController):
     @route.post(
-        "/pair", response=schema.MyTokenObtainPairOutSchema, url_name="token_obtain_pair"
+        "/pair", response=MyTokenObtainPairOutSchema, url_name="token_obtain_pair"
     )
     def obtain_token(self, user_token: MyTokenObtainPairSchema):
         return user_token.output_schema()
@@ -50,7 +51,7 @@ from ninja_schema import Schema
 router = router('/token')
 
 @router.post(
-    "/pair", response=schema.MyTokenObtainPairOutSchema, url_name="token_obtain_pair"
+    "/pair", response=MyTokenObtainPairOutSchema, url_name="token_obtain_pair"
 )
 def obtain_token(self, user_token: MyTokenObtainPairSchema):
     return user_token.output_schema()

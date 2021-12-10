@@ -10,11 +10,12 @@ same token secret key. To use this feature, add the
 of the default `JWTAuth` backend) to the Django Ninja Extra route definition
 
 ```python
-from ninja_extra import APIController, router, route
+from ninja_extra import api_controller, route
 from ninja_jwt.authentication import JWTTokenUserAuth
 
-@router('')
-class MyController(APIController):
+
+@api_controller
+class MyController:
     @route.get('/some-endpoint', auth=JWTTokenUserAuth())
     def some_endpoint(self):
         pass
