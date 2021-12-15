@@ -27,7 +27,7 @@ extras_require = {
         "ipython",
     ],
     "python-jose": [
-        "python-jose==3.0.0",
+        "python-jose==3.3.0",
     ],
 }
 
@@ -75,6 +75,7 @@ setup(
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
         "Topic :: Internet :: WWW/HTTP",
     ],
 )

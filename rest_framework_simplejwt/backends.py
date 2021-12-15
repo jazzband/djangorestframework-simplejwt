@@ -20,7 +20,7 @@ class TokenBackend:
         self,
         algorithm,
         signing_key=None,
-        verifying_key=None,
+        verifying_key="",
         audience=None,
         issuer=None,
         jwk_url: str = None,

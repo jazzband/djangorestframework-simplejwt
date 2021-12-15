@@ -17,7 +17,7 @@ DEFAULTS = {
     "UPDATE_LAST_LOGIN": False,
     "ALGORITHM": "HS256",
     "SIGNING_KEY": settings.SECRET_KEY,
-    "VERIFYING_KEY": None,
+    "VERIFYING_KEY": "",
     "AUDIENCE": None,
     "ISSUER": None,
     "JWK_URL": None,
