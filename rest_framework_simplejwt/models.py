@@ -15,6 +15,7 @@ class TokenUser:
     class instead of a `User` model instance.  Instances of this class act as
     stateless user objects which are backed by validated tokens.
     """
+
     # User is always active since Simple JWT will never issue a token for an
     # inactive user
     is_active = True
@@ -26,7 +27,7 @@ class TokenUser:
         self.token = token
 
     def __str__(self):
-        return 'TokenUser {}'.format(self.id)
+        return f"TokenUser {self.id}"
 
     @cached_property
     def id(self):
@@ -38,15 +39,15 @@ class TokenUser:
 
     @cached_property
     def username(self):
-        return self.token.get('username', '')
+        return self.token.get("username", "")
 
     @cached_property
     def is_staff(self):
-        return self.token.get('is_staff', False)
+        return self.token.get("is_staff", False)
 
     @cached_property
     def is_superuser(self):
-        return self.token.get('is_superuser', False)
+        return self.token.get("is_superuser", False)
 
     def __eq__(self, other):
         return self.id == other.id
@@ -58,16 +59,16 @@ class TokenUser:
         return hash(self.id)
 
     def save(self):
-        raise NotImplementedError('Token users have no DB representation')
+        raise NotImplementedError("Token users have no DB representation")
 
     def delete(self):
-        raise NotImplementedError('Token users have no DB representation')
+        raise NotImplementedError("Token users have no DB representation")
 
     def set_password(self, raw_password):
-        raise NotImplementedError('Token users have no DB representation')
+        raise NotImplementedError("Token users have no DB representation")
 
     def check_password(self, raw_password):
-        raise NotImplementedError('Token users have no DB representation')
+        raise NotImplementedError("Token users have no DB representation")
 
     @property
     def groups(self):

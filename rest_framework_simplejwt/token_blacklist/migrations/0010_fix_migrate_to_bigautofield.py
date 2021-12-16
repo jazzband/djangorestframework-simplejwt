@@ -10,18 +10,18 @@ parent_dir = Path(__file__).resolve(strict=True).parent
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('token_blacklist', '0008_migrate_to_bigautofield'),
+        ("token_blacklist", "0008_migrate_to_bigautofield"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='blacklistedtoken',
-            name='id',
+            model_name="blacklistedtoken",
+            name="id",
             field=models.BigAutoField(primary_key=True, serialize=False),
         ),
         migrations.AlterField(
-            model_name='outstandingtoken',
-            name='id',
+            model_name="outstandingtoken",
+            name="id",
             field=models.BigAutoField(primary_key=True, serialize=False),
         ),
     ]
