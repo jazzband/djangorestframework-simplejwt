@@ -16,19 +16,13 @@ jobs:
       max-parallel: 5
       matrix:
         python-version: ['3.7', '3.8', '3.9', '3.10']
-        django-version: ['2.2', '3.1', '3.2', 'main']
-        drf-version: ['3.10', '3.11', '3.12']
+        django-version: ['2.2', '3.2', '4.0', 'main']
+        drf-version: ['3.10', '3.11', '3.12', '3.13']
         exclude:
           - python-version: '3.7'
             django-version: 'main'
-          - python-version: '3.8'
-            django-version: 'main'
-          - django-version: '3.1'
-            drf-version: '3.10'
           - python-version: '3.10'
             django-version: '2.2'
-          - python-version: '3.10'
-            django-version: '3.1'
 
     steps:
     - uses: actions/checkout@v2
