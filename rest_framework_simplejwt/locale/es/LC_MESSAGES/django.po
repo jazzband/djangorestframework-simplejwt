@@ -51,7 +51,7 @@ msgstr "El token es inválido o ha expirado"
 
 #: serializers.py:24
 msgid "No active account found with the given credentials"
-msgstr "La combination de credenciales no tiene una cuenta activa"
+msgstr "La combinación de credenciales no tiene una cuenta activa"
 
 #: settings.py:63
 msgid ""
