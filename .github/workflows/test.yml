@@ -20,7 +20,9 @@ jobs:
         drf-version: ['3.10', '3.11', '3.12', '3.13']
         exclude:
           - python-version: '3.7'
-            django-version: ['4.0', 'main']
+            django-version: 'main'
+          - python-version: '3.7'
+            django-version: '4.0'
           - python-version: '3.8'
             django-version: 'main'
           - django-version: '3.1'
