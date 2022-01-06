@@ -1,5 +1,7 @@
 ## Unreleased
 
+* Add support for Django 4.0 + DRF 3.13 and drop Django 3.1 ([#500](https://github.com/jazzband/djangorestframework-simplejwt/pull/500))
+
 ## Version 5.0.0
 
 #### Breaking
