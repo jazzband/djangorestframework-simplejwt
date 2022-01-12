@@ -30,16 +30,12 @@ class TokenBackend:
 
         self.algorithm = algorithm
         self.signing_key = signing_key
+        self.verifying_key = verifying_key
         self.audience = audience
         self.issuer = issuer
 
         self.jwks_client = PyJWKClient(jwk_url) if jwk_url else None
         self.leeway = leeway
-
-        if algorithm.startswith("HS"):
-            self.verifying_key = signing_key
-        else:
-            self.verifying_key = verifying_key
 
     def _validate_algorithm(self, algorithm):
         """
