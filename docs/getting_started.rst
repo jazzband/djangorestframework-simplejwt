@@ -59,11 +59,9 @@ allow API users to verify HMAC-signed tokens without having access to your
 signing key:
 
 .. code-block:: python
-  # add `TokenVerifyView` to your import
   
   from rest_framework_simplejwt.views import TokenVerifyView
   
-  # and define it in your `urlpatterns`
   urlpatterns = [
       ...
       path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
