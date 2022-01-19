@@ -35,11 +35,13 @@ class OutstandingTokenAdmin(admin.ModelAdmin):
         return False
 
     def has_change_permission(self, request, obj=None):
-        return request.method in [
-            "GET",
-            "HEAD",
-        ] and super().has_change_permission(  # noqa: W504
-            request, obj
+        return (
+            request.method
+            in [
+                "GET",
+                "HEAD",
+            ]
+            and super().has_change_permission(request, obj)
         )
 
 
