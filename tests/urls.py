@@ -1,30 +1,27 @@
+import django
 from django.urls import path
 from ninja_extra import NinjaExtraAPI, api_controller, permissions
 
-from ninja_jwt.controller import (
-    NinjaJWTDefaultController,
-    TokenBlackListController,
-    TokenObtainSlidingController,
-)
+from ninja_jwt import controller
 
-from .views import TestAPIController
+from . import views
 
 TokenObtainSlidingController = api_controller(
     "/token",
     permissions=[permissions.AllowAny],
     tags=["token"],
-)(TokenObtainSlidingController)
+)(controller.TokenObtainSlidingController)
 
 TokenBlackListController = api_controller(
     "/token",
     permissions=[permissions.AllowAny],
     tags=["token"],
-)(TokenBlackListController)
+)(controller.TokenBlackListController)
 
 api = NinjaExtraAPI(urls_namespace="jwt")
 api.register_controllers(
-    NinjaJWTDefaultController,
-    TestAPIController,
+    controller.NinjaJWTDefaultController,
+    views.TestAPIController,
     TokenObtainSlidingController,
     TokenBlackListController,
 )
@@ -33,3 +30,28 @@ api.register_controllers(
 urlpatterns = [
     path("api/", api.urls),
 ]
+
+if django.VERSION > (3, 0):
+    AsyncTokenObtainSlidingController = api_controller(
+        "/token-async",
+        permissions=[permissions.AllowAny],
+        tags=["token-async"],
+    )(controller.AsyncTokenObtainSlidingController)
+
+    AsyncTokenBlackListController = api_controller(
+        "/token-async",
+        permissions=[permissions.AllowAny],
+        tags=["token-async"],
+    )(controller.AsyncTokenBlackListController)
+
+    async_api = NinjaExtraAPI(urls_namespace="jwt-async")
+    async_api.register_controllers(
+        controller.AsyncNinjaJWTDefaultController,
+        views.TestAPIAsyncController,
+        AsyncTokenObtainSlidingController,
+        AsyncTokenBlackListController,
+    )
+
+    urlpatterns += [
+        path("api/async/", async_api.urls),
+    ]

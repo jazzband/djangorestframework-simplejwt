@@ -54,3 +54,21 @@ def apikey(request):
     return f"Token = {request.auth}"
 
 ```
+
+### Asynchronous Route Authentication
+If you are interested in the Asynchronous Route Authentication, there is `AsyncJWTAuth` class
+
+```python
+from ninja_extra import api_controller, route
+from ninja_jwt.authentication import AsyncJWTAuth
+
+@api_controller
+class MyController:
+    @route.get('/some-endpoint', auth=AsyncJWTAuth())
+    async def some_endpoint(self):
+        ...
+```
+N:B `some_endpoint` must be asynchronous. Any endpoint function marked with `AsyncJWTAuth` must be asynchronous. 
+
+!!! warning
+    Asynchronous feature is only available for django version > 3.0

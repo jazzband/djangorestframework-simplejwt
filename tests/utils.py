@@ -24,7 +24,7 @@ def client_action_wrapper(action):
 
         _url = url or reverse(self.view_name, args=reverse_args, kwargs=reverse_kwargs)
         if query_string is not None:
-            url = _url + "?{0}".format(query_string)
+            _url = _url + "?{0}".format(query_string)
 
         response = getattr(self.client, action)(_url, *args, **kwargs)
         try:
@@ -58,7 +58,7 @@ class APIViewTestCase:
 def override_api_settings(**new_settings):
     from django.conf import settings
 
-    old_settings = getattr(settings, "SIMPLE_JWT", {})
+    old_settings = getattr(settings, "NINJA_JWT", {})
     combined_settings = dict(old_settings)
     combined_settings.update(new_settings)
     return override_settings(SIMPLE_JWT=combined_settings)

@@ -11,7 +11,7 @@ from ninja_jwt.settings import api_settings
 from ninja_jwt.tokens import AccessToken, RefreshToken, SlidingToken
 from ninja_jwt.utils import aware_utcnow, datetime_from_epoch, datetime_to_epoch
 
-from .utils import APIViewTestCase, override_api_settings
+from .utils import APIViewTestCase
 
 User = get_user_model()
 
