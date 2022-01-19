@@ -32,6 +32,7 @@ class TokenBackend:
 
         self.algorithm = algorithm
         self.signing_key = signing_key
+        self.verifying_key = verifying_key
         self.audience = audience
         self.issuer = issuer
 
