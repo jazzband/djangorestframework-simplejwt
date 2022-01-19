@@ -6,7 +6,7 @@ Getting started
 Requirements
 ------------
 
-* Python (3.7, 3.8, 3.9)
+* Python (3.7, 3.8, 3.9, 3.10)
 * Django (2.2, 3.1, 3.2)
 * Django REST Framework (3.10, 3.11, 3.12)
 
@@ -59,11 +59,9 @@ allow API users to verify HMAC-signed tokens without having access to your
 signing key:
 
 .. code-block:: python
-  # add `TokenVerifyView` to your import
   
   from ninja_jwt.views import TokenVerifyView
   
-  # and define it in your `urlpatterns`
   urlpatterns = [
       ...
       path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),

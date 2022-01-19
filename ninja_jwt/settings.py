@@ -40,7 +40,7 @@ class NinjaJWTSettings(Schema):
     UPDATE_LAST_LOGIN: bool = Field(False)
     ALGORITHM: str = Field("HS256")
     SIGNING_KEY: str = Field(settings.SECRET_KEY)
-    VERIFYING_KEY: Optional[str] = Field(None)
+    VERIFYING_KEY: Optional[str] = Field("")
     AUDIENCE: Optional[str] = Field(None)
     ISSUER: Optional[str] = Field(None)
     JWK_URL: Optional[AnyUrl] = Field(None)
@@ -62,7 +62,7 @@ class NinjaJWTSettings(Schema):
     JTI_CLAIM: str = Field("jti")
     SLIDING_TOKEN_REFRESH_EXP_CLAIM: str = Field("refresh_exp")
     SLIDING_TOKEN_LIFETIME: timedelta = Field(timedelta(minutes=5))
-    SLIDING_TOKEN_REFRESH_LIFETIME: timedelta = Field(timedelta(minutes=5))
+    SLIDING_TOKEN_REFRESH_LIFETIME: timedelta = Field(timedelta(days=1))
 
     @root_validator
     def validate_ninja_jwt_settings(cls, values):
