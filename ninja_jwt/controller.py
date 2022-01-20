@@ -15,7 +15,7 @@ exports = [
     "NinjaJWTSlidingController",
 ]
 
-if django.VERSION > (3, 0):
+if not django.VERSION < (3, 1):
     exports += [
         "AsyncTokenVerificationController",
         "AsyncTokenBlackListController",
