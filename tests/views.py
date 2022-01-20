@@ -11,7 +11,7 @@ class TestAPIController:
         return {"foo": "bar"}
 
 
-if django.VERSION > (3, 0):
+if not django.VERSION < (3, 1):
 
     @api_controller("/test-view-async", auth=authentication.AsyncJWTAuth())
     class TestAPIAsyncController:

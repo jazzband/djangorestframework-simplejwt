@@ -142,7 +142,7 @@ class TestJWTTokenUserAuth:
             assert user.username == "bsaget"
 
 
-if django.VERSION > (3, 0):
+if not django.VERSION < (3, 1):
     from asgiref.sync import sync_to_async
 
     class TestAsyncJWTAuth(TestJWTAuth):

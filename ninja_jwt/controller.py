@@ -102,7 +102,7 @@ class NinjaJWTSlidingController(
     auto_import = False
 
 
-if django.VERSION > (3, 0):
+if not django.VERSION < (3, 1):
 
     class AsyncTokenVerificationController(TokenVerificationController):
         @http_post("/verify", response={200: Schema}, url_name="token_verify")

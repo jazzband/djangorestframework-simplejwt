@@ -31,7 +31,7 @@ urlpatterns = [
     path("api/", api.urls),
 ]
 
-if django.VERSION > (3, 0):
+if not django.VERSION < (3, 1):
     AsyncTokenObtainSlidingController = api_controller(
         "/token-async",
         permissions=[permissions.AllowAny],

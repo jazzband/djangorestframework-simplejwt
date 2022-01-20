@@ -148,7 +148,7 @@ class TestTestView(APIViewTestCase):
         assert res.data["foo"] == "bar"
 
 
-if django.VERSION > (3, 0):
+if not django.VERSION < (3, 1):
     from asgiref.sync import sync_to_async
 
     class TestAsyncTestView(TestTestView):

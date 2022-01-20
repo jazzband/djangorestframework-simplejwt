@@ -108,7 +108,7 @@ def default_user_authentication_rule(user) -> bool:
     return user is not None and user.is_active
 
 
-if django.VERSION > (3, 0):
+if not django.VERSION < (3, 1):
     from asgiref.sync import sync_to_async
 
     class AsyncJWTBaseAuthentication(JWTBaseAuthentication):
@@ -123,11 +123,9 @@ if django.VERSION > (3, 0):
             request.user = user
             return user
 
-
     class AsyncJWTAuth(AsyncJWTBaseAuthentication, JWTAuth, AsyncHttpBearer):
         async def authenticate(self, request: HttpRequest, token: str) -> Any:
             return await self.async_jwt_authenticate(request, token)
-
 
     class AsyncJWTTokenUserAuth(
         AsyncJWTBaseAuthentication, JWTTokenUserAuth, AsyncHttpBearer
