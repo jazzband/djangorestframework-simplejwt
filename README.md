@@ -19,7 +19,7 @@ For full documentation, [visit](https://eadwincode.github.io/django-ninja-jwt/).
 - Django >= 2.1
 - Django-Ninja >= 0.16.1
 - Ninja-Schema >= 0.12.8
-- Django-Ninja-Extra >= 0.11.0
+- Django-Ninja-Extra >= 0.14.2
 
 
 Installation

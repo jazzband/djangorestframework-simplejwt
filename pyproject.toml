@@ -50,8 +50,8 @@ dependencies = [
     "Django >= 2.1",
     "pyjwt>=2,<3",
     "pyjwt[crypto]",
-    "ninja-schema",
-    "django-ninja-extra",
+    "ninja-schema >= 0.12.8",
+    "django-ninja-extra >= 0.14.2",
 ]
 
 
