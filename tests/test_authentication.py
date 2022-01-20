@@ -1,5 +1,6 @@
 from datetime import timedelta
 
+import django
 import pytest
 from django.contrib.auth import get_user_model
 
@@ -16,6 +17,9 @@ AuthToken = api_settings.AUTH_TOKEN_CLASSES[0]
 class TestJWTAuth:
     @pytest.fixture(autouse=True)
     def setUp(self):
+        self.init_backend()
+
+    def init_backend(self):
         self.backend = authentication.JWTAuth()
 
     @pytest.mark.django_db
@@ -96,6 +100,9 @@ class TestJWTAuth:
 class TestJWTTokenUserAuth:
     @pytest.fixture(autouse=True)
     def setUp(self):
+        self.init_backend()
+
+    def init_backend(self):
         self.backend = authentication.JWTTokenUserAuth()
 
     @pytest.mark.django_db
@@ -133,3 +140,41 @@ class TestJWTTokenUserAuth:
             assert isinstance(user, api_settings.TOKEN_USER_CLASS)
             assert user.id == 42
             assert user.username == "bsaget"
+
+
+if not django.VERSION < (3, 1):
+    from asgiref.sync import sync_to_async
+
+    class TestAsyncJWTAuth(TestJWTAuth):
+        def init_backend(self):
+            self.backend = authentication.AsyncJWTAuth()
+
+        @pytest.mark.asyncio
+        @pytest.mark.django_db
+        async def test_get_validated_token(self, monkeypatch):
+            _test_get_validated_token = sync_to_async(
+                super(TestAsyncJWTAuth, self).test_get_validated_token
+            )
+            await _test_get_validated_token(monkeypatch=monkeypatch)
+
+        @pytest.mark.asyncio
+        @pytest.mark.django_db
+        async def test_get_user(self):
+            _test_get_user = sync_to_async(super(TestAsyncJWTAuth, self).test_get_user)
+            await _test_get_user()
+
+    class TestAsyncJWTTokenUserAuth(TestJWTTokenUserAuth):
+        def init_backend(self):
+            self.backend = authentication.AsyncJWTTokenUserAuth()
+
+        @pytest.mark.asyncio
+        @pytest.mark.django_db
+        async def test_get_user(self):
+            _test_get_user = sync_to_async(super().test_get_user)
+            await _test_get_user()
+
+        @pytest.mark.asyncio
+        @pytest.mark.django_db
+        async def test_custom_tokenuser(self, monkeypatch):
+            _test_custom_tokenuser = sync_to_async(super().test_custom_tokenuser)
+            await _test_custom_tokenuser(monkeypatch=monkeypatch)

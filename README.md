@@ -18,8 +18,8 @@ For full documentation, [visit](https://eadwincode.github.io/django-ninja-jwt/).
 - Python >= 3.6
 - Django >= 2.1
 - Django-Ninja >= 0.16.1
-- Ninja-Schema >= 0.12.2
-- Django-Ninja-Extra >= 0.11.0
+- Ninja-Schema >= 0.12.8
+- Django-Ninja-Extra >= 0.14.2
 
 
 Installation

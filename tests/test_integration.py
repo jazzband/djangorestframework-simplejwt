@@ -1,5 +1,6 @@
 from datetime import timedelta
 
+import django
 import pytest
 from django.contrib.auth import get_user_model
 
@@ -14,7 +15,11 @@ User = get_user_model()
 
 @pytest.mark.django_db
 class TestTestView(APIViewTestCase):
-    view_name = "jwt:test_view"
+    namespace = "jwt"
+
+    @property
+    def view_name(self):
+        return f"{self.namespace}:test_view"
 
     @pytest.fixture(autouse=True)
     def setUp(self):
@@ -35,7 +40,7 @@ class TestTestView(APIViewTestCase):
 
     def test_wrong_auth_type(self):
         res = self.view_post(
-            url=reverse("jwt:token_obtain_sliding"),
+            url=reverse(f"{self.namespace}:token_obtain_sliding"),
             data={
                 User.USERNAME_FIELD: self.username,
                 "password": self.password,
@@ -56,7 +61,7 @@ class TestTestView(APIViewTestCase):
         AccessToken.lifetime = timedelta(seconds=0)
         try:
             res = self.view_post(
-                url=reverse("jwt:token_obtain_pair"),
+                url=reverse(f"{self.namespace}:token_obtain_pair"),
                 data={
                     User.USERNAME_FIELD: self.username,
                     "password": self.password,
@@ -80,7 +85,7 @@ class TestTestView(APIViewTestCase):
 
     def test_user_can_get_sliding_token_and_use_it(self, monkeypatch):
         res = self.view_post(
-            url=reverse("jwt:token_obtain_sliding"),
+            url=reverse(f"{self.namespace}:token_obtain_sliding"),
             data={
                 User.USERNAME_FIELD: self.username,
                 "password": self.password,
@@ -102,7 +107,7 @@ class TestTestView(APIViewTestCase):
 
     def test_user_can_get_access_and_refresh_tokens_and_use_them(self, monkeypatch):
         res = self.view_post(
-            url=reverse("jwt:token_obtain_pair"),
+            url=reverse(f"{self.namespace}:token_obtain_pair"),
             data={
                 User.USERNAME_FIELD: self.username,
                 "password": self.password,
@@ -125,7 +130,7 @@ class TestTestView(APIViewTestCase):
         assert res.data["foo"] == "bar"
 
         res = self.view_post(
-            url=reverse("jwt:token_refresh"),
+            url=reverse(f"{self.namespace}:token_refresh"),
             data={"refresh": refresh},
             content_type="application/json",
         )
@@ -141,3 +146,48 @@ class TestTestView(APIViewTestCase):
 
         assert res.status_code == 200
         assert res.data["foo"] == "bar"
+
+
+if not django.VERSION < (3, 1):
+    from asgiref.sync import sync_to_async
+
+    class TestAsyncTestView(TestTestView):
+        namespace = "jwt-async"
+
+        @pytest.mark.asyncio
+        @pytest.mark.django_db(transaction=True)
+        async def test_no_authorization(self):
+            _test_no_authorization = sync_to_async(super().test_no_authorization)
+            await _test_no_authorization()
+
+        @pytest.mark.asyncio
+        @pytest.mark.django_db(transaction=True)
+        async def test_wrong_auth_type(self):
+            _test_wrong_auth_type = sync_to_async(super().test_wrong_auth_type)
+            await _test_wrong_auth_type()
+
+        @pytest.mark.asyncio
+        @pytest.mark.django_db(transaction=True)
+        async def test_expired_token(self, monkeypatch):
+            _test_expired_token = sync_to_async(super().test_expired_token)
+            await _test_expired_token(monkeypatch=monkeypatch)
+
+        @pytest.mark.asyncio
+        @pytest.mark.django_db(transaction=True)
+        async def test_user_can_get_sliding_token_and_use_it(self, monkeypatch):
+            _test_user_can_get_sliding_token_and_use_it = sync_to_async(
+                super().test_user_can_get_sliding_token_and_use_it
+            )
+            await _test_user_can_get_sliding_token_and_use_it(monkeypatch=monkeypatch)
+
+        @pytest.mark.asyncio
+        @pytest.mark.django_db(transaction=True)
+        async def test_user_can_get_access_and_refresh_tokens_and_use_them(
+            self, monkeypatch
+        ):
+            _test_user_can_get_access_and_refresh_tokens_and_use_them = sync_to_async(
+                super().test_user_can_get_access_and_refresh_tokens_and_use_them
+            )
+            await _test_user_can_get_access_and_refresh_tokens_and_use_them(
+                monkeypatch=monkeypatch
+            )

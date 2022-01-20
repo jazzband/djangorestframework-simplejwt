@@ -1,17 +1,15 @@
 from datetime import timedelta
-from importlib import reload
 from unittest.mock import patch
 
 import pytest
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 
-from ninja_jwt import schema
 from ninja_jwt.settings import api_settings
 from ninja_jwt.tokens import AccessToken, RefreshToken, SlidingToken
 from ninja_jwt.utils import aware_utcnow, datetime_from_epoch, datetime_to_epoch
 
-from .utils import APIViewTestCase, override_api_settings
+from .utils import APIViewTestCase
 
 User = get_user_model()
 
