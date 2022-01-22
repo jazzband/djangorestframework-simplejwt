@@ -55,6 +55,9 @@ class TokenObtainSerializer(serializers.Serializer):
 
         return {}
 
+    def to_representation(self, instance):
+        return instance
+
     @classmethod
     def get_token(cls, user):
         raise NotImplementedError(
@@ -126,6 +129,9 @@ class TokenRefreshSerializer(serializers.Serializer):
 
         return data
 
+    def to_representation(self, instance):
+        return instance
+
 
 class TokenRefreshSlidingSerializer(serializers.Serializer):
     token = serializers.CharField()
@@ -171,3 +177,6 @@ class TokenBlacklistSerializer(serializers.Serializer):
         except AttributeError:
             pass
         return {}
+
+    def to_representation(self, instance):
+        return instance
