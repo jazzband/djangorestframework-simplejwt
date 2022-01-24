@@ -172,6 +172,29 @@ class TestTokenBlacklistFlushExpiredTokens(TestCase):
             [not_expired_2["jti"], not_expired_3["jti"]],
         )
 
+    def test_token_blacklist_will_not_be_removed_on_User_delete(self):
+        token = RefreshToken.for_user(self.user)
+        outstanding_token = OutstandingToken.objects.first()
+
+        # Should raise no exception
+        RefreshToken(str(token))
+
+        # Add token to blacklist
+        BlacklistedToken.objects.create(token=outstanding_token)
+
+        with self.assertRaises(TokenError) as e:
+            # Should raise exception
+            RefreshToken(str(token))
+            self.assertIn("blacklisted", e.exception.args[0])
+
+        # Delete the User and try again
+        self.user.delete()
+
+        with self.assertRaises(TokenError) as e:
+            # Should raise exception
+            RefreshToken(str(token))
+            self.assertIn("blacklisted", e.exception.args[0])
+
 
 class TestPopulateJtiHexMigration(MigrationTestCase):
     migrate_from = ("token_blacklist", "0002_outstandingtoken_jti_hex")
