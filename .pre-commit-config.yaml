@@ -1,24 +1,24 @@
 repos:
 - repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: 'v4.0.1'
+  rev: 'v4.1.0'
   hooks:
   - id: check-merge-conflict
 - repo: https://github.com/asottile/yesqa
-  rev: v1.2.3
+  rev: v1.3.0
   hooks:
   - id: yesqa
 - repo: https://github.com/pycqa/isort
-  rev: '5.9.3'
+  rev: '5.10.1'
   hooks:
   - id: isort
     args: ["--profile", "black"]
 - repo: https://github.com/psf/black
-  rev: '21.9b0'
+  rev: '21.12b0'
   hooks:
   - id: black
     language_version: python3 # Should be a command that runs python3.6+
 - repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: 'v4.0.1'
+  rev: 'v4.1.0'
   hooks:
   - id: end-of-file-fixer
     exclude: >-
@@ -48,7 +48,7 @@ repos:
   - id: detect-private-key
     exclude: ^tests/
 - repo: https://github.com/asottile/pyupgrade
-  rev: 'v2.28.0'
+  rev: 'v2.31.0'
   hooks:
   - id: pyupgrade
     args: ['--py37-plus', '--keep-mock']
