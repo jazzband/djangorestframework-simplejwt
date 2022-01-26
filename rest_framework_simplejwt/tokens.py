@@ -265,23 +265,28 @@ class BlacklistMixin:
 
             return BlacklistedToken.objects.get_or_create(token=token)
 
+        def create_outstanding_token(self):
+            """
+            Mark this token as outstanding in the database.
+            """
+            jti = self[api_settings.JTI_CLAIM]
+            exp = self["exp"]
+
+            OutstandingToken.objects.create(
+                user_id=self[api_settings.USER_ID_CLAIM],
+                jti=jti,
+                token=str(self),
+                created_at=self.current_time,
+                expires_at=datetime_from_epoch(exp),
+            )
+
         @classmethod
         def for_user(cls, user: AuthUser) -> Token:
             """
             Adds this token to the outstanding token list.
             """
             token = super().for_user(user)  # type: ignore
-
-            jti = token[api_settings.JTI_CLAIM]
-            exp = token["exp"]
-
-            OutstandingToken.objects.create(
-                user=user,
-                jti=jti,
-                token=str(token),
-                created_at=token.current_time,
-                expires_at=datetime_from_epoch(exp),
-            )
+            token.create_outstanding_token()
 
             return token
 
