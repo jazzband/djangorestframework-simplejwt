@@ -44,7 +44,6 @@ class SerializerTestCase(TestCase):
 
 
 class TestTokenObtainSerializer(SerializerTestCase):
-
     def test_it_should_not_validate_if_any_fields_missing(self):
         s = TokenObtainSerializer(data={})
         self.assertFalse(s.is_valid())
@@ -96,7 +95,6 @@ class TestTokenObtainSerializer(SerializerTestCase):
 
 
 class TestTokenObtainSlidingSerializer(SerializerTestCase):
-
     def test_it_should_produce_a_json_web_token_when_valid(self):
         s = TokenObtainSlidingSerializer(
             context=MagicMock(),
@@ -116,7 +114,6 @@ class TestTokenObtainSlidingSerializer(SerializerTestCase):
 
 
 class TestTokenObtainPairSerializer(SerializerTestCase):
-
     def test_it_should_produce_a_json_web_token_when_valid(self):
         s = TokenObtainPairSerializer(
             context=MagicMock(),
@@ -221,7 +218,6 @@ class TestTokenRefreshSlidingSerializer(TestCase):
 
 
 class TestTokenRefreshSerializer(SerializerTestCase):
-
     def test_it_should_raise_token_error_if_token_invalid(self):
         token = RefreshToken()
         del token["exp"]
