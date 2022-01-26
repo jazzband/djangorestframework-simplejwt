@@ -1,9 +1,10 @@
 from unittest.mock import patch
 
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.management import call_command
 from django.db.models import BigAutoField
-from django.test import TestCase
+from django.test import TestCase, override_settings
 
 from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.serializers import TokenVerifySerializer
@@ -240,17 +241,18 @@ class TokenVerifySerializerShouldHonourBlacklist(MigrationTestCase):
     def test_token_verify_serializer_should_honour_blacklist_if_blacklisting_enabled(
         self,
     ):
-        with override_api_settings(BLACKLIST_AFTER_ROTATION=True):
-            refresh_token = RefreshToken.for_user(self.user)
-            refresh_token.blacklist()
+        refresh_token = RefreshToken.for_user(self.user)
+        refresh_token.blacklist()
 
-            serializer = TokenVerifySerializer(data={"token": str(refresh_token)})
-            self.assertFalse(serializer.is_valid())
+        serializer = TokenVerifySerializer(data={"token": str(refresh_token)})
+        self.assertFalse(serializer.is_valid())
 
     def test_token_verify_serializer_should_not_honour_blacklist_if_blacklisting_not_enabled(
         self,
     ):
-        with override_api_settings(BLACKLIST_AFTER_ROTATION=False):
+        installed_apps = list(settings.INSTALLED_APPS)
+        installed_apps.remove("rest_framework_simplejwt.token_blacklist")
+        with override_settings(INSTALLED_APPS=installed_apps):
             refresh_token = RefreshToken.for_user(self.user)
             refresh_token.blacklist()
 
