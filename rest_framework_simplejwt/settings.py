@@ -34,12 +34,16 @@ DEFAULTS = {
     "SLIDING_TOKEN_REFRESH_EXP_CLAIM": "refresh_exp",
     "SLIDING_TOKEN_LIFETIME": timedelta(minutes=5),
     "SLIDING_TOKEN_REFRESH_LIFETIME": timedelta(days=1),
+    "SLIDING_TOKEN_OBTAIN_SERIALIZER": "rest_framework_simplejwt.serializers.TokenObtainSlidingSerializer",
+    "TOKEN_OBTAIN_SERIALIZER": "rest_framework_simplejwt.serializers.TokenObtainPairSerializer",
 }
 
 IMPORT_STRINGS = (
     "AUTH_TOKEN_CLASSES",
     "TOKEN_USER_CLASS",
     "USER_AUTHENTICATION_RULE",
+    "SLIDING_TOKEN_OBTAIN_SERIALIZER",
+    "TOKEN_OBTAIN_SERIALIZER",
 )
 
 REMOVED_SETTINGS = (

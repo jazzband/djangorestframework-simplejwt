@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from . import serializers
 from .authentication import AUTH_HEADER_TYPES
 from .exceptions import InvalidToken, TokenError
+from .settings import api_settings
 
 
 class TokenViewBase(generics.GenericAPIView):
@@ -37,7 +38,7 @@ class TokenObtainPairView(TokenViewBase):
     token pair to prove the authentication of those credentials.
     """
 
-    serializer_class = serializers.TokenObtainPairSerializer
+    serializer_class = api_settings.TOKEN_OBTAIN_SERIALIZER
 
 
 token_obtain_pair = TokenObtainPairView.as_view()
@@ -61,7 +62,7 @@ class TokenObtainSlidingView(TokenViewBase):
     prove the authentication of those credentials.
     """
 
-    serializer_class = serializers.TokenObtainSlidingSerializer
+    serializer_class = api_settings.SLIDING_TOKEN_OBTAIN_SERIALIZER
 
 
 token_obtain_sliding = TokenObtainSlidingView.as_view()
