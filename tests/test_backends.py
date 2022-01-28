@@ -10,12 +10,12 @@ from rest_framework_simplejwt.backends import TokenBackend
 from rest_framework_simplejwt.exceptions import TokenBackendError
 from rest_framework_simplejwt.utils import aware_utcnow, datetime_to_epoch, make_utc
 from tests.keys import (
+    ES256_PRIVATE_KEY,
+    ES256_PUBLIC_KEY,
     PRIVATE_KEY,
     PRIVATE_KEY_2,
     PUBLIC_KEY,
     PUBLIC_KEY_2,
-    ES256_PRIVATE_KEY,
-    ES256_PUBLIC_KEY,
 )
 
 SECRET = "not_secret"
