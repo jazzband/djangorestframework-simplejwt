@@ -9,7 +9,14 @@ from jwt import PyJWS, algorithms
 from rest_framework_simplejwt.backends import TokenBackend
 from rest_framework_simplejwt.exceptions import TokenBackendError
 from rest_framework_simplejwt.utils import aware_utcnow, datetime_to_epoch, make_utc
-from tests.keys import PRIVATE_KEY, PRIVATE_KEY_2, PUBLIC_KEY, PUBLIC_KEY_2
+from tests.keys import (
+    PRIVATE_KEY,
+    PRIVATE_KEY_2,
+    PUBLIC_KEY,
+    PUBLIC_KEY_2,
+    ES256_PRIVATE_KEY,
+    ES256_PUBLIC_KEY,
+)
 
 SECRET = "not_secret"
 
@@ -31,7 +38,13 @@ class TestTokenBackend(TestCase):
             "RS256", PRIVATE_KEY, PUBLIC_KEY, AUDIENCE, ISSUER
         )
         self.payload = {"foo": "bar"}
-        self.backends = (self.hmac_token_backend, self.rsa_token_backend)
+        self.backends = (
+            self.hmac_token_backend,
+            self.rsa_token_backend,
+            TokenBackend("ES256", ES256_PRIVATE_KEY, ES256_PUBLIC_KEY),
+            TokenBackend("ES384", ES256_PRIVATE_KEY, ES256_PUBLIC_KEY),
+            TokenBackend("ES512", ES256_PRIVATE_KEY, ES256_PUBLIC_KEY),
+        )
 
     def test_init(self):
         # Should reject unknown algorithms
@@ -42,9 +55,10 @@ class TestTokenBackend(TestCase):
 
     @patch.object(algorithms, "has_crypto", new=False)
     def test_init_fails_for_rs_algorithms_when_crypto_not_installed(self):
-        for algo in ("RS256", "RS384", "RS512"):
+        for algo in ("RS256", "RS384", "RS512", "ES256"):
             with self.assertRaisesRegex(
-                    TokenBackendError, f"You must have cryptography installed to use {algo}."
+                TokenBackendError,
+                f"You must have cryptography installed to use {algo}.",
             ):
                 TokenBackend(algo, "not_secret")
 
