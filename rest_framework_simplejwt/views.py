@@ -1,3 +1,4 @@
+from django.utils.module_loading import import_string
 from rest_framework import generics, status
 from rest_framework.response import Response
 
@@ -14,6 +15,14 @@ class TokenViewBase(generics.GenericAPIView):
     serializer_class = None
 
     www_authenticate_realm = "api"
+
+    def get_serializer_class(self):
+        # Get the serializer from settings
+        try:
+            return import_string(self._serializer_class)
+        except ImportError:
+            msg = "Could not import serializer '%s'" % self._serializer_class
+            raise ImportError(msg)
 
     def get_authenticate_header(self, request):
         return '{} realm="{}"'.format(
@@ -38,7 +47,7 @@ class TokenObtainPairView(TokenViewBase):
     token pair to prove the authentication of those credentials.
     """
 
-    serializer_class = api_settings.TOKEN_OBTAIN_SERIALIZER
+    _serializer_class = api_settings.TOKEN_OBTAIN_SERIALIZER
 
 
 token_obtain_pair = TokenObtainPairView.as_view()
@@ -50,7 +59,7 @@ class TokenRefreshView(TokenViewBase):
     token if the refresh token is valid.
     """
 
-    serializer_class = serializers.TokenRefreshSerializer
+    _serializer_class = api_settings.TOKEN_REFRESH_SERIALIZER
 
 
 token_refresh = TokenRefreshView.as_view()
@@ -62,7 +71,7 @@ class TokenObtainSlidingView(TokenViewBase):
     prove the authentication of those credentials.
     """
 
-    serializer_class = api_settings.SLIDING_TOKEN_OBTAIN_SERIALIZER
+    _serializer_class = api_settings.SLIDING_TOKEN_OBTAIN_SERIALIZER
 
 
 token_obtain_sliding = TokenObtainSlidingView.as_view()
@@ -74,7 +83,7 @@ class TokenRefreshSlidingView(TokenViewBase):
     token's refresh period has not expired.
     """
 
-    serializer_class = serializers.TokenRefreshSlidingSerializer
+    _serializer_class = api_settings.SLIDING_TOKEN_REFRESH_SERIALIZER
 
 
 token_refresh_sliding = TokenRefreshSlidingView.as_view()
@@ -86,7 +95,7 @@ class TokenVerifyView(TokenViewBase):
     information about a token's fitness for a particular use.
     """
 
-    serializer_class = serializers.TokenVerifySerializer
+    _serializer_class = api_settings.TOKEN_VERIFY_SERIALIZER
 
 
 token_verify = TokenVerifyView.as_view()
@@ -98,7 +107,7 @@ class TokenBlacklistView(TokenViewBase):
     `rest_framework_simplejwt.token_blacklist` app installed.
     """
 
-    serializer_class = serializers.TokenBlacklistSerializer
+    _serializer_class = api_settings.TOKEN_BLACKLIST_SERIALIZER
 
 
 token_blacklist = TokenBlacklistView.as_view()
