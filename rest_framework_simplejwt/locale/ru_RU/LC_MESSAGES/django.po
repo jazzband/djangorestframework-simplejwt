@@ -16,48 +16,48 @@ msgstr ""
 "%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
 "X-Generator: Poedit 2.2.1\n"
 
-#: authentication.py:79
+#: authentication.py:78
 msgid "Authorization header must contain two space-delimited values"
 msgstr ""
 "Заголовок авторизации должен содержать два значения, разделенных пробелом"
 
-#: authentication.py:100
+#: authentication.py:104
 msgid "Given token not valid for any token type"
 msgstr "Данный токен недействителен для любого типа токена"
 
-#: authentication.py:111 authentication.py:133
+#: authentication.py:116 authentication.py:138
 msgid "Token contained no recognizable user identification"
 msgstr "Токен не содержит идентификатор пользователя"
 
-#: authentication.py:116
+#: authentication.py:121
 msgid "User not found"
 msgstr "Пользователь не найден"
 
-#: authentication.py:119
+#: authentication.py:124
 msgid "User is inactive"
 msgstr "Пользователь неактивен"
 
-#: backends.py:37
+#: backends.py:50
 msgid "Unrecognized algorithm type '{}'"
 msgstr "Нераспознанный тип алгоритма '{}'"
 
-#: backends.py:40
+#: backends.py:56
 msgid "You must have cryptography installed to use {}."
 msgstr ""
 
-#: backends.py:74
+#: backends.py:108
 msgid "Invalid algorithm specified"
 msgstr ""
 
-#: backends.py:76 exceptions.py:38 tokens.py:44
+#: backends.py:110 exceptions.py:38 tokens.py:44
 msgid "Token is invalid or expired"
 msgstr "Токен недействителен или просрочен"
 
-#: serializers.py:24
+#: serializers.py:30
 msgid "No active account found with the given credentials"
 msgstr "Не найдено активной учетной записи с указанными данными"
 
-#: settings.py:63
+#: settings.py:68
 msgid ""
 "The '{}' setting has been removed. Please refer to '{}' for available "
 "settings."
@@ -65,19 +65,19 @@ msgstr ""
 "Параметр '{}' был удален. Пожалуйста, обратитесь к '{}' для просмотра "
 "доступных настроек."
 
-#: token_blacklist/admin.py:72
+#: token_blacklist/admin.py:68
 msgid "jti"
 msgstr "jti"
 
-#: token_blacklist/admin.py:77
+#: token_blacklist/admin.py:74
 msgid "user"
 msgstr "пользователь"
 
-#: token_blacklist/admin.py:82
+#: token_blacklist/admin.py:80
 msgid "created at"
 msgstr "создан"
 
-#: token_blacklist/admin.py:87
+#: token_blacklist/admin.py:86
 msgid "expires at"
 msgstr "истекает"
 
@@ -89,26 +89,26 @@ msgstr "Token Blacklist"
 msgid "Cannot create token with no type or lifetime"
 msgstr "Невозможно создать токен без типа или времени жизни"
 
-#: tokens.py:98
+#: tokens.py:97
 msgid "Token has no id"
 msgstr "У токена нет идентификатора"
 
-#: tokens.py:109
+#: tokens.py:108
 msgid "Token has no type"
 msgstr "Токен не имеет типа"
 
-#: tokens.py:112
+#: tokens.py:111
 msgid "Token has wrong type"
 msgstr "Токен имеет неправильный тип"
 
-#: tokens.py:149
+#: tokens.py:163
 msgid "Token has no '{}' claim"
 msgstr "Токен не содержит '{}'"
 
-#: tokens.py:153
+#: tokens.py:167
 msgid "Token '{}' claim has expired"
 msgstr "Токен имеет просроченное значение '{}'"
 
-#: tokens.py:192
+#: tokens.py:217
 msgid "Token is blacklisted"
 msgstr "Токен занесен в черный список"

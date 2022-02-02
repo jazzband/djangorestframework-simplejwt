@@ -14,7 +14,9 @@ msgstr ""
 
 #: authentication.py:78
 msgid "Authorization header must contain two space-delimited values"
-msgstr "Yetkilendirme header'i boşlukla sınırlandırılmış iki değer bulundurmak zorunda"
+msgstr ""
+"Yetkilendirme header'i boşlukla sınırlandırılmış iki değer bulundurmak "
+"zorunda"
 
 #: authentication.py:104
 msgid "Given token not valid for any token type"
@@ -32,27 +34,27 @@ msgstr "Kullanıcı bulunamadı"
 msgid "User is inactive"
 msgstr "Kullanıcı etkin değil"
 
-#: backends.py:47
+#: backends.py:50
 msgid "Unrecognized algorithm type '{}'"
 msgstr "Tanınmayan algortima tipi '{}'"
 
-#: backends.py:53
+#: backends.py:56
 msgid "You must have cryptography installed to use {}."
 msgstr "{} kullanmak için cryptography yüklemeniz gerekiyor."
 
-#: backends.py:105
+#: backends.py:108
 msgid "Invalid algorithm specified"
 msgstr "Geçersiz algoritma belirtildi"
 
-#: backends.py:107 exceptions.py:38 tokens.py:44
+#: backends.py:110 exceptions.py:38 tokens.py:44
 msgid "Token is invalid or expired"
 msgstr "Token geçersiz veya süresi geçmiş"
 
-#: serializers.py:29
+#: serializers.py:30
 msgid "No active account found with the given credentials"
 msgstr "Verilen kimlik bilgileriyle aktif bir hesap bulunamadı"
 
-#: settings.py:62
+#: settings.py:68
 msgid ""
 "The '{}' setting has been removed. Please refer to '{}' for available "
 "settings."

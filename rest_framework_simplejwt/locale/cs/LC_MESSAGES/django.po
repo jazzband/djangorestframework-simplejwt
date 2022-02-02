@@ -11,65 +11,65 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: authentication.py:79
+#: authentication.py:78
 msgid "Authorization header must contain two space-delimited values"
 msgstr "Autorizační hlavička musí obsahovat dvě hodnoty oddělené mezerou"
 
-#: authentication.py:100
+#: authentication.py:104
 msgid "Given token not valid for any token type"
 msgstr "Daný token není validní pro žádný typ tokenu"
 
-#: authentication.py:111 authentication.py:133
+#: authentication.py:116 authentication.py:138
 msgid "Token contained no recognizable user identification"
 msgstr "Token neobsahoval žádnou rozpoznatelnou identifikaci uživatele"
 
-#: authentication.py:116
+#: authentication.py:121
 msgid "User not found"
 msgstr "Uživatel nenalezen"
 
-#: authentication.py:119
+#: authentication.py:124
 msgid "User is inactive"
 msgstr "Uživatel není aktivní"
 
-#: backends.py:37
+#: backends.py:50
 msgid "Unrecognized algorithm type '{}'"
 msgstr "Nerozpoznaný typ algoritmu '{}'"
 
-#: backends.py:40
+#: backends.py:56
 msgid "You must have cryptography installed to use {}."
 msgstr ""
 
-#: backends.py:74
+#: backends.py:108
 msgid "Invalid algorithm specified"
 msgstr ""
 
-#: backends.py:76 exceptions.py:38 tokens.py:44
+#: backends.py:110 exceptions.py:38 tokens.py:44
 msgid "Token is invalid or expired"
 msgstr "Token není validní nebo vypršela jeho platnost"
 
-#: serializers.py:24
+#: serializers.py:30
 msgid "No active account found with the given credentials"
 msgstr "Žádný aktivní účet s danými údaji nebyl nalezen"
 
-#: settings.py:63
+#: settings.py:68
 msgid ""
 "The '{}' setting has been removed. Please refer to '{}' for available "
 "settings."
 msgstr "Nastavení '{}' bylo odstraněno. Dostupná nastavení jsou v '{}'"
 
-#: token_blacklist/admin.py:72
+#: token_blacklist/admin.py:68
 msgid "jti"
 msgstr "jti"
 
-#: token_blacklist/admin.py:77
+#: token_blacklist/admin.py:74
 msgid "user"
 msgstr "uživatel"
 
-#: token_blacklist/admin.py:82
+#: token_blacklist/admin.py:80
 msgid "created at"
 msgstr "vytvořený v"
 
-#: token_blacklist/admin.py:87
+#: token_blacklist/admin.py:86
 msgid "expires at"
 msgstr "platí do"
 
@@ -81,26 +81,26 @@ msgstr "Token Blacklist"
 msgid "Cannot create token with no type or lifetime"
 msgstr "Nelze vytvořit token bez zadaného typu nebo životnosti"
 
-#: tokens.py:98
+#: tokens.py:97
 msgid "Token has no id"
 msgstr "Token nemá žádný identifikátor"
 
-#: tokens.py:109
+#: tokens.py:108
 msgid "Token has no type"
 msgstr "Token nemá žádný typ"
 
-#: tokens.py:112
+#: tokens.py:111
 msgid "Token has wrong type"
 msgstr "Token má špatný typ"
 
-#: tokens.py:149
+#: tokens.py:163
 msgid "Token has no '{}' claim"
 msgstr "Token nemá žádnou hodnotu '{}'"
 
-#: tokens.py:153
+#: tokens.py:167
 msgid "Token '{}' claim has expired"
 msgstr "Hodnota tokenu '{}' vypršela"
 
-#: tokens.py:192
+#: tokens.py:217
 msgid "Token is blacklisted"
 msgstr "Token je na černé listině"
