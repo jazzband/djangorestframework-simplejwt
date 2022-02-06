@@ -103,3 +103,7 @@ class TokenUser:
 
     def get_username(self):
         return self.username
+
+    def __getattr__(self, attr):
+        """This acts as a backup attribute getter for custom claims defined in Token serializers."""
+        return self.token.get(attr, None)
