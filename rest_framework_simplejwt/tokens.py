@@ -272,6 +272,11 @@ class SlidingToken(BlacklistMixin, Token):
             )
 
 
+class AccessToken(Token):
+    token_type = "access"
+    lifetime = api_settings.ACCESS_TOKEN_LIFETIME
+
+
 class RefreshToken(BlacklistMixin, Token):
     token_type = "refresh"
     lifetime = api_settings.REFRESH_TOKEN_LIFETIME
@@ -285,6 +290,7 @@ class RefreshToken(BlacklistMixin, Token):
         api_settings.JTI_CLAIM,
         "jti",
     )
+    access_token_class = AccessToken
 
     @property
     def access_token(self):
@@ -293,7 +299,7 @@ class RefreshToken(BlacklistMixin, Token):
         claims present in this refresh token to the new access token except
         those claims listed in the `no_copy_claims` attribute.
         """
-        access = AccessToken()
+        access = self.access_token_class()
 
         # Use instantiation time of refresh token as relative timestamp for
         # access token "exp" claim.  This ensures that both a refresh and
@@ -308,11 +314,6 @@ class RefreshToken(BlacklistMixin, Token):
             access[claim] = value
 
         return access
-
-
-class AccessToken(Token):
-    token_type = "access"
-    lifetime = api_settings.ACCESS_TOKEN_LIFETIME
 
 
 class UntypedToken(Token):
