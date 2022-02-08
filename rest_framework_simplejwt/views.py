@@ -13,11 +13,17 @@ class TokenViewBase(generics.GenericAPIView):
     authentication_classes = ()
 
     serializer_class = None
+    _serializer_class = ""
 
     www_authenticate_realm = "api"
 
     def get_serializer_class(self):
-        # Get the serializer from settings
+        """
+        If serializer_class is set, use it directly. Otherwise get the class from settings.
+        """
+
+        if self.serializer_class:
+            return self.serializer_class
         try:
             return import_string(self._serializer_class)
         except ImportError:
