@@ -4,6 +4,7 @@ from unittest.mock import patch
 
 from django.contrib.auth import get_user_model
 from django.utils import timezone
+from rest_framework.test import APIRequestFactory
 
 from rest_framework_simplejwt import serializers
 from rest_framework_simplejwt.settings import api_settings
@@ -13,6 +14,7 @@ from rest_framework_simplejwt.utils import (
     datetime_from_epoch,
     datetime_to_epoch,
 )
+from rest_framework_simplejwt.views import TokenViewBase
 
 from .utils import APIViewTestCase, override_api_settings
 
@@ -431,3 +433,15 @@ class TestTokenBlacklistView(APIViewTestCase):
         del self.view_name
 
         self.assertEqual(res.status_code, 401)
+
+
+class TestCustomTokenView(APIViewTestCase):
+    def test_custom_view_class(self):
+        class CustomTokenView(TokenViewBase):
+            serializer_class = serializers.TokenObtainPairSerializer
+
+        factory = APIRequestFactory()
+        view = CustomTokenView.as_view()
+        request = factory.post("/", {}, format="json")
+        res = view(request)
+        self.assertEqual(res.status_code, 400)
