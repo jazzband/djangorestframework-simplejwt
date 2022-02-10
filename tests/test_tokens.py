@@ -309,6 +309,20 @@ class TestToken(TestCase):
                 "refresh_exp", current_time=current_time + timedelta(days=2)
             )
 
+    def test_check_token_not_expired_if_in_leeway(self):
+        token = MyToken()
+        token.set_exp("refresh_exp", lifetime=timedelta(days=1))
+
+        datetime_in_leeway = token.current_time + timedelta(days=1)
+
+        with self.assertRaises(TokenError):
+            token.check_exp("refresh_exp", current_time=datetime_in_leeway)
+
+        # a token 1 day expired is valid if leeway is 2 days
+        token.token_backend.leeway = timedelta(days=2).total_seconds()
+        token.check_exp("refresh_exp", current_time=datetime_in_leeway)
+        token.token_backend.leeway = 0
+
     def test_for_user(self):
         username = "test_user"
         user = User.objects.create_user(

@@ -163,7 +163,8 @@ class Token:
             raise TokenError(format_lazy(_("Token has no '{}' claim"), claim))
 
         claim_time = datetime_from_epoch(claim_value)
-        if claim_time <= current_time:
+        leeway = self.get_token_backend().leeway
+        if claim_time <= current_time - timedelta(seconds=leeway):
             raise TokenError(format_lazy(_("Token '{}' claim has expired"), claim))
 
     @classmethod
@@ -183,12 +184,17 @@ class Token:
 
     _token_backend = None
 
-    def get_token_backend(self):
+    @property
+    def token_backend(self):
         if self._token_backend is None:
             self._token_backend = import_string(
                 "rest_framework_simplejwt.state.token_backend"
             )
         return self._token_backend
+
+    def get_token_backend(self):
+        # Backward compatibility.
+        return self.token_backend
 
 
 class BlacklistMixin:
