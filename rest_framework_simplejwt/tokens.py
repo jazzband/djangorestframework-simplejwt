@@ -184,12 +184,17 @@ class Token:
 
     _token_backend = None
 
-    def get_token_backend(self):
+    @property
+    def token_backend(self):
         if self._token_backend is None:
             self._token_backend = import_string(
                 "rest_framework_simplejwt.state.token_backend"
             )
         return self._token_backend
+
+    def get_token_backend(self):
+        # Backward compatibility.
+        return self.token_backend
 
 
 class BlacklistMixin:
