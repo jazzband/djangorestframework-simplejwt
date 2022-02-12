@@ -43,6 +43,9 @@ Some of Simple JWT's behavior can be customized through settings variables in
       'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
       'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
       'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
+
+      "CUSTOM_TOKEN_USER_ATTRIBUTES": [],
+      "CUSTOM_TOKEN_CALLABLE_ATTRIBUTES": []
   }
 
 Above, the default values for these settings are shown.
@@ -264,3 +267,17 @@ More about this in the "Sliding tokens" section below.
 
 The claim name that is used to store the expiration time of a sliding token's
 refresh period.  More about this in the "Sliding tokens" section below.
+
+``CUSTOM_TOKEN_USER_ATTRIBUTES``
+--------------------------------
+
+The list of Django user attributes to be copied to token as claims. i.e.: ``['is_active',]``.
+
+``CUSTOM_TOKEN_CALLABLE_ATTRIBUTES``
+------------------------------------
+
+This is used to customize claims which cannot be done by simply using ``CUSTOM_TOKEN_USER_ATTRIBUTES`` setting.
+This should be a list of dictionaries containing ``attr_name`` and ``attr_getter``.
+i.e. : ``[{'attr_name': 'preferences', 'attr_getter': 'my_module.some_file.get_user_preferences'}, ...]``
+
+The function specified in ``attr_getter`` should accept an argument of a Django user instance.

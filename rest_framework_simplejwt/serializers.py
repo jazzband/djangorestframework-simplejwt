@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.models import update_last_login
+from django.utils.module_loading import import_string
 from django.utils.translation import gettext_lazy as _
 from rest_framework import exceptions, serializers
 from rest_framework.exceptions import ValidationError
@@ -10,6 +11,19 @@ from .tokens import RefreshToken, SlidingToken, UntypedToken
 
 if api_settings.BLACKLIST_AFTER_ROTATION:
     from .token_blacklist.models import BlacklistedToken
+
+
+def add_custom_token_claims(token, user):
+    """Append custom token claims specified using settings."""
+    for attr in api_settings.CUSTOM_TOKEN_USER_ATTRIBUTES:
+        token[attr] = getattr(user, attr, None)
+
+    for attr in api_settings.CUSTOM_TOKEN_CALLABLE_ATTRIBUTES:
+        attr_name = attr['attr_name']
+        attr_getter = import_string(attr['attr_getter'])
+        token[attr_name] = attr_getter(user)
+
+    return token
 
 
 class PasswordField(serializers.CharField):
@@ -58,7 +72,12 @@ class TokenObtainSerializer(serializers.Serializer):
 
     @classmethod
     def get_token(cls, user):
-        return cls.token_class.for_user(user)
+        # append custom claims from user attributes
+
+        token = cls.token_class.for_user(user)
+        add_custom_token_claims(token, user)
+
+        return token
 
 
 class TokenObtainPairSerializer(TokenObtainSerializer):

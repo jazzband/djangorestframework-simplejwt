@@ -40,6 +40,8 @@ DEFAULTS = {
     "TOKEN_BLACKLIST_SERIALIZER": "rest_framework_simplejwt.serializers.TokenBlacklistSerializer",
     "SLIDING_TOKEN_OBTAIN_SERIALIZER": "rest_framework_simplejwt.serializers.TokenObtainSlidingSerializer",
     "SLIDING_TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
+    "CUSTOM_TOKEN_USER_ATTRIBUTES": [],
+    "CUSTOM_TOKEN_CALLABLE_ATTRIBUTES": []
 }
 
 IMPORT_STRINGS = (
@@ -76,7 +78,6 @@ class APISettings(_APISettings):  # pragma: no cover
 
 
 api_settings = APISettings(USER_SETTINGS, DEFAULTS, IMPORT_STRINGS)
-
 
 def reload_api_settings(*args, **kwargs):  # pragma: no cover
     global api_settings
