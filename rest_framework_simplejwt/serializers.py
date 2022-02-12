@@ -19,8 +19,8 @@ def add_custom_token_claims(token, user):
         token[attr] = getattr(user, attr, None)
 
     for attr in api_settings.CUSTOM_TOKEN_CALLABLE_ATTRIBUTES:
-        attr_name = attr['attr_name']
-        attr_getter = import_string(attr['attr_getter'])
+        attr_name = attr["attr_name"]
+        attr_getter = import_string(attr["attr_getter"])
         token[attr_name] = attr_getter(user)
 
     return token
