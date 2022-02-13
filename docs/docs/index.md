@@ -4,6 +4,7 @@
 [![PyPI version](https://img.shields.io/pypi/v/django-ninja-jwt.svg)](https://pypi.python.org/pypi/django-ninja-jwt)
 [![PyPI version](https://img.shields.io/pypi/pyversions/django-ninja-jwt.svg)](https://pypi.python.org/pypi/django-ninja-jwt)
 [![PyPI version](https://img.shields.io/pypi/djversions/django-ninja-jwt.svg)](https://pypi.python.org/pypi/django-ninja-jwt)
+[![Downloads](https://static.pepy.tech/personalized-badge/django-ninja-jwt?period=month&units=international_system&left_color=black&right_color=yellow&left_text=Downloads)](https://pepy.tech/project/django-ninja-jwt)
 
 A JSON Web Token authentication plugin for the [Django Ninja REST Framework](https://github.com/vitalik/django-ninja).
 
