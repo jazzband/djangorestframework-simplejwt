@@ -47,16 +47,8 @@ class TokenObtainSerializer(ModelSchema):
 
         if not values.get("password"):
             raise exceptions.ValidationError({"password": "password is required"})
-        return values
 
-    @root_validator
-    def validate_schema(cls, values: Dict) -> dict:
-        authenticate_kwargs = {
-            user_name_field: values[user_name_field],
-            "password": values["password"],
-        }
-
-        cls._user = authenticate(**authenticate_kwargs)
+        cls._user = authenticate(**values)
 
         if not api_settings.USER_AUTHENTICATION_RULE(cls._user):
             raise exceptions.AuthenticationFailed(

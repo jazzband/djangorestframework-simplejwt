@@ -64,10 +64,10 @@ test = [
     "pytest",
     "pytest-cov",
     "pytest-django",
-    "black",
-    "isort",
-    "flake8",
-    "mypy",
+    "pytest-asyncio",
+    "black==21.12b0",
+    "isort==5.10.1",
+    "flake8==4.0.1",
     "django-stubs",
     "python-jose==3.0.0"
 ]
