@@ -26,7 +26,7 @@ def cache_creation():
         if os.path.isdir(file):
             continue
 
-        with open(file, "r") as f:
+        with open(file) as f:
             for line in f.readlines():
                 if line.startswith('"POT-Creation-Date: '):
                     cache[file] = line
