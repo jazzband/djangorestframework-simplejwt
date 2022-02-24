@@ -5,7 +5,7 @@ from unittest.mock import patch
 import jwt
 import pytest
 from django.test import TestCase
-from jwt import PyJWS, algorithms
+from jwt import PyJWS, algorithms, __version__ as jwt_version
 
 from rest_framework_simplejwt.backends import JWK_CLIENT_AVAILABLE, TokenBackend
 from rest_framework_simplejwt.exceptions import TokenBackendError
@@ -28,6 +28,8 @@ ISSUER = "https://www.myoidcprovider.com"
 JWK_URL = "https://randomstring.auth0.com/.well-known/jwks.json"
 
 LEEWAY = 100
+
+IS_OLD_JWT = jwt_version == "1.7.1"
 
 
 class TestTokenBackend(TestCase):
@@ -160,7 +162,7 @@ class TestTokenBackend(TestCase):
     def test_decode_with_invalid_sig(self):
         self.payload["exp"] = aware_utcnow() - timedelta(seconds=1)
         for backend in self.backends:
-            with self.subTest("Test decode with invalid sig for f{backend.algorithm}"):
+            with self.subTest(f"Test decode with invalid sig for {backend.algorithm}"):
                 payload = self.payload.copy()
                 payload["exp"] = aware_utcnow() + timedelta(days=1)
                 token_1 = jwt.encode(
@@ -170,6 +172,10 @@ class TestTokenBackend(TestCase):
                 token_2 = jwt.encode(
                     payload, backend.signing_key, algorithm=backend.algorithm
                 )
+
+                if IS_OLD_JWT:
+                    token_1 = token_1.decode("utf-8")
+                    token_2 = token_2.decode("utf-8")
 
                 token_2_payload = token_2.rsplit(".", 1)[0]
                 token_1_sig = token_1.rsplit(".", 1)[-1]
@@ -190,8 +196,12 @@ class TestTokenBackend(TestCase):
                 token_2 = jwt.encode(
                     payload, backend.signing_key, algorithm=backend.algorithm
                 )
-                # Payload copied
-                payload["exp"] = datetime_to_epoch(payload["exp"])
+                if IS_OLD_JWT:
+                    token_1 = token_1.decode("utf-8")
+                    token_2 = token_2.decode("utf-8")
+                else:
+                    # Payload copied
+                    payload["exp"] = datetime_to_epoch(payload["exp"])
 
                 token_2_payload = token_2.rsplit(".", 1)[0]
                 token_1_sig = token_1.rsplit(".", 1)[-1]
@@ -211,9 +221,13 @@ class TestTokenBackend(TestCase):
                 token = jwt.encode(
                     self.payload, backend.signing_key, algorithm=backend.algorithm
                 )
-                # Payload copied
-                payload = self.payload.copy()
-                payload["exp"] = datetime_to_epoch(self.payload["exp"])
+                if IS_OLD_JWT:
+                    token = token.decode("utf-8")
+                    payload = self.payload
+                else:
+                    # Payload copied
+                    payload = self.payload.copy()
+                    payload["exp"] = datetime_to_epoch(self.payload["exp"])
 
                 self.assertEqual(backend.decode(token), payload)
 
@@ -224,8 +238,11 @@ class TestTokenBackend(TestCase):
         self.payload["iss"] = ISSUER
 
         token = jwt.encode(self.payload, PRIVATE_KEY, algorithm="RS256")
-        # Payload copied
-        self.payload["exp"] = datetime_to_epoch(self.payload["exp"])
+        if IS_OLD_JWT:
+            token = token.decode("utf-8")
+        else:
+            # Payload copied
+            self.payload["exp"] = datetime_to_epoch(self.payload["exp"])
 
         self.assertEqual(self.aud_iss_token_backend.decode(token), self.payload)
 
@@ -266,6 +283,8 @@ class TestTokenBackend(TestCase):
 
     def test_decode_when_algorithm_not_available(self):
         token = jwt.encode(self.payload, PRIVATE_KEY, algorithm="RS256")
+        if IS_OLD_JWT:
+            token = token.decode("utf-8")
 
         pyjwt_without_rsa = PyJWS()
         pyjwt_without_rsa.unregister_algorithm("RS256")
@@ -281,6 +300,8 @@ class TestTokenBackend(TestCase):
 
     def test_decode_when_token_algorithm_does_not_match(self):
         token = jwt.encode(self.payload, PRIVATE_KEY, algorithm="RS256")
+        if IS_OLD_JWT:
+            token = token.decode("utf-8")
 
         with self.assertRaisesRegex(TokenBackendError, "Invalid algorithm specified"):
             self.hmac_token_backend.decode(token)
