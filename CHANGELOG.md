@@ -1,7 +1,8 @@
 ## Unreleased
 
-## Version 5.0.1
+## Version 5.1.0
 
+* Add back support for PyJWT 1.7.1 ([#536](https://github.com/jazzband/djangorestframework-simplejwt/pull/536))
 * Make the token serializer configurable ([#521](https://github.com/jazzband/djangorestframework-simplejwt/pull/521))
 * Simplify using custom token classes in serializers ([#517](https://github.com/jazzband/djangorestframework-simplejwt/pull/517))
 * Fix default_app_config deprecation ([#415](https://github.com/jazzband/djangorestframework-simplejwt/pull/415))
@@ -9,6 +10,9 @@
 * Add blacklist view to log out users ([#306](https://github.com/jazzband/djangorestframework-simplejwt/pull/306))
 * Set default verifying key to empty str ([#487](https://github.com/jazzband/djangorestframework-simplejwt/pull/487))
 * Add docs about TOKEN_USER_CLASS ([#455](https://github.com/jazzband/djangorestframework-simplejwt/pull/440))
+
+Meta:
+* Add auto locale updater ([#456](https://github.com/jazzband/djangorestframework-simplejwt/pull/456))
 
 Translations:
 
