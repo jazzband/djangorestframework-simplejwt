@@ -26,9 +26,3 @@ Framework <http://www.django-rest-framework.org/>`__.
 
 For full documentation, visit `django-rest-framework-simplejwt.readthedocs.io
 <https://django-rest-framework-simplejwt.readthedocs.io/en/latest/>`__.
-
-Looking for Maintainers
------------------------
-
-For more information, see `here
-<https://github.com/jazzband/djangorestframework-simplejwt/issues/207>`__.
