@@ -70,12 +70,12 @@ jobs:
     - name: Checkout repo
       uses: actions/checkout@v2
       with:
-        fetch-head: 2
+        ref: ${{ github.head_ref }}
 
-    - name: Set up Python 3.6
+    - name: Set up Python 3.9
       uses: actions/setup-python@v2
       with:
-        python-version: '3.6'
+        python-version: '3.9'
 
     - name: Get pip cache dir
       id: pip-cache
@@ -87,19 +87,43 @@ jobs:
       with:
         path: ${{ steps.pip-cache.outputs.dir }}
         key:
-          3.6-v1-${{ hashFiles('**/setup.py') }}
+          3.9-v1-${{ hashFiles('**/setup.py') }}
         restore-keys: |
-          3.6-v1-
+          3.9-v1-
 
     - name: Install dependencies
       run: |
         sudo apt-get install -y gettext 
         python -m pip install --upgrade pip
-        pip install django
+        pip install -e .[dev]
     
     - name: Run locale
-      working-directory: rest_framework_simplejwt/locale
+      working-directory: rest_framework_simplejwt
       run: |
-        find . -maxdepth 1 -type d -exec django-admin makemessages -l {} \;
-        git diff --exit-code
+        python ../scripts/i18n_updater.py
 
+    - name: Commit locale changes
+      uses: stefanzweifel/git-auto-commit-action@v4
+      id: auto-commit-action
+      with:
+        commit_message: "Update locale files"
+        file_pattern: rest_framework_simplejwt/locale/**
+
+    - name: Tell user about locale update
+      if: steps.auto-commit-action.outputs.changes_detected == 'true'
+      run: echo "Locale files updated"
+
+    - name: Tell user about locale update
+      if: |
+        steps.auto-commit-action.outputs.changes_detected == 'true'
+        && github.event_name == 'pull_request'
+      uses: actions/github-script@v5
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: "👋 Hey! We've automatically updated the locale files for you."
+          })
