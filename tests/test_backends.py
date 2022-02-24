@@ -3,10 +3,11 @@ from unittest import mock
 from unittest.mock import patch
 
 import jwt
+import pytest
 from django.test import TestCase
 from jwt import PyJWS, algorithms
 
-from rest_framework_simplejwt.backends import TokenBackend
+from rest_framework_simplejwt.backends import JWK_CLIENT_AVAILABLE, TokenBackend
 from rest_framework_simplejwt.exceptions import TokenBackendError
 from rest_framework_simplejwt.utils import aware_utcnow, datetime_to_epoch, make_utc
 from tests.keys import (
@@ -228,6 +229,10 @@ class TestTokenBackend(TestCase):
 
         self.assertEqual(self.aud_iss_token_backend.decode(token), self.payload)
 
+    @pytest.mark.skipif(
+        not JWK_CLIENT_AVAILABLE,
+        reason="PyJWT 1.7.1 doesn't have JWK client",
+    )
     def test_decode_rsa_aud_iss_jwk_success(self):
         self.payload["exp"] = aware_utcnow() + timedelta(days=1)
         self.payload["foo"] = "baz"
