@@ -10,10 +10,7 @@ AUTH_HEADER_TYPES = api_settings.AUTH_HEADER_TYPES
 if not isinstance(api_settings.AUTH_HEADER_TYPES, (list, tuple)):
     AUTH_HEADER_TYPES = (AUTH_HEADER_TYPES,)
 
-AUTH_HEADER_TYPE_BYTES = set(
-    h.encode(HTTP_HEADER_ENCODING)
-    for h in AUTH_HEADER_TYPES
-)
+AUTH_HEADER_TYPE_BYTES = {h.encode(HTTP_HEADER_ENCODING) for h in AUTH_HEADER_TYPES}
 
 
 class JWTAuthentication(authentication.BaseAuthentication):
@@ -21,8 +18,9 @@ class JWTAuthentication(authentication.BaseAuthentication):
     An authentication plugin that authenticates requests through a JSON web
     token provided in a request header.
     """
-    www_authenticate_realm = 'api'
-    media_type = 'application/json'
+
+    www_authenticate_realm = "api"
+    media_type = "application/json"
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -42,7 +40,7 @@ class JWTAuthentication(authentication.BaseAuthentication):
         return self.get_user(validated_token), validated_token
 
     def authenticate_header(self, request):
-        return '{0} realm="{1}"'.format(
+        return '{} realm="{}"'.format(
             AUTH_HEADER_TYPES[0],
             self.www_authenticate_realm,
         )
@@ -77,8 +75,8 @@ class JWTAuthentication(authentication.BaseAuthentication):
 
         if len(parts) != 2:
             raise AuthenticationFailed(
-                _('Authorization header must contain two space-delimited values'),
-                code='bad_authorization_header',
+                _("Authorization header must contain two space-delimited values"),
+                code="bad_authorization_header",
             )
 
         return parts[1]
@@ -93,14 +91,20 @@ class JWTAuthentication(authentication.BaseAuthentication):
             try:
                 return AuthToken(raw_token)
             except TokenError as e:
-                messages.append({'token_class': AuthToken.__name__,
-                                 'token_type': AuthToken.token_type,
-                                 'message': e.args[0]})
+                messages.append(
+                    {
+                        "token_class": AuthToken.__name__,
+                        "token_type": AuthToken.token_type,
+                        "message": e.args[0],
+                    }
+                )
 
-        raise InvalidToken({
-            'detail': _('Given token not valid for any token type'),
-            'messages': messages,
-        })
+        raise InvalidToken(
+            {
+                "detail": _("Given token not valid for any token type"),
+                "messages": messages,
+            }
+        )
 
     def get_user(self, validated_token):
         """
@@ -109,15 +113,15 @@ class JWTAuthentication(authentication.BaseAuthentication):
         try:
             user_id = validated_token[api_settings.USER_ID_CLAIM]
         except KeyError:
-            raise InvalidToken(_('Token contained no recognizable user identification'))
+            raise InvalidToken(_("Token contained no recognizable user identification"))
 
         try:
             user = self.user_model.objects.get(**{api_settings.USER_ID_FIELD: user_id})
         except self.user_model.DoesNotExist:
-            raise AuthenticationFailed(_('User not found'), code='user_not_found')
+            raise AuthenticationFailed(_("User not found"), code="user_not_found")
 
         if not user.is_active:
-            raise AuthenticationFailed(_('User is inactive'), code='user_inactive')
+            raise AuthenticationFailed(_("User is inactive"), code="user_inactive")
 
         return user
 
@@ -131,7 +135,7 @@ class JWTTokenUserAuthentication(JWTAuthentication):
         if api_settings.USER_ID_CLAIM not in validated_token:
             # The TokenUser class assumes tokens will have a recognizable user
             # identifier claim.
-            raise InvalidToken(_('Token contained no recognizable user identification'))
+            raise InvalidToken(_("Token contained no recognizable user identification"))
 
         return api_settings.TOKEN_USER_CLASS(validated_token)
 

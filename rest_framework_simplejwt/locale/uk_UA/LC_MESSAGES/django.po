@@ -15,99 +15,96 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: rest_framework_simplejwt/authentication.py:79
+#: authentication.py:78
 msgid "Authorization header must contain two space-delimited values"
 msgstr "Авторизаційний заголовок має містити два значення розділені пробілом"
 
-#: rest_framework_simplejwt/authentication.py:100
+#: authentication.py:104
 msgid "Given token not valid for any token type"
 msgstr "Наданий токен не відповідає жодному типу ключа"
 
-#: rest_framework_simplejwt/authentication.py:111
-#: rest_framework_simplejwt/authentication.py:133
+#: authentication.py:116 authentication.py:138
 msgid "Token contained no recognizable user identification"
 msgstr "Наданий токен не мітить жодної ідентифікаційної інформації"
 
-#: rest_framework_simplejwt/authentication.py:116
+#: authentication.py:121
 msgid "User not found"
 msgstr "Користувач не знайдений"
 
-#: rest_framework_simplejwt/authentication.py:119
+#: authentication.py:124
 msgid "User is inactive"
 msgstr "Користувач неактивний"
 
-#: rest_framework_simplejwt/backends.py:37
+#: backends.py:50
 msgid "Unrecognized algorithm type '{}'"
 msgstr "Тип алгоритму '{}' не розпізнаний"
 
-#: rest_framework_simplejwt/backends.py:40
+#: backends.py:56
 msgid "You must have cryptography installed to use {}."
 msgstr "Встановіть модуль cryptography щоб використовувати {}"
 
-#: rest_framework_simplejwt/backends.py:74
+#: backends.py:108
 msgid "Invalid algorithm specified"
 msgstr "Вказаний невірний алгоритм"
 
-#: rest_framework_simplejwt/backends.py:76
-#: rest_framework_simplejwt/exceptions.py:38
-#: rest_framework_simplejwt/tokens.py:44
+#: backends.py:110 exceptions.py:38 tokens.py:44
 msgid "Token is invalid or expired"
 msgstr "Токен некоректний або термін його дії вичерпаний"
 
-#: rest_framework_simplejwt/serializers.py:24
+#: serializers.py:30
 msgid "No active account found with the given credentials"
 msgstr "Не знайдено жодного облікового запису по наданих облікових даних"
 
-#: rest_framework_simplejwt/settings.py:63
+#: settings.py:68
 msgid ""
 "The '{}' setting has been removed. Please refer to '{}' for available "
 "settings."
 msgstr "Налаштування '{}' видалене. Подивіться у '{}' для інших доступних"
 
-#: rest_framework_simplejwt/token_blacklist/admin.py:72
+#: token_blacklist/admin.py:68
 msgid "jti"
 msgstr "jti"
 
-#: rest_framework_simplejwt/token_blacklist/admin.py:77
+#: token_blacklist/admin.py:74
 msgid "user"
 msgstr "користувач"
 
-#: rest_framework_simplejwt/token_blacklist/admin.py:82
+#: token_blacklist/admin.py:80
 msgid "created at"
 msgstr "створений о"
 
-#: rest_framework_simplejwt/token_blacklist/admin.py:87
+#: token_blacklist/admin.py:86
 msgid "expires at"
 msgstr "дійстний по"
 
-#: rest_framework_simplejwt/token_blacklist/apps.py:7
+#: token_blacklist/apps.py:7
 msgid "Token Blacklist"
 msgstr "Чорний список токенів"
 
-#: rest_framework_simplejwt/tokens.py:30
+#: tokens.py:30
 msgid "Cannot create token with no type or lifetime"
 msgstr "Неможливо створити токен без типу або строку дії"
 
-#: rest_framework_simplejwt/tokens.py:98
+#: tokens.py:97
 msgid "Token has no id"
 msgstr "У ключі доступу не міститься id"
 
-#: rest_framework_simplejwt/tokens.py:109
+#: tokens.py:108
 msgid "Token has no type"
 msgstr "У ключі доступу не міститься тип"
 
-#: rest_framework_simplejwt/tokens.py:112
+#: tokens.py:111
 msgid "Token has wrong type"
 msgstr "токен позначений невірним типом"
 
-#: rest_framework_simplejwt/tokens.py:149
+#: tokens.py:163
 msgid "Token has no '{}' claim"
 msgstr "У токені не міститься '{}' заголовку"
 
-#: rest_framework_simplejwt/tokens.py:153
+#: tokens.py:167
 msgid "Token '{}' claim has expired"
 msgstr "Заголовок '{}' токена не дійсний"
 
-#: rest_framework_simplejwt/tokens.py:192
+#: tokens.py:217
 msgid "Token is blacklisted"
 msgstr "Токен занесений у чорний список"

@@ -15,48 +15,48 @@ msgstr ""
 "X-Generator: Poedit 2.0.6\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: authentication.py:79
+#: authentication.py:78
 msgid "Authorization header must contain two space-delimited values"
 msgstr ""
 "L'header di autorizzazione deve contenere due valori delimitati da uno spazio"
 
-#: authentication.py:100
+#: authentication.py:104
 msgid "Given token not valid for any token type"
 msgstr "Il token dato non è valido per qualsiasi tipo di token"
 
-#: authentication.py:111 authentication.py:133
+#: authentication.py:116 authentication.py:138
 msgid "Token contained no recognizable user identification"
 msgstr "Il token non conteneva nessuna informazione riconoscibile dell'utente"
 
-#: authentication.py:116
+#: authentication.py:121
 msgid "User not found"
 msgstr "Utente non trovato"
 
-#: authentication.py:119
+#: authentication.py:124
 msgid "User is inactive"
 msgstr "Utente non attivo"
 
-#: backends.py:37
+#: backends.py:50
 msgid "Unrecognized algorithm type '{}'"
 msgstr "Algoritmo di tipo '{}' non riconosciuto"
 
-#: backends.py:40
+#: backends.py:56
 msgid "You must have cryptography installed to use {}."
 msgstr "Devi avere installato cryptography per usare '{}'."
 
-#: backends.py:74
+#: backends.py:108
 msgid "Invalid algorithm specified"
 msgstr "L'algoritmo specificato non è valido"
 
-#: backends.py:76 exceptions.py:38 tokens.py:44
+#: backends.py:110 exceptions.py:38 tokens.py:44
 msgid "Token is invalid or expired"
 msgstr "Il token non è valido o è scaduto"
 
-#: serializers.py:24
+#: serializers.py:30
 msgid "No active account found with the given credentials"
 msgstr "Nessun account attivo trovato con queste credenziali"
 
-#: settings.py:63
+#: settings.py:68
 msgid ""
 "The '{}' setting has been removed. Please refer to '{}' for available "
 "settings."
@@ -64,19 +64,19 @@ msgstr ""
 "L'impostazione '{}' è stata rimossa. Per favore utilizza '{}' per "
 "visualizzare le impostazioni valide."
 
-#: token_blacklist/admin.py:72
+#: token_blacklist/admin.py:68
 msgid "jti"
 msgstr "jti"
 
-#: token_blacklist/admin.py:77
+#: token_blacklist/admin.py:74
 msgid "user"
 msgstr "utente"
 
-#: token_blacklist/admin.py:82
+#: token_blacklist/admin.py:80
 msgid "created at"
 msgstr "creato il"
 
-#: token_blacklist/admin.py:87
+#: token_blacklist/admin.py:86
 msgid "expires at"
 msgstr "scade il"
 
@@ -88,26 +88,26 @@ msgstr "Blacklist dei token"
 msgid "Cannot create token with no type or lifetime"
 msgstr "Impossibile creare un token senza tipo o durata"
 
-#: tokens.py:98
+#: tokens.py:97
 msgid "Token has no id"
 msgstr "Il token non ha un id"
 
-#: tokens.py:109
+#: tokens.py:108
 msgid "Token has no type"
 msgstr "Il token non ha un tipo"
 
-#: tokens.py:112
+#: tokens.py:111
 msgid "Token has wrong type"
 msgstr "Il token ha un tipo sbagliato"
 
-#: tokens.py:149
+#: tokens.py:163
 msgid "Token has no '{}' claim"
 msgstr "Il token non contiene il parametro '{}'"
 
-#: tokens.py:153
+#: tokens.py:167
 msgid "Token '{}' claim has expired"
 msgstr "Il parametro '{}' del token è scaduto"
 
-#: tokens.py:192
+#: tokens.py:217
 msgid "Token is blacklisted"
 msgstr "Il token è stato inserito nella blacklist"

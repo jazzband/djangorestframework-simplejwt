@@ -14,34 +14,35 @@ if api_settings.BLACKLIST_AFTER_ROTATION:
 
 class PasswordField(serializers.CharField):
     def __init__(self, *args, **kwargs):
-        kwargs.setdefault('style', {})
+        kwargs.setdefault("style", {})
 
-        kwargs['style']['input_type'] = 'password'
-        kwargs['write_only'] = True
+        kwargs["style"]["input_type"] = "password"
+        kwargs["write_only"] = True
 
         super().__init__(*args, **kwargs)
 
 
 class TokenObtainSerializer(serializers.Serializer):
     username_field = get_user_model().USERNAME_FIELD
+    token_class = None
 
     default_error_messages = {
-        'no_active_account': _('No active account found with the given credentials')
+        "no_active_account": _("No active account found with the given credentials")
     }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         self.fields[self.username_field] = serializers.CharField()
-        self.fields['password'] = PasswordField()
+        self.fields["password"] = PasswordField()
 
     def validate(self, attrs):
         authenticate_kwargs = {
             self.username_field: attrs[self.username_field],
-            'password': attrs['password'],
+            "password": attrs["password"],
         }
         try:
-            authenticate_kwargs['request'] = self.context['request']
+            authenticate_kwargs["request"] = self.context["request"]
         except KeyError:
             pass
 
@@ -49,29 +50,27 @@ class TokenObtainSerializer(serializers.Serializer):
 
         if not api_settings.USER_AUTHENTICATION_RULE(self.user):
             raise exceptions.AuthenticationFailed(
-                self.error_messages['no_active_account'],
-                'no_active_account',
+                self.error_messages["no_active_account"],
+                "no_active_account",
             )
 
         return {}
 
     @classmethod
     def get_token(cls, user):
-        raise NotImplementedError('Must implement `get_token` method for `TokenObtainSerializer` subclasses')
+        return cls.token_class.for_user(user)
 
 
 class TokenObtainPairSerializer(TokenObtainSerializer):
-    @classmethod
-    def get_token(cls, user):
-        return RefreshToken.for_user(user)
+    token_class = RefreshToken
 
     def validate(self, attrs):
         data = super().validate(attrs)
 
         refresh = self.get_token(self.user)
 
-        data['refresh'] = str(refresh)
-        data['access'] = str(refresh.access_token)
+        data["refresh"] = str(refresh)
+        data["access"] = str(refresh.access_token)
 
         if api_settings.UPDATE_LAST_LOGIN:
             update_last_login(None, self.user)
@@ -80,16 +79,14 @@ class TokenObtainPairSerializer(TokenObtainSerializer):
 
 
 class TokenObtainSlidingSerializer(TokenObtainSerializer):
-    @classmethod
-    def get_token(cls, user):
-        return SlidingToken.for_user(user)
+    token_class = SlidingToken
 
     def validate(self, attrs):
         data = super().validate(attrs)
 
         token = self.get_token(self.user)
 
-        data['token'] = str(token)
+        data["token"] = str(token)
 
         if api_settings.UPDATE_LAST_LOGIN:
             update_last_login(None, self.user)
@@ -100,11 +97,12 @@ class TokenObtainSlidingSerializer(TokenObtainSerializer):
 class TokenRefreshSerializer(serializers.Serializer):
     refresh = serializers.CharField()
     access = serializers.CharField(read_only=True)
+    token_class = RefreshToken
 
     def validate(self, attrs):
-        refresh = RefreshToken(attrs['refresh'])
+        refresh = self.token_class(attrs["refresh"])
 
-        data = {'access': str(refresh.access_token)}
+        data = {"access": str(refresh.access_token)}
 
         if api_settings.ROTATE_REFRESH_TOKENS:
             if api_settings.BLACKLIST_AFTER_ROTATION:
@@ -120,16 +118,17 @@ class TokenRefreshSerializer(serializers.Serializer):
             refresh.set_exp()
             refresh.set_iat()
 
-            data['refresh'] = str(refresh)
+            data["refresh"] = str(refresh)
 
         return data
 
 
 class TokenRefreshSlidingSerializer(serializers.Serializer):
     token = serializers.CharField()
+    token_class = SlidingToken
 
     def validate(self, attrs):
-        token = SlidingToken(attrs['token'])
+        token = self.token_class(attrs["token"])
 
         # Check that the timestamp in the "refresh_exp" claim has not
         # passed
@@ -139,18 +138,18 @@ class TokenRefreshSlidingSerializer(serializers.Serializer):
         token.set_exp()
         token.set_iat()
 
-        return {'token': str(token)}
+        return {"token": str(token)}
 
 
 class TokenVerifySerializer(serializers.Serializer):
     token = serializers.CharField()
 
     def validate(self, attrs):
-        token = UntypedToken(attrs['token'])
+        token = UntypedToken(attrs["token"])
 
         if (
             api_settings.BLACKLIST_AFTER_ROTATION
-            and 'rest_framework_simplejwt.token_blacklist' in settings.INSTALLED_APPS
+            and "rest_framework_simplejwt.token_blacklist" in settings.INSTALLED_APPS
         ):
             jti = token.get(api_settings.JTI_CLAIM)
             if BlacklistedToken.objects.filter(token__jti=jti).exists():
@@ -161,9 +160,10 @@ class TokenVerifySerializer(serializers.Serializer):
 
 class TokenBlacklistSerializer(serializers.Serializer):
     refresh = serializers.CharField()
+    token_class = RefreshToken
 
     def validate(self, attrs):
-        refresh = RefreshToken(attrs['refresh'])
+        refresh = self.token_class(attrs["refresh"])
         try:
             refresh.blacklist()
         except AttributeError:
