@@ -97,7 +97,7 @@ class Token:
             api_settings.JTI_CLAIM is not None
             and api_settings.JTI_CLAIM not in self.payload
         ):
-            raise TokenError(_('Token has no id'))
+            raise TokenError(_("Token has no id"))
 
         if api_settings.TOKEN_TYPE_CLAIM is not None:
             self.verify_token_type()
