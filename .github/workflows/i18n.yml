@@ -53,8 +53,8 @@ jobs:
         branch: i18n-auto-update
         title: "[i18n] Update"
         body: "Updated locale files on master branch"
-        commit_message: "Update locale files"
+        commit-message: "Update locale files"
         add-paths: rest_framework_simplejwt/locale/**
 
     - name: Tell whether locale updated
-      run: echo "Locale updated at ${steps.auto-commit-aciton.outputs.pull-request-url}"
+      run: echo "Locale files updated"
