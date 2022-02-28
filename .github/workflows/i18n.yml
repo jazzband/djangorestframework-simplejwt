@@ -46,16 +46,15 @@ jobs:
       run: |
         python ../scripts/i18n_updater.py
 
-    - name: Commit locale changes
-      uses: stefanzweifel/git-auto-commit-action@v4
+    - name: Create Pull Request
+      uses: peter-evans/create-pull-request@v3
       id: auto-commit-action
       with:
+        branch: i18n-auto-update
+        title: "[i18n] Update"
+        body: "Updated locale files on master branch"
         commit_message: "Update locale files"
-        file_pattern: rest_framework_simplejwt/locale/**
-        commit_user_name: Andrew-Chen-Wang
-        commit_user_email: acwangpython@gmail.com
-        commit_author: Andrew-Chen-Wang <acwangpython@gmail.com>
+        add-paths: rest_framework_simplejwt/locale/**
 
     - name: Tell whether locale updated
-      if: steps.auto-commit-action.outputs.changes_detected == 'true'
-      run: echo "Locale files updated"
+      run: echo "Locale updated at ${steps.auto-commit-aciton.outputs.pull-request-url}"
