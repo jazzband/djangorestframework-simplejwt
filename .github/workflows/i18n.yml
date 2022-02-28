@@ -1,0 +1,61 @@
+name: Locale Updater
+
+on:
+  push:
+    branches:
+      - master
+      - main
+
+jobs:
+  locale-updater:
+    name: Locale updater
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v2
+      with:
+        ref: ${{ github.head_ref }}
+
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.9'
+
+    - name: Get pip cache dir
+      id: pip-cache
+      run: |
+        echo "::set-output name=dir::$(pip cache dir)"
+
+    - name: Cache
+      uses: actions/cache@v2
+      with:
+        path: ${{ steps.pip-cache.outputs.dir }}
+        key:
+          3.9-v1-${{ hashFiles('**/setup.py') }}
+        restore-keys: |
+          3.9-v1-
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get install -y gettext 
+        python -m pip install --upgrade pip wheel setuptools
+        pip install -e .[dev]
+
+    - name: Run locale
+      working-directory: rest_framework_simplejwt
+      run: |
+        python ../scripts/i18n_updater.py
+
+    - name: Commit locale changes
+      uses: stefanzweifel/git-auto-commit-action@v4
+      id: auto-commit-action
+      with:
+        commit_message: "Update locale files"
+        file_pattern: rest_framework_simplejwt/locale/**
+        commit_user_name: Andrew-Chen-Wang
+        commit_user_email: acwangpython@gmail.com
+        commit_author: Andrew-Chen-Wang
+
+    - name: Tell whether locale updated
+      if: steps.auto-commit-action.outputs.changes_detected == 'true'
+      run: echo "Locale files updated"

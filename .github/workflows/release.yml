@@ -18,12 +18,20 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: 3.8
+          python-version: 3.9
 
       - name: Install dependencies
         run: |
+          sudo apt-get install -y gettext 
           python -m pip install -U pip
           python -m pip install -U setuptools twine wheel
+          pip install -e .[dev]
+
+      - name: Check locale
+        run: |
+          echo "Checking if locale files need updating. If they do, cd rest_framework_simplejwt && run python ../scripts/i18n_updater.py"
+          python ../scripts/i18n_updater.py
+          git diff --exit-code
 
       - name: Build package
         run: |
