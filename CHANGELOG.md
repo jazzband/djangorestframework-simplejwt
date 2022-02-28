@@ -1,5 +1,24 @@
 ## Unreleased
 
+## Version 5.1.0
+
+* Add back support for PyJWT 1.7.1 ([#536](https://github.com/jazzband/djangorestframework-simplejwt/pull/536))
+* Make the token serializer configurable ([#521](https://github.com/jazzband/djangorestframework-simplejwt/pull/521))
+* Simplify using custom token classes in serializers ([#517](https://github.com/jazzband/djangorestframework-simplejwt/pull/517))
+* Fix default_app_config deprecation ([#415](https://github.com/jazzband/djangorestframework-simplejwt/pull/415))
+* Add missing integration instructions for drf-yasg ([#505](https://github.com/jazzband/djangorestframework-simplejwt/pull/505))
+* Add blacklist view to log out users ([#306](https://github.com/jazzband/djangorestframework-simplejwt/pull/306))
+* Set default verifying key to empty str ([#487](https://github.com/jazzband/djangorestframework-simplejwt/pull/487))
+* Add docs about TOKEN_USER_CLASS ([#455](https://github.com/jazzband/djangorestframework-simplejwt/pull/440))
+
+Meta:
+* Add auto locale updater ([#456](https://github.com/jazzband/djangorestframework-simplejwt/pull/456))
+
+Translations:
+
+* Added Korean translations ([#501](https://github.com/jazzband/djangorestframework-simplejwt/pull/501))
+* Added Turkish translations ([#508](https://github.com/jazzband/djangorestframework-simplejwt/pull/508))
+
 ## Version 5.0.0
 
 #### Breaking
@@ -12,8 +31,7 @@
 * Updated import list ([#459](https://github.com/jazzband/djangorestframework-simplejwt/pull/459))
 * Repair generation of OpenAPI with Spectacular ([#452](https://github.com/jazzband/djangorestframework-simplejwt/pull/452))
 * Add "iat" claim to token ([#192](https://github.com/jazzband/djangorestframework-simplejwt/pull/192))
-* Add blacklist view to log out users ([#306](https://github.com/jazzband/djangorestframework-simplejwt/pull/306))
-* updated import list in docs ([#459](https://github.com/jazzband/djangorestframework-simplejwt/pull/459))
+* Add blacklist view to log out users ([#306](https://github.com/jazzband/djangorestframework-simplejwt/pull/306)) 
 
 ## Version 4.8.0
 
@@ -36,6 +54,7 @@
 * Fix invalid syntax in docs for `INSTALLED_APPS` ([#416](https://github.com/jazzband/django-rest-framework-simplejwt/pull/416))
 
 Translations:
+
 * Added Dutch translations ([#422](https://github.com/jazzband/django-rest-framework-simplejwt/pull/422))
 * Added Ukrainian translations ([#423](https://github.com/jazzband/django-rest-framework-simplejwt/pull/423))
 * Added Simplified Chinese translations ([#427](https://github.com/jazzband/django-rest-framework-simplejwt/pull/427))
