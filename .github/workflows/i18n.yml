@@ -54,7 +54,7 @@ jobs:
         file_pattern: rest_framework_simplejwt/locale/**
         commit_user_name: Andrew-Chen-Wang
         commit_user_email: acwangpython@gmail.com
-        commit_author: Andrew-Chen-Wang
+        commit_author: Andrew-Chen-Wang <acwangpython@gmail.com>
 
     - name: Tell whether locale updated
       if: steps.auto-commit-action.outputs.changes_detected == 'true'
