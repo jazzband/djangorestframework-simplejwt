@@ -1,9 +1,16 @@
 import jwt
 from django.utils.translation import gettext_lazy as _
-from jwt import InvalidAlgorithmError, InvalidTokenError, PyJWKClient, algorithms
+from jwt import InvalidAlgorithmError, InvalidTokenError, algorithms
 
 from .exceptions import TokenBackendError
 from .utils import format_lazy
+
+try:
+    from jwt import PyJWKClient
+
+    JWK_CLIENT_AVAILABLE = True
+except ImportError:
+    JWK_CLIENT_AVAILABLE = False
 
 ALLOWED_ALGORITHMS = {
     "HS256",
@@ -37,7 +44,10 @@ class TokenBackend:
         self.audience = audience
         self.issuer = issuer
 
-        self.jwks_client = PyJWKClient(jwk_url) if jwk_url else None
+        if JWK_CLIENT_AVAILABLE:
+            self.jwks_client = PyJWKClient(jwk_url) if jwk_url else None
+        else:
+            self.jwks_client = None
         self.leeway = leeway
 
     def _validate_algorithm(self, algorithm):
