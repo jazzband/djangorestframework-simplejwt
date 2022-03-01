@@ -35,19 +35,19 @@ msgstr "Користувач не знайдений"
 msgid "User is inactive"
 msgstr "Користувач неактивний"
 
-#: backends.py:50
+#: backends.py:60
 msgid "Unrecognized algorithm type '{}'"
 msgstr "Тип алгоритму '{}' не розпізнаний"
 
-#: backends.py:56
+#: backends.py:66
 msgid "You must have cryptography installed to use {}."
 msgstr "Встановіть модуль cryptography щоб використовувати {}"
 
-#: backends.py:108
+#: backends.py:118
 msgid "Invalid algorithm specified"
 msgstr "Вказаний невірний алгоритм"
 
-#: backends.py:110 exceptions.py:38 tokens.py:44
+#: backends.py:120 exceptions.py:38 tokens.py:44
 msgid "Token is invalid or expired"
 msgstr "Токен некоректний або термін його дії вичерпаний"
 
@@ -101,10 +101,10 @@ msgstr "токен позначений невірним типом"
 msgid "Token has no '{}' claim"
 msgstr "У токені не міститься '{}' заголовку"
 
-#: tokens.py:167
+#: tokens.py:168
 msgid "Token '{}' claim has expired"
 msgstr "Заголовок '{}' токена не дійсний"
 
-#: tokens.py:217
+#: tokens.py:223
 msgid "Token is blacklisted"
 msgstr "Токен занесений у чорний список"

@@ -32,19 +32,19 @@ msgstr "Pengguna tidak ditemukan"
 msgid "User is inactive"
 msgstr "Pengguna tidak aktif"
 
-#: backends.py:50
+#: backends.py:60
 msgid "Unrecognized algorithm type '{}'"
 msgstr "Jenis algoritma tidak dikenal '{}'"
 
-#: backends.py:56
+#: backends.py:66
 msgid "You must have cryptography installed to use {}."
 msgstr "Anda harus memasang kriptografi untuk menggunakan {}."
 
-#: backends.py:108
+#: backends.py:118
 msgid "Invalid algorithm specified"
 msgstr "Algoritma yang ditentukan tidak valid"
 
-#: backends.py:110 exceptions.py:38 tokens.py:44
+#: backends.py:120 exceptions.py:38 tokens.py:44
 msgid "Token is invalid or expired"
 msgstr "Token tidak valid atau kedaluwarsa"
 
@@ -100,10 +100,10 @@ msgstr "Jenis token salah"
 msgid "Token has no '{}' claim"
 msgstr "Token tidak memiliki klaim '{}'"
 
-#: tokens.py:167
+#: tokens.py:168
 msgid "Token '{}' claim has expired"
 msgstr "Klaim token '{}' telah kedaluwarsa"
 
-#: tokens.py:217
+#: tokens.py:223
 msgid "Token is blacklisted"
 msgstr "Token masuk daftar hitam"

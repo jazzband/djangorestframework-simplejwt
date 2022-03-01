@@ -32,19 +32,19 @@ msgstr "Gebruiker niet gevonden"
 msgid "User is inactive"
 msgstr "Gebruiker is inactief"
 
-#: backends.py:50
+#: backends.py:60
 msgid "Unrecognized algorithm type '{}'"
 msgstr "Niet herkend algoritme type '{}"
 
-#: backends.py:56
+#: backends.py:66
 msgid "You must have cryptography installed to use {}."
 msgstr ""
 
-#: backends.py:108
+#: backends.py:118
 msgid "Invalid algorithm specified"
 msgstr ""
 
-#: backends.py:110 exceptions.py:38 tokens.py:44
+#: backends.py:120 exceptions.py:38 tokens.py:44
 msgid "Token is invalid or expired"
 msgstr "Token is niet geldig of verlopen"
 
@@ -99,10 +99,10 @@ msgstr "Token heeft het verkeerde type"
 msgid "Token has no '{}' claim"
 msgstr "Token heeft geen '{}' recht"
 
-#: tokens.py:167
+#: tokens.py:168
 msgid "Token '{}' claim has expired"
 msgstr "Token '{}' recht is verlopen"
 
-#: tokens.py:217
+#: tokens.py:223
 msgid "Token is blacklisted"
 msgstr "Token is ge-blacklist"

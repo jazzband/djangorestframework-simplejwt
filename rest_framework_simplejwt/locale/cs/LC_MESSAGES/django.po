@@ -31,19 +31,19 @@ msgstr "Uživatel nenalezen"
 msgid "User is inactive"
 msgstr "Uživatel není aktivní"
 
-#: backends.py:50
+#: backends.py:60
 msgid "Unrecognized algorithm type '{}'"
 msgstr "Nerozpoznaný typ algoritmu '{}'"
 
-#: backends.py:56
+#: backends.py:66
 msgid "You must have cryptography installed to use {}."
 msgstr ""
 
-#: backends.py:108
+#: backends.py:118
 msgid "Invalid algorithm specified"
 msgstr ""
 
-#: backends.py:110 exceptions.py:38 tokens.py:44
+#: backends.py:120 exceptions.py:38 tokens.py:44
 msgid "Token is invalid or expired"
 msgstr "Token není validní nebo vypršela jeho platnost"
 
@@ -97,10 +97,10 @@ msgstr "Token má špatný typ"
 msgid "Token has no '{}' claim"
 msgstr "Token nemá žádnou hodnotu '{}'"
 
-#: tokens.py:167
+#: tokens.py:168
 msgid "Token '{}' claim has expired"
 msgstr "Hodnota tokenu '{}' vypršela"
 
-#: tokens.py:217
+#: tokens.py:223
 msgid "Token is blacklisted"
 msgstr "Token je na černé listině"

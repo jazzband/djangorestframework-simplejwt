@@ -33,19 +33,19 @@ msgstr "Benutzer nicht gefunden"
 msgid "User is inactive"
 msgstr "Inaktiver Benutzer"
 
-#: backends.py:50
+#: backends.py:60
 msgid "Unrecognized algorithm type '{}'"
 msgstr "Unerkannter Algorithmustyp '{}'"
 
-#: backends.py:56
+#: backends.py:66
 msgid "You must have cryptography installed to use {}."
 msgstr ""
 
-#: backends.py:108
+#: backends.py:118
 msgid "Invalid algorithm specified"
 msgstr ""
 
-#: backends.py:110 exceptions.py:38 tokens.py:44
+#: backends.py:120 exceptions.py:38 tokens.py:44
 msgid "Token is invalid or expired"
 msgstr "Ungültiger oder abgelaufener Token"
 
@@ -101,10 +101,10 @@ msgstr "Token hat den falschen Typ"
 msgid "Token has no '{}' claim"
 msgstr "Token hat kein '{}' Recht"
 
-#: tokens.py:167
+#: tokens.py:168
 msgid "Token '{}' claim has expired"
 msgstr "Das Tokenrecht '{}' ist abgelaufen"
 
-#: tokens.py:217
+#: tokens.py:223
 msgid "Token is blacklisted"
 msgstr "Token steht auf der Blacklist"
