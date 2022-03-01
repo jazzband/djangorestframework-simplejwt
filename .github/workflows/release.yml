@@ -28,6 +28,7 @@ jobs:
           pip install -e .[dev]
 
       - name: Check locale
+        working-directory: rest_framework_simplejwt
         run: |
           echo "Checking if locale files need updating. If they do, cd rest_framework_simplejwt && run python ../scripts/i18n_updater.py"
           python ../scripts/i18n_updater.py
