@@ -33,19 +33,19 @@ msgstr "L'utilisateur n'a pas été trouvé"
 msgid "User is inactive"
 msgstr "L'utilisateur est désactivé"
 
-#: backends.py:50
+#: backends.py:60
 msgid "Unrecognized algorithm type '{}'"
 msgstr "Type d'algorithme non reconnu '{}'"
 
-#: backends.py:56
+#: backends.py:66
 msgid "You must have cryptography installed to use {}."
 msgstr "Vous devez installer cryptography afin d'utiliser {}."
 
-#: backends.py:108
+#: backends.py:118
 msgid "Invalid algorithm specified"
 msgstr "L'algorithme spécifié est invalide"
 
-#: backends.py:110 exceptions.py:38 tokens.py:44
+#: backends.py:120 exceptions.py:38 tokens.py:44
 msgid "Token is invalid or expired"
 msgstr "Le jeton est invalide ou expiré"
 
@@ -101,10 +101,10 @@ msgstr "Le jeton a un type erroné"
 msgid "Token has no '{}' claim"
 msgstr "Le jeton n'a pas le privilège '{}'"
 
-#: tokens.py:167
+#: tokens.py:168
 msgid "Token '{}' claim has expired"
 msgstr "Le privilège '{}' du jeton a expiré"
 
-#: tokens.py:217
+#: tokens.py:223
 msgid "Token is blacklisted"
 msgstr "Le jeton a été banni"

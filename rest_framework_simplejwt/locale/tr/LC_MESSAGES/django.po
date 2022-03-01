@@ -34,19 +34,19 @@ msgstr "Kullanıcı bulunamadı"
 msgid "User is inactive"
 msgstr "Kullanıcı etkin değil"
 
-#: backends.py:50
+#: backends.py:60
 msgid "Unrecognized algorithm type '{}'"
 msgstr "Tanınmayan algortima tipi '{}'"
 
-#: backends.py:56
+#: backends.py:66
 msgid "You must have cryptography installed to use {}."
 msgstr "{} kullanmak için cryptography yüklemeniz gerekiyor."
 
-#: backends.py:108
+#: backends.py:118
 msgid "Invalid algorithm specified"
 msgstr "Geçersiz algoritma belirtildi"
 
-#: backends.py:110 exceptions.py:38 tokens.py:44
+#: backends.py:120 exceptions.py:38 tokens.py:44
 msgid "Token is invalid or expired"
 msgstr "Token geçersiz veya süresi geçmiş"
 
@@ -100,10 +100,10 @@ msgstr "Token'in tipi yanlış"
 msgid "Token has no '{}' claim"
 msgstr "Token'in '{}' claim'i yok"
 
-#: tokens.py:167
+#: tokens.py:168
 msgid "Token '{}' claim has expired"
 msgstr "Token'in '{}' claim'i sona erdi"
 
-#: tokens.py:217
+#: tokens.py:223
 msgid "Token is blacklisted"
 msgstr "Token kara listeye alınmış"

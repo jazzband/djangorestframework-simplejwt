@@ -35,19 +35,19 @@ msgstr "未找到该用户"
 msgid "User is inactive"
 msgstr "该用户已禁用"
 
-#: backends.py:50
+#: backends.py:60
 msgid "Unrecognized algorithm type '{}'"
 msgstr "未知算法类型 '{}'"
 
-#: backends.py:56
+#: backends.py:66
 msgid "You must have cryptography installed to use {}."
 msgstr "你必须安装 cryptography 才能使用 {}。"
 
-#: backends.py:108
+#: backends.py:118
 msgid "Invalid algorithm specified"
 msgstr "指定的算法无效"
 
-#: backends.py:110 exceptions.py:38 tokens.py:44
+#: backends.py:120 exceptions.py:38 tokens.py:44
 msgid "Token is invalid or expired"
 msgstr "令牌无效或已过期"
 
@@ -101,10 +101,10 @@ msgstr "令牌类型错误"
 msgid "Token has no '{}' claim"
 msgstr "令牌没有 '{}' 声明"
 
-#: tokens.py:167
+#: tokens.py:168
 msgid "Token '{}' claim has expired"
 msgstr "令牌 '{}' 声明已过期"
 
-#: tokens.py:217
+#: tokens.py:223
 msgid "Token is blacklisted"
 msgstr "令牌已被加入黑名单"
