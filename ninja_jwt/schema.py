@@ -4,10 +4,10 @@ from django.conf import settings
 from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.models import AbstractUser, update_last_login
 from django.utils.translation import gettext_lazy as _
+from ninja.orm import create_schema
+from ninja_jwt.utils import token_error
 from ninja_schema import ModelSchema, Schema
 from pydantic import root_validator
-
-from ninja_jwt.utils import token_error
 
 from . import exceptions
 from .settings import api_settings
@@ -17,6 +17,9 @@ if api_settings.BLACKLIST_AFTER_ROTATION:
     from .token_blacklist.models import BlacklistedToken
 
 user_name_field = get_user_model().USERNAME_FIELD  # type: ignore
+
+
+AuthUserSchema = create_schema(get_user_model(), fields=[user_name_field])
 
 
 class TokenObtainSerializer(ModelSchema):
@@ -69,10 +72,9 @@ class TokenObtainSerializer(ModelSchema):
         )
 
 
-class TokenObtainPairOutput(Schema):
+class TokenObtainPairOutput(AuthUserSchema):
     refresh: str
     access: str
-    username: str
 
 
 class TokenObtainPairSerializer(TokenObtainSerializer):
@@ -97,9 +99,8 @@ class TokenObtainPairSerializer(TokenObtainSerializer):
         return TokenObtainPairOutput(**self.dict(exclude={"password"}))
 
 
-class TokenObtainSlidingOutput(Schema):
+class TokenObtainSlidingOutput(AuthUserSchema):
     token: str
-    username: str
 
 
 class TokenObtainSlidingSerializer(TokenObtainSerializer):
