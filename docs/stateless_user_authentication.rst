@@ -1,19 +1,19 @@
-.. _experimental_features:
+.. _stateless_user_authentication:
 
-Experimental features
+Stateless User Authentication
 =====================
 
-JWTTokenUserAuthentication backend
+JWTStatelessUserAuthentication backend
 ----------------------------------
 
-The ``JWTTokenUserAuthentication`` backend's ``authenticate`` method does not
+The ``JWTStatelessUserAuthentication`` backend's ``authenticate`` method does not
 perform a database lookup to obtain a user instance.  Instead, it returns a
 ``rest_framework_simplejwt.models.TokenUser`` instance which acts as a
 stateless user object backed only by a validated token instead of a record in a
 database.  This can facilitate developing single sign-on functionality between
 separately hosted Django apps which all share the same token secret key.  To
 use this feature, add the
-``rest_framework_simplejwt.authentication.JWTTokenUserAuthentication`` backend
+``rest_framework_simplejwt.authentication.JWTStatelessUserAuthentication`` backend
 (instead of the default ``JWTAuthentication`` backend) to the Django REST
 Framework's ``DEFAULT_AUTHENTICATION_CLASSES`` config setting:
 
@@ -23,7 +23,7 @@ Framework's ``DEFAULT_AUTHENTICATION_CLASSES`` config setting:
       ...
       'DEFAULT_AUTHENTICATION_CLASSES': (
           ...
-          'rest_framework_simplejwt.authentication.JWTTokenUserAuthentication',
+          'rest_framework_simplejwt.authentication.JWTStatelessUserAuthentication',
       )
       ...
   }

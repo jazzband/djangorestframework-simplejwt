@@ -157,9 +157,9 @@ class TestJWTAuthentication(TestCase):
         self.assertEqual(self.backend.get_user(payload).id, u.id)
 
 
-class TestJWTTokenUserAuthentication(TestCase):
+class TestJWTStatelessUserAuthentication(TestCase):
     def setUp(self):
-        self.backend = authentication.JWTTokenUserAuthentication()
+        self.backend = authentication.JWTStatelessUserAuthentication()
 
     def test_get_user(self):
         payload = {"some_other_id": "foo"}
