@@ -239,7 +239,7 @@ store such a value.
 --------------------
 
 A stateless user object which is backed by a validated token. Used only for
-the experimental JWTTokenUserAuthentication authentication backend. The value
+the JWTStatelessUserAuthentication authentication backend. The value
 is a dotted path to your subclass of ``rest_framework_simplejwt.models.TokenUser``,
 which also is the default.
 

@@ -126,7 +126,12 @@ class JWTAuthentication(authentication.BaseAuthentication):
         return user
 
 
-class JWTTokenUserAuthentication(JWTAuthentication):
+class JWTStatelessUserAuthentication(JWTAuthentication):
+    """
+    An authentication plugin that authenticates requests through a JSON web
+    token provided in a request header without performing a database lookup to obtain a user instance.
+    """
+
     def get_user(self, validated_token):
         """
         Returns a stateless user object which is backed by the given validated
