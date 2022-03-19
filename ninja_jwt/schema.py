@@ -4,10 +4,10 @@ from django.conf import settings
 from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.models import AbstractUser, update_last_login
 from django.utils.translation import gettext_lazy as _
-from ninja.orm import create_schema
-from ninja_jwt.utils import token_error
 from ninja_schema import ModelSchema, Schema
 from pydantic import root_validator
+
+from ninja_jwt.utils import token_error
 
 from . import exceptions
 from .settings import api_settings
@@ -19,7 +19,10 @@ if api_settings.BLACKLIST_AFTER_ROTATION:
 user_name_field = get_user_model().USERNAME_FIELD  # type: ignore
 
 
-AuthUserSchema = create_schema(get_user_model(), fields=[user_name_field])
+class AuthUserSchema(ModelSchema):
+    class Config:
+        model = get_user_model()
+        include = [user_name_field]
 
 
 class TokenObtainSerializer(ModelSchema):
