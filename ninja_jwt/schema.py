@@ -19,6 +19,12 @@ if api_settings.BLACKLIST_AFTER_ROTATION:
 user_name_field = get_user_model().USERNAME_FIELD  # type: ignore
 
 
+class AuthUserSchema(ModelSchema):
+    class Config:
+        model = get_user_model()
+        include = [user_name_field]
+
+
 class TokenObtainSerializer(ModelSchema):
     class Config:
         model = get_user_model()
@@ -69,10 +75,9 @@ class TokenObtainSerializer(ModelSchema):
         )
 
 
-class TokenObtainPairOutput(Schema):
+class TokenObtainPairOutput(AuthUserSchema):
     refresh: str
     access: str
-    username: str
 
 
 class TokenObtainPairSerializer(TokenObtainSerializer):
@@ -97,9 +102,8 @@ class TokenObtainPairSerializer(TokenObtainSerializer):
         return TokenObtainPairOutput(**self.dict(exclude={"password"}))
 
 
-class TokenObtainSlidingOutput(Schema):
+class TokenObtainSlidingOutput(AuthUserSchema):
     token: str
-    username: str
 
 
 class TokenObtainSlidingSerializer(TokenObtainSerializer):
