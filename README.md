@@ -24,6 +24,9 @@ For full documentation, [visit](https://eadwincode.github.io/django-ninja-jwt/).
 - Ninja-Schema >= 0.12.8
 - Django-Ninja-Extra >= 0.14.2
 
+## Example
+Checkout this sample project: https://github.com/eadwinCode/bookstoreapi
+
 
 Installation
 ============
