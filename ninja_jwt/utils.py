@@ -1,3 +1,4 @@
+import logging
 from calendar import timegm
 from datetime import datetime
 from functools import wraps
@@ -10,6 +11,8 @@ from six import string_types
 
 from ninja_jwt import exceptions
 
+logger = logging.getLogger("django")
+
 
 def token_error(func):
     @wraps(func)
@@ -18,6 +21,9 @@ def token_error(func):
             return func(*args, **kwargs)
         except exceptions.TokenError as tex:
             raise exceptions.InvalidToken(str(tex))
+        except Exception as ex:
+            logger.error(f"{func} raised exception: {str(ex)}")
+            raise ex
 
     return _wrap
 

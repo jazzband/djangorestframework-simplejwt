@@ -103,6 +103,7 @@ class NinjaJWTSlidingController(
 
 
 if not django.VERSION < (3, 1):
+    from asgiref.sync import sync_to_async
 
     class AsyncTokenVerificationController(TokenVerificationController):
         @http_post("/verify", response={200: Schema}, url_name="token_verify")
@@ -127,7 +128,9 @@ if not django.VERSION < (3, 1):
             "/refresh", response=schema.TokenRefreshSerializer, url_name="token_refresh"
         )
         async def refresh_token(self, refresh_token: schema.TokenRefreshSchema):
-            refresh = schema.TokenRefreshSerializer(**refresh_token.dict())
+            refresh = await sync_to_async(schema.TokenRefreshSerializer)(
+                **refresh_token.dict()
+            )
             return refresh
 
     class AsyncTokenObtainSlidingController(TokenObtainSlidingController):
@@ -145,7 +148,9 @@ if not django.VERSION < (3, 1):
             url_name="token_refresh_sliding",
         )
         async def refresh_token(self, refresh_token: schema.TokenRefreshSlidingSchema):
-            refresh = schema.TokenRefreshSlidingSerializer(**refresh_token.dict())
+            refresh = await sync_to_async(schema.TokenRefreshSlidingSerializer)(
+                **refresh_token.dict()
+            )
             return refresh
 
     @api_controller("/token", permissions=[AllowAny], tags=["token"])
