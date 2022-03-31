@@ -69,7 +69,8 @@ test = [
     "isort==5.10.1",
     "flake8==4.0.1",
     "django-stubs",
-    "python-jose==3.0.0"
+    "python-jose==3.0.0",
+    "click==8.0.4"
 ]
 doc = []
 
