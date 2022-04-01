@@ -73,6 +73,14 @@ class TestTokenBlacklist:
             RefreshToken(str(token))
             assert "blacklisted" in e.exception.args[0]
 
+        # Delete the User and try again
+        self.user.delete()
+
+        with pytest.raises(TokenError) as e:
+            # Should raise exception
+            RefreshToken(str(token))
+            assert "blacklisted" in e.exception.args[0]
+
     def test_tokens_can_be_manually_blacklisted(self):
         token = RefreshToken.for_user(self.user)
 
