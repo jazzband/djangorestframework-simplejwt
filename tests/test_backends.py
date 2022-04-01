@@ -4,10 +4,8 @@ from unittest.mock import patch
 
 import jwt
 import pytest
+from jwt import PyJWS, __version__ as jwt_version, algorithms
 
-from jwt import PyJWS
-from jwt import __version__ as jwt_version
-from jwt import algorithms
 from ninja_jwt.backends import JWK_CLIENT_AVAILABLE, TokenBackend
 from ninja_jwt.exceptions import TokenBackendError
 from ninja_jwt.utils import aware_utcnow, datetime_to_epoch, make_utc
@@ -53,7 +51,6 @@ class TestTokenBackend:
         )
         self.payload = {"foo": "bar"}
 
-
     def test_init(self):
         # Should reject unknown algorithms
         with pytest.raises(TokenBackendError):
@@ -65,8 +62,8 @@ class TestTokenBackend:
     def test_init_fails_for_rs_algorithms_when_crypto_not_installed(self):
         for algo in ("RS256", "RS384", "RS512", "ES256"):
             with pytest.raises(
-                    TokenBackendError,
-                    match=rf"You must have cryptography installed to use {algo}.",
+                TokenBackendError,
+                match=rf"You must have cryptography installed to use {algo}.",
             ):
                 TokenBackend(algo, "not_secret")
 
@@ -122,7 +119,10 @@ class TestTokenBackend:
 
     @pytest.mark.parametrize(
         "title, backend",
-        [(f"Test decode with no expiry for {backend.algorithm}", backend)for backend in backends]
+        [
+            (f"Test decode with no expiry for {backend.algorithm}", backend)
+            for backend in backends
+        ],
     )
     def test_decode_with_no_expiry(self, title, backend):
         # for backend in self.backends:
@@ -134,19 +134,26 @@ class TestTokenBackend:
 
     @pytest.mark.parametrize(
         "title, backend",
-        [(f"Test decode with no expiry and no verify for {backend.algorithm}", backend)for backend in backends]
+        [
+            (
+                f"Test decode with no expiry and no verify for {backend.algorithm}",
+                backend,
+            )
+            for backend in backends
+        ],
     )
     def test_decode_with_no_expiry_no_verify(self, title, backend):
         no_exp_token = jwt.encode(
             self.payload, backend.signing_key, algorithm=backend.algorithm
         )
-        assert (
-            backend.decode(no_exp_token, verify=False) == self.payload
-        )
+        assert backend.decode(no_exp_token, verify=False) == self.payload
 
     @pytest.mark.parametrize(
         "title, backend",
-        [(f"Test decode with expiry for {backend.algorithm}", backend) for backend in backends]
+        [
+            (f"Test decode with expiry for {backend.algorithm}", backend)
+            for backend in backends
+        ],
     )
     def test_decode_with_expiry(self, title, backend):
         self.payload["exp"] = aware_utcnow() - timedelta(seconds=1)
@@ -158,7 +165,10 @@ class TestTokenBackend:
 
     @pytest.mark.parametrize(
         "title, backend",
-        [(f"Test decode with invalid sig for {backend.algorithm}", backend) for backend in backends]
+        [
+            (f"Test decode with invalid sig for {backend.algorithm}", backend)
+            for backend in backends
+        ],
     )
     def test_decode_with_invalid_sig(self, title, backend):
         self.payload["exp"] = aware_utcnow() - timedelta(seconds=1)
@@ -167,13 +177,9 @@ class TestTokenBackend:
         #     with self.subTest(f"Test decode with invalid sig for {backend.algorithm}"):
         payload = self.payload.copy()
         payload["exp"] = aware_utcnow() + timedelta(days=1)
-        token_1 = jwt.encode(
-            payload, backend.signing_key, algorithm=backend.algorithm
-        )
+        token_1 = jwt.encode(payload, backend.signing_key, algorithm=backend.algorithm)
         payload["foo"] = "baz"
-        token_2 = jwt.encode(
-            payload, backend.signing_key, algorithm=backend.algorithm
-        )
+        token_2 = jwt.encode(payload, backend.signing_key, algorithm=backend.algorithm)
 
         if IS_OLD_JWT:
             token_1 = token_1.decode("utf-8")
@@ -188,19 +194,18 @@ class TestTokenBackend:
 
     @pytest.mark.parametrize(
         "title, backend",
-        [(f"Test decode with invalid sig for {backend.algorithm}", backend) for backend in backends]
+        [
+            (f"Test decode with invalid sig for {backend.algorithm}", backend)
+            for backend in backends
+        ],
     )
     def test_decode_with_invalid_sig_no_verify(self, title, backend):
         self.payload["exp"] = aware_utcnow() + timedelta(days=1)
 
         payload = self.payload.copy()
-        token_1 = jwt.encode(
-            payload, backend.signing_key, algorithm=backend.algorithm
-        )
+        token_1 = jwt.encode(payload, backend.signing_key, algorithm=backend.algorithm)
         payload["foo"] = "baz"
-        token_2 = jwt.encode(
-            payload, backend.signing_key, algorithm=backend.algorithm
-        )
+        token_2 = jwt.encode(payload, backend.signing_key, algorithm=backend.algorithm)
         if IS_OLD_JWT:
             token_1 = token_1.decode("utf-8")
             token_2 = token_2.decode("utf-8")
@@ -212,13 +217,14 @@ class TestTokenBackend:
         token_1_sig = token_1.rsplit(".", 1)[-1]
         invalid_token = token_2_payload + "." + token_1_sig
 
-        assert (
-                backend.decode(invalid_token, verify=False) == payload
-        )
+        assert backend.decode(invalid_token, verify=False) == payload
 
     @pytest.mark.parametrize(
         "title, backend",
-        [(f"est decode success for {backend.algorithm}", backend) for backend in backends]
+        [
+            (f"est decode success for {backend.algorithm}", backend)
+            for backend in backends
+        ],
     )
     def test_decode_success(self, title, backend):
         self.payload["exp"] = aware_utcnow() + timedelta(days=1)
