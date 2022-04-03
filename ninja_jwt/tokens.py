@@ -170,7 +170,8 @@ class Token:
             raise TokenError(format_lazy(_("Token has no '{}' claim"), claim))
 
         claim_time = datetime_from_epoch(claim_value)
-        if claim_time <= current_time:
+        leeway = self.get_token_backend().leeway
+        if claim_time <= current_time - timedelta(seconds=leeway):
             raise TokenError(format_lazy(_("Token '{}' claim has expired"), claim))
 
     @classmethod
@@ -190,10 +191,15 @@ class Token:
 
     _token_backend = None
 
-    def get_token_backend(self):
+    @property
+    def token_backend(self):
         if self._token_backend is None:
             self._token_backend = import_string("ninja_jwt.state.token_backend")
         return self._token_backend
+
+    def get_token_backend(self):
+        # Backward compatibility.
+        return self.token_backend
 
 
 class BlacklistMixin:
@@ -277,6 +283,11 @@ class SlidingToken(BlacklistMixin, Token):
             )
 
 
+class AccessToken(Token):
+    token_type: str = "access"
+    lifetime: timedelta = api_settings.ACCESS_TOKEN_LIFETIME
+
+
 class RefreshToken(BlacklistMixin, Token):
     token_type: str = "refresh"
     lifetime: timedelta = api_settings.REFRESH_TOKEN_LIFETIME
@@ -290,6 +301,7 @@ class RefreshToken(BlacklistMixin, Token):
         api_settings.JTI_CLAIM,
         "jti",
     )
+    access_token_class = AccessToken
 
     @property
     def access_token(self) -> "AccessToken":
@@ -298,7 +310,7 @@ class RefreshToken(BlacklistMixin, Token):
         claims present in this refresh token to the new access token except
         those claims listed in the `no_copy_claims` attribute.
         """
-        access = AccessToken()
+        access = self.access_token_class()
 
         # Use instantiation time of refresh token as relative timestamp for
         # access token "exp" claim.  This ensures that both a refresh and
@@ -313,11 +325,6 @@ class RefreshToken(BlacklistMixin, Token):
             access[claim] = value
 
         return access
-
-
-class AccessToken(Token):
-    token_type: str = "access"
-    lifetime: timedelta = api_settings.ACCESS_TOKEN_LIFETIME
 
 
 class UntypedToken(Token):

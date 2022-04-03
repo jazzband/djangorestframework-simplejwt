@@ -4,13 +4,20 @@ from unittest.mock import patch
 
 import jwt
 import pytest
-from jwt import PyJWS, algorithms
+from jwt import PyJWS, __version__ as jwt_version, algorithms
 
-from ninja_jwt.backends import TokenBackend
+from ninja_jwt.backends import JWK_CLIENT_AVAILABLE, TokenBackend
 from ninja_jwt.exceptions import TokenBackendError
 from ninja_jwt.utils import aware_utcnow, datetime_to_epoch, make_utc
 
-from .keys import PRIVATE_KEY, PRIVATE_KEY_2, PUBLIC_KEY, PUBLIC_KEY_2
+from .keys import (
+    ES256_PRIVATE_KEY,
+    ES256_PUBLIC_KEY,
+    PRIVATE_KEY,
+    PRIVATE_KEY_2,
+    PUBLIC_KEY,
+    PUBLIC_KEY_2,
+)
 
 SECRET = "not_secret"
 
@@ -22,8 +29,18 @@ JWK_URL = "https://randomstring.auth0.com/.well-known/jwks.json"
 
 LEEWAY = 100
 
+IS_OLD_JWT = jwt_version == "1.7.1"
+
 
 class TestTokenBackend:
+    backends = (
+        TokenBackend("HS256", SECRET),
+        TokenBackend("RS256", PRIVATE_KEY, PUBLIC_KEY),
+        TokenBackend("ES256", ES256_PRIVATE_KEY, ES256_PUBLIC_KEY),
+        TokenBackend("ES384", ES256_PRIVATE_KEY, ES256_PUBLIC_KEY),
+        TokenBackend("ES512", ES256_PRIVATE_KEY, ES256_PUBLIC_KEY),
+    )
+
     @pytest.fixture(autouse=True)
     def setUp(self):
         self.hmac_token_backend = TokenBackend("HS256", SECRET)
@@ -43,21 +60,12 @@ class TestTokenBackend:
 
     @patch.object(algorithms, "has_crypto", new=False)
     def test_init_fails_for_rs_algorithms_when_crypto_not_installed(self):
-        with pytest.raises(
-            TokenBackendError,
-            match=r"You must have cryptography installed to use RS256.",
-        ):
-            TokenBackend("RS256", "not_secret")
-        with pytest.raises(
-            TokenBackendError,
-            match=r"You must have cryptography installed to use RS384.",
-        ):
-            TokenBackend("RS384", "not_secret")
-        with pytest.raises(
-            TokenBackendError,
-            match=r"You must have cryptography installed to use RS512.",
-        ):
-            TokenBackend("RS512", "not_secret")
+        for algo in ("RS256", "RS384", "RS512", "ES256"):
+            with pytest.raises(
+                TokenBackendError,
+                match=rf"You must have cryptography installed to use {algo}.",
+            ):
+                TokenBackend(algo, "not_secret")
 
     def test_encode_hmac(self):
         # Should return a JSON web token for the given payload
@@ -109,64 +117,131 @@ class TestTokenBackend:
             "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJvcGVuaWQtY2xpZW50LWlkIiwiZXhwIjo5NDY2ODQ4MDAsImlzcyI6Imh0dHBzOi8vd3d3Lm15b2lkY3Byb3ZpZGVyLmNvbSJ9.s6sElpfKL8WHWfbD_Kbwiy_ip4O082V8ElZqwugvDpS-7yQ3FTvQ3WXqtVAJc-fBZe4ZsBnrXUWwZV0Nhoe6iWKjEjTPjonQWbWL_WUJmIC2HVz18AOISnqReV2rcuLSHQ2ckhsyktlE9K1Rfj-Hi6f3HzzzePEgTsL2ZdBH6GrcmJVDFKqLLrkvOHShoPp7rcwuFBr0J_S1oqYac5O0B-u0OVnxBXTwij0ThrTGMgVCp2rn6Hk0NvtF6CE49Eu4XP8Ue-APT8l5_SjqX9GcrjkJp8Gif_oyBheL-zRg_v-cU60X6qY9wVolO8WodVPSnlE02XyYhLVxvfK-w5129A",
         )
 
-    def test_decode_hmac_with_no_expiry(self):
-        no_exp_token = jwt.encode(self.payload, SECRET, algorithm="HS256")
-
-        self.hmac_token_backend.decode(no_exp_token)
-
-    def test_decode_hmac_with_no_expiry_no_verify(self):
-        no_exp_token = jwt.encode(self.payload, SECRET, algorithm="HS256")
-
-        assert (
-            self.hmac_token_backend.decode(no_exp_token, verify=False) == self.payload
+    @pytest.mark.parametrize(
+        "title, backend",
+        [
+            (f"Test decode with no expiry for {backend.algorithm}", backend)
+            for backend in backends
+        ],
+    )
+    def test_decode_with_no_expiry(self, title, backend):
+        # for backend in self.backends:
+        # with self.subTest("Test decode with no expiry for f{backend.algorithm}"):
+        no_exp_token = jwt.encode(
+            self.payload, backend.signing_key, algorithm=backend.algorithm
         )
+        backend.decode(no_exp_token)
 
-    def test_decode_hmac_with_expiry(self):
+    @pytest.mark.parametrize(
+        "title, backend",
+        [
+            (
+                f"Test decode with no expiry and no verify for {backend.algorithm}",
+                backend,
+            )
+            for backend in backends
+        ],
+    )
+    def test_decode_with_no_expiry_no_verify(self, title, backend):
+        no_exp_token = jwt.encode(
+            self.payload, backend.signing_key, algorithm=backend.algorithm
+        )
+        assert backend.decode(no_exp_token, verify=False) == self.payload
+
+    @pytest.mark.parametrize(
+        "title, backend",
+        [
+            (f"Test decode with expiry for {backend.algorithm}", backend)
+            for backend in backends
+        ],
+    )
+    def test_decode_with_expiry(self, title, backend):
+        self.payload["exp"] = aware_utcnow() - timedelta(seconds=1)
+        expired_token = jwt.encode(
+            self.payload, backend.signing_key, algorithm=backend.algorithm
+        )
+        with pytest.raises(TokenBackendError):
+            backend.decode(expired_token)
+
+    @pytest.mark.parametrize(
+        "title, backend",
+        [
+            (f"Test decode with invalid sig for {backend.algorithm}", backend)
+            for backend in backends
+        ],
+    )
+    def test_decode_with_invalid_sig(self, title, backend):
         self.payload["exp"] = aware_utcnow() - timedelta(seconds=1)
 
-        expired_token = jwt.encode(self.payload, SECRET, algorithm="HS256")
+        # for backend in self.backends:
+        #     with self.subTest(f"Test decode with invalid sig for {backend.algorithm}"):
+        payload = self.payload.copy()
+        payload["exp"] = aware_utcnow() + timedelta(days=1)
+        token_1 = jwt.encode(payload, backend.signing_key, algorithm=backend.algorithm)
+        payload["foo"] = "baz"
+        token_2 = jwt.encode(payload, backend.signing_key, algorithm=backend.algorithm)
 
-        with pytest.raises(TokenBackendError):
-            self.hmac_token_backend.decode(expired_token)
-
-    def test_decode_hmac_with_invalid_sig(self):
-        self.payload["exp"] = aware_utcnow() + timedelta(days=1)
-        token_1 = jwt.encode(self.payload, SECRET, algorithm="HS256")
-        self.payload["foo"] = "baz"
-        token_2 = jwt.encode(self.payload, SECRET, algorithm="HS256")
-
-        token_2_payload = token_2.rsplit(".", 1)[0]
-        token_1_sig = token_1.rsplit(".", 1)[-1]
-        invalid_token = token_2_payload + "." + token_1_sig
-
-        with pytest.raises(TokenBackendError):
-            self.hmac_token_backend.decode(invalid_token)
-
-    def test_decode_hmac_with_invalid_sig_no_verify(self):
-        self.payload["exp"] = aware_utcnow() + timedelta(days=1)
-        token_1 = jwt.encode(self.payload, SECRET, algorithm="HS256")
-        self.payload["foo"] = "baz"
-        token_2 = jwt.encode(self.payload, SECRET, algorithm="HS256")
-        # Payload copied
-        self.payload["exp"] = datetime_to_epoch(self.payload["exp"])
+        if IS_OLD_JWT:
+            token_1 = token_1.decode("utf-8")
+            token_2 = token_2.decode("utf-8")
 
         token_2_payload = token_2.rsplit(".", 1)[0]
         token_1_sig = token_1.rsplit(".", 1)[-1]
         invalid_token = token_2_payload + "." + token_1_sig
 
-        assert (
-            self.hmac_token_backend.decode(invalid_token, verify=False) == self.payload
+        with pytest.raises(TokenBackendError):
+            backend.decode(invalid_token)
+
+    @pytest.mark.parametrize(
+        "title, backend",
+        [
+            (f"Test decode with invalid sig for {backend.algorithm}", backend)
+            for backend in backends
+        ],
+    )
+    def test_decode_with_invalid_sig_no_verify(self, title, backend):
+        self.payload["exp"] = aware_utcnow() + timedelta(days=1)
+
+        payload = self.payload.copy()
+        token_1 = jwt.encode(payload, backend.signing_key, algorithm=backend.algorithm)
+        payload["foo"] = "baz"
+        token_2 = jwt.encode(payload, backend.signing_key, algorithm=backend.algorithm)
+        if IS_OLD_JWT:
+            token_1 = token_1.decode("utf-8")
+            token_2 = token_2.decode("utf-8")
+        else:
+            # Payload copied
+            payload["exp"] = datetime_to_epoch(payload["exp"])
+
+        token_2_payload = token_2.rsplit(".", 1)[0]
+        token_1_sig = token_1.rsplit(".", 1)[-1]
+        invalid_token = token_2_payload + "." + token_1_sig
+
+        assert backend.decode(invalid_token, verify=False) == payload
+
+    @pytest.mark.parametrize(
+        "title, backend",
+        [
+            (f"est decode success for {backend.algorithm}", backend)
+            for backend in backends
+        ],
+    )
+    def test_decode_success(self, title, backend):
+        self.payload["exp"] = aware_utcnow() + timedelta(days=1)
+        self.payload["foo"] = "baz"
+
+        token = jwt.encode(
+            self.payload, backend.signing_key, algorithm=backend.algorithm
         )
+        if IS_OLD_JWT:
+            token = token.decode("utf-8")
+            payload = self.payload
+        else:
+            # Payload copied
+            payload = self.payload.copy()
+            payload["exp"] = datetime_to_epoch(self.payload["exp"])
 
-    def test_decode_hmac_success(self):
-        self.payload["exp"] = aware_utcnow() + timedelta(days=1)
-        self.payload["foo"] = "baz"
-
-        token = jwt.encode(self.payload, SECRET, algorithm="HS256")
-        # Payload copied
-        self.payload["exp"] = datetime_to_epoch(self.payload["exp"])
-
-        assert self.hmac_token_backend.decode(token) == self.payload
+        assert backend.decode(token) == payload
 
     def test_decode_rsa_with_no_expiry(self):
         no_exp_token = jwt.encode(self.payload, PRIVATE_KEY, algorithm="RS256")
@@ -180,53 +255,6 @@ class TestTokenBackend:
             self.hmac_token_backend.decode(no_exp_token, verify=False) == self.payload
         )
 
-    def test_decode_rsa_with_expiry(self):
-        self.payload["exp"] = aware_utcnow() - timedelta(seconds=1)
-
-        expired_token = jwt.encode(self.payload, PRIVATE_KEY, algorithm="RS256")
-
-        with pytest.raises(TokenBackendError):
-            self.rsa_token_backend.decode(expired_token)
-
-    def test_decode_rsa_with_invalid_sig(self):
-        self.payload["exp"] = aware_utcnow() + timedelta(days=1)
-        token_1 = jwt.encode(self.payload, PRIVATE_KEY, algorithm="RS256")
-        self.payload["foo"] = "baz"
-        token_2 = jwt.encode(self.payload, PRIVATE_KEY, algorithm="RS256")
-
-        token_2_payload = token_2.rsplit(".", 1)[0]
-        token_1_sig = token_1.rsplit(".", 1)[-1]
-        invalid_token = token_2_payload + "." + token_1_sig
-
-        with pytest.raises(TokenBackendError):
-            self.rsa_token_backend.decode(invalid_token)
-
-    def test_decode_rsa_with_invalid_sig_no_verify(self):
-        self.payload["exp"] = aware_utcnow() + timedelta(days=1)
-        token_1 = jwt.encode(self.payload, PRIVATE_KEY, algorithm="RS256")
-        self.payload["foo"] = "baz"
-        token_2 = jwt.encode(self.payload, PRIVATE_KEY, algorithm="RS256")
-
-        token_2_payload = token_2.rsplit(".", 1)[0]
-        token_1_sig = token_1.rsplit(".", 1)[-1]
-        invalid_token = token_2_payload + "." + token_1_sig
-        # Payload copied
-        self.payload["exp"] = datetime_to_epoch(self.payload["exp"])
-
-        assert (
-            self.hmac_token_backend.decode(invalid_token, verify=False) == self.payload
-        )
-
-    def test_decode_rsa_success(self):
-        self.payload["exp"] = aware_utcnow() + timedelta(days=1)
-        self.payload["foo"] = "baz"
-
-        token = jwt.encode(self.payload, PRIVATE_KEY, algorithm="RS256")
-        # Payload copied
-        self.payload["exp"] = datetime_to_epoch(self.payload["exp"])
-
-        assert self.rsa_token_backend.decode(token) == self.payload
-
     def test_decode_aud_iss_success(self):
         self.payload["exp"] = aware_utcnow() + timedelta(days=1)
         self.payload["foo"] = "baz"
@@ -234,11 +262,18 @@ class TestTokenBackend:
         self.payload["iss"] = ISSUER
 
         token = jwt.encode(self.payload, PRIVATE_KEY, algorithm="RS256")
-        # Payload copied
-        self.payload["exp"] = datetime_to_epoch(self.payload["exp"])
+        if IS_OLD_JWT:
+            token = token.decode("utf-8")
+        else:
+            # Payload copied
+            self.payload["exp"] = datetime_to_epoch(self.payload["exp"])
 
         assert self.aud_iss_token_backend.decode(token) == self.payload
 
+    @pytest.mark.skipif(
+        not JWK_CLIENT_AVAILABLE,
+        reason="PyJWT 1.7.1 doesn't have JWK client",
+    )
     def test_decode_rsa_aud_iss_jwk_success(self):
         self.payload["exp"] = aware_utcnow() + timedelta(days=1)
         self.payload["foo"] = "baz"
@@ -254,7 +289,6 @@ class TestTokenBackend:
         # Payload copied
         self.payload["exp"] = datetime_to_epoch(self.payload["exp"])
 
-        mock_jwk_module = mock.MagicMock()
         with patch("ninja_jwt.backends.PyJWKClient") as mock_jwk_module:
             mock_jwk_client = mock.MagicMock()
             mock_signing_key = mock.MagicMock()
@@ -272,7 +306,8 @@ class TestTokenBackend:
 
     def test_decode_when_algorithm_not_available(self):
         token = jwt.encode(self.payload, PRIVATE_KEY, algorithm="RS256")
-
+        if IS_OLD_JWT:
+            token = token.decode("utf-8")
         pyjwt_without_rsa = PyJWS()
         pyjwt_without_rsa.unregister_algorithm("RS256")
 
@@ -285,7 +320,8 @@ class TestTokenBackend:
 
     def test_decode_when_token_algorithm_does_not_match(self):
         token = jwt.encode(self.payload, PRIVATE_KEY, algorithm="RS256")
-
+        if IS_OLD_JWT:
+            token = token.decode("utf-8")
         with pytest.raises(TokenBackendError, match="Invalid algorithm specified"):
             self.hmac_token_backend.decode(token)
 
