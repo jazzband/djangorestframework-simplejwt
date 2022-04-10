@@ -5,7 +5,7 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 from jose import jwt
 
-from rest_framework_simplejwt.exceptions import TokenError, TokenBackendError
+from rest_framework_simplejwt.exceptions import TokenBackendError, TokenError
 from rest_framework_simplejwt.settings import api_settings
 from rest_framework_simplejwt.state import token_backend
 from rest_framework_simplejwt.tokens import (
@@ -322,15 +322,15 @@ class TestToken(TestCase):
         # float (seconds)
         token.token_backend.leeway = timedelta(days=2).total_seconds()
         token.check_exp("refresh_exp", current_time=datetime_in_leeway)
-        
+
         # timedelta
         token.token_backend.leeway = timedelta(days=2)
         token.check_exp("refresh_exp", current_time=datetime_in_leeway)
-        
+
         # integer (seconds)
         token.token_backend.leeway = 10
         token.check_exp("refresh_exp", current_time=datetime_in_leeway)
-        
+
         token.token_backend.leeway = 0
 
     def test_check_token_if_wrong_type_leeway(self):

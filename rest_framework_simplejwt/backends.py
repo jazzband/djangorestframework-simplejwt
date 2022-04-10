@@ -1,8 +1,10 @@
+from datetime import timedelta
+from typing import Union
+
 import jwt
 from django.utils.translation import gettext_lazy as _
-from typing import Union
 from jwt import InvalidAlgorithmError, InvalidTokenError, algorithms
-from datetime import timedelta
+
 from .exceptions import TokenBackendError
 from .utils import format_lazy
 
@@ -78,11 +80,14 @@ class TokenBackend:
             return self.leeway
         else:
             raise TokenBackendError(
-                format_lazy(_("Unrecognized type '{}', 'leeway' must be of type int, float or timedelta."), 
-                        type(self.leeway)
+                format_lazy(
+                    _(
+                        "Unrecognized type '{}', 'leeway' must be of type int, float or timedelta."
+                    ),
+                    type(self.leeway),
                 )
             )
-        
+
     def get_verifying_key(self, token):
         if self.algorithm.startswith("HS"):
             return self.signing_key
