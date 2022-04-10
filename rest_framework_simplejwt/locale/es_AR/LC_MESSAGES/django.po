@@ -26,7 +26,7 @@ msgstr ""
 msgid "Given token not valid for any token type"
 msgstr "El token dado no es válido para ningún tipo de token"
 
-#: authentication.py:116 authentication.py:138
+#: authentication.py:116 authentication.py:143
 msgid "Token contained no recognizable user identification"
 msgstr "El token no contiene ninguna identificación de usuario"
 
@@ -38,19 +38,24 @@ msgstr "Usuario no encontrado"
 msgid "User is inactive"
 msgstr "El usuario está inactivo"
 
-#: backends.py:60
+#: backends.py:64
 msgid "Unrecognized algorithm type '{}'"
 msgstr "Tipo de algoritmo no reconocido '{}'"
 
-#: backends.py:66
+#: backends.py:70
 msgid "You must have cryptography installed to use {}."
 msgstr ""
 
-#: backends.py:118
+#: backends.py:85
+msgid ""
+"Unrecognized type '{}', 'leeway' must be of type int, float or timedelta."
+msgstr ""
+
+#: backends.py:139
 msgid "Invalid algorithm specified"
 msgstr ""
 
-#: backends.py:120 exceptions.py:38 tokens.py:44
+#: backends.py:141 exceptions.py:38 tokens.py:44
 msgid "Token is invalid or expired"
 msgstr "El token es inválido o ha expirado"
 

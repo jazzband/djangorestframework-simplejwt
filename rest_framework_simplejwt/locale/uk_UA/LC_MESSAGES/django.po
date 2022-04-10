@@ -23,7 +23,7 @@ msgstr "Авторизаційний заголовок має містити д
 msgid "Given token not valid for any token type"
 msgstr "Наданий токен не відповідає жодному типу ключа"
 
-#: authentication.py:116 authentication.py:138
+#: authentication.py:116 authentication.py:143
 msgid "Token contained no recognizable user identification"
 msgstr "Наданий токен не мітить жодної ідентифікаційної інформації"
 
@@ -35,19 +35,24 @@ msgstr "Користувач не знайдений"
 msgid "User is inactive"
 msgstr "Користувач неактивний"
 
-#: backends.py:60
+#: backends.py:64
 msgid "Unrecognized algorithm type '{}'"
 msgstr "Тип алгоритму '{}' не розпізнаний"
 
-#: backends.py:66
+#: backends.py:70
 msgid "You must have cryptography installed to use {}."
 msgstr "Встановіть модуль cryptography щоб використовувати {}"
 
-#: backends.py:118
+#: backends.py:85
+msgid ""
+"Unrecognized type '{}', 'leeway' must be of type int, float or timedelta."
+msgstr ""
+
+#: backends.py:139
 msgid "Invalid algorithm specified"
 msgstr "Вказаний невірний алгоритм"
 
-#: backends.py:120 exceptions.py:38 tokens.py:44
+#: backends.py:141 exceptions.py:38 tokens.py:44
 msgid "Token is invalid or expired"
 msgstr "Токен некоректний або термін його дії вичерпаний"
 

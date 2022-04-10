@@ -20,7 +20,7 @@ msgstr "Header otorisasi harus berisi dua nilai yang dipisahkan spasi"
 msgid "Given token not valid for any token type"
 msgstr "Token yang diberikan tidak valid untuk semua jenis token"
 
-#: authentication.py:116 authentication.py:138
+#: authentication.py:116 authentication.py:143
 msgid "Token contained no recognizable user identification"
 msgstr "Token tidak mengandung identifikasi pengguna yang dapat dikenali"
 
@@ -32,19 +32,24 @@ msgstr "Pengguna tidak ditemukan"
 msgid "User is inactive"
 msgstr "Pengguna tidak aktif"
 
-#: backends.py:60
+#: backends.py:64
 msgid "Unrecognized algorithm type '{}'"
 msgstr "Jenis algoritma tidak dikenal '{}'"
 
-#: backends.py:66
+#: backends.py:70
 msgid "You must have cryptography installed to use {}."
 msgstr "Anda harus memasang kriptografi untuk menggunakan {}."
 
-#: backends.py:118
+#: backends.py:85
+msgid ""
+"Unrecognized type '{}', 'leeway' must be of type int, float or timedelta."
+msgstr ""
+
+#: backends.py:139
 msgid "Invalid algorithm specified"
 msgstr "Algoritma yang ditentukan tidak valid"
 
-#: backends.py:120 exceptions.py:38 tokens.py:44
+#: backends.py:141 exceptions.py:38 tokens.py:44
 msgid "Token is invalid or expired"
 msgstr "Token tidak valid atau kedaluwarsa"
 

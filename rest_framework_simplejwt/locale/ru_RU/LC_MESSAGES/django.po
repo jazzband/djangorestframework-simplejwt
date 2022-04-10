@@ -25,7 +25,7 @@ msgstr ""
 msgid "Given token not valid for any token type"
 msgstr "Данный токен недействителен для любого типа токена"
 
-#: authentication.py:116 authentication.py:138
+#: authentication.py:116 authentication.py:143
 msgid "Token contained no recognizable user identification"
 msgstr "Токен не содержит идентификатор пользователя"
 
@@ -37,19 +37,24 @@ msgstr "Пользователь не найден"
 msgid "User is inactive"
 msgstr "Пользователь неактивен"
 
-#: backends.py:60
+#: backends.py:64
 msgid "Unrecognized algorithm type '{}'"
 msgstr "Нераспознанный тип алгоритма '{}'"
 
-#: backends.py:66
+#: backends.py:70
 msgid "You must have cryptography installed to use {}."
 msgstr ""
 
-#: backends.py:118
+#: backends.py:85
+msgid ""
+"Unrecognized type '{}', 'leeway' must be of type int, float or timedelta."
+msgstr ""
+
+#: backends.py:139
 msgid "Invalid algorithm specified"
 msgstr ""
 
-#: backends.py:120 exceptions.py:38 tokens.py:44
+#: backends.py:141 exceptions.py:38 tokens.py:44
 msgid "Token is invalid or expired"
 msgstr "Токен недействителен или просрочен"
 
