@@ -1,5 +1,6 @@
 import jwt
 from django.utils.translation import gettext_lazy as _
+from typing import Union
 from jwt import InvalidAlgorithmError, InvalidTokenError, algorithms
 from datetime import timedelta
 from .exceptions import TokenBackendError
@@ -34,7 +35,7 @@ class TokenBackend:
         audience=None,
         issuer=None,
         jwk_url: str = None,
-        leeway=None,
+        leeway: Union[float, int, timedelta] = None,
     ):
         self._validate_algorithm(algorithm)
 
@@ -68,7 +69,7 @@ class TokenBackend:
                 )
             )
 
-    def get_leeway(self):
+    def get_leeway(self) -> timedelta:
         if self.leeway is None:
             return timedelta(seconds=0)
         elif isinstance(self.leeway, (int, float)):
@@ -77,7 +78,7 @@ class TokenBackend:
             return self.leeway
         else:
             raise TokenBackendError(
-                format_lazy(_("Unrecognized type '{}', 'leeway' must be of type int or timedelta."), 
+                format_lazy(_("Unrecognized type '{}', 'leeway' must be of type int, float or timedelta."), 
                         type(self.leeway)
                 )
             )
