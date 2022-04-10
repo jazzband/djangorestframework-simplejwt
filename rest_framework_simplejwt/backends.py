@@ -1,7 +1,7 @@
 import jwt
 from django.utils.translation import gettext_lazy as _
 from jwt import InvalidAlgorithmError, InvalidTokenError, algorithms
-
+from datetime import timedelta
 from .exceptions import TokenBackendError
 from .utils import format_lazy
 
@@ -34,7 +34,7 @@ class TokenBackend:
         audience=None,
         issuer=None,
         jwk_url: str = None,
-        leeway=0,
+        leeway=None,
     ):
         self._validate_algorithm(algorithm)
 
@@ -48,6 +48,7 @@ class TokenBackend:
             self.jwks_client = PyJWKClient(jwk_url) if jwk_url else None
         else:
             self.jwks_client = None
+
         self.leeway = leeway
 
     def _validate_algorithm(self, algorithm):
@@ -67,6 +68,20 @@ class TokenBackend:
                 )
             )
 
+    def get_leeway(self):
+        if self.leeway is None:
+            return timedelta(seconds=0)
+        elif isinstance(self.leeway, (int, float)):
+            return timedelta(seconds=self.leeway)
+        elif isinstance(self.leeway, timedelta):
+            return self.leeway
+        else:
+            raise TokenBackendError(
+                format_lazy(_("Unrecognized type '{}', 'leeway' must be of type int or timedelta."), 
+                        type(self.leeway)
+                )
+            )
+        
     def get_verifying_key(self, token):
         if self.algorithm.startswith("HS"):
             return self.signing_key
@@ -108,7 +123,7 @@ class TokenBackend:
                 algorithms=[self.algorithm],
                 audience=self.audience,
                 issuer=self.issuer,
-                leeway=self.leeway,
+                leeway=self.get_leeway(),
                 options={
                     "verify_aud": self.audience is not None,
                     "verify_signature": verify,
