@@ -19,7 +19,7 @@ msgstr "Nagłówek autoryzacji musi zawierać dwie wartości rodzielone spacjami
 msgid "Given token not valid for any token type"
 msgstr "Podany token jest błędny dla każdego typu tokena"
 
-#: authentication.py:116 authentication.py:138
+#: authentication.py:116 authentication.py:143
 msgid "Token contained no recognizable user identification"
 msgstr "Token nie zawierał rozpoznawalnej identyfikacji użytkownika"
 
@@ -31,19 +31,24 @@ msgstr "Użytkownik nie znaleziony"
 msgid "User is inactive"
 msgstr "Użytkownik jest nieaktywny"
 
-#: backends.py:60
+#: backends.py:64
 msgid "Unrecognized algorithm type '{}'"
 msgstr "Nierozpoznany typ algorytmu '{}'"
 
-#: backends.py:66
+#: backends.py:70
 msgid "You must have cryptography installed to use {}."
 msgstr ""
 
-#: backends.py:118
+#: backends.py:85
+msgid ""
+"Unrecognized type '{}', 'leeway' must be of type int, float or timedelta."
+msgstr ""
+
+#: backends.py:139
 msgid "Invalid algorithm specified"
 msgstr ""
 
-#: backends.py:120 exceptions.py:38 tokens.py:44
+#: backends.py:141 exceptions.py:38 tokens.py:44
 msgid "Token is invalid or expired"
 msgstr "Token jest niepoprawny lub wygasł"
 

@@ -20,7 +20,7 @@ msgstr "인증 헤더에는 공백으로 구분 된 두 개의 값이 포함되�
 msgid "Given token not valid for any token type"
 msgstr "이 토큰은 모든 타입의 토큰에 대해 유효하지 않습니다"
 
-#: authentication.py:116 authentication.py:138
+#: authentication.py:116 authentication.py:143
 msgid "Token contained no recognizable user identification"
 msgstr "토큰에 사용자 식별자가 포함되어 있지 않습니다"
 
@@ -32,19 +32,26 @@ msgstr "찾을 수 없는 사용자"
 msgid "User is inactive"
 msgstr "비활성화된 사용자"
 
-#: backends.py:60
+#: backends.py:64
 msgid "Unrecognized algorithm type '{}'"
 msgstr "알 수 없는 알고리즘 유형 '{}'"
 
-#: backends.py:66
+#: backends.py:70
 msgid "You must have cryptography installed to use {}."
 msgstr "{}를 사용하려면 암호화가 설치되어 있어야 합니다."
 
-#: backends.py:118
+#: backends.py:85
+msgid ""
+"Unrecognized type '{}', 'leeway' must be of type int, float or timedelta."
+msgstr ""
+"알 수 없는 타입 '{}', 'leeway' 값은 반드시 int, float 또는 timedelta 타입이어"
+"야 합니다."
+
+#: backends.py:139
 msgid "Invalid algorithm specified"
 msgstr "잘못된 알고리즘이 지정되었습니다"
 
-#: backends.py:120 exceptions.py:38 tokens.py:44
+#: backends.py:141 exceptions.py:38 tokens.py:44
 msgid "Token is invalid or expired"
 msgstr "유효하지 않거나 만료된 토큰"
 

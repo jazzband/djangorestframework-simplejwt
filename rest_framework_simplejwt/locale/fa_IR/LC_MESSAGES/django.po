@@ -19,7 +19,7 @@ msgstr "هدر اعتبارسنجی باید شامل دو مقدار جدا ش�
 msgid "Given token not valid for any token type"
 msgstr "توکن داده شده برای هیچ نوع توکنی معتبر نمی‌باشد"
 
-#: authentication.py:116 authentication.py:138
+#: authentication.py:116 authentication.py:143
 msgid "Token contained no recognizable user identification"
 msgstr "توکن شامل هیچ شناسه قابل تشخیصی از کاربر نیست"
 
@@ -31,19 +31,24 @@ msgstr "کاربر یافت نشد"
 msgid "User is inactive"
 msgstr "کاربر غیرفعال است"
 
-#: backends.py:60
+#: backends.py:64
 msgid "Unrecognized algorithm type '{}'"
 msgstr "نوع الگوریتم ناشناخته '{}'"
 
-#: backends.py:66
+#: backends.py:70
 msgid "You must have cryptography installed to use {}."
 msgstr ""
 
-#: backends.py:118
+#: backends.py:85
+msgid ""
+"Unrecognized type '{}', 'leeway' must be of type int, float or timedelta."
+msgstr ""
+
+#: backends.py:139
 msgid "Invalid algorithm specified"
 msgstr ""
 
-#: backends.py:120 exceptions.py:38 tokens.py:44
+#: backends.py:141 exceptions.py:38 tokens.py:44
 msgid "Token is invalid or expired"
 msgstr "توکن نامعتبر است یا منقضی شده است"
 

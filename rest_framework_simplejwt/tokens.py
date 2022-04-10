@@ -163,8 +163,8 @@ class Token:
             raise TokenError(format_lazy(_("Token has no '{}' claim"), claim))
 
         claim_time = datetime_from_epoch(claim_value)
-        leeway = self.get_token_backend().leeway
-        if claim_time <= current_time - timedelta(seconds=leeway):
+        leeway = self.get_token_backend().get_leeway()
+        if claim_time <= current_time - leeway:
             raise TokenError(format_lazy(_("Token '{}' claim has expired"), claim))
 
     @classmethod

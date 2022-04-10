@@ -1,3 +1,6 @@
+from datetime import timedelta
+from typing import Union
+
 import jwt
 from django.utils.translation import gettext_lazy as _
 from jwt import InvalidAlgorithmError, InvalidTokenError, algorithms
@@ -34,7 +37,7 @@ class TokenBackend:
         audience=None,
         issuer=None,
         jwk_url: str = None,
-        leeway=0,
+        leeway: Union[float, int, timedelta] = None,
     ):
         self._validate_algorithm(algorithm)
 
@@ -48,6 +51,7 @@ class TokenBackend:
             self.jwks_client = PyJWKClient(jwk_url) if jwk_url else None
         else:
             self.jwks_client = None
+
         self.leeway = leeway
 
     def _validate_algorithm(self, algorithm):
@@ -64,6 +68,23 @@ class TokenBackend:
             raise TokenBackendError(
                 format_lazy(
                     _("You must have cryptography installed to use {}."), algorithm
+                )
+            )
+
+    def get_leeway(self) -> timedelta:
+        if self.leeway is None:
+            return timedelta(seconds=0)
+        elif isinstance(self.leeway, (int, float)):
+            return timedelta(seconds=self.leeway)
+        elif isinstance(self.leeway, timedelta):
+            return self.leeway
+        else:
+            raise TokenBackendError(
+                format_lazy(
+                    _(
+                        "Unrecognized type '{}', 'leeway' must be of type int, float or timedelta."
+                    ),
+                    type(self.leeway),
                 )
             )
 
@@ -108,7 +129,7 @@ class TokenBackend:
                 algorithms=[self.algorithm],
                 audience=self.audience,
                 issuer=self.issuer,
-                leeway=self.leeway,
+                leeway=self.get_leeway(),
                 options={
                     "verify_aud": self.audience is not None,
                     "verify_signature": verify,

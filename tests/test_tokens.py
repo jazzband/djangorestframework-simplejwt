@@ -5,7 +5,7 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 from jose import jwt
 
-from rest_framework_simplejwt.exceptions import TokenError
+from rest_framework_simplejwt.exceptions import TokenBackendError, TokenError
 from rest_framework_simplejwt.settings import api_settings
 from rest_framework_simplejwt.state import token_backend
 from rest_framework_simplejwt.tokens import (
@@ -319,8 +319,29 @@ class TestToken(TestCase):
             token.check_exp("refresh_exp", current_time=datetime_in_leeway)
 
         # a token 1 day expired is valid if leeway is 2 days
+        # float (seconds)
         token.token_backend.leeway = timedelta(days=2).total_seconds()
         token.check_exp("refresh_exp", current_time=datetime_in_leeway)
+
+        # timedelta
+        token.token_backend.leeway = timedelta(days=2)
+        token.check_exp("refresh_exp", current_time=datetime_in_leeway)
+
+        # integer (seconds)
+        token.token_backend.leeway = 10
+        token.check_exp("refresh_exp", current_time=datetime_in_leeway)
+
+        token.token_backend.leeway = 0
+
+    def test_check_token_if_wrong_type_leeway(self):
+        token = MyToken()
+        token.set_exp("refresh_exp", lifetime=timedelta(days=1))
+
+        datetime_in_leeway = token.current_time + timedelta(days=1)
+
+        token.token_backend.leeway = "1"
+        with self.assertRaises(TokenBackendError):
+            token.check_exp("refresh_exp", current_time=datetime_in_leeway)
         token.token_backend.leeway = 0
 
     def test_for_user(self):
