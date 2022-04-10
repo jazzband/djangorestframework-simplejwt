@@ -53,7 +53,7 @@ repos:
   - id: pyupgrade
     args: ['--py37-plus', '--keep-mock']
 
-- repo: git://github.com/Lucas-C/pre-commit-hooks-markup
+- repo: https://github.com/Lucas-C/pre-commit-hooks-markup
   rev: v1.0.1
   hooks:
   - id: rst-linter
