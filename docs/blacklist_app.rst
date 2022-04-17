@@ -46,6 +46,28 @@ subclass instance and calling the instance's ``blacklist`` method:
 This will create unique outstanding token and blacklist records for the token's
 "jti" claim or whichever claim is specified by the ``JTI_CLAIM`` setting.
 
+In a ``urls.py`` file, you can also include a route for ``TokenBlackListView``:
+
+.. code-block:: python
+
+  from rest_framework_simplejwt.views import TokenBlacklistView
+
+  urlpatterns = [
+    ...
+    path('api/token/blacklist/', TokenBlacklistView.as_view(), name='token_blacklist'),
+    ...
+  ]
+
+It allows API users to blacklist tokens sending them to ``/api/token/blacklist/``, for example using curl:
+
+.. code-block:: bash
+
+  curl \
+    -X POST \
+    -H "Content-Type: application/json" \
+    -d '{"refresh":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTY1MDI5NTEwOCwiaWF0IjoxNjUwMjA4NzA4LCJqdGkiOiJhYTY3ZDUxNzkwMGY0MTEyYTY5NTE0MTNmNWQ4NDk4NCIsInVzZXJfaWQiOjF9.tcj1_OcO1BRDfFyw4miHD7mqFdWKxmP7BJDRmxwCzrg"}' \
+    http://localhost:8000/api/token/blacklist/
+
 The blacklist app also provides a management command, ``flushexpiredtokens``,
 which will delete any tokens from the outstanding list and blacklist that have
 expired.  You should set up a cron job on your server or hosting platform which
