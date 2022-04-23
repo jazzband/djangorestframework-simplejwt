@@ -27,3 +27,6 @@ Framework's ``DEFAULT_AUTHENTICATION_CLASSES`` config setting:
       )
       ...
   }
+  
+v5.1.0 has renamed ``JWTTokenUserAuthentication`` to ``JWTStatelessUserAuthentication``, 
+but both names are supported for backwards compatibility
