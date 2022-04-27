@@ -122,7 +122,7 @@ class TokenRefreshSerializer(serializers.Serializer):
             refresh.set_jti()
             refresh.set_exp()
             refresh.set_iat()
-            
+
             # Create OutstandingToken when rotate refresh token
             auth = JWTAuthentication()
             user = auth.get_user(validated_token=refresh)
@@ -131,7 +131,7 @@ class TokenRefreshSerializer(serializers.Serializer):
                 jti=refresh[api_settings.JTI_CLAIM],
                 token=str(refresh),
                 created_at=refresh.current_time,
-                expires_at=datetime_from_epoch(refresh['exp'])
+                expires_at=datetime_from_epoch(refresh["exp"]),
             )
 
             data["refresh"] = str(refresh)
