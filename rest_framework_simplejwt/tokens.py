@@ -92,7 +92,9 @@ class Token:
         # claim.  We don't want any zombie tokens walking around.
         self.check_exp()
 
-        # Ensure token id is present
+        # If the defaults are not None then we should enforce the 
+        # requirement of these settings.As above, the spec labels 
+        # these as optional.
         if (
             api_settings.JTI_CLAIM is not None
             and api_settings.JTI_CLAIM not in self.payload
@@ -100,6 +102,7 @@ class Token:
             raise TokenError(_("Token has no id"))
 
         if api_settings.TOKEN_TYPE_CLAIM is not None:
+
             self.verify_token_type()
 
     def verify_token_type(self):
