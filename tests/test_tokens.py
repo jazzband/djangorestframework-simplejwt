@@ -225,6 +225,16 @@ class TestToken(TestCase):
         self.assertIn("jti", token)
         self.assertNotEqual(old_jti, token["jti"])
 
+    def test_optional_jti(self):
+        with override_api_settings(JTI_CLAIM=None):
+            token = MyToken()
+        self.assertNotIn("jti", token)
+
+    def test_optional_type_token(self):
+        with override_api_settings(TOKEN_TYPE_CLAIM=None):
+            token = MyToken()
+        self.assertNotIn("type", token)
+
     def test_set_exp(self):
         now = make_utc(datetime(year=2000, month=1, day=1))
 
