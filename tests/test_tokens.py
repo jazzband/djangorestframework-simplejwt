@@ -234,7 +234,7 @@ class TestToken(TestCase):
         with override_api_settings(TOKEN_TYPE_CLAIM=None):
             token = MyToken()
         self.assertNotIn("type", token)
-    
+
     def test_set_exp(self):
         now = make_utc(datetime(year=2000, month=1, day=1))
 

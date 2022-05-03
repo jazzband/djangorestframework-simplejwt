@@ -92,8 +92,8 @@ class Token:
         # claim.  We don't want any zombie tokens walking around.
         self.check_exp()
 
-        # If the defaults are not None then we should enforce the 
-        # requirement of these settings.As above, the spec labels 
+        # If the defaults are not None then we should enforce the
+        # requirement of these settings.As above, the spec labels
         # these as optional.
         if (
             api_settings.JTI_CLAIM is not None
