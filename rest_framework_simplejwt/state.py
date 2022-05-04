@@ -9,4 +9,5 @@ token_backend = TokenBackend(
     api_settings.ISSUER,
     api_settings.JWK_URL,
     api_settings.LEEWAY,
+    api_settings.JSON_ENCODER,
 )

@@ -20,6 +20,7 @@ DEFAULTS = {
     "VERIFYING_KEY": "",
     "AUDIENCE": None,
     "ISSUER": None,
+    "JSON_ENCODER": None,
     "JWK_URL": None,
     "LEEWAY": 0,
     "AUTH_HEADER_TYPES": ("Bearer",),
@@ -44,6 +45,7 @@ DEFAULTS = {
 
 IMPORT_STRINGS = (
     "AUTH_TOKEN_CLASSES",
+    "JSON_ENCODER",
     "TOKEN_USER_CLASS",
     "USER_AUTHENTICATION_RULE",
 )
