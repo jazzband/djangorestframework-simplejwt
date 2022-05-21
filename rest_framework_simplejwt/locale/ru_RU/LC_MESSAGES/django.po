@@ -37,24 +37,24 @@ msgstr "Пользователь не найден"
 msgid "User is inactive"
 msgstr "Пользователь неактивен"
 
-#: backends.py:64
+#: backends.py:67
 msgid "Unrecognized algorithm type '{}'"
 msgstr "Нераспознанный тип алгоритма '{}'"
 
-#: backends.py:70
+#: backends.py:73
 msgid "You must have cryptography installed to use {}."
 msgstr ""
 
-#: backends.py:85
+#: backends.py:88
 msgid ""
 "Unrecognized type '{}', 'leeway' must be of type int, float or timedelta."
 msgstr ""
 
-#: backends.py:139
+#: backends.py:147
 msgid "Invalid algorithm specified"
 msgstr ""
 
-#: backends.py:141 exceptions.py:38 tokens.py:44
+#: backends.py:149 exceptions.py:38 tokens.py:44
 msgid "Token is invalid or expired"
 msgstr "Токен недействителен или просрочен"
 
@@ -62,7 +62,7 @@ msgstr "Токен недействителен или просрочен"
 msgid "No active account found with the given credentials"
 msgstr "Не найдено активной учетной записи с указанными данными"
 
-#: settings.py:68
+#: settings.py:70
 msgid ""
 "The '{}' setting has been removed. Please refer to '{}' for available "
 "settings."
@@ -94,26 +94,26 @@ msgstr "Token Blacklist"
 msgid "Cannot create token with no type or lifetime"
 msgstr "Невозможно создать токен без типа или времени жизни"
 
-#: tokens.py:97
+#: tokens.py:102
 msgid "Token has no id"
 msgstr "У токена нет идентификатора"
 
-#: tokens.py:108
+#: tokens.py:115
 msgid "Token has no type"
 msgstr "Токен не имеет типа"
 
-#: tokens.py:111
+#: tokens.py:118
 msgid "Token has wrong type"
 msgstr "Токен имеет неправильный тип"
 
-#: tokens.py:163
+#: tokens.py:170
 msgid "Token has no '{}' claim"
 msgstr "Токен не содержит '{}'"
 
-#: tokens.py:168
+#: tokens.py:175
 msgid "Token '{}' claim has expired"
 msgstr "Токен имеет просроченное значение '{}'"
 
-#: tokens.py:223
+#: tokens.py:230
 msgid "Token is blacklisted"
 msgstr "Токен занесен в черный список"

@@ -34,24 +34,24 @@ msgstr "Kullanıcı bulunamadı"
 msgid "User is inactive"
 msgstr "Kullanıcı etkin değil"
 
-#: backends.py:64
+#: backends.py:67
 msgid "Unrecognized algorithm type '{}'"
 msgstr "Tanınmayan algortima tipi '{}'"
 
-#: backends.py:70
+#: backends.py:73
 msgid "You must have cryptography installed to use {}."
 msgstr "{} kullanmak için cryptography yüklemeniz gerekiyor."
 
-#: backends.py:85
+#: backends.py:88
 msgid ""
 "Unrecognized type '{}', 'leeway' must be of type int, float or timedelta."
 msgstr ""
 
-#: backends.py:139
+#: backends.py:147
 msgid "Invalid algorithm specified"
 msgstr "Geçersiz algoritma belirtildi"
 
-#: backends.py:141 exceptions.py:38 tokens.py:44
+#: backends.py:149 exceptions.py:38 tokens.py:44
 msgid "Token is invalid or expired"
 msgstr "Token geçersiz veya süresi geçmiş"
 
@@ -59,7 +59,7 @@ msgstr "Token geçersiz veya süresi geçmiş"
 msgid "No active account found with the given credentials"
 msgstr "Verilen kimlik bilgileriyle aktif bir hesap bulunamadı"
 
-#: settings.py:68
+#: settings.py:70
 msgid ""
 "The '{}' setting has been removed. Please refer to '{}' for available "
 "settings."
@@ -89,26 +89,26 @@ msgstr "Token Kara Listesi"
 msgid "Cannot create token with no type or lifetime"
 msgstr "Tipi veya geçerlilik süresi olmayan token oluşturulamaz"
 
-#: tokens.py:97
+#: tokens.py:102
 msgid "Token has no id"
 msgstr "Token'in id'si yok"
 
-#: tokens.py:108
+#: tokens.py:115
 msgid "Token has no type"
 msgstr "Token'in tipi yok"
 
-#: tokens.py:111
+#: tokens.py:118
 msgid "Token has wrong type"
 msgstr "Token'in tipi yanlış"
 
-#: tokens.py:163
+#: tokens.py:170
 msgid "Token has no '{}' claim"
 msgstr "Token'in '{}' claim'i yok"
 
-#: tokens.py:168
+#: tokens.py:175
 msgid "Token '{}' claim has expired"
 msgstr "Token'in '{}' claim'i sona erdi"
 
-#: tokens.py:223
+#: tokens.py:230
 msgid "Token is blacklisted"
 msgstr "Token kara listeye alınmış"
