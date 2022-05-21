@@ -1,5 +1,14 @@
 ## Unreleased
 
+## Version 5.2.0
+
+* Remove the JWTTokenUserAuthentication from the Experimental Features #546 by @byrpatrick in https://github.com/jazzband/djangorestframework-simplejwt/pull/547
+* Fix leeway type error by @2ykwang in https://github.com/jazzband/djangorestframework-simplejwt/pull/554
+* Add info on TokenBlacklistView to the docs by @inti7ary in https://github.com/jazzband/djangorestframework-simplejwt/pull/558
+* Update JWTStatelessUserAuthentication docs by @2ykwang in https://github.com/jazzband/djangorestframework-simplejwt/pull/561
+* Allow none jti claim token type claim by @denniskeends in https://github.com/jazzband/djangorestframework-simplejwt/pull/567
+* Allow customizing token JSON encoding by @vainu-arto in https://github.com/jazzband/djangorestframework-simplejwt/pull/568
+
 ## Version 5.1.0
 
 * Add back support for PyJWT 1.7.1 ([#536](https://github.com/jazzband/djangorestframework-simplejwt/pull/536))
