@@ -32,24 +32,24 @@ msgstr "Pengguna tidak ditemukan"
 msgid "User is inactive"
 msgstr "Pengguna tidak aktif"
 
-#: backends.py:64
+#: backends.py:67
 msgid "Unrecognized algorithm type '{}'"
 msgstr "Jenis algoritma tidak dikenal '{}'"
 
-#: backends.py:70
+#: backends.py:73
 msgid "You must have cryptography installed to use {}."
 msgstr "Anda harus memasang kriptografi untuk menggunakan {}."
 
-#: backends.py:85
+#: backends.py:88
 msgid ""
 "Unrecognized type '{}', 'leeway' must be of type int, float or timedelta."
 msgstr ""
 
-#: backends.py:139
+#: backends.py:147
 msgid "Invalid algorithm specified"
 msgstr "Algoritma yang ditentukan tidak valid"
 
-#: backends.py:141 exceptions.py:38 tokens.py:44
+#: backends.py:149 exceptions.py:38 tokens.py:44
 msgid "Token is invalid or expired"
 msgstr "Token tidak valid atau kedaluwarsa"
 
@@ -57,7 +57,7 @@ msgstr "Token tidak valid atau kedaluwarsa"
 msgid "No active account found with the given credentials"
 msgstr "Tidak ada akun aktif yang ditemukan dengan kredensial yang diberikan"
 
-#: settings.py:68
+#: settings.py:70
 msgid ""
 "The '{}' setting has been removed. Please refer to '{}' for available "
 "settings."
@@ -89,26 +89,26 @@ msgstr "Daftar Hitam Token"
 msgid "Cannot create token with no type or lifetime"
 msgstr "Tidak dapat membuat token tanpa tipe atau masa pakai"
 
-#: tokens.py:97
+#: tokens.py:102
 msgid "Token has no id"
 msgstr "Token tidak memiliki id"
 
-#: tokens.py:108
+#: tokens.py:115
 msgid "Token has no type"
 msgstr "Token tidak memiliki tipe"
 
-#: tokens.py:111
+#: tokens.py:118
 msgid "Token has wrong type"
 msgstr "Jenis token salah"
 
-#: tokens.py:163
+#: tokens.py:170
 msgid "Token has no '{}' claim"
 msgstr "Token tidak memiliki klaim '{}'"
 
-#: tokens.py:168
+#: tokens.py:175
 msgid "Token '{}' claim has expired"
 msgstr "Klaim token '{}' telah kedaluwarsa"
 
-#: tokens.py:223
+#: tokens.py:230
 msgid "Token is blacklisted"
 msgstr "Token masuk daftar hitam"
