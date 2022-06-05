@@ -32,7 +32,7 @@ extra in the ``djangorestframework-simplejwt`` requirement:
 
 .. code-block:: console
 
-    $ pip install djangorestframework-simplejwt[crypto]
+  pip install djangorestframework-simplejwt[crypto]
 
 The ``djangorestframework-simplejwt[crypto]`` format is recommended in requirements
 files in projects using ``Simple JWT``, as a separate ``cryptography`` requirement
