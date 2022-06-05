@@ -28,7 +28,7 @@ Cryptographic Dependencies (Optional)
 If you are planning on encoding or decoding tokens using certain digital
 signature algorithms (like RSA or ECDSA), you will need to install the
 cryptography_ library. This can be installed explicitly, or as a required
-extra in the ``Simple JWT`` requirement:
+extra in the ``djangorestframework-simplejwt`` requirement:
 
 .. code-block:: console
 
@@ -40,6 +40,9 @@ line may later be mistaken for an unused requirement and removed.
 
 
 .. _`cryptography`: https://cryptography.io
+
+Project Configuration
+---------------------
 
 Then, your django project must be configured to use the library.  In
 ``settings.py``, add
