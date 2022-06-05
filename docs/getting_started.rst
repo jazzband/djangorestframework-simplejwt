@@ -40,7 +40,6 @@ The ``djangorestframework-simplejwt[crypto]`` format is recommended in requireme
 files in projects using ``Simple JWT``, as a separate ``cryptography`` requirement
 line may later be mistaken for an unused requirement and removed.
 
-
 .. _`cryptography`: https://cryptography.io
 
 Project Configuration
