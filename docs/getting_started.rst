@@ -17,7 +17,9 @@ possible.
 Installation
 ------------
 
-Simple JWT can be installed with pip::
+Simple JWT can be installed with pip:
+
+.. code-block:: console
 
   pip install djangorestframework-simplejwt
 
