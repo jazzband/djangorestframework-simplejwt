@@ -17,9 +17,33 @@ possible.
 Installation
 ------------
 
-Simple JWT can be installed with pip::
+Simple JWT can be installed with pip:
+
+.. code-block:: console
 
   pip install djangorestframework-simplejwt
+
+
+Cryptographic Dependencies (Optional)
+-------------------------------------
+
+If you are planning on encoding or decoding tokens using certain digital
+signature algorithms (i.e. RSA and ECDSA; visit PyJWT for other algorithms), you will need to install the
+cryptography_ library. This can be installed explicitly, or as a required
+extra in the ``djangorestframework-simplejwt`` requirement:
+
+.. code-block:: console
+
+  pip install djangorestframework-simplejwt[crypto]
+
+The ``djangorestframework-simplejwt[crypto]`` format is recommended in requirements
+files in projects using ``Simple JWT``, as a separate ``cryptography`` requirement
+line may later be mistaken for an unused requirement and removed.
+
+.. _`cryptography`: https://cryptography.io
+
+Project Configuration
+---------------------
 
 Then, your django project must be configured to use the library.  In
 ``settings.py``, add
@@ -59,16 +83,16 @@ allow API users to verify HMAC-signed tokens without having access to your
 signing key:
 
 .. code-block:: python
-  
+
   from rest_framework_simplejwt.views import TokenVerifyView
-  
+
   urlpatterns = [
       ...
       path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
       ...
   ]
 
-If you wish to use localizations/translations, simply add 
+If you wish to use localizations/translations, simply add
 ``rest_framework_simplejwt`` to ``INSTALLED_APPS``.
 
 .. code-block:: python
