@@ -6,7 +6,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-07-13 10:45+0100\n"
 "Last-Translator: Daniel Cuznetov <danielcuznetov04@gmail.com>\n"
-"Language: ro_RO\n"
+"Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -82,7 +82,7 @@ msgstr "expiră la"
 
 #: token_blacklist/apps.py:7
 msgid "Token Blacklist"
-msgstr "Listă de tokenuri blocate"
+msgstr "Listă de token-uri blocate"
 
 #: tokens.py:30
 msgid "Cannot create token with no type or lifetime"
@@ -90,24 +90,24 @@ msgstr "Nu se poate crea token fără tip sau durată de viață"
 
 #: tokens.py:102
 msgid "Token has no id"
-msgstr "Token nu are id"
+msgstr "Tokenul nu are id"
 
 #: tokens.py:115
 msgid "Token has no type"
-msgstr "Token nu are tip"
+msgstr "Tokenul nu are tip"
 
 #: tokens.py:118
 msgid "Token has wrong type"
-msgstr "Token are tip greșit"
+msgstr "Tokenul are tip greșit"
 
 #: tokens.py:170
 msgid "Token has no '{}' claim"
-msgstr "Token nu are '{}' reclamație"
+msgstr "Tokenul nu are reclamația '{}'"
 
 #: tokens.py:175
 msgid "Token '{}' claim has expired"
-msgstr "Token '{}' reclamație a expirat"
+msgstr "Reclamația '{}' a tokenului a expirat"
 
 #: tokens.py:230
 msgid "Token is blacklisted"
-msgstr "Token este în listă de tokenuri blocate"
+msgstr "Tokenul este în listă de tokenuri blocate"
