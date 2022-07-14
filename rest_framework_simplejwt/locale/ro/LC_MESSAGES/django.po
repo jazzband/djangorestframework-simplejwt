@@ -14,15 +14,15 @@ msgstr ""
 
 #: authentication.py:78
 msgid "Authorization header must contain two space-delimited values"
-msgstr "Header de autorizare trebuie să conțină două valori separate de spațiu"
+msgstr "Header-ul(antetul) de autorizare trebuie să conțină două valori separate prin spațiu"
 
 #: authentication.py:104
 msgid "Given token not valid for any token type"
-msgstr "Token dat nu este valid pentru niciun tip de token"
+msgstr "Tokenul dat nu este valid pentru niciun tip de token"
 
 #: authentication.py:116 authentication.py:143
 msgid "Token contained no recognizable user identification"
-msgstr "Token nu conține identificarea utilizatorului"
+msgstr "Tokenul nu conține date de identificare a utilizatorului"
 
 #: authentication.py:121
 msgid "User not found"
@@ -30,7 +30,7 @@ msgstr "Utilizatorul nu a fost găsit"
 
 #: authentication.py:124
 msgid "User is inactive"
-msgstr "Utilizatorul nu este activ"
+msgstr "Utilizatorul este inactiv"
 
 #: backends.py:67
 msgid "Unrecognized algorithm type '{}'"
@@ -48,7 +48,7 @@ msgstr ""
 
 #: backends.py:147
 msgid "Invalid algorithm specified"
-msgstr "Algoritm invalid specificat"
+msgstr "Algoritm nevalid specificat"
 
 #: backends.py:149 exceptions.py:38 tokens.py:44
 msgid "Token is invalid or expired"
@@ -98,7 +98,7 @@ msgstr "Tokenul nu are tip"
 
 #: tokens.py:118
 msgid "Token has wrong type"
-msgstr "Tokenul are tip greșit"
+msgstr "Tokenul are tipul greșit"
 
 #: tokens.py:170
 msgid "Token has no '{}' claim"
@@ -106,7 +106,7 @@ msgstr "Tokenul nu are reclamația '{}'"
 
 #: tokens.py:175
 msgid "Token '{}' claim has expired"
-msgstr "Reclamația '{}' a tokenului a expirat"
+msgstr "Reclamația tokenului '{}' a expirat"
 
 #: tokens.py:230
 msgid "Token is blacklisted"
