@@ -1,4 +1,6 @@
+import uuid
 from datetime import datetime, timedelta
+from json import JSONEncoder
 from unittest import mock
 from unittest.mock import patch
 
@@ -30,6 +32,13 @@ JWK_URL = "https://randomstring.auth0.com/.well-known/jwks.json"
 LEEWAY = 100
 
 IS_OLD_JWT = jwt_version == "1.7.1"
+
+
+class UUIDJSONEncoder(JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, uuid.UUID):
+            return str(obj)
+        return super().default(obj)
 
 
 class TestTokenBackend:
@@ -343,3 +352,11 @@ class TestTokenBackend:
         expired_token = jwt.encode(self.payload, SECRET, algorithm="HS256")
 
         assert self.hmac_leeway_token_backend.decode(expired_token) == self.payload
+
+    def test_custom_JSONEncoder(self):
+        backend = TokenBackend("HS256", SECRET, json_encoder=UUIDJSONEncoder)
+        unique = uuid.uuid4()
+        self.payload["uuid"] = unique
+        token = backend.encode(self.payload)
+        decoded = backend.decode(token)
+        assert decoded["uuid"] == str(unique)

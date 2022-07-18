@@ -15,6 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+<<<<<<< HEAD:ninja_jwt/locale/uk_UA/LC_MESSAGES/django.po
 #: ninja_jwt/authentication.py:79
 msgid "Authorization header must contain two space-delimited values"
 msgstr "Авторизаційний заголовок має містити два значення розділені пробілом"
@@ -59,11 +60,60 @@ msgid "No active account found with the given credentials"
 msgstr "Не знайдено жодного облікового запису по наданих облікових даних"
 
 #: ninja_jwt/settings.py:63
+=======
+#: authentication.py:78
+msgid "Authorization header must contain two space-delimited values"
+msgstr "Авторизаційний заголовок має містити два значення розділені пробілом"
+
+#: authentication.py:104
+msgid "Given token not valid for any token type"
+msgstr "Наданий токен не відповідає жодному типу ключа"
+
+#: authentication.py:116 authentication.py:143
+msgid "Token contained no recognizable user identification"
+msgstr "Наданий токен не мітить жодної ідентифікаційної інформації"
+
+#: authentication.py:121
+msgid "User not found"
+msgstr "Користувач не знайдений"
+
+#: authentication.py:124
+msgid "User is inactive"
+msgstr "Користувач неактивний"
+
+#: backends.py:67
+msgid "Unrecognized algorithm type '{}'"
+msgstr "Тип алгоритму '{}' не розпізнаний"
+
+#: backends.py:73
+msgid "You must have cryptography installed to use {}."
+msgstr "Встановіть модуль cryptography щоб використовувати {}"
+
+#: backends.py:88
+msgid ""
+"Unrecognized type '{}', 'leeway' must be of type int, float or timedelta."
+msgstr ""
+
+#: backends.py:147
+msgid "Invalid algorithm specified"
+msgstr "Вказаний невірний алгоритм"
+
+#: backends.py:149 exceptions.py:38 tokens.py:44
+msgid "Token is invalid or expired"
+msgstr "Токен некоректний або термін його дії вичерпаний"
+
+#: serializers.py:30
+msgid "No active account found with the given credentials"
+msgstr "Не знайдено жодного облікового запису по наданих облікових даних"
+
+#: settings.py:70
+>>>>>>> cd4ea99424ec7256291253a87f3435fec01ecf0e:rest_framework_simplejwt/locale/uk_UA/LC_MESSAGES/django.po
 msgid ""
 "The '{}' setting has been removed. Please refer to '{}' for available "
 "settings."
 msgstr "Налаштування '{}' видалене. Подивіться у '{}' для інших доступних"
 
+<<<<<<< HEAD:ninja_jwt/locale/uk_UA/LC_MESSAGES/django.po
 #: ninja_jwt/token_blacklist/admin.py:72
 msgid "jti"
 msgstr "jti"
@@ -109,5 +159,52 @@ msgid "Token '{}' claim has expired"
 msgstr "Заголовок '{}' токена не дійсний"
 
 #: ninja_jwt/tokens.py:192
+=======
+#: token_blacklist/admin.py:68
+msgid "jti"
+msgstr "jti"
+
+#: token_blacklist/admin.py:74
+msgid "user"
+msgstr "користувач"
+
+#: token_blacklist/admin.py:80
+msgid "created at"
+msgstr "створений о"
+
+#: token_blacklist/admin.py:86
+msgid "expires at"
+msgstr "дійстний по"
+
+#: token_blacklist/apps.py:7
+msgid "Token Blacklist"
+msgstr "Чорний список токенів"
+
+#: tokens.py:30
+msgid "Cannot create token with no type or lifetime"
+msgstr "Неможливо створити токен без типу або строку дії"
+
+#: tokens.py:102
+msgid "Token has no id"
+msgstr "У ключі доступу не міститься id"
+
+#: tokens.py:115
+msgid "Token has no type"
+msgstr "У ключі доступу не міститься тип"
+
+#: tokens.py:118
+msgid "Token has wrong type"
+msgstr "токен позначений невірним типом"
+
+#: tokens.py:170
+msgid "Token has no '{}' claim"
+msgstr "У токені не міститься '{}' заголовку"
+
+#: tokens.py:175
+msgid "Token '{}' claim has expired"
+msgstr "Заголовок '{}' токена не дійсний"
+
+#: tokens.py:230
+>>>>>>> cd4ea99424ec7256291253a87f3435fec01ecf0e:rest_framework_simplejwt/locale/uk_UA/LC_MESSAGES/django.po
 msgid "Token is blacklisted"
 msgstr "Токен занесений у чорний список"

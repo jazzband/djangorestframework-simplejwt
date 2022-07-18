@@ -20,7 +20,7 @@ msgstr "인증 헤더에는 공백으로 구분 된 두 개의 값이 포함되�
 msgid "Given token not valid for any token type"
 msgstr "이 토큰은 모든 타입의 토큰에 대해 유효하지 않습니다"
 
-#: authentication.py:116 authentication.py:138
+#: authentication.py:116 authentication.py:143
 msgid "Token contained no recognizable user identification"
 msgstr "토큰에 사용자 식별자가 포함되어 있지 않습니다"
 
@@ -32,27 +32,34 @@ msgstr "찾을 수 없는 사용자"
 msgid "User is inactive"
 msgstr "비활성화된 사용자"
 
-#: backends.py:51
+#: backends.py:67
 msgid "Unrecognized algorithm type '{}'"
 msgstr "알 수 없는 알고리즘 유형 '{}'"
 
-#: backends.py:57
+#: backends.py:73
 msgid "You must have cryptography installed to use {}."
 msgstr "{}를 사용하려면 암호화가 설치되어 있어야 합니다."
 
-#: backends.py:109
+#: backends.py:88
+msgid ""
+"Unrecognized type '{}', 'leeway' must be of type int, float or timedelta."
+msgstr ""
+"알 수 없는 타입 '{}', 'leeway' 값은 반드시 int, float 또는 timedelta 타입이어"
+"야 합니다."
+
+#: backends.py:147
 msgid "Invalid algorithm specified"
 msgstr "잘못된 알고리즘이 지정되었습니다"
 
-#: backends.py:111 exceptions.py:38 tokens.py:44
+#: backends.py:149 exceptions.py:38 tokens.py:44
 msgid "Token is invalid or expired"
 msgstr "유효하지 않거나 만료된 토큰"
 
-#: serializers.py:29
+#: serializers.py:30
 msgid "No active account found with the given credentials"
 msgstr "지정된 자격 증명에 해당하는 활성화된 사용자를 찾을 수 없습니다"
 
-#: settings.py:62
+#: settings.py:70
 msgid ""
 "The '{}' setting has been removed. Please refer to '{}' for available "
 "settings."
@@ -82,26 +89,26 @@ msgstr "토큰 블랙리스트"
 msgid "Cannot create token with no type or lifetime"
 msgstr "타입 또는 수명이 없는 토큰을 생성할 수 없습니다"
 
-#: tokens.py:97
+#: tokens.py:102
 msgid "Token has no id"
 msgstr "토큰에 식별자가 주어지지 않음"
 
-#: tokens.py:108
+#: tokens.py:115
 msgid "Token has no type"
 msgstr "토큰 타입이 주어지지 않음"
 
-#: tokens.py:111
+#: tokens.py:118
 msgid "Token has wrong type"
 msgstr "잘못된 토큰 타입"
 
-#: tokens.py:163
+#: tokens.py:170
 msgid "Token has no '{}' claim"
 msgstr "토큰에 '{}' 클레임이 없음"
 
-#: tokens.py:167
+#: tokens.py:175
 msgid "Token '{}' claim has expired"
 msgstr "토큰 '{}' 클레임이 만료되었습니다"
 
-#: tokens.py:217
+#: tokens.py:230
 msgid "Token is blacklisted"
 msgstr "블랙리스트에 추가된 토큰"

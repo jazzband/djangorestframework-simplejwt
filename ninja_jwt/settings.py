@@ -57,7 +57,7 @@ class NinjaJWTSettings(Schema):
     )
     TOKEN_USER_CLASS: Any = Field("ninja_jwt.models.TokenUser")
     AUTH_TOKEN_CLASSES: List[Any] = Field(["ninja_jwt.tokens.AccessToken"])
-
+    JSON_ENCODER: Optional[Any] = Field(None)
     TOKEN_TYPE_CLAIM: str = Field("token_type")
     JTI_CLAIM: str = Field("jti")
     SLIDING_TOKEN_REFRESH_EXP_CLAIM: str = Field("refresh_exp")

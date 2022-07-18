@@ -3,10 +3,9 @@ from unittest.mock import patch
 
 import pytest
 from django.contrib.auth import get_user_model
-from django.test import TestCase
 from jose import jwt
 
-from ninja_jwt.exceptions import TokenError
+from ninja_jwt.exceptions import TokenBackendError, TokenError
 from ninja_jwt.settings import api_settings
 from ninja_jwt.state import token_backend
 from ninja_jwt.tokens import (
@@ -17,8 +16,6 @@ from ninja_jwt.tokens import (
     UntypedToken,
 )
 from ninja_jwt.utils import aware_utcnow, datetime_to_epoch, make_utc
-
-from .utils import override_api_settings
 
 User = get_user_model()
 
@@ -251,6 +248,41 @@ class TestToken:
         token.set_iat(claim="refresh_iat", at_time=now + timedelta(days=1))
         assert "refresh_iat" in token
         assert token["refresh_iat"] == datetime_to_epoch(now + timedelta(days=1))
+
+    def test_check_token_not_expired_if_in_leeway(self):
+        token = MyToken()
+        token.set_exp("refresh_exp", lifetime=timedelta(days=1))
+
+        datetime_in_leeway = token.current_time + timedelta(days=1)
+
+        with pytest.raises(TokenError):
+            token.check_exp("refresh_exp", current_time=datetime_in_leeway)
+
+        # a token 1 day expired is valid if leeway is 2 days
+        # float (seconds)
+        token.token_backend.leeway = timedelta(days=2).total_seconds()
+        token.check_exp("refresh_exp", current_time=datetime_in_leeway)
+
+        # timedelta
+        token.token_backend.leeway = timedelta(days=2)
+        token.check_exp("refresh_exp", current_time=datetime_in_leeway)
+
+        # integer (seconds)
+        token.token_backend.leeway = 10
+        token.check_exp("refresh_exp", current_time=datetime_in_leeway)
+
+        token.token_backend.leeway = 0
+
+    def test_check_token_if_wrong_type_leeway(self):
+        token = MyToken()
+        token.set_exp("refresh_exp", lifetime=timedelta(days=1))
+
+        datetime_in_leeway = token.current_time + timedelta(days=1)
+
+        token.token_backend.leeway = "1"
+        with pytest.raises(TokenBackendError):
+            token.check_exp("refresh_exp", current_time=datetime_in_leeway)
+        token.token_backend.leeway = 0
 
     def test_check_exp(self):
         token = MyToken()
