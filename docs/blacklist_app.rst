@@ -46,7 +46,7 @@ subclass instance and calling the instance's ``blacklist`` method:
 This will create unique outstanding token and blacklist records for the token's
 "jti" claim or whichever claim is specified by the ``JTI_CLAIM`` setting.
 
-In a ``urls.py`` file, you can also include a route for ``TokenBlackListView``:
+In a ``urls.py`` file, you can also include a route for ``TokenBlacklistView``:
 
 .. code-block:: python
 
