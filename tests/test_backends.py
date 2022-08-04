@@ -7,7 +7,7 @@ from unittest.mock import patch
 import jwt
 import pytest
 from django.test import TestCase
-from jwt import PyJWKClientError, PyJWS
+from jwt import PyJWS
 from jwt import __version__ as jwt_version
 from jwt import algorithms
 
@@ -314,7 +314,7 @@ class TestTokenBackend(TestCase):
             mock_jwk_client = mock.MagicMock()
 
             mock_jwk_module.return_value = mock_jwk_client
-            mock_jwk_client.get_signing_key_from_jwt.side_effect = PyJWKClientError(
+            mock_jwk_client.get_signing_key_from_jwt.side_effect = jwt.PyJWKClientError(
                 "Unable to find a signing key that matches"
             )
 
