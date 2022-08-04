@@ -7,10 +7,9 @@ from unittest.mock import patch
 import jwt
 import pytest
 from django.test import TestCase
-from jwt import PyJWS
+from jwt import PyJWKClientError, PyJWS
 from jwt import __version__ as jwt_version
 from jwt import algorithms
-from jwt import PyJWKClientError
 
 from rest_framework_simplejwt.backends import JWK_CLIENT_AVAILABLE, TokenBackend
 from rest_framework_simplejwt.exceptions import TokenBackendError
@@ -315,14 +314,18 @@ class TestTokenBackend(TestCase):
             mock_jwk_client = mock.MagicMock()
 
             mock_jwk_module.return_value = mock_jwk_client
-            mock_jwk_client.get_signing_key_from_jwt.side_effect = PyJWKClientError("Unable to find a signing key that matches")
+            mock_jwk_client.get_signing_key_from_jwt.side_effect = PyJWKClientError(
+                "Unable to find a signing key that matches"
+            )
 
             # Note the PRIV,PUB care is intentially the original pairing
             jwk_token_backend = TokenBackend(
                 "RS256", PRIVATE_KEY, PUBLIC_KEY, AUDIENCE, ISSUER, JWK_URL
             )
 
-            with self.assertRaisesRegex(TokenBackendError, "Token is invalid or expired"):
+            with self.assertRaisesRegex(
+                TokenBackendError, "Token is invalid or expired"
+            ):
                 jwk_token_backend.decode(token)
 
     def test_decode_when_algorithm_not_available(self):
