@@ -292,6 +292,42 @@ class TestTokenBackend(TestCase):
 
             self.assertEqual(jwk_token_backend.decode(token), self.payload)
 
+    @pytest.mark.skipif(
+        not JWK_CLIENT_AVAILABLE,
+        reason="PyJWT 1.7.1 doesn't have JWK client",
+    )
+    def test_decode_jwk_missing_key_raises_tokenbackenderror(self):
+        self.payload["exp"] = aware_utcnow() + timedelta(days=1)
+        self.payload["foo"] = "baz"
+        self.payload["aud"] = AUDIENCE
+        self.payload["iss"] = ISSUER
+
+        token = jwt.encode(
+            self.payload,
+            PRIVATE_KEY_2,
+            algorithm="RS256",
+            headers={"kid": "230498151c214b788dd97f22b85410a5"},
+        )
+
+        mock_jwk_module = mock.MagicMock()
+        with patch("rest_framework_simplejwt.backends.PyJWKClient") as mock_jwk_module:
+            mock_jwk_client = mock.MagicMock()
+
+            mock_jwk_module.return_value = mock_jwk_client
+            mock_jwk_client.get_signing_key_from_jwt.side_effect = jwt.PyJWKClientError(
+                "Unable to find a signing key that matches"
+            )
+
+            # Note the PRIV,PUB care is intentially the original pairing
+            jwk_token_backend = TokenBackend(
+                "RS256", PRIVATE_KEY, PUBLIC_KEY, AUDIENCE, ISSUER, JWK_URL
+            )
+
+            with self.assertRaisesRegex(
+                TokenBackendError, "Token is invalid or expired"
+            ):
+                jwk_token_backend.decode(token)
+
     def test_decode_when_algorithm_not_available(self):
         token = jwt.encode(self.payload, PRIVATE_KEY, algorithm="RS256")
         if IS_OLD_JWT:

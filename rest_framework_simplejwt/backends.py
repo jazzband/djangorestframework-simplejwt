@@ -10,7 +10,7 @@ from .exceptions import TokenBackendError
 from .utils import format_lazy
 
 try:
-    from jwt import PyJWKClient
+    from jwt import PyJWKClient, PyJWKClientError
 
     JWK_CLIENT_AVAILABLE = True
 except ImportError:
@@ -96,7 +96,10 @@ class TokenBackend:
             return self.signing_key
 
         if self.jwks_client:
-            return self.jwks_client.get_signing_key_from_jwt(token).key
+            try:
+                return self.jwks_client.get_signing_key_from_jwt(token).key
+            except PyJWKClientError as ex:
+                raise TokenBackendError(_("Token is invalid or expired")) from ex
 
         return self.verifying_key
 
@@ -145,5 +148,5 @@ class TokenBackend:
             )
         except InvalidAlgorithmError as ex:
             raise TokenBackendError(_("Invalid algorithm specified")) from ex
-        except InvalidTokenError:
-            raise TokenBackendError(_("Token is invalid or expired"))
+        except InvalidTokenError as ex:
+            raise TokenBackendError(_("Token is invalid or expired")) from ex
