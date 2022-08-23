@@ -3,7 +3,8 @@ from datetime import datetime
 
 from django.conf import settings
 from django.utils.functional import lazy
-from django.utils.timezone import is_naive, make_aware, utc
+from django.utils.timezone import is_naive, make_aware
+from datetime.timezone import utc
 
 
 def make_utc(dt):
