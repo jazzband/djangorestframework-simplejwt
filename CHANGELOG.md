@@ -1,5 +1,12 @@
 ## Unreleased
 
+## Version 5.2.1
+
+* Add Swedish translations by @PasinduPrabhashitha in https://github.com/jazzband/djangorestframework-simplejwt/pull/579
+* Fixed issue #543 by @armenak-baburyan in https://github.com/jazzband/djangorestframework-simplejwt/pull/586
+* Fix uncaught exception with JWK by @jerr0328 in https://github.com/jazzband/djangorestframework-simplejwt/pull/600
+* Test on Django 4.1 by @2ykwang in https://github.com/jazzband/djangorestframework-simplejwt/pull/604
+
 ## Version 5.2.0
 
 * Remove the JWTTokenUserAuthentication from the Experimental Features #546 by @byrpatrick in https://github.com/jazzband/djangorestframework-simplejwt/pull/547
