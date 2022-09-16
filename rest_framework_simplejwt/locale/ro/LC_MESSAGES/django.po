@@ -1,0 +1,113 @@
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR Daniel Cuznetov <danielcuznetov04@gmail.com>, 2022.
+msgid ""
+msgstr ""
+"Project-Id-Version: djangorestframework_simplejwt\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-07-13 10:45+0100\n"
+"Last-Translator: Daniel Cuznetov <danielcuznetov04@gmail.com>\n"
+"Language: ro\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: authentication.py:78
+msgid "Authorization header must contain two space-delimited values"
+msgstr "Header-ul(antetul) de autorizare trebuie să conțină două valori separate prin spațiu"
+
+#: authentication.py:104
+msgid "Given token not valid for any token type"
+msgstr "Tokenul dat nu este valid pentru niciun tip de token"
+
+#: authentication.py:116 authentication.py:143
+msgid "Token contained no recognizable user identification"
+msgstr "Tokenul nu conține date de identificare a utilizatorului"
+
+#: authentication.py:121
+msgid "User not found"
+msgstr "Utilizatorul nu a fost găsit"
+
+#: authentication.py:124
+msgid "User is inactive"
+msgstr "Utilizatorul este inactiv"
+
+#: backends.py:67
+msgid "Unrecognized algorithm type '{}'"
+msgstr "Tipul de algoritm '{}' nu este recunoscut"
+
+#: backends.py:73
+msgid "You must have cryptography installed to use {}."
+msgstr "Trebuie să aveți instalată criptografia pentru a utiliza {}."
+
+#: backends.py:88
+msgid ""
+"Unrecognized type '{}', 'leeway' must be of type int, float or timedelta."
+msgstr ""
+"Tipul '{}' nu este recunoscut, 'leeway' trebuie să fie de tip int, float sau timedelta."
+
+#: backends.py:147
+msgid "Invalid algorithm specified"
+msgstr "Algoritm nevalid specificat"
+
+#: backends.py:149 exceptions.py:38 tokens.py:44
+msgid "Token is invalid or expired"
+msgstr "Token nu este valid sau a expirat"
+
+#: serializers.py:30
+msgid "No active account found with the given credentials"
+msgstr "Nu a fost găsit cont activ cu aceste date de autentificare"
+
+#: settings.py:70
+msgid ""
+"The '{}' setting has been removed. Please refer to '{}' for available "
+"settings."
+msgstr "Setarea '{}' a fost ștearsă. Referați la '{}' pentru setări disponibile."
+
+#: token_blacklist/admin.py:68
+msgid "jti"
+msgstr "jti"
+
+#: token_blacklist/admin.py:74
+msgid "user"
+msgstr "utilizator"
+
+#: token_blacklist/admin.py:80
+msgid "created at"
+msgstr "creat la"
+
+#: token_blacklist/admin.py:86
+msgid "expires at"
+msgstr "expiră la"
+
+#: token_blacklist/apps.py:7
+msgid "Token Blacklist"
+msgstr "Listă de token-uri blocate"
+
+#: tokens.py:30
+msgid "Cannot create token with no type or lifetime"
+msgstr "Nu se poate crea token fără tip sau durată de viață"
+
+#: tokens.py:102
+msgid "Token has no id"
+msgstr "Tokenul nu are id"
+
+#: tokens.py:115
+msgid "Token has no type"
+msgstr "Tokenul nu are tip"
+
+#: tokens.py:118
+msgid "Token has wrong type"
+msgstr "Tokenul are tipul greșit"
+
+#: tokens.py:170
+msgid "Token has no '{}' claim"
+msgstr "Tokenul nu are reclamația '{}'"
+
+#: tokens.py:175
+msgid "Token '{}' claim has expired"
+msgstr "Reclamația tokenului '{}' a expirat"
+
+#: tokens.py:230
+msgid "Token is blacklisted"
+msgstr "Tokenul este în listă de tokenuri blocate"
