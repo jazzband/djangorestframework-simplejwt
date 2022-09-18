@@ -30,13 +30,13 @@ Cryptographic Dependencies (Optional)
 If you are planning on encoding or decoding tokens using certain digital
 signature algorithms (i.e. RSA and ECDSA; visit PyJWT for other algorithms), you will need to install the
 cryptography_ library. This can be installed explicitly, or as a required
-extra in the ``djangorestframework-simplejwt`` requirement:
+extra in the ``pyjwt`` requirement:
 
 .. code-block:: console
 
-  pip install djangorestframework-simplejwt[crypto]
+  pip install pyjwt[crypto]
 
-The ``djangorestframework-simplejwt[crypto]`` format is recommended in requirements
+The ``pyjwt[crypto]`` format is recommended in requirements
 files in projects using ``Simple JWT``, as a separate ``cryptography`` requirement
 line may later be mistaken for an unused requirement and removed.
 
