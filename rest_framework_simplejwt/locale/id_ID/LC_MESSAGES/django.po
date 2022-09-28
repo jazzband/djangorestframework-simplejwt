@@ -45,13 +45,13 @@ msgid ""
 "Unrecognized type '{}', 'leeway' must be of type int, float or timedelta."
 msgstr ""
 
-#: backends.py:147
-msgid "Invalid algorithm specified"
-msgstr "Algoritma yang ditentukan tidak valid"
-
-#: backends.py:149 exceptions.py:38 tokens.py:44
+#: backends.py:102 backends.py:152 exceptions.py:38 tokens.py:44
 msgid "Token is invalid or expired"
 msgstr "Token tidak valid atau kedaluwarsa"
+
+#: backends.py:150
+msgid "Invalid algorithm specified"
+msgstr "Algoritma yang ditentukan tidak valid"
 
 #: serializers.py:30
 msgid "No active account found with the given credentials"

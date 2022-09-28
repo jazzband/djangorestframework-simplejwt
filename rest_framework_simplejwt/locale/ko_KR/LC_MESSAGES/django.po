@@ -47,13 +47,13 @@ msgstr ""
 "알 수 없는 타입 '{}', 'leeway' 값은 반드시 int, float 또는 timedelta 타입이어"
 "야 합니다."
 
-#: backends.py:147
-msgid "Invalid algorithm specified"
-msgstr "잘못된 알고리즘이 지정되었습니다"
-
-#: backends.py:149 exceptions.py:38 tokens.py:44
+#: backends.py:102 backends.py:152 exceptions.py:38 tokens.py:44
 msgid "Token is invalid or expired"
 msgstr "유효하지 않거나 만료된 토큰"
+
+#: backends.py:150
+msgid "Invalid algorithm specified"
+msgstr "잘못된 알고리즘이 지정되었습니다"
 
 #: serializers.py:30
 msgid "No active account found with the given credentials"
