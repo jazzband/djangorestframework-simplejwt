@@ -14,7 +14,9 @@ msgstr ""
 
 #: authentication.py:78
 msgid "Authorization header must contain two space-delimited values"
-msgstr "Header-ul(antetul) de autorizare trebuie să conțină două valori separate prin spațiu"
+msgstr ""
+"Header-ul(antetul) de autorizare trebuie să conțină două valori separate "
+"prin spațiu"
 
 #: authentication.py:104
 msgid "Given token not valid for any token type"
@@ -44,15 +46,16 @@ msgstr "Trebuie să aveți instalată criptografia pentru a utiliza {}."
 msgid ""
 "Unrecognized type '{}', 'leeway' must be of type int, float or timedelta."
 msgstr ""
-"Tipul '{}' nu este recunoscut, 'leeway' trebuie să fie de tip int, float sau timedelta."
+"Tipul '{}' nu este recunoscut, 'leeway' trebuie să fie de tip int, float sau "
+"timedelta."
 
-#: backends.py:147
-msgid "Invalid algorithm specified"
-msgstr "Algoritm nevalid specificat"
-
-#: backends.py:149 exceptions.py:38 tokens.py:44
+#: backends.py:102 backends.py:152 exceptions.py:38 tokens.py:44
 msgid "Token is invalid or expired"
 msgstr "Token nu este valid sau a expirat"
+
+#: backends.py:150
+msgid "Invalid algorithm specified"
+msgstr "Algoritm nevalid specificat"
 
 #: serializers.py:30
 msgid "No active account found with the given credentials"
@@ -62,7 +65,8 @@ msgstr "Nu a fost găsit cont activ cu aceste date de autentificare"
 msgid ""
 "The '{}' setting has been removed. Please refer to '{}' for available "
 "settings."
-msgstr "Setarea '{}' a fost ștearsă. Referați la '{}' pentru setări disponibile."
+msgstr ""
+"Setarea '{}' a fost ștearsă. Referați la '{}' pentru setări disponibile."
 
 #: token_blacklist/admin.py:68
 msgid "jti"
