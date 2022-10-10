@@ -89,7 +89,7 @@ class JWTAuthentication(authentication.BaseAuthentication):
         messages = []
         for AuthToken in api_settings.AUTH_TOKEN_CLASSES:
             try:
-                return AuthToken(raw_token, api_settings.VERIFYING_KEY is not None)
+                return AuthToken(raw_token)
             except TokenError as e:
                 messages.append(
                     {
