@@ -1,5 +1,12 @@
 ## Unreleased
 
+## Version 5.2.2
+
+Major security release
+
+* Revert #605 in https://github.com/jazzband/djangorestframework-simplejwt/pull/629
+* Fix typo in blacklist_app.rst by @cbscsm in https://github.com/jazzband/djangorestframework-simplejwt/pull/593
+
 ## Version 5.2.1
 
 * Add Swedish translations by @PasinduPrabhashitha in https://github.com/jazzband/djangorestframework-simplejwt/pull/579
