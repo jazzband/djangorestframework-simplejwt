@@ -1,6 +1,6 @@
 ## Unreleased
 
-* Added support for Python 3.11 by @joshuadavidthomas in TODO.
+* Added support for Python 3.11 by @joshuadavidthomas in https://github.com/jazzband/djangorestframework-simplejwt/pull/636.
 
 ## Version 5.2.2
 
