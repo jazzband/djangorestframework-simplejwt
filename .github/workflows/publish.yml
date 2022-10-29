@@ -13,7 +13,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v1
         with:
-          python-version: 3.6
+          python-version: 3.7
       - name: Install Flit
         run: pip install flit
       - name: Install Dependencies
@@ -23,3 +23,5 @@ jobs:
           FLIT_USERNAME: ${{ secrets.FLIT_USERNAME }}
           FLIT_PASSWORD: ${{ secrets.FLIT_PASSWORD }}
         run: flit publish
+      - name: Deploy Documentation
+        run: make doc-deploy

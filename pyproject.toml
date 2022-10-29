@@ -9,7 +9,6 @@ name = "ninja_jwt"
 [project]
 name = "django-ninja-jwt"
 authors = [
-   {name = "David Sanders", email = "davesque@gmail.com"},
    {name = "Ezeudoh Tochukwu", email = "tochukwu.ezeudoh@gmail.com"},
 ]
 dynamic = ["version", "description"]
@@ -34,6 +33,7 @@ classifiers = [
     "Programming Language :: Python :: 3.7",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3 :: Only",
     "Framework :: Django",
     "Framework :: Django :: 2.1",
@@ -41,6 +41,8 @@ classifiers = [
     "Framework :: Django :: 3.0",
     "Framework :: Django :: 3.1",
     "Framework :: Django :: 3.2",
+    "Framework :: Django :: 4.0",
+    "Framework :: Django :: 4.1",
     "Framework :: AsyncIO",
     "Topic :: Internet :: WWW/HTTP :: HTTP Servers",
     "Topic :: Internet :: WWW/HTTP",
@@ -69,8 +71,14 @@ test = [
     "isort==5.10.1",
     "flake8==4.0.1",
     "django-stubs",
-    "python-jose==3.0.0",
+    "python-jose==3.3.0",
     "click==8.0.4"
 ]
-doc = []
+doc = [
+"mkdocs",
+"mkdocs-material",
+"markdown-include",
+"mdx-include >=1.4.1,<2.0.0",
+"mkdocs-markdownextradata-plugin >=0.1.7,<0.3.0",
+]
 
