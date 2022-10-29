@@ -9,7 +9,6 @@ name = "ninja_jwt"
 [project]
 name = "django-ninja-jwt"
 authors = [
-   {name = "David Sanders", email = "davesque@gmail.com"},
    {name = "Ezeudoh Tochukwu", email = "tochukwu.ezeudoh@gmail.com"},
 ]
 dynamic = ["version", "description"]
