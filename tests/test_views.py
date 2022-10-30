@@ -490,6 +490,5 @@ class TestTokenBlacklistView(APIViewTestCase):
         )
         # make sure other tests are not affected
         del self.view_name
-
         assert res.status_code == 401
         assert res.data["code"] == "token_not_valid"
