@@ -81,10 +81,11 @@ crypto = [
 ]
 
 doc = [
-"mkdocs",
+"mkdocs >=1.1.2,<2.0.0",
 "mkdocs-material",
 "markdown-include",
 "mdx-include >=1.4.1,<2.0.0",
 "mkdocs-markdownextradata-plugin >=0.1.7,<0.3.0",
+"mkdocstrings"
 ]
 
