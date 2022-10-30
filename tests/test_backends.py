@@ -42,13 +42,7 @@ class UUIDJSONEncoder(JSONEncoder):
 
 
 class TestTokenBackend:
-    backends = (
-        TokenBackend("HS256", SECRET),
-        TokenBackend("RS256", PRIVATE_KEY, PUBLIC_KEY),
-        TokenBackend("ES256", ES256_PRIVATE_KEY, ES256_PUBLIC_KEY),
-        TokenBackend("ES384", ES256_PRIVATE_KEY, ES256_PUBLIC_KEY),
-        TokenBackend("ES512", ES256_PRIVATE_KEY, ES256_PUBLIC_KEY),
-    )
+    backends = ()
 
     @pytest.fixture(autouse=True)
     def setUp(self):
@@ -59,6 +53,13 @@ class TestTokenBackend:
             "RS256", PRIVATE_KEY, PUBLIC_KEY, AUDIENCE, ISSUER
         )
         self.payload = {"foo": "bar"}
+        self.backends = (
+            self.hmac_token_backend,
+            self.rsa_token_backend,
+            TokenBackend("ES256", ES256_PRIVATE_KEY, ES256_PUBLIC_KEY),
+            TokenBackend("ES384", ES256_PRIVATE_KEY, ES256_PUBLIC_KEY),
+            TokenBackend("ES512", ES256_PRIVATE_KEY, ES256_PUBLIC_KEY),
+        )
 
     def test_init(self):
         # Should reject unknown algorithms
@@ -252,18 +253,6 @@ class TestTokenBackend:
 
         assert backend.decode(token) == payload
 
-    def test_decode_rsa_with_no_expiry(self):
-        no_exp_token = jwt.encode(self.payload, PRIVATE_KEY, algorithm="RS256")
-
-        self.rsa_token_backend.decode(no_exp_token)
-
-    def test_decode_rsa_with_no_expiry_no_verify(self):
-        no_exp_token = jwt.encode(self.payload, PRIVATE_KEY, algorithm="RS256")
-
-        assert (
-            self.hmac_token_backend.decode(no_exp_token, verify=False) == self.payload
-        )
-
     def test_decode_aud_iss_success(self):
         self.payload["exp"] = aware_utcnow() + timedelta(days=1)
         self.payload["foo"] = "baz"
@@ -312,6 +301,39 @@ class TestTokenBackend:
             )
 
             assert jwk_token_backend.decode(token) == self.payload
+
+    @pytest.mark.skipif(
+        not JWK_CLIENT_AVAILABLE,
+        reason="PyJWT 1.7.1 doesn't have JWK client",
+    )
+    def test_decode_jwk_missing_key_raises_tokenbackenderror(self):
+        self.payload["exp"] = aware_utcnow() + timedelta(days=1)
+        self.payload["foo"] = "baz"
+        self.payload["aud"] = AUDIENCE
+        self.payload["iss"] = ISSUER
+
+        token = jwt.encode(
+            self.payload,
+            PRIVATE_KEY_2,
+            algorithm="RS256",
+            headers={"kid": "230498151c214b788dd97f22b85410a5"},
+        )
+
+        with patch("ninja_jwt.backends.PyJWKClient") as mock_jwk_module:
+            mock_jwk_client = mock.MagicMock()
+
+            mock_jwk_module.return_value = mock_jwk_client
+            mock_jwk_client.get_signing_key_from_jwt.side_effect = jwt.PyJWKClientError(
+                "Unable to find a signing key that matches"
+            )
+
+            # Note the PRIV,PUB care is intentially the original pairing
+            jwk_token_backend = TokenBackend(
+                "RS256", PRIVATE_KEY, PUBLIC_KEY, AUDIENCE, ISSUER, JWK_URL
+            )
+
+            with pytest.raises(TokenBackendError, match="Token is invalid or expired"):
+                jwk_token_backend.decode(token)
 
     def test_decode_when_algorithm_not_available(self):
         token = jwt.encode(self.payload, PRIVATE_KEY, algorithm="RS256")

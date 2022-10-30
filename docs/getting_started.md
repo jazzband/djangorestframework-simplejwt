@@ -97,3 +97,19 @@ curl \
 ...
 {"access":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX3BrIjoxLCJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiY29sZF9zdHVmZiI6IuKYgyIsImV4cCI6MTIzNTY3LCJqdGkiOiJjNzE4ZTVkNjgzZWQ0NTQyYTU0NWJkM2VmMGI0ZGQ0ZSJ9.ekxRxgb9OKmHkfy-zs1Ro_xs1eMLXiR17dIDBVxeT-w"}
 ```
+
+Cryptographic Dependencies (Optional)
+-------------------------------------
+
+If you are planning on encoding or decoding tokens using certain digital
+signature algorithms (i.e. RSA and ECDSA; visit PyJWT for other algorithms), you will need to install the
+cryptography_ library. This can be installed explicitly, or as a required
+extra in the `django-ninja-jwt` requirement:
+
+    pip install django-ninja-jwt[crypto]
+
+
+The `django-ninja-jwt[crypto]` format is recommended in requirements
+files in projects using `Ninja JWT`, as a separate `cryptography` requirement
+line may later be mistaken for an unused requirement and removed.
+[cryptography](https://cryptography.io)

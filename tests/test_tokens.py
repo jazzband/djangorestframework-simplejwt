@@ -218,6 +218,18 @@ class TestToken:
         assert "jti" in token
         assert old_jti != token["jti"]
 
+    def test_optional_jti(self, monkeypatch):
+        with monkeypatch.context() as m:
+            m.setattr(api_settings, "JTI_CLAIM", None)
+            token = MyToken()
+        assert "jti" not in token
+
+    def test_optional_type_token(self, monkeypatch):
+        with monkeypatch.context() as m:
+            m.setattr(api_settings, "TOKEN_TYPE_CLAIM", None)
+            token = MyToken()
+        assert "type" not in token
+
     def test_set_exp(self):
         now = make_utc(datetime(year=2000, month=1, day=1))
 
@@ -332,20 +344,6 @@ class TestToken:
             token.check_exp(
                 "refresh_exp", current_time=current_time + timedelta(days=2)
             )
-
-    def test_check_token_not_expired_if_in_leeway(self):
-        token = MyToken()
-        token.set_exp("refresh_exp", lifetime=timedelta(days=1))
-
-        datetime_in_leeway = token.current_time + timedelta(days=1)
-
-        with pytest.raises(TokenError):
-            token.check_exp("refresh_exp", current_time=datetime_in_leeway)
-
-        # a token 1 day expired is valid if leeway is 2 days
-        token.token_backend.leeway = timedelta(days=2).total_seconds()
-        token.check_exp("refresh_exp", current_time=datetime_in_leeway)
-        token.token_backend.leeway = 0
 
     @pytest.mark.django_db
     def test_for_user(self, monkeypatch):

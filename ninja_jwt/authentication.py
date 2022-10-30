@@ -75,10 +75,10 @@ class JWTAuth(JWTBaseAuthentication, HttpBearer):
         return self.jwt_authenticate(request, token)
 
 
-class JWTTokenUserAuth(JWTBaseAuthentication, HttpBearer):
+class JWTStatelessUserAuthentication(JWTBaseAuthentication, HttpBearer):
     """
-    Experimental features
-    JWTTokenUserAuth backend
+    An authentication plugin that authenticates requests through a JSON web
+    token provided in a request header without performing a database lookup to obtain a user instance.
     """
 
     def authenticate(self, request: HttpRequest, token: str) -> Any:
@@ -95,6 +95,9 @@ class JWTTokenUserAuth(JWTBaseAuthentication, HttpBearer):
             raise InvalidToken(_("Token contained no recognizable user identification"))
 
         return api_settings.TOKEN_USER_CLASS(validated_token)
+
+
+JWTTokenUserAuth = JWTStatelessUserAuthentication
 
 
 def default_user_authentication_rule(user) -> bool:

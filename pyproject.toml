@@ -63,6 +63,7 @@ Source = "https://github.com/eadwinCode/django-ninja-jwt"
 
 [project.optional-dependencies]
 test = [
+    "cryptography",
     "pytest",
     "pytest-cov",
     "pytest-django",
@@ -74,6 +75,11 @@ test = [
     "python-jose==3.3.0",
     "click==8.0.4"
 ]
+
+crypto = [
+    "cryptography>=3.3.1",
+]
+
 doc = [
 "mkdocs",
 "mkdocs-material",

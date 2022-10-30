@@ -14,8 +14,7 @@ msgstr ""
 
 #: authentication.py:78
 msgid "Authorization header must contain two space-delimited values"
-msgstr ""
-"Auktoriseringshuvudet måste innehålla två mellanslagsavgränsade värden"
+msgstr "Auktoriseringshuvudet måste innehålla två mellanslagsavgränsade värden"
 
 #: authentication.py:104
 msgid "Given token not valid for any token type"
@@ -46,13 +45,13 @@ msgid ""
 "Unrecognized type '{}', 'leeway' must be of type int, float or timedelta."
 msgstr ""
 
-#: backends.py:147
-msgid "Invalid algorithm specified"
-msgstr "Ogiltig algoritm har angetts"
-
-#: backends.py:149 exceptions.py:38 tokens.py:44
+#: backends.py:102 backends.py:152 exceptions.py:38 tokens.py:44
 msgid "Token is invalid or expired"
 msgstr "Token är ogiltig eller har löpt ut"
+
+#: backends.py:150
+msgid "Invalid algorithm specified"
+msgstr "Ogiltig algoritm har angetts"
 
 #: serializers.py:30
 msgid "No active account found with the given credentials"
@@ -63,8 +62,7 @@ msgid ""
 "The '{}' setting has been removed. Please refer to '{}' for available "
 "settings."
 msgstr ""
-"Inställningen '{}' har tagits bort. Se '{}' för tillgängliga "
-"inställningar"
+"Inställningen '{}' har tagits bort. Se '{}' för tillgängliga inställningar"
 
 #: token_blacklist/admin.py:68
 msgid "jti"
