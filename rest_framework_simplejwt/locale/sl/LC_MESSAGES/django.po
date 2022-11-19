@@ -1,5 +1,5 @@
 # This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <prevcurban@gmail.com>, 2020.
+# FIRST AUTHOR <prevcurban@gmail.com>, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: djangorestframework_simplejwt\n"
