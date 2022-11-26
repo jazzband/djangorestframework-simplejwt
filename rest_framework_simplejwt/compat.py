@@ -1,10 +1,5 @@
 import warnings
 
-try:
-    from django.urls import reverse, reverse_lazy
-except ImportError:
-    from django.core.urlresolvers import reverse, reverse_lazy  # NOQA
-
 
 class RemovedInDjango20Warning(DeprecationWarning):
     pass
@@ -32,17 +27,11 @@ class CallableBool:  # pragma: no cover
         )
         return self.value
 
-    def __nonzero__(self):  # Python 2 compatibility
-        return self.value
-
     def __repr__(self):
         return "CallableBool(%r)" % self.value
 
     def __eq__(self, other):
         return self.value == other
-
-    def __ne__(self, other):
-        return self.value != other
 
     def __or__(self, other):
         return bool(self.value or other)
