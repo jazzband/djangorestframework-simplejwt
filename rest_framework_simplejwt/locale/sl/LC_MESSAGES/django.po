@@ -1,0 +1,117 @@
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <prevcurban@gmail.com>, 2022.
+msgid ""
+msgstr ""
+"Project-Id-Version: djangorestframework_simplejwt\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-11-19 20:46+0100\n"
+"PO-Revision-Date: \n"
+"Last-Translator: Urban Prevc <prevcurban@gmail.com>\n"
+"Language-Team: \n"
+"Language: sl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.0.6\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: authentication.py:78
+msgid "Authorization header must contain two space-delimited values"
+msgstr "Glava 'Authorization' mora vsebovati dve vrednosti, ločeni s presledkom"
+
+#: authentication.py:104
+msgid "Given token not valid for any token type"
+msgstr "Podan žeton ni veljaven za nobeno vrsto žetona"
+
+#: authentication.py:116 authentication.py:143
+msgid "Token contained no recognizable user identification"
+msgstr "Žeton ni vseboval prepoznavne identifikacije uporabnika"
+
+#: authentication.py:121
+msgid "User not found"
+msgstr "Uporabnik ni najden"
+
+#: authentication.py:124
+msgid "User is inactive"
+msgstr "Uporabnik je neaktiven"
+
+#: backends.py:67
+msgid "Unrecognized algorithm type '{}'"
+msgstr "Neprepoznana vrsta algoritma'{}'"
+
+#: backends.py:73
+msgid "You must have cryptography installed to use {}."
+msgstr "Za uporabo '{}' je potrebna namestitev 'cryptography'."
+
+#: backends.py:88
+msgid ""
+"Unrecognized type '{}', 'leeway' must be of type int, float or timedelta."
+msgstr ""
+"Neprepoznana vrsta '{}', 'leeway' mora biti vrste int, float ali timedelta."
+
+#: backends.py:102 backends.py:152 exceptions.py:38 tokens.py:44
+msgid "Token is invalid or expired"
+msgstr "Žeton je neveljaven ali potekel"
+
+#: backends.py:150
+msgid "Invalid algorithm specified"
+msgstr "Naveden algoritem je neveljaven"
+
+#: serializers.py:30
+msgid "No active account found with the given credentials"
+msgstr "Aktiven račun s podanimi poverilnicami ni najden"
+
+#: settings.py:70
+msgid ""
+"The '{}' setting has been removed. Please refer to '{}' for available "
+"settings."
+msgstr ""
+"Nastavitev '{}' je bila odstranjena. Prosimo, oglejte si '{}' za razpoložljive nastavitve."
+
+#: token_blacklist/admin.py:68
+msgid "jti"
+msgstr "jti"
+
+#: token_blacklist/admin.py:74
+msgid "user"
+msgstr "uporabnik"
+
+#: token_blacklist/admin.py:80
+msgid "created at"
+msgstr "ustvarjen ob"
+
+#: token_blacklist/admin.py:86
+msgid "expires at"
+msgstr "poteče ob"
+
+#: token_blacklist/apps.py:7
+msgid "Token Blacklist"
+msgstr "Črni seznam žetonov"
+
+#: tokens.py:30
+msgid "Cannot create token with no type or lifetime"
+msgstr "Ni mogoče ustvariti žetona brez vrste ali življenjske dobe"
+
+#: tokens.py:102
+msgid "Token has no id"
+msgstr "Žetonu manjka id"
+
+#: tokens.py:115
+msgid "Token has no type"
+msgstr "Žetonu manjka vrsta"
+
+#: tokens.py:118
+msgid "Token has wrong type"
+msgstr "Žeton je napačne vrste"
+
+#: tokens.py:170
+msgid "Token has no '{}' claim"
+msgstr "Žeton nima '{}' zahtevka"
+
+#: tokens.py:175
+msgid "Token '{}' claim has expired"
+msgstr "'{}' zahtevek žetona je potekel"
+
+#: tokens.py:230
+msgid "Token is blacklisted"
+msgstr "Žeton je na črnem seznamu"
