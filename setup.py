@@ -18,8 +18,8 @@ extras_require = {
         "isort",
     ],
     "doc": [
-        "Sphinx>=1.6.5,<2",
-        "sphinx_rtd_theme>=0.1.9",
+        "Sphinx>=4.2.0",
+        "sphinx_rtd_theme>=1.0.0",
     ],
     "dev": [
         "pytest-watch",
