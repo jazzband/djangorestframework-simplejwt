@@ -17,6 +17,7 @@ export async function defineConfig(env) {
   return {
     referenceLanguage: "en",
     languages: [
+      "en",
       "cs",
       "de",
       "es",
