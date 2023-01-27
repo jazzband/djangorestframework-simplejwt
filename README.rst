@@ -29,5 +29,6 @@ For full documentation, visit `django-rest-framework-simplejwt.readthedocs.io
 
 
 Translations
----------
+------------
+
 Contribute translations via inlang https://inlang.com/editor/github.com/jazzband/djangorestframework-simplejwt
