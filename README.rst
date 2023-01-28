@@ -26,3 +26,9 @@ Framework <http://www.django-rest-framework.org/>`__.
 
 For full documentation, visit `django-rest-framework-simplejwt.readthedocs.io
 <https://django-rest-framework-simplejwt.readthedocs.io/en/latest/>`__.
+
+
+Translations
+------------
+
+Contribute translations directly with PRs or via inlang https://inlang.com/editor/github.com/jazzband/djangorestframework-simplejwt
