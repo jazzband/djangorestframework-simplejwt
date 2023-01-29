@@ -16,7 +16,6 @@ AUTH_HEADER_TYPE_BYTES = {h.encode(HTTP_HEADER_ENCODING) for h in AUTH_HEADER_TY
 class DbRead():
     def databases(self, request):
         CompanyCode = request.GET.get('code','')
-        print("CompanyCode",CompanyCode)
         with open('clientDetails.json', 'r') as j:
             contents = json.loads(j.read())
             if CompanyCode in contents:
