@@ -12,7 +12,19 @@ if not isinstance(api_settings.AUTH_HEADER_TYPES, (list, tuple)):
 
 AUTH_HEADER_TYPE_BYTES = {h.encode(HTTP_HEADER_ENCODING) for h in AUTH_HEADER_TYPES}
 
-
+class DbRead():
+    def databases(self, request):
+        CompanyCode = request.GET.get('code','')
+        print("CompanyCode",CompanyCode)
+        with open('clientDetails.json', 'r') as j:
+            contents = json.loads(j.read())
+            if CompanyCode in contents:
+                value = contents[CompanyCode]
+                # print('Value',value)
+                return value
+            else:
+                raise AuthenticationFailed('Invalid company code, try again')
+                
 class JWTAuthentication(authentication.BaseAuthentication):
     """
     An authentication plugin that authenticates requests through a JSON web
@@ -36,8 +48,10 @@ class JWTAuthentication(authentication.BaseAuthentication):
             return None
 
         validated_token = self.get_validated_token(raw_token)
-
-        return self.get_user(validated_token), validated_token
+        
+        DbName = DbRead()
+        db = DbName.databases(request)
+        return self.get_user(validated_token,db), validated_token
 
     def authenticate_header(self, request):
         return '{} realm="{}"'.format(
@@ -106,7 +120,7 @@ class JWTAuthentication(authentication.BaseAuthentication):
             }
         )
 
-    def get_user(self, validated_token):
+    def get_user(self, validated_token,db):
         """
         Attempts to find and return a user using the given validated token.
         """
@@ -116,7 +130,7 @@ class JWTAuthentication(authentication.BaseAuthentication):
             raise InvalidToken(_("Token contained no recognizable user identification"))
 
         try:
-            user = self.user_model.objects.get(**{api_settings.USER_ID_FIELD: user_id})
+            user = self.user_model.objects.using(db).get(**{api_settings.USER_ID_FIELD: user_id})
         except self.user_model.DoesNotExist:
             raise AuthenticationFailed(_("User not found"), code="user_not_found")
 
