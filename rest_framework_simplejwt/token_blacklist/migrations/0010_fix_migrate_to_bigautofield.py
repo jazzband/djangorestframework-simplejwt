@@ -8,7 +8,6 @@ parent_dir = Path(__file__).resolve(strict=True).parent
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("token_blacklist", "0008_migrate_to_bigautofield"),
     ]

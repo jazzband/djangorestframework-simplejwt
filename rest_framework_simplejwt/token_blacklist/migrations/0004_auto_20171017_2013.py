@@ -2,7 +2,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("token_blacklist", "0003_auto_20171017_2007"),
     ]

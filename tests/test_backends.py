@@ -162,7 +162,6 @@ class TestTokenBackend(TestCase):
         self.payload["exp"] = aware_utcnow() - timedelta(seconds=1)
         for backend in self.backends:
             with self.subTest("Test decode with expiry for f{backend.algorithm}"):
-
                 expired_token = jwt.encode(
                     self.payload, backend.signing_key, algorithm=backend.algorithm
                 )
@@ -228,7 +227,6 @@ class TestTokenBackend(TestCase):
         self.payload["foo"] = "baz"
         for backend in self.backends:
             with self.subTest("Test decode success for f{backend.algorithm}"):
-
                 token = jwt.encode(
                     self.payload, backend.signing_key, algorithm=backend.algorithm
                 )
