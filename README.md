@@ -12,8 +12,7 @@
 Ninja JWT is JSON Web Token plugin for Django-Ninja. The library is a fork of [Simple JWT](https://github.com/jazzband/djangorestframework-simplejwt) by Jazzband, a popular  JWT plugin for [Django REST Framework](http://www.django-rest-framework.org).
 #### Notice
 This library does not fix any issues from the source SIMPLE JWT. 
-It only added support for Django-Ninja and removes DRF dependencies. 
-Subsequent updates from SIMPLE JWT will reflect here.
+It only added support for Django-Ninja and removes DRF dependencies but time after time, subsequent updates from SIMPLE JWT will reflect here.
 
 For full documentation, [visit](https://eadwincode.github.io/django-ninja-jwt/).
 
