@@ -107,5 +107,5 @@ class TokenUser:
     def __getattr__(self, attr):
         """This acts as a backup attribute getter for custom claims defined in Token serializers."""
         if attr in self.token:
-            return self.token.get(attr)
+            return self.token[attr]
         raise AttributeError(f"'TokenUser' does not have an attribute {attr}")
