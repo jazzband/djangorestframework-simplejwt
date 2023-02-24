@@ -2,7 +2,6 @@ from django.contrib.auth import models as auth_models
 from django.db.models.manager import EmptyManager
 from django.utils.functional import cached_property
 
-from .compat import CallableFalse, CallableTrue
 from .settings import api_settings
 
 
@@ -95,11 +94,11 @@ class TokenUser:
 
     @property
     def is_anonymous(self):
-        return CallableFalse
+        return False
 
     @property
     def is_authenticated(self):
-        return CallableTrue
+        return True
 
     def get_username(self):
         return self.username
