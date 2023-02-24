@@ -6,7 +6,6 @@ from django.urls import reverse
 from rest_framework_simplejwt.settings import api_settings
 from rest_framework_simplejwt.tokens import AccessToken
 
-
 from .utils import APIViewTestCase, override_api_settings
 
 User = get_user_model()
