@@ -38,7 +38,6 @@ build-docs:
 		tests/* \
 		rest_framework_simplejwt/token_blacklist/* \
 		rest_framework_simplejwt/backends.py \
-		rest_framework_simplejwt/compat.py \
 		rest_framework_simplejwt/exceptions.py \
 		rest_framework_simplejwt/settings.py \
 		rest_framework_simplejwt/state.py
