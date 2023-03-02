@@ -5,8 +5,13 @@ from django.utils.translation import gettext_lazy as _
 from rest_framework import exceptions, serializers
 from rest_framework.exceptions import ValidationError
 
+from .authentication import JWTAuthentication
 from .settings import api_settings
 from .tokens import RefreshToken, SlidingToken, UntypedToken
+from .utils import datetime_from_epoch
+
+if api_settings.ROTATE_REFRESH_TOKENS:
+    from .token_blacklist.models import OutstandingToken
 
 if api_settings.BLACKLIST_AFTER_ROTATION:
     from .token_blacklist.models import BlacklistedToken
@@ -117,6 +122,17 @@ class TokenRefreshSerializer(serializers.Serializer):
             refresh.set_jti()
             refresh.set_exp()
             refresh.set_iat()
+
+            # Create OutstandingToken when rotate refresh token
+            auth = JWTAuthentication()
+            user = auth.get_user(validated_token=refresh)
+            OutstandingToken.objects.create(
+                user=user,
+                jti=refresh[api_settings.JTI_CLAIM],
+                token=str(refresh),
+                created_at=refresh.current_time,
+                expires_at=datetime_from_epoch(refresh["exp"]),
+            )
 
             data["refresh"] = str(refresh)
 
