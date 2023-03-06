@@ -27,10 +27,10 @@ class Token:
     new JWT.
     """
 
-    token_type: Optional[str] = None
-    lifetime: Optional[timedelta] = None
+    token_type: str | None = None
+    lifetime: timedelta | None = None
 
-    def __init__(self, token: Optional[Token] = None, verify: bool = True) -> None:
+    def __init__(self, token: Token | None = None, verify: bool = True) -> None:
         """
         !!!! IMPORTANT !!!! MUST raise a TokenError with a user-facing error
         message if the given token is invalid, expired, or otherwise not safe
@@ -138,7 +138,12 @@ class Token:
         """
         self.payload[api_settings.JTI_CLAIM] = uuid4().hex
 
-    def set_exp(self, claim: str = "exp", from_time: Optional[datetime] = None, lifetime: Optional[timedelta] = None) -> None:
+    def set_exp(
+        self,
+        claim: str = "exp",
+        from_time: datetime | None = None,
+        lifetime: timedelta | None = None,
+    ) -> None:
         """
         Updates the expiration time of a token.
 
@@ -153,7 +158,7 @@ class Token:
 
         self.payload[claim] = datetime_to_epoch(from_time + lifetime)
 
-    def set_iat(self, claim: str = "iat", at_time: Optional[datetime] = None) -> None:
+    def set_iat(self, claim: str = "iat", at_time: datetime | None = None) -> None:
         """
         Updates the time at which the token was issued.
 
@@ -165,7 +170,9 @@ class Token:
 
         self.payload[claim] = datetime_to_epoch(at_time)
 
-    def check_exp(self, claim: str = "exp", current_time: Optional[datetime] = None) -> None:
+    def check_exp(
+        self, claim: str = "exp", current_time: datetime | None = None
+    ) -> None:
         """
         Checks whether a timestamp value in the given claim has passed (since
         the given datetime value in `current_time`).  Raises a TokenError with
@@ -199,7 +206,7 @@ class Token:
 
         return token
 
-    _token_backend: Optional[TokenBackend] = None
+    _token_backend: TokenBackend | None = None
 
     @property
     def token_backend(self) -> TokenBackend:
@@ -303,7 +310,7 @@ class AccessToken(Token):
 class RefreshToken(BlacklistMixin, Token):
     token_type = "refresh"
     lifetime = api_settings.REFRESH_TOKEN_LIFETIME
-    no_copy_claims: Tuple[Any, str, Any, str] = (
+    no_copy_claims: tuple[Any, str, Any, str] = (
         api_settings.TOKEN_TYPE_CLAIM,
         "exp",
         # Both of these claims are included even though they may be the same.
@@ -313,7 +320,7 @@ class RefreshToken(BlacklistMixin, Token):
         api_settings.JTI_CLAIM,
         "jti",
     )
-    access_token_class: Type[AccessToken] = AccessToken
+    access_token_class: type[AccessToken] = AccessToken
 
     @property
     def access_token(self) -> AccessToken:

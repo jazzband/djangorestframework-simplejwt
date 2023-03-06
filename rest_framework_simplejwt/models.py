@@ -36,11 +36,11 @@ class TokenUser:
         return f"TokenUser {self.id}"
 
     @cached_property
-    def id(self) -> Union[int, str]:
+    def id(self) -> int | str:
         return self.token[api_settings.USER_ID_CLAIM]
 
     @cached_property
-    def pk(self) -> Union[int, str]:
+    def pk(self) -> int | str:
         return self.id
 
     @cached_property
@@ -86,16 +86,16 @@ class TokenUser:
     def user_permissions(self) -> auth_models.Permission:
         return self._user_permissions
 
-    def get_group_permissions(self, obj: Optional[TokenUser] = None) -> set:
+    def get_group_permissions(self, obj: TokenUser | None = None) -> set:
         return set()
 
-    def get_all_permissions(self, obj: Optional[TokenUser] = None) -> set:
+    def get_all_permissions(self, obj: TokenUser | None = None) -> set:
         return set()
 
-    def has_perm(self, perm: str, obj: Optional[TokenUser] = None) -> bool:
+    def has_perm(self, perm: str, obj: TokenUser | None = None) -> bool:
         return False
 
-    def has_perms(self, perm_list: List[str], obj: Optional[TokenUser] = None) -> bool:
+    def has_perms(self, perm_list: list[str], obj: TokenUser | None = None) -> bool:
         return False
 
     def has_module_perms(self, module: str) -> bool:

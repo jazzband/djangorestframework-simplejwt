@@ -7,8 +7,9 @@ from unittest.mock import patch
 import jwt
 import pytest
 from django.test import TestCase
-from jwt import PyJWS, algorithms
+from jwt import PyJWS
 from jwt import __version__ as jwt_version
+from jwt import algorithms
 
 from rest_framework_simplejwt.backends import JWK_CLIENT_AVAILABLE, TokenBackend
 from rest_framework_simplejwt.exceptions import TokenBackendError

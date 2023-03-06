@@ -138,7 +138,9 @@ class TokenBackend:
         try:
             return jwt.decode(
                 token,
-                self.get_verifying_key(token),  # TODO: we can't be sure there is a signing_key?
+                self.get_verifying_key(
+                    token
+                ),  # TODO: we can't be sure there is a signing_key?
                 algorithms=[self.algorithm],
                 audience=self.audience,
                 issuer=self.issuer,

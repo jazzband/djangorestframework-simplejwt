@@ -16,7 +16,9 @@ AUTH_HEADER_TYPES: Union[Tuple[str], List[str], str] = api_settings.AUTH_HEADER_
 if not isinstance(api_settings.AUTH_HEADER_TYPES, (list, tuple)):
     AUTH_HEADER_TYPES: Union[Tuple[str], List[str]] = (AUTH_HEADER_TYPES,)
 
-AUTH_HEADER_TYPE_BYTES: Set[bytes] = {h.encode(HTTP_HEADER_ENCODING) for h in AUTH_HEADER_TYPES}
+AUTH_HEADER_TYPE_BYTES: Set[bytes] = {
+    h.encode(HTTP_HEADER_ENCODING) for h in AUTH_HEADER_TYPES
+}
 
 AuthUser = Union[AbstractUser, AbstractBaseUser, AnonymousUser, TokenUser]
 

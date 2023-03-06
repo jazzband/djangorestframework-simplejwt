@@ -43,7 +43,9 @@ class OutstandingTokenAdmin(admin.ModelAdmin):
     def has_delete_permission(self, *args, **kwargs) -> bool:
         return False
 
-    def has_change_permission(self, request: Request, obj: Optional[object] = None) -> bool:
+    def has_change_permission(
+        self, request: Request, obj: Optional[object] = None
+    ) -> bool:
         return request.method in ["GET", "HEAD"] and super().has_change_permission(
             request, obj
         )
