@@ -2,7 +2,6 @@ from django.utils.module_loading import import_string
 from rest_framework import generics, status
 from rest_framework.response import Response
 
-from . import serializers
 from .authentication import AUTH_HEADER_TYPES
 from .exceptions import InvalidToken, TokenError
 from .settings import api_settings
