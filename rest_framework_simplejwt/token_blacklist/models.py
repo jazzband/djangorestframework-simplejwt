@@ -1,10 +1,13 @@
+from typing import TYPE_CHECKING, Optional
 from django.conf import settings
 from django.db import models
+from django.contrib.auth.models import AbstractBaseUser
 
 
 class OutstandingToken(models.Model):
     id = models.BigAutoField(primary_key=True, serialize=False)
-    user = models.ForeignKey(
+    # The AUTH_USER_MODEL from the settings will always inherit from AbstractBaseUser
+    user: Optional[AbstractBaseUser] = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True
     )
 
@@ -20,8 +23,9 @@ class OutstandingToken(models.Model):
         #
         # Also see corresponding ticket:
         # https://github.com/encode/django-rest-framework/issues/705
+        # If we are TYPE_CHECKING, we don't want it to be abstract so django-stubs can pick it up
         abstract = (
-            "rest_framework_simplejwt.token_blacklist" not in settings.INSTALLED_APPS
+            "rest_framework_simplejwt.token_blacklist" not in settings.INSTALLED_APPS and not TYPE_CHECKING
         )
         ordering = ("user",)
 
@@ -44,8 +48,9 @@ class BlacklistedToken(models.Model):
         #
         # Also see corresponding ticket:
         # https://github.com/encode/django-rest-framework/issues/705
+        # If we are TYPE_CHECKING, we don't want it to be abstract so django-stubs can pick it up
         abstract = (
-            "rest_framework_simplejwt.token_blacklist" not in settings.INSTALLED_APPS
+            "rest_framework_simplejwt.token_blacklist" not in settings.INSTALLED_APPS and not TYPE_CHECKING
         )
 
     def __str__(self) -> str:
