@@ -7,7 +7,7 @@ from django.contrib.auth.models import AbstractBaseUser
 class OutstandingToken(models.Model):
     id = models.BigAutoField(primary_key=True, serialize=False)
     # The AUTH_USER_MODEL from the settings will always inherit from AbstractBaseUser
-    user: Optional[AbstractBaseUser] = models.ForeignKey(
+    user: Optional[AbstractBaseUser] = models.ForeignKey(  # type: ignore
         settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True
     )
 
