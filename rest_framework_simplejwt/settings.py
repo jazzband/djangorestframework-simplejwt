@@ -2,7 +2,7 @@ from datetime import timedelta
 from typing import Any, Dict
 
 from django.conf import settings
-from django.test.signals import setting_changed
+from django.core.signals import setting_changed
 from django.utils.translation import gettext_lazy as _
 from rest_framework.settings import APISettings as _APISettings
 
@@ -77,17 +77,20 @@ class APISettings(_APISettings):  # pragma: no cover
 
         return user_settings
 
+# type ignored because it expects DRF's settings.
+# See: https://github.com/typeddjango/djangorestframework-stubs/issues/375
+api_settings = APISettings(USER_SETTINGS, DEFAULTS, IMPORT_STRINGS)  # type: ignore
 
-api_settings = APISettings(USER_SETTINGS, DEFAULTS, IMPORT_STRINGS)
 
-
-def reload_api_settings(*args, **kwargs) -> None:  # pragma: no cover
+def reload_api_settings(*args: Any, **kwargs: Any) -> None:  # pragma: no cover
     global api_settings
 
     setting, value = kwargs["setting"], kwargs["value"]
 
     if setting == "SIMPLE_JWT":
-        api_settings = APISettings(value, DEFAULTS, IMPORT_STRINGS)
+        # type ignored because it expects DRF's settings.
+        # See: https://github.com/typeddjango/djangorestframework-stubs/issues/375
+        api_settings = APISettings(value, DEFAULTS, IMPORT_STRINGS)  # type: ignore
 
 
 setting_changed.connect(reload_api_settings)
