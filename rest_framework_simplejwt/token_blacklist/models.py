@@ -1,13 +1,11 @@
 from typing import TYPE_CHECKING, Optional
 from django.conf import settings
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser
 
 
 class OutstandingToken(models.Model):
     id = models.BigAutoField(primary_key=True, serialize=False)
-    # The AUTH_USER_MODEL from the settings will always inherit from AbstractBaseUser
-    user: Optional[AbstractBaseUser] = models.ForeignKey(  # type: ignore
+    user = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True
     )
 
