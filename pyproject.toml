@@ -69,7 +69,7 @@ test = [
     "pytest-django",
     "pytest-asyncio",
     "black==21.12b0",
-    "isort==5.10.1",
+    "isort==5.12.0",
     "flake8==6.0.0",
     "django-stubs",
     "python-jose==3.3.0",
