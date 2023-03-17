@@ -9,8 +9,7 @@ from jwt import InvalidAlgorithmError, InvalidTokenError, algorithms
 
 from .exceptions import TokenBackendError
 from .utils import format_lazy
-
-TokenType = Union[str, bytes]
+from .tokens import TokenType
 
 try:
     from jwt import PyJWKClient, PyJWKClientError

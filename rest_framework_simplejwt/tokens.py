@@ -1,5 +1,6 @@
+from __future__ import annotations
 from datetime import datetime, timedelta
-from typing import TYPE_CHECKING, Any, Dict, Optional, TypeVar
+from typing import TYPE_CHECKING, Any, Dict, Optional, Tuple, TypeVar, Union
 from uuid import uuid4
 
 from django.conf import settings
@@ -8,7 +9,6 @@ from django.utils.module_loading import import_string
 from django.utils.translation import gettext_lazy as _
 
 from .exceptions import TokenBackendError, TokenError
-from .models import TokenUser
 from .settings import api_settings
 from .token_blacklist.models import BlacklistedToken, OutstandingToken
 from .utils import aware_utcnow, datetime_from_epoch, datetime_to_epoch, format_lazy
@@ -16,7 +16,10 @@ from .utils import aware_utcnow, datetime_from_epoch, datetime_to_epoch, format_
 if TYPE_CHECKING:
     from .backends import TokenBackend
 
-AuthUser = TypeVar("AuthUser", AbstractBaseUser, TokenUser)
+TokenType = Union[str, bytes]
+
+
+T = TypeVar("T")
 
 
 class Token:
@@ -28,7 +31,7 @@ class Token:
     token_type: Optional[str] = None
     lifetime: Optional[timedelta] = None
 
-    def __init__(self, token: Optional["Token"] = None, verify: bool = True) -> None:
+    def __init__(self, token: Optional[TokenType] = None, verify: bool = True) -> None:
         """
         !!!! IMPORTANT !!!! MUST raise a TokenError with a user-facing error
         message if the given token is invalid, expired, or otherwise not safe
@@ -67,7 +70,7 @@ class Token:
     def __repr__(self) -> str:
         return repr(self.payload)
 
-    def __getitem__(self, key: str):
+    def __getitem__(self, key: str) -> Any:
         return self.payload[key]
 
     def __setitem__(self, key: str, value: Any) -> None:
@@ -79,7 +82,7 @@ class Token:
     def __contains__(self, key: str) -> Any:
         return key in self.payload
 
-    def get(self, key: str, default: Optional[Any] = None) -> Any:
+    def get(self, key: str, default: Optional[T] = None) -> T:
         return self.payload.get(key, default)
 
     def __str__(self) -> str:
@@ -154,7 +157,7 @@ class Token:
         if lifetime is None:
             lifetime = self.lifetime
 
-        self.payload[claim] = datetime_to_epoch(from_time + lifetime)
+        self.payload[claim] = datetime_to_epoch(from_time + lifetime)  # type: ignore  # Should be checked, not typesafe
 
     def set_iat(self, claim: str = "iat", at_time: Optional[datetime] = None) -> None:
         """
@@ -190,7 +193,7 @@ class Token:
             raise TokenError(format_lazy(_("Token '{}' claim has expired"), claim))
 
     @classmethod
-    def for_user(cls, user: AuthUser) -> "Token":
+    def for_user(cls, user: AbstractBaseUser) -> Token:
         """
         Returns an authorization token for the given user that will be provided
         after authenticating the user's credentials.
@@ -204,22 +207,27 @@ class Token:
 
         return token
 
-    _token_backend: Optional["TokenBackend"] = None
+    _token_backend: Optional[TokenBackend] = None
 
     @property
-    def token_backend(self) -> "TokenBackend":
+    def token_backend(self) -> TokenBackend:
         if self._token_backend is None:
             self._token_backend = import_string(
                 "rest_framework_simplejwt.state.token_backend"
             )
         return self._token_backend
 
-    def get_token_backend(self) -> "TokenBackend":
+    def get_token_backend(self) -> TokenBackend:
         # Backward compatibility.
         return self.token_backend
 
+if TYPE_CHECKING:
+    TokenMixin = Token
+else:
+    TokenMixin = object
 
-class BlacklistMixin:
+
+class BlacklistMixin(TokenMixin):
     """
     If the `rest_framework_simplejwt.token_blacklist` app was configured to be
     used, tokens created from `BlacklistMixin` subclasses will insert
@@ -231,10 +239,10 @@ class BlacklistMixin:
 
     if "rest_framework_simplejwt.token_blacklist" in settings.INSTALLED_APPS:
 
-        def verify(self, *args, **kwargs) -> None:
+        def verify(self, *args: Any, **kwargs: Any) -> None:
             self.check_blacklist()
 
-            super().verify(*args, **kwargs)  # type: ignore
+            super().verify(*args, **kwargs)
 
         def check_blacklist(self) -> None:
             """
@@ -246,7 +254,7 @@ class BlacklistMixin:
             if BlacklistedToken.objects.filter(token__jti=jti).exists():
                 raise TokenError(_("Token is blacklisted"))
 
-        def blacklist(self) -> BlacklistedToken:
+        def blacklist(self) -> Tuple[BlacklistedToken, bool]:
             """
             Ensures this token is included in the outstanding token list and
             adds it to the blacklist.
@@ -266,16 +274,16 @@ class BlacklistMixin:
             return BlacklistedToken.objects.get_or_create(token=token)
 
         @classmethod
-        def for_user(cls, user: AuthUser) -> Token:
+        def for_user(cls, user: AbstractBaseUser) -> Token:
             """
             Adds this token to the outstanding token list.
             """
-            token = super().for_user(user)  # type: ignore
+            token = super().for_user(user)
 
             jti = token[api_settings.JTI_CLAIM]
             exp = token["exp"]
 
-            OutstandingToken.objects.create(
+            OutstandingToken.objects.create(  # type: ignore # User will always be derived from AbstractBaseUser
                 user=user,
                 jti=jti,
                 token=str(token),
@@ -290,7 +298,7 @@ class SlidingToken(BlacklistMixin, Token):
     token_type = "sliding"
     lifetime = api_settings.SLIDING_TOKEN_LIFETIME
 
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
 
         if self.token is None:
