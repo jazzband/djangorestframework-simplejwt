@@ -52,7 +52,7 @@ class TokenObtainSerializer(serializers.Serializer, Generic[T]):
         except KeyError:
             pass
 
-        self.user = authenticate(**authenticate_kwargs)  # type: ignore # Will be validated to not be none in the next line
+        self.user = authenticate(**authenticate_kwargs)  # type: ignore # Will be validated to not be None in the next line
 
         if not api_settings.USER_AUTHENTICATION_RULE(self.user):
             raise exceptions.AuthenticationFailed(
