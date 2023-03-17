@@ -11,7 +11,9 @@ clean: ## Removing cached python compiled files
 	find . -name __pycache__  | xargs  rm -rfv
 
 install: ## Install dependencies
+	make clean
 	flit install --deps develop --symlink
+	pre-commit install -f
 
 lint: ## Run code linters
 	make clean
@@ -36,3 +38,7 @@ test-cov: ## Run tests with coverage
 doc-deploy: ## Run Deploy Documentation
 	make clean
 	mkdocs gh-deploy --force
+
+doc-serve: ## Run Deploy Documentation
+	make clean
+	mkdocs serve

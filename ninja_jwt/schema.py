@@ -1,17 +1,18 @@
-from typing import Dict, Optional, Type, cast
+import warnings
+from typing import Any, Callable, Dict, Optional, Type, Union, cast
 
 from django.conf import settings
 from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.models import AbstractUser, update_last_login
 from django.utils.translation import gettext_lazy as _
-from ninja_schema import ModelSchema, Schema
+from ninja import ModelSchema, Schema
 from pydantic import root_validator
 
+import ninja_jwt.exceptions as exceptions
 from ninja_jwt.utils import token_error
 
-from . import exceptions
 from .settings import api_settings
-from .tokens import RefreshToken, SlidingToken, Token, UntypedToken
+from .tokens import RefreshToken, SlidingToken, UntypedToken
 
 if api_settings.BLACKLIST_AFTER_ROTATION:
     from .token_blacklist.models import BlacklistedToken
@@ -22,22 +23,37 @@ user_name_field = get_user_model().USERNAME_FIELD  # type: ignore
 class AuthUserSchema(ModelSchema):
     class Config:
         model = get_user_model()
-        include = [user_name_field]
+        model_fields = [user_name_field]
 
 
-class TokenObtainSerializer(ModelSchema):
-    class Config:
-        model = get_user_model()
-        include = ["password", user_name_field]
+class InputSchemaMixin:
+    dict: Callable
 
-    _user: Optional[Type[AbstractUser]] = None
+    @classmethod
+    def get_response_schema(cls) -> Type[Schema]:
+        raise NotImplementedError("Must implement `get_response_schema`")
+
+    def to_response_schema(self):
+        _schema_type = self.get_response_schema()
+        return _schema_type(**self.dict())
+
+
+class TokenInputSchemaMixin(InputSchemaMixin):
+
+    _user: Optional[AbstractUser] = None
 
     _default_error_messages = {
         "no_active_account": _("No active account found with the given credentials")
     }
 
-    @root_validator(pre=True)
-    def validate_inputs(cls, values: Dict) -> dict:
+    @classmethod
+    def check_user_authentication_rule(
+        cls, user: Optional[Union[AbstractUser, Any]], values: Dict
+    ) -> bool:
+        return api_settings.USER_AUTHENTICATION_RULE(user)
+
+    @classmethod
+    def validate_values(cls, values: Dict) -> dict:
         if user_name_field not in values and "password" not in values:
             raise exceptions.ValidationError(
                 {
@@ -54,79 +70,108 @@ class TokenObtainSerializer(ModelSchema):
         if not values.get("password"):
             raise exceptions.ValidationError({"password": "password is required"})
 
-        cls._user = authenticate(**values)
+        _user = authenticate(**values)
 
-        if not api_settings.USER_AUTHENTICATION_RULE(cls._user):
+        if not cls.check_user_authentication_rule(_user, values):
             raise exceptions.AuthenticationFailed(
                 cls._default_error_messages["no_active_account"]
             )
 
+        cls._user = _user
+
         return values
 
-    def output_schema(self) -> Type[Schema]:
-        raise NotImplementedError(
-            "Must implement `output_schema` method for `TokenObtainSerializer` subclasses"
+    def output_schema(self) -> Schema:
+        warnings.warn(
+            "output_schema() is deprecated in favor of " "to_response_schema()",
+            DeprecationWarning,
+            stacklevel=2,
         )
+        return self.to_response_schema()
 
     @classmethod
-    def get_token(cls, user: Type[AbstractUser]) -> Type[Token]:
+    def get_token(cls, user: AbstractUser) -> Dict:
         raise NotImplementedError(
             "Must implement `get_token` method for `TokenObtainSerializer` subclasses"
         )
 
 
-class TokenObtainPairOutput(AuthUserSchema):
-    refresh: str
-    access: str
+class TokenObtainInputSchemaBase(ModelSchema, TokenInputSchemaMixin):
+    class Config:
+        model = get_user_model()
+        model_fields = ["password", user_name_field]
 
-
-class TokenObtainPairSerializer(TokenObtainSerializer):
-    @classmethod
-    def get_token(cls, user: Type[AbstractUser]) -> Type[Token]:
-        return RefreshToken.for_user(user)
+    @root_validator(pre=True)
+    def validate_inputs(cls, values: Dict) -> dict:
+        return cls.validate_values(values)
 
     @root_validator
-    def validate_schema(cls, values: Dict) -> dict:
-        refresh = cls.get_token(cls._user)
-        refresh = cast(RefreshToken, refresh)
+    def post_validate(cls, values: Dict) -> dict:
+        return cls.post_validate_schema(values)
 
-        values["refresh"] = str(refresh)
-        values["access"] = str(refresh.access_token)
+    @classmethod
+    def post_validate_schema(cls, values: Dict) -> dict:
+        """
+        This is a post validate process which is common for any token generating schema.
+        :param values:
+        :return:
+        """
+        # get_token can return values that wants to apply to `OutputSchema`
+        data = cls.get_token(cls._user)
+
+        if not isinstance(data, dict):
+            raise Exception("`get_token` must return a `typing.Dict` type.")
+
+        values.update(data)
 
         if api_settings.UPDATE_LAST_LOGIN:
             update_last_login(None, cls._user)
 
         return values
 
-    def output_schema(self):
-        return TokenObtainPairOutput(**self.dict(exclude={"password"}))
+    def to_response_schema(self):
+        _schema_type = self.get_response_schema()
+        return _schema_type(**self.dict(exclude={"password"}))
 
 
-class TokenObtainSlidingOutput(AuthUserSchema):
+class TokenObtainPairOutputSchema(AuthUserSchema):
+    refresh: str
+    access: str
+
+
+class TokenObtainPairInputSchema(TokenObtainInputSchemaBase):
+    @classmethod
+    def get_response_schema(cls) -> Type[Schema]:
+        return TokenObtainPairOutputSchema
+
+    @classmethod
+    def get_token(cls, user: AbstractUser) -> Dict:
+        values = {}
+        refresh = RefreshToken.for_user(user)
+        refresh = cast(RefreshToken, refresh)
+        values["refresh"] = str(refresh)
+        values["access"] = str(refresh.access_token)
+        return values
+
+
+class TokenObtainSlidingOutputSchema(AuthUserSchema):
     token: str
 
 
-class TokenObtainSlidingSerializer(TokenObtainSerializer):
+class TokenObtainSlidingInputSchema(TokenObtainInputSchemaBase):
     @classmethod
-    def get_token(cls, user: Type[AbstractUser]) -> Type[Token]:
-        return SlidingToken.for_user(user)
+    def get_response_schema(cls) -> Type:
+        return TokenObtainSlidingOutputSchema
 
-    @root_validator
-    def validate_schema(cls, values: Dict) -> dict:
-        token = cls.get_token(cls._user)
-
-        values["token"] = str(token)
-
-        if api_settings.UPDATE_LAST_LOGIN and cls._user:
-            update_last_login(cls, cls._user)
-
+    @classmethod
+    def get_token(cls, user: AbstractUser) -> Dict:
+        values = {}
+        slide_token = SlidingToken.for_user(user)
+        values["token"] = str(slide_token)
         return values
 
-    def output_schema(self):
-        return TokenObtainSlidingOutput(**self.dict(exclude={"password"}))
 
-
-class TokenRefreshSchema(Schema):
+class TokenRefreshInputSchema(Schema, InputSchemaMixin):
     refresh: str
 
     @root_validator
@@ -135,8 +180,12 @@ class TokenRefreshSchema(Schema):
             raise exceptions.ValidationError({"refresh": "token is required"})
         return values
 
+    @classmethod
+    def get_response_schema(cls) -> Type[Schema]:
+        return TokenRefreshOutputSchema
 
-class TokenRefreshSerializer(Schema):
+
+class TokenRefreshOutputSchema(Schema):
     refresh: str
     access: Optional[str]
 
@@ -165,11 +214,11 @@ class TokenRefreshSerializer(Schema):
             refresh.set_iat()
 
             data["refresh"] = str(refresh)
+        values.update(data)
+        return values
 
-        return data
 
-
-class TokenRefreshSlidingSchema(Schema):
+class TokenRefreshSlidingInputSchema(Schema, InputSchemaMixin):
     token: str
 
     @root_validator
@@ -178,8 +227,12 @@ class TokenRefreshSlidingSchema(Schema):
             raise exceptions.ValidationError({"token": "token is required"})
         return values
 
+    @classmethod
+    def get_response_schema(cls) -> Type[Schema]:
+        return TokenRefreshSlidingOutputSchema
 
-class TokenRefreshSlidingSerializer(Schema):
+
+class TokenRefreshSlidingOutputSchema(Schema):
     token: str
 
     @root_validator
@@ -197,11 +250,11 @@ class TokenRefreshSlidingSerializer(Schema):
         # Update the "exp" and "iat" claims
         token.set_exp()
         token.set_iat()
+        values.update({"token": str(token)})
+        return values
 
-        return {"token": str(token)}
 
-
-class TokenVerifySerializer(Schema):
+class TokenVerifyInputSchema(Schema, InputSchemaMixin):
     token: str
 
     @root_validator
@@ -221,8 +274,15 @@ class TokenVerifySerializer(Schema):
 
         return values
 
+    @classmethod
+    def get_response_schema(cls) -> Type[Schema]:
+        return Schema
 
-class TokenBlacklistSerializer(Schema):
+    def to_response_schema(self):
+        return {}
+
+
+class TokenBlacklistInputSchema(Schema, InputSchemaMixin):
     refresh: str
 
     @root_validator
@@ -236,3 +296,37 @@ class TokenBlacklistSerializer(Schema):
         except AttributeError:
             pass
         return values
+
+    @classmethod
+    def get_response_schema(cls) -> Type[Schema]:
+        return Schema
+
+    def to_response_schema(self):
+        return {}
+
+
+__deprecated__ = {
+    "TokenBlacklistSerializer": TokenBlacklistInputSchema,
+    "TokenVerifySerializer": TokenVerifyInputSchema,
+    "TokenRefreshSlidingSerializer": TokenRefreshSlidingOutputSchema,
+    "TokenRefreshSlidingSchema": TokenRefreshSlidingInputSchema,
+    "TokenRefreshSerializer": TokenRefreshOutputSchema,
+    "TokenRefreshSchema": TokenRefreshInputSchema,
+    "TokenObtainSlidingOutput": TokenObtainSlidingOutputSchema,
+    "TokenObtainSerializer": TokenObtainInputSchemaBase,
+    "TokenObtainPairOutput": TokenObtainPairOutputSchema,
+    "TokenObtainPairSerializer": TokenObtainPairInputSchema,
+    "TokenObtainSlidingSerializer": TokenObtainSlidingInputSchema,
+}
+
+
+def __getattr__(name: str) -> Any:  # pragma: no cover
+    if name in __deprecated__:
+        value = __deprecated__[name]
+        warnings.warn(
+            f"'{name}' is deprecated. Use '{value.__name__}' instead.",
+            category=DeprecationWarning,
+            stacklevel=2,
+        )
+        return value
+    raise AttributeError(f"module '{__name__}' has no attribute '{name}'")

@@ -5,13 +5,14 @@ views, create a subclass for the desired controller as well as a subclass for
 its corresponding serializer. Here\'s an example :
 
 !!! info
-    if you are interested in Asynchronous version of the class, checkout  `AsyncNinjaJWTDefaultController` and `AsyncNinjaJWTSlidingController`
+    if you are interested in Asynchronous version of the class, use `AsyncNinjaJWTDefaultController` and `AsyncNinjaJWTSlidingController`.
+    Also note, it's only available for Django versions that supports asynchronous actions.
 
 ```python
-from ninja_jwt.schema import TokenObtainPairSerializer
+from ninja_jwt.schema import TokenObtainPairInputSchema
 from ninja_jwt.controller import TokenObtainPairController
 from ninja_extra import api_controller, route
-from ninja_schema import Schema
+from ninja import Schema
 
 
 class UserSchema(Schema):
@@ -25,11 +26,12 @@ class MyTokenObtainPairOutSchema(Schema):
     user: UserSchema
 
 
-class MyTokenObtainPairSchema(TokenObtainPairSerializer):
+class MyTokenObtainPairSchema(TokenObtainPairInputSchema):
     def output_schema(self):
         out_dict = self.dict(exclude={"password"})
         out_dict.update(user=UserSchema.from_orm(self._user))
         return MyTokenObtainPairOutSchema(**out_dict)
+
 
 @api_controller('/token', tags=['Auth'])
 class MyTokenObtainPairController(TokenObtainPairController):
@@ -49,7 +51,6 @@ Here is an example
 
 ```python
 from ninja import router
-from ninja_schema import Schema
 
 router = router('/token')
 
@@ -67,3 +68,67 @@ from ninja import NinjaAPI
 api = NinjaAPI()
 api.add_router('', tags=['Auth'], router=router)
 ```
+
+
+### Controller Schema Swapping
+
+You can now swap controller schema in `NINJA_JWT` settings without having to inherit or override Ninja JWT controller function.
+
+All controller input schema must inherit from `ninja_jwt.schema.InputSchemaMixin` and token generating schema should inherit
+from `ninja_jwt.schema.TokenObtainInputSchemaBase` or `ninja_jwt.schema.TokenInputSchemaMixin` if you want to have more control.
+
+Using the example above:
+
+```python
+# project/schema.py
+from typing import Type, Dict
+from ninja_jwt.schema import TokenObtainInputSchemaBase
+from ninja import Schema
+from ninja_jwt.tokens import RefreshToken
+
+class UserSchema(Schema):
+    first_name: str
+    email: str
+
+
+class MyTokenObtainPairOutSchema(Schema):
+    refresh: str
+    access: str
+    user: UserSchema
+
+
+class MyTokenObtainPairInputSchema(TokenObtainInputSchemaBase):
+    @classmethod
+    def get_response_schema(cls) -> Type[Schema]:
+        return MyTokenObtainPairOutSchema
+    
+    @classmethod
+    def get_token(cls, user) -> Dict:
+        values = {}
+        refresh = RefreshToken.for_user(user)
+        values["refresh"] = str(refresh)
+        values["access"] = str(refresh.access_token)
+        values.update(user=UserSchema.from_orm(user)) # this will be needed when creating output schema
+        return values
+```
+
+In the  `MyTokenObtainPairInputSchema` we override `get_token` to define our token and some data needed for our output schema.
+We also override `get_response_schema` to define our output schema `MyTokenObtainPairOutSchema`.
+
+Next, we apply the `MyTokenObtainPairInputSchema` schema to controller. This is simply done in `NINJA_JWT` settings.
+
+```python
+# project/settings.py
+
+NINJA_JWT = {
+    'TOKEN_OBTAIN_PAIR_INPUT_SCHEMA': 'project.schema.MyTokenObtainPairInputSchema',
+}
+```
+Other swappable schemas can be found in [settings](../settings)
+
+![token_customization_git](./img/token_customize.gif)
+
+!!! Note
+    `Controller Schema Swapping` is only available from **v5.2.4**
+
+    

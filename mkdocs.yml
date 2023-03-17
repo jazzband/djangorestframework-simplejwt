@@ -3,7 +3,7 @@ site_description: Django Ninja JWT - A Simple JWT plugin for Django-Ninja.
 site_url: https://eadwincode.github.io/django-ninja-jwt/
 repo_name: eadwinCode/django-ninja-jwt
 repo_url: https://github.com/eadwinCode/django-ninja-jwt
-edit_uri: ''
+edit_uri: 'https://github.com/eadwinCode/django-ninja-jwt/docs'
 
 theme:
   name: material
@@ -44,3 +44,8 @@ nav:
 - Development and Contributing: development_and_contributing.md
 - Experimental Feature: experimental_features.md
 #- ninja_jwt package: index.md
+
+markdown_extensions:
+- codehilite
+- admonition
+- pymdownx.superfences

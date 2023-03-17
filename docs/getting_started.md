@@ -3,7 +3,6 @@
 - Python >= 3.6
 - Django >= 2.1
 - Django-Ninja >= 0.16.1
-- Ninja-Schema >= 0.12.2
 - Django-Ninja-Extra >= 0.11.0
 
 These are the officially supported python and package versions. Other
@@ -12,7 +11,6 @@ see what is possible.
 
 Installation
 ============
-
 Ninja JWT can be installed with pip:
 
     pip install django-ninja-jwt

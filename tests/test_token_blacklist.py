@@ -6,7 +6,7 @@ from django.core.management import call_command
 from django.db.models import BigAutoField
 
 from ninja_jwt.exceptions import TokenError
-from ninja_jwt.schema import TokenVerifySerializer
+from ninja_jwt.schema import TokenVerifyInputSchema
 from ninja_jwt.settings import api_settings
 from ninja_jwt.token_blacklist.models import BlacklistedToken, OutstandingToken
 from ninja_jwt.tokens import AccessToken, RefreshToken, SlidingToken
@@ -221,7 +221,7 @@ class TestTokenVerifySerializerShouldHonourBlacklist(MigrationTestCase):
             refresh_token.blacklist()
 
             with pytest.raises(Exception):
-                TokenVerifySerializer(token=str(refresh_token))
+                TokenVerifyInputSchema(token=str(refresh_token))
 
     def test_token_verify_serializer_should_not_honour_blacklist_if_blacklisting_not_enabled(
         self, monkeypatch
@@ -231,7 +231,7 @@ class TestTokenVerifySerializerShouldHonourBlacklist(MigrationTestCase):
             refresh_token = RefreshToken.for_user(self.user)
             refresh_token.blacklist()
 
-            serializer = TokenVerifySerializer(token=str(refresh_token))
+            serializer = TokenVerifyInputSchema(token=str(refresh_token))
             assert serializer.token == str(refresh_token)
 
 
