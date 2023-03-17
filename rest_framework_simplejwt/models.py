@@ -1,4 +1,5 @@
-from typing import TYPE_CHECKING, Any, List, Optional, Union
+from __future__ import annotations
+from typing import TYPE_CHECKING, Any, List, Optional, Union, cast
 
 from django.contrib.auth import models as auth_models
 from django.db.models.manager import EmptyManager
@@ -27,7 +28,7 @@ class TokenUser:
     _groups = EmptyManager(auth_models.Group)
     _user_permissions = EmptyManager(auth_models.Permission)
 
-    def __init__(self, token: "Token") -> None:
+    def __init__(self, token: Token) -> None:
         self.token = token
 
     def __str__(self) -> str:
@@ -35,7 +36,7 @@ class TokenUser:
 
     @cached_property
     def id(self) -> Union[int, str]:
-        return self.token[api_settings.USER_ID_CLAIM]
+        return cast(Union[int, str], self.token[api_settings.USER_ID_CLAIM])
 
     @cached_property
     def pk(self) -> Union[int, str]:
@@ -77,11 +78,11 @@ class TokenUser:
         raise NotImplementedError("Token users have no DB representation")
 
     @property
-    def groups(self) -> auth_models.Group:
+    def groups(self) -> EmptyManager[auth_models.Group]:
         return self._groups
 
     @property
-    def user_permissions(self) -> auth_models.Permission:
+    def user_permissions(self) -> EmptyManager[auth_models.Permission]:
         return self._user_permissions
 
     def get_group_permissions(self, obj: Optional[object] = None) -> set:
