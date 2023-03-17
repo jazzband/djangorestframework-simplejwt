@@ -7,7 +7,6 @@ from rest_framework import HTTP_HEADER_ENCODING, authentication
 from rest_framework.request import Request
 
 from .exceptions import AuthenticationFailed, InvalidToken, TokenError
-from .models import TokenUser
 from .settings import api_settings
 from .tokens import Token
 
@@ -83,7 +82,7 @@ class JWTAuthentication(authentication.BaseAuthentication):
 
         if len(parts) != 2:
             raise AuthenticationFailed(
-                cast(str, _("Authorization header must contain two space-delimited values")),
+                 _("Authorization header must contain two space-delimited values"),
                 code="bad_authorization_header",
             )
 
@@ -122,15 +121,15 @@ class JWTAuthentication(authentication.BaseAuthentication):
         try:
             user_id = validated_token[api_settings.USER_ID_CLAIM]
         except KeyError:
-            raise InvalidToken(cast(str, _("Token contained no recognizable user identification")))
+            raise InvalidToken(_("Token contained no recognizable user identification"))
 
         try:
             user = self.user_model.objects.get(**{api_settings.USER_ID_FIELD: user_id})
         except self.user_model.DoesNotExist:
-            raise AuthenticationFailed(cast(str, _("User not found")), code="user_not_found")
+            raise AuthenticationFailed(_("User not found"), code="user_not_found")
 
         if not user.is_active:
-            raise AuthenticationFailed(cast(str, _("User is inactive")), code="user_inactive")
+            raise AuthenticationFailed(_("User is inactive"), code="user_inactive")
 
         return user
 
@@ -149,7 +148,7 @@ class JWTStatelessUserAuthentication(JWTAuthentication):
         if api_settings.USER_ID_CLAIM not in validated_token:
             # The TokenUser class assumes tokens will have a recognizable user
             # identifier claim.
-            raise InvalidToken(cast(str,_("Token contained no recognizable user identification")))
+            raise InvalidToken(_("Token contained no recognizable user identification"))
 
         return cast(AbstractBaseUser, api_settings.TOKEN_USER_CLASS(validated_token))
 

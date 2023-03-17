@@ -1,15 +1,16 @@
 import json
 from collections.abc import Iterable
 from datetime import timedelta
-from typing import Any, Dict, Optional, Type, Union
+from typing import Any, Dict, Optional, Type, Union, cast
 
 import jwt
 from django.utils.translation import gettext_lazy as _
 from jwt import InvalidAlgorithmError, InvalidTokenError, algorithms
 
 from .exceptions import TokenBackendError
-from .tokens import Token
 from .utils import format_lazy
+
+TokenType = Union[str, bytes]
 
 try:
     from jwt import PyJWKClient, PyJWKClientError
@@ -35,7 +36,7 @@ class TokenBackend:
     def __init__(
         self,
         algorithm: str,
-        signing_key: Optional[str] = None,
+        signing_key: str = "",
         verifying_key: str = "",
         audience: Union[str, Iterable, None] = None,
         issuer: Optional[str] = None,
@@ -93,13 +94,13 @@ class TokenBackend:
                 )
             )
 
-    def get_verifying_key(self, token: Token) -> Optional[str]:
+    def get_verifying_key(self, token: TokenType) -> str:
         if self.algorithm.startswith("HS"):
             return self.signing_key
 
         if self.jwks_client:
             try:
-                return self.jwks_client.get_signing_key_from_jwt(token).key
+                return cast(str, self.jwks_client.get_signing_key_from_jwt(token).key)  # type: ignore # https://github.com/python/typeshed/issues/3381
             except PyJWKClientError as ex:
                 raise TokenBackendError(_("Token is invalid or expired")) from ex
 
@@ -121,13 +122,13 @@ class TokenBackend:
             algorithm=self.algorithm,
             json_encoder=self.json_encoder,
         )
-        if isinstance(token, bytes):
+        if isinstance(token, bytes):  # type: ignore
             # For PyJWT <= 1.7.1
-            return token.decode("utf-8")
+            return token.decode("utf-8")  # type: ignore
         # For PyJWT >= 2.0.0a1
         return token
 
-    def decode(self, token: Token, verify: bool = True) -> Dict[str, Any]:
+    def decode(self, token: TokenType, verify: bool = True) -> Dict[str, Any]:
         """
         Performs a validation of the given token and returns its payload
         dictionary.
@@ -137,7 +138,7 @@ class TokenBackend:
         """
         try:
             return jwt.decode(
-                token,
+                token,  # type: ignore # https://github.com/python/typeshed/issues/3381
                 self.get_verifying_key(token),
                 algorithms=[self.algorithm],
                 audience=self.audience,

@@ -3,6 +3,7 @@ from django.utils.translation import gettext_lazy as _
 from rest_framework import exceptions, status
 
 if TYPE_CHECKING:
+    from rest_framework.exceptions import _Detail
     # DetailDictMixin is used with drf APIExceptions
     BASE_AuthenticationFailed = exceptions.APIException
 else:
@@ -20,7 +21,7 @@ class TokenBackendError(Exception):
 class DetailDictMixin(BASE_AuthenticationFailed):
     def __init__(
         self,
-        detail: Union[Dict[str, Any], str, None] = None,
+        detail: Optional[_Detail] = None,
         code: Optional[str] = None,
     ) -> None:
         """
