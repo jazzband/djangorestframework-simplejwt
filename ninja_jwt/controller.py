@@ -66,6 +66,7 @@ class TokenObtainPairController(ControllerBase):
         url_name="token_obtain_pair",
     )
     def obtain_token(self, user_token: schema.obtain_pair_schema):
+        user_token.check_user_authentication_rule()
         return user_token.to_response_schema()
 
     @http_post(
@@ -86,6 +87,7 @@ class TokenObtainSlidingController(TokenObtainPairController):
         url_name="token_obtain_sliding",
     )
     def obtain_token(self, user_token: schema.obtain_sliding_schema):
+        user_token.check_user_authentication_rule()
         return user_token.to_response_schema()
 
     @http_post(
@@ -146,6 +148,7 @@ if not django.VERSION < (3, 1):
             url_name="token_obtain_pair",
         )
         async def obtain_token(self, user_token: schema.obtain_pair_schema):
+            await sync_to_async(user_token.check_user_authentication_rule)()
             return user_token.to_response_schema()
 
         @http_post(
@@ -164,6 +167,7 @@ if not django.VERSION < (3, 1):
             url_name="token_obtain_sliding",
         )
         async def obtain_token(self, user_token: schema.obtain_sliding_schema):
+            await sync_to_async(user_token.check_user_authentication_rule)()
             return user_token.to_response_schema()
 
         @http_post(

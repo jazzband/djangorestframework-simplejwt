@@ -61,6 +61,10 @@ class MyNewObtainPairSchemaInput(TokenObtainInputSchemaBase):
 class MyNewObtainTokenSlidingSchemaInput(TokenObtainSlidingInputSchema):
     my_extra_field: str
 
+    def check_user_authentication_rule(self) -> bool:
+        my_extra_field = self.my_extra_field
+        return api_settings.USER_AUTHENTICATION_RULE(self._user)
+
     @classmethod
     def get_response_schema(cls):
         return MyNewObtainTokenSlidingSchemaOutput

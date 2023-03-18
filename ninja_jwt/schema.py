@@ -1,5 +1,5 @@
 import warnings
-from typing import Any, Callable, Dict, Optional, Type, Union, cast
+from typing import Any, Callable, Dict, Optional, Type, cast
 
 from django.conf import settings
 from django.contrib.auth import authenticate, get_user_model
@@ -46,11 +46,11 @@ class TokenInputSchemaMixin(InputSchemaMixin):
         "no_active_account": _("No active account found with the given credentials")
     }
 
-    @classmethod
-    def check_user_authentication_rule(
-        cls, user: Optional[Union[AbstractUser, Any]], values: Dict
-    ) -> bool:
-        return api_settings.USER_AUTHENTICATION_RULE(user)
+    def check_user_authentication_rule(self) -> None:
+        if not api_settings.USER_AUTHENTICATION_RULE(self._user):
+            raise exceptions.AuthenticationFailed(
+                self._default_error_messages["no_active_account"]
+            )
 
     @classmethod
     def validate_values(cls, values: Dict) -> dict:
@@ -71,13 +71,12 @@ class TokenInputSchemaMixin(InputSchemaMixin):
             raise exceptions.ValidationError({"password": "password is required"})
 
         _user = authenticate(**values)
+        cls._user = _user
 
-        if not cls.check_user_authentication_rule(_user, values):
+        if _user is None:
             raise exceptions.AuthenticationFailed(
                 cls._default_error_messages["no_active_account"]
             )
-
-        cls._user = _user
 
         return values
 
@@ -117,6 +116,7 @@ class TokenObtainInputSchemaBase(ModelSchema, TokenInputSchemaMixin):
         :return:
         """
         # get_token can return values that wants to apply to `OutputSchema`
+
         data = cls.get_token(cls._user)
 
         if not isinstance(data, dict):

@@ -1,9 +1,8 @@
-import contextlib
 import json
 
 from django.db import connection
 from django.db.migrations.executor import MigrationExecutor
-from django.test import Client, TestCase
+from django.test import Client
 from django.test.utils import override_settings
 
 from ninja_jwt.compat import reverse
