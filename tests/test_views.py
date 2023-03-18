@@ -1,5 +1,4 @@
 from datetime import timedelta
-from importlib import reload
 from unittest.mock import patch
 
 from django.contrib.auth import get_user_model
@@ -93,20 +92,18 @@ class TestTokenObtainPairView(APIViewTestCase):
         user = User.objects.get(username=self.username)
         self.assertEqual(user.last_login, None)
 
+    @override_api_settings(UPDATE_LAST_LOGIN=True)
+    def test_update_last_login_updated(self):
         # verify last_login is updated
-        with override_api_settings(UPDATE_LAST_LOGIN=True):
-            reload(serializers)
-            self.view_post(
-                data={
-                    User.USERNAME_FIELD: self.username,
-                    "password": self.password,
-                }
-            )
-            user = User.objects.get(username=self.username)
-            self.assertIsNotNone(user.last_login)
-            self.assertGreaterEqual(timezone.now(), user.last_login)
-
-        reload(serializers)
+        self.view_post(
+            data={
+                User.USERNAME_FIELD: self.username,
+                "password": self.password,
+            }
+        )
+        user = User.objects.get(username=self.username)
+        self.assertIsNotNone(user.last_login)
+        self.assertGreaterEqual(timezone.now(), user.last_login)
 
 
 class TestTokenRefreshView(APIViewTestCase):
@@ -233,20 +230,18 @@ class TestTokenObtainSlidingView(APIViewTestCase):
         user = User.objects.get(username=self.username)
         self.assertEqual(user.last_login, None)
 
+    @override_api_settings(UPDATE_LAST_LOGIN=True)
+    def test_update_last_login_updated(self):
         # verify last_login is updated
-        with override_api_settings(UPDATE_LAST_LOGIN=True):
-            reload(serializers)
-            self.view_post(
-                data={
-                    User.USERNAME_FIELD: self.username,
-                    "password": self.password,
-                }
-            )
-            user = User.objects.get(username=self.username)
-            self.assertIsNotNone(user.last_login)
-            self.assertGreaterEqual(timezone.now(), user.last_login)
-
-        reload(serializers)
+        self.view_post(
+            data={
+                User.USERNAME_FIELD: self.username,
+                "password": self.password,
+            }
+        )
+        user = User.objects.get(username=self.username)
+        self.assertIsNotNone(user.last_login)
+        self.assertGreaterEqual(timezone.now(), user.last_login)
 
 
 class TestTokenRefreshSlidingView(APIViewTestCase):
