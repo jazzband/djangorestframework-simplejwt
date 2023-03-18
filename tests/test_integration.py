@@ -2,6 +2,7 @@ from datetime import timedelta
 
 from django.contrib.auth import get_user_model
 from django.urls import reverse
+from rest_framework.status import HTTP_200_OK, HTTP_401_UNAUTHORIZED
 
 from rest_framework_simplejwt.settings import api_settings
 from rest_framework_simplejwt.tokens import AccessToken
@@ -26,7 +27,7 @@ class TestTestView(APIViewTestCase):
     def test_no_authorization(self):
         res = self.view_get()
 
-        self.assertEqual(res.status_code, 401)
+        self.assertEqual(res.status_code, HTTP_401_UNAUTHORIZED)
         self.assertIn("credentials were not provided", res.data["detail"])
 
     def test_wrong_auth_type(self):
@@ -43,7 +44,7 @@ class TestTestView(APIViewTestCase):
 
         res = self.view_get()
 
-        self.assertEqual(res.status_code, 401)
+        self.assertEqual(res.status_code, HTTP_401_UNAUTHORIZED)
         self.assertIn("credentials were not provided", res.data["detail"])
 
     def test_expired_token(self):
@@ -68,7 +69,7 @@ class TestTestView(APIViewTestCase):
         ):
             res = self.view_get()
 
-        self.assertEqual(res.status_code, 401)
+        self.assertEqual(res.status_code, HTTP_401_UNAUTHORIZED)
         self.assertEqual("token_not_valid", res.data["code"])
 
     def test_user_can_get_sliding_token_and_use_it(self):
@@ -88,7 +89,7 @@ class TestTestView(APIViewTestCase):
         ):
             res = self.view_get()
 
-        self.assertEqual(res.status_code, 200)
+        self.assertEqual(res.status_code, HTTP_200_OK)
         self.assertEqual(res.data["foo"], "bar")
 
     def test_user_can_get_access_and_refresh_tokens_and_use_them(self):
@@ -110,7 +111,7 @@ class TestTestView(APIViewTestCase):
         ):
             res = self.view_get()
 
-        self.assertEqual(res.status_code, 200)
+        self.assertEqual(res.status_code, HTTP_200_OK)
         self.assertEqual(res.data["foo"], "bar")
 
         res = self.client.post(
@@ -127,5 +128,5 @@ class TestTestView(APIViewTestCase):
         ):
             res = self.view_get()
 
-        self.assertEqual(res.status_code, 200)
+        self.assertEqual(res.status_code, HTTP_200_OK)
         self.assertEqual(res.data["foo"], "bar")
