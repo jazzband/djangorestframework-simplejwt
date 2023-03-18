@@ -4,8 +4,9 @@ from typing import Any, List, Optional
 from django.contrib import admin
 from django.contrib.auth.models import AbstractBaseUser
 from django.db.models import QuerySet
-from django.utils.translation import gettext_lazy as _
 from django.http import HttpRequest
+from django.utils.translation import gettext_lazy as _
+
 from .models import BlacklistedToken, OutstandingToken
 
 

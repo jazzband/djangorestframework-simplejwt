@@ -33,7 +33,9 @@ class JWTAuthentication(authentication.BaseAuthentication):
         super().__init__(*args, **kwargs)
         self.user_model = get_user_model()
 
-    def authenticate(self, request: Request) -> Optional[Tuple[AbstractBaseUser, Token]]:
+    def authenticate(
+        self, request: Request
+    ) -> Optional[Tuple[AbstractBaseUser, Token]]:
         header = self.get_header(request)
         if header is None:
             return None
@@ -57,7 +59,9 @@ class JWTAuthentication(authentication.BaseAuthentication):
         Extracts the header containing the JSON web token from the given
         request.
         """
-        header = cast(Optional[Union[str, bytes]], request.META.get(api_settings.AUTH_HEADER_NAME))
+        header = cast(
+            Optional[Union[str, bytes]], request.META.get(api_settings.AUTH_HEADER_NAME)
+        )
 
         if isinstance(header, str):
             # Work around django test client oddness
@@ -82,7 +86,7 @@ class JWTAuthentication(authentication.BaseAuthentication):
 
         if len(parts) != 2:
             raise AuthenticationFailed(
-                 _("Authorization header must contain two space-delimited values"),
+                _("Authorization header must contain two space-delimited values"),
                 code="bad_authorization_header",
             )
 

@@ -10,7 +10,6 @@ from rest_framework.exceptions import ValidationError
 from .settings import api_settings
 from .tokens import RefreshToken, SlidingToken, Token, UntypedToken
 
-
 if api_settings.BLACKLIST_AFTER_ROTATION:
     from .token_blacklist.models import BlacklistedToken
 
@@ -94,7 +93,7 @@ class TokenObtainSlidingSerializer(TokenObtainSerializer[SlidingToken]):
         data["token"] = str(token)
 
         if api_settings.UPDATE_LAST_LOGIN:
-            update_last_login(None, self.user)   # type: ignore # Manual call can pass None
+            update_last_login(None, self.user)  # type: ignore # Manual call can pass None
 
         return data
 

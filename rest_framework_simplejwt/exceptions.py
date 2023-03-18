@@ -1,9 +1,11 @@
-from typing import TYPE_CHECKING, Optional, Any
+from typing import TYPE_CHECKING, Any, Optional
+
 from django.utils.translation import gettext_lazy as _
 from rest_framework import exceptions, status
 
 if TYPE_CHECKING:
     from rest_framework.exceptions import _Detail
+
     # DetailDictMixin is used with drf APIExceptions
     BASE_AuthenticationFailed = exceptions.APIException
 else:

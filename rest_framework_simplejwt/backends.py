@@ -8,8 +8,8 @@ from django.utils.translation import gettext_lazy as _
 from jwt import InvalidAlgorithmError, InvalidTokenError, algorithms
 
 from .exceptions import TokenBackendError
-from .utils import format_lazy
 from .tokens import TokenType
+from .utils import format_lazy
 
 try:
     from jwt import PyJWKClient, PyJWKClientError

@@ -1,4 +1,5 @@
 from typing import Any
+
 from django.core.management.base import BaseCommand
 
 from rest_framework_simplejwt.utils import aware_utcnow

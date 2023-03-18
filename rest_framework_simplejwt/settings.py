@@ -77,6 +77,7 @@ class APISettings(_APISettings):  # pragma: no cover
 
         return user_settings
 
+
 # type ignored because it expects DRF's settings.
 # See: https://github.com/typeddjango/djangorestframework-stubs/issues/375
 api_settings = APISettings(USER_SETTINGS, DEFAULTS, IMPORT_STRINGS)  # type: ignore

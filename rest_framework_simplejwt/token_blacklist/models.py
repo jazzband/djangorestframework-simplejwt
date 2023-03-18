@@ -1,4 +1,5 @@
 from typing import TYPE_CHECKING
+
 from django.conf import settings
 from django.db import models
 
@@ -23,7 +24,8 @@ class OutstandingToken(models.Model):
         # https://github.com/encode/django-rest-framework/issues/705
         # If we are TYPE_CHECKING, we don't want it to be abstract so django-stubs can pick it up
         abstract = (
-            "rest_framework_simplejwt.token_blacklist" not in settings.INSTALLED_APPS and not TYPE_CHECKING
+            "rest_framework_simplejwt.token_blacklist" not in settings.INSTALLED_APPS
+            and not TYPE_CHECKING
         )
         ordering = ("user",)
 
@@ -48,7 +50,8 @@ class BlacklistedToken(models.Model):
         # https://github.com/encode/django-rest-framework/issues/705
         # If we are TYPE_CHECKING, we don't want it to be abstract so django-stubs can pick it up
         abstract = (
-            "rest_framework_simplejwt.token_blacklist" not in settings.INSTALLED_APPS and not TYPE_CHECKING
+            "rest_framework_simplejwt.token_blacklist" not in settings.INSTALLED_APPS
+            and not TYPE_CHECKING
         )
 
     def __str__(self) -> str:

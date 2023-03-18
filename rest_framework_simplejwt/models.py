@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 from typing import TYPE_CHECKING, Any, List, Optional, Union, cast
 
 from django.contrib.auth import models as auth_models
@@ -35,11 +36,11 @@ class TokenUser:
         return f"TokenUser {self.id}"
 
     @cached_property
-    def id(self) -> Union[int, str]:
+    def id(self) -> int | str:
         return cast(Union[int, str], self.token[api_settings.USER_ID_CLAIM])
 
     @cached_property
-    def pk(self) -> Union[int, str]:
+    def pk(self) -> int | str:
         return self.id
 
     @cached_property
@@ -85,16 +86,16 @@ class TokenUser:
     def user_permissions(self) -> EmptyManager[auth_models.Permission]:
         return self._user_permissions
 
-    def get_group_permissions(self, obj: Optional[object] = None) -> set:
+    def get_group_permissions(self, obj: object | None = None) -> set:
         return set()
 
-    def get_all_permissions(self, obj: Optional[object] = None) -> set:
+    def get_all_permissions(self, obj: object | None = None) -> set:
         return set()
 
-    def has_perm(self, perm: str, obj: Optional[object] = None) -> bool:
+    def has_perm(self, perm: str, obj: object | None = None) -> bool:
         return False
 
-    def has_perms(self, perm_list: List[str], obj: Optional[object] = None) -> bool:
+    def has_perms(self, perm_list: list[str], obj: object | None = None) -> bool:
         return False
 
     def has_module_perms(self, module: str) -> bool:
@@ -111,6 +112,6 @@ class TokenUser:
     def get_username(self) -> str:
         return self.username
 
-    def __getattr__(self, attr: str) -> Optional[Any]:
+    def __getattr__(self, attr: str) -> Any | None:
         """This acts as a backup attribute getter for custom claims defined in Token serializers."""
         return self.token.get(attr, None)

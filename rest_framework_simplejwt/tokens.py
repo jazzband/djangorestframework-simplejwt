@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 from datetime import datetime, timedelta
 from typing import TYPE_CHECKING, Any, Dict, Optional, Tuple, TypeVar, Union
 from uuid import uuid4
@@ -28,10 +29,10 @@ class Token:
     new JWT.
     """
 
-    token_type: Optional[str] = None
-    lifetime: Optional[timedelta] = None
+    token_type: str | None = None
+    lifetime: timedelta | None = None
 
-    def __init__(self, token: Optional[TokenType] = None, verify: bool = True) -> None:
+    def __init__(self, token: TokenType | None = None, verify: bool = True) -> None:
         """
         !!!! IMPORTANT !!!! MUST raise a TokenError with a user-facing error
         message if the given token is invalid, expired, or otherwise not safe
@@ -82,7 +83,7 @@ class Token:
     def __contains__(self, key: str) -> Any:
         return key in self.payload
 
-    def get(self, key: str, default: Optional[T] = None) -> T:
+    def get(self, key: str, default: T | None = None) -> T:
         return self.payload.get(key, default)
 
     def __str__(self) -> str:
@@ -142,8 +143,8 @@ class Token:
     def set_exp(
         self,
         claim: str = "exp",
-        from_time: Optional[datetime] = None,
-        lifetime: Optional[timedelta] = None,
+        from_time: datetime | None = None,
+        lifetime: timedelta | None = None,
     ) -> None:
         """
         Updates the expiration time of a token.
@@ -159,7 +160,7 @@ class Token:
 
         self.payload[claim] = datetime_to_epoch(from_time + lifetime)  # type: ignore  # Should be checked, not typesafe
 
-    def set_iat(self, claim: str = "iat", at_time: Optional[datetime] = None) -> None:
+    def set_iat(self, claim: str = "iat", at_time: datetime | None = None) -> None:
         """
         Updates the time at which the token was issued.
 
@@ -172,7 +173,7 @@ class Token:
         self.payload[claim] = datetime_to_epoch(at_time)
 
     def check_exp(
-        self, claim: str = "exp", current_time: Optional[datetime] = None
+        self, claim: str = "exp", current_time: datetime | None = None
     ) -> None:
         """
         Checks whether a timestamp value in the given claim has passed (since
@@ -207,7 +208,7 @@ class Token:
 
         return token
 
-    _token_backend: Optional[TokenBackend] = None
+    _token_backend: TokenBackend | None = None
 
     @property
     def token_backend(self) -> TokenBackend:
@@ -220,6 +221,7 @@ class Token:
     def get_token_backend(self) -> TokenBackend:
         # Backward compatibility.
         return self.token_backend
+
 
 if TYPE_CHECKING:
     TokenMixin = Token
@@ -235,7 +237,7 @@ class BlacklistMixin(TokenMixin):
     membership in a token blacklist.
     """
 
-    payload: Dict[str, Any]
+    payload: dict[str, Any]
 
     if "rest_framework_simplejwt.token_blacklist" in settings.INSTALLED_APPS:
 
@@ -254,7 +256,7 @@ class BlacklistMixin(TokenMixin):
             if BlacklistedToken.objects.filter(token__jti=jti).exists():
                 raise TokenError(_("Token is blacklisted"))
 
-        def blacklist(self) -> Tuple[BlacklistedToken, bool]:
+        def blacklist(self) -> tuple[BlacklistedToken, bool]:
             """
             Ensures this token is included in the outstanding token list and
             adds it to the blacklist.
