@@ -73,7 +73,7 @@ class TokenInputSchemaMixin(InputSchemaMixin):
         _user = authenticate(**values)
         cls._user = _user
 
-        if _user is not None and _user.is_active:
+        if not (_user is not None and _user.is_active):
             raise exceptions.AuthenticationFailed(
                 cls._default_error_messages["no_active_account"]
             )
