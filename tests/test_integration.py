@@ -64,14 +64,14 @@ class TestTestView(APIViewTestCase):
         access = res.data["access"]
         self.authenticate_with_token(api_settings.AUTH_HEADER_TYPES[0], access)
 
-        with override_api_settings(
-            AUTH_TOKEN_CLASSES=("rest_framework_simplejwt.tokens.AccessToken",)
-        ):
-            res = self.view_get()
+        res = self.view_get()
 
         self.assertEqual(res.status_code, HTTP_401_UNAUTHORIZED)
         self.assertEqual("token_not_valid", res.data["code"])
 
+    @override_api_settings(
+        AUTH_TOKEN_CLASSES=("rest_framework_simplejwt.tokens.SlidingToken",),
+    )
     def test_user_can_get_sliding_token_and_use_it(self):
         res = self.client.post(
             reverse("token_obtain_sliding"),
@@ -84,10 +84,7 @@ class TestTestView(APIViewTestCase):
         token = res.data["token"]
         self.authenticate_with_token(api_settings.AUTH_HEADER_TYPES[0], token)
 
-        with override_api_settings(
-            AUTH_TOKEN_CLASSES=("rest_framework_simplejwt.tokens.SlidingToken",)
-        ):
-            res = self.view_get()
+        res = self.view_get()
 
         self.assertEqual(res.status_code, HTTP_200_OK)
         self.assertEqual(res.data["foo"], "bar")
@@ -106,10 +103,7 @@ class TestTestView(APIViewTestCase):
 
         self.authenticate_with_token(api_settings.AUTH_HEADER_TYPES[0], access)
 
-        with override_api_settings(
-            AUTH_TOKEN_CLASSES=("rest_framework_simplejwt.tokens.AccessToken",)
-        ):
-            res = self.view_get()
+        res = self.view_get()
 
         self.assertEqual(res.status_code, HTTP_200_OK)
         self.assertEqual(res.data["foo"], "bar")
@@ -123,10 +117,7 @@ class TestTestView(APIViewTestCase):
 
         self.authenticate_with_token(api_settings.AUTH_HEADER_TYPES[0], access)
 
-        with override_api_settings(
-            AUTH_TOKEN_CLASSES=("rest_framework_simplejwt.tokens.AccessToken",)
-        ):
-            res = self.view_get()
+        res = self.view_get()
 
         self.assertEqual(res.status_code, HTTP_200_OK)
         self.assertEqual(res.data["foo"], "bar")
