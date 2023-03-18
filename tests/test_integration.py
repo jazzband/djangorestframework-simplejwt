@@ -47,6 +47,9 @@ class TestTestView(APIViewTestCase):
         self.assertEqual(res.status_code, HTTP_401_UNAUTHORIZED)
         self.assertIn("credentials were not provided", res.data["detail"])
 
+    @override_api_settings(
+        AUTH_TOKEN_CLASSES=("rest_framework_simplejwt.tokens.AccessToken",),
+    )
     def test_expired_token(self):
         old_lifetime = AccessToken.lifetime
         AccessToken.lifetime = timedelta(seconds=0)
@@ -89,6 +92,9 @@ class TestTestView(APIViewTestCase):
         self.assertEqual(res.status_code, HTTP_200_OK)
         self.assertEqual(res.data["foo"], "bar")
 
+    @override_api_settings(
+        AUTH_TOKEN_CLASSES=("rest_framework_simplejwt.tokens.AccessToken",),
+    )
     def test_user_can_get_access_and_refresh_tokens_and_use_them(self):
         res = self.client.post(
             reverse("token_obtain_pair"),
