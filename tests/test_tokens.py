@@ -30,8 +30,11 @@ class MyToken(Token):
 class TestToken(TestCase):
     def setUp(self):
         self.token = MyToken()
-        self.username = "test_user"
-        self.user = User.objects.create_user(
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.username = "test_user"
+        cls.user = User.objects.create_user(
             username=self.username,
             password="test_password",
         )
