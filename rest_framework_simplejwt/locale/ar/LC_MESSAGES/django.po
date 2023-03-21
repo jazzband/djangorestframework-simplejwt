@@ -1,0 +1,113 @@
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <info@lukasrod.cz>, 2019.
+msgid ""
+msgstr ""
+"Project-Id-Version: djangorestframework_simplejwt\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-03-20 17:30+0100\n"
+"Last-Translator: Ahmed Jazzar <me@ahmedjazzar.com>\n"
+"Language: ar\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+
+#: authentication.py:78
+msgid "Authorization header must contain two space-delimited values"
+msgstr "يجب أن يحتوي رأس التفويض على قيمتين مفصولتين بمسافات"
+
+#: authentication.py:104
+msgid "Given token not valid for any token type"
+msgstr "تأشيرة المرور غير صالحة لأي نوع من أنواع التأشيرات"
+
+#: authentication.py:116 authentication.py:143
+msgid "Token contained no recognizable user identification"
+msgstr "لا تحتوي تأشيرة المرور على هوية مستخدم يمكن التعرف عليها"
+
+#: authentication.py:121
+msgid "User not found"
+msgstr "لم يتم العثور على المستخدم"
+
+#: authentication.py:124
+msgid "User is inactive"
+msgstr "الحساب غير مفعل"
+
+#: backends.py:67
+msgid "Unrecognized algorithm type '{}'"
+msgstr "نوع الخوارزمية غير معروف '{}'"
+
+#: backends.py:73
+msgid "You must have cryptography installed to use {}."
+msgstr "يجب أن يكون لديك تشفير مثبت لاستخدام {}."
+
+#: backends.py:88
+msgid ""
+"Unrecognized type '{}', 'leeway' must be of type int, float or timedelta."
+msgstr "نوع غير معروف '{}'. يجب أن تكون 'leeway' عددًا صحيحًا أو عددًا نسبيًا أو فرق وقت."
+
+#: backends.py:102 backends.py:152 exceptions.py:38 tokens.py:44
+msgid "Token is invalid or expired"
+msgstr "تأشيرة المرور غير صالحة أو منتهية الصلاحية"
+
+#: backends.py:150
+msgid "Invalid algorithm specified"
+msgstr "تم تحديد خوارزمية غير صالحة"
+
+#: serializers.py:30
+msgid "No active account found with the given credentials"
+msgstr "لم يتم العثور على حساب نشط للبيانات المقدمة"
+
+#: settings.py:70
+msgid ""
+"The '{}' setting has been removed. Please refer to '{}' for available "
+"settings."
+msgstr "تمت إزالة الإعداد '{}'. يرجى الرجوع إلى '{}' للتعرف على الإعدادات المتاحة."
+
+#: token_blacklist/admin.py:68
+msgid "jti"
+msgstr "jti"
+
+#: token_blacklist/admin.py:74
+msgid "user"
+msgstr "المستخدم"
+
+#: token_blacklist/admin.py:80
+msgid "created at"
+msgstr "أنشئت في"
+
+#: token_blacklist/admin.py:86
+msgid "expires at"
+msgstr "تنتهي في"
+
+#: token_blacklist/apps.py:7
+msgid "Token Blacklist"
+msgstr "قائمة تأشيرات المرور السوداء"
+
+#: tokens.py:30
+msgid "Cannot create token with no type or lifetime"
+msgstr "لا يمكن إنشاء تأشيرة مرور بدون نوع أو عمر"
+
+#: tokens.py:102
+msgid "Token has no id"
+msgstr "التأشيرة ليس لها معرف"
+
+#: tokens.py:115
+msgid "Token has no type"
+msgstr "التأشيرة ليس لها نوع"
+
+#: tokens.py:118
+msgid "Token has wrong type"
+msgstr "التأشيرة لها نوع خاطئ"
+
+#: tokens.py:170
+msgid "Token has no '{}' claim"
+msgstr "التأشيرة ليس لديها مطالبة '{}'"
+
+#: tokens.py:175
+msgid "Token '{}' claim has expired"
+msgstr "انتهى عمر المطالبة بالتأشيرة '{}'"
+
+#: tokens.py:230
+msgid "Token is blacklisted"
+msgstr "التأشيرة مدرجة في القائمة السوداء"
