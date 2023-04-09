@@ -25,7 +25,7 @@ class OutstandingToken(models.Model):
         )
         ordering = ("user",)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return "Token for {} ({})".format(
             self.user,
             self.jti,
@@ -48,5 +48,5 @@ class BlacklistedToken(models.Model):
             "rest_framework_simplejwt.token_blacklist" not in settings.INSTALLED_APPS
         )
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"Blacklisted token for {self.token.user}"

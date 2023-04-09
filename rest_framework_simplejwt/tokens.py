@@ -1,14 +1,22 @@
-from datetime import timedelta
+from datetime import datetime, timedelta
+from typing import TYPE_CHECKING, Any, Dict, Optional, TypeVar
 from uuid import uuid4
 
 from django.conf import settings
+from django.contrib.auth.models import AbstractBaseUser
 from django.utils.module_loading import import_string
 from django.utils.translation import gettext_lazy as _
 
 from .exceptions import TokenBackendError, TokenError
+from .models import TokenUser
 from .settings import api_settings
 from .token_blacklist.models import BlacklistedToken, OutstandingToken
 from .utils import aware_utcnow, datetime_from_epoch, datetime_to_epoch, format_lazy
+
+if TYPE_CHECKING:
+    from .backends import TokenBackend
+
+AuthUser = TypeVar("AuthUser", AbstractBaseUser, TokenUser)
 
 
 class Token:
@@ -17,10 +25,10 @@ class Token:
     new JWT.
     """
 
-    token_type = None
-    lifetime = None
+    token_type: Optional[str] = None
+    lifetime: Optional[timedelta] = None
 
-    def __init__(self, token=None, verify=True):
+    def __init__(self, token: Optional["Token"] = None, verify: bool = True) -> None:
         """
         !!!! IMPORTANT !!!! MUST raise a TokenError with a user-facing error
         message if the given token is invalid, expired, or otherwise not safe
@@ -56,31 +64,31 @@ class Token:
             # Set "jti" claim
             self.set_jti()
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return repr(self.payload)
 
-    def __getitem__(self, key):
+    def __getitem__(self, key: str):
         return self.payload[key]
 
-    def __setitem__(self, key, value):
+    def __setitem__(self, key: str, value: Any) -> None:
         self.payload[key] = value
 
-    def __delitem__(self, key):
+    def __delitem__(self, key: str) -> None:
         del self.payload[key]
 
-    def __contains__(self, key):
+    def __contains__(self, key: str) -> Any:
         return key in self.payload
 
-    def get(self, key, default=None):
+    def get(self, key: str, default: Optional[Any] = None) -> Any:
         return self.payload.get(key, default)
 
-    def __str__(self):
+    def __str__(self) -> str:
         """
         Signs and returns a token as a base64 encoded string.
         """
         return self.get_token_backend().encode(self.payload)
 
-    def verify(self):
+    def verify(self) -> None:
         """
         Performs additional validation steps which were not performed when this
         token was decoded.  This method is part of the "public" API to indicate
@@ -105,7 +113,7 @@ class Token:
 
             self.verify_token_type()
 
-    def verify_token_type(self):
+    def verify_token_type(self) -> None:
         """
         Ensures that the token type claim is present and has the correct value.
         """
@@ -117,7 +125,7 @@ class Token:
         if self.token_type != token_type:
             raise TokenError(_("Token has wrong type"))
 
-    def set_jti(self):
+    def set_jti(self) -> None:
         """
         Populates the configured jti claim of a token with a string where there
         is a negligible probability that the same string will be chosen at a
@@ -128,7 +136,12 @@ class Token:
         """
         self.payload[api_settings.JTI_CLAIM] = uuid4().hex
 
-    def set_exp(self, claim="exp", from_time=None, lifetime=None):
+    def set_exp(
+        self,
+        claim: str = "exp",
+        from_time: Optional[datetime] = None,
+        lifetime: Optional[timedelta] = None,
+    ) -> None:
         """
         Updates the expiration time of a token.
 
@@ -143,7 +156,7 @@ class Token:
 
         self.payload[claim] = datetime_to_epoch(from_time + lifetime)
 
-    def set_iat(self, claim="iat", at_time=None):
+    def set_iat(self, claim: str = "iat", at_time: Optional[datetime] = None) -> None:
         """
         Updates the time at which the token was issued.
 
@@ -155,7 +168,9 @@ class Token:
 
         self.payload[claim] = datetime_to_epoch(at_time)
 
-    def check_exp(self, claim="exp", current_time=None):
+    def check_exp(
+        self, claim: str = "exp", current_time: Optional[datetime] = None
+    ) -> None:
         """
         Checks whether a timestamp value in the given claim has passed (since
         the given datetime value in `current_time`).  Raises a TokenError with
@@ -175,7 +190,7 @@ class Token:
             raise TokenError(format_lazy(_("Token '{}' claim has expired"), claim))
 
     @classmethod
-    def for_user(cls, user):
+    def for_user(cls, user: AuthUser) -> "Token":
         """
         Returns an authorization token for the given user that will be provided
         after authenticating the user's credentials.
@@ -189,17 +204,17 @@ class Token:
 
         return token
 
-    _token_backend = None
+    _token_backend: Optional["TokenBackend"] = None
 
     @property
-    def token_backend(self):
+    def token_backend(self) -> "TokenBackend":
         if self._token_backend is None:
             self._token_backend = import_string(
                 "rest_framework_simplejwt.state.token_backend"
             )
         return self._token_backend
 
-    def get_token_backend(self):
+    def get_token_backend(self) -> "TokenBackend":
         # Backward compatibility.
         return self.token_backend
 
@@ -212,14 +227,16 @@ class BlacklistMixin:
     membership in a token blacklist.
     """
 
+    payload: Dict[str, Any]
+
     if "rest_framework_simplejwt.token_blacklist" in settings.INSTALLED_APPS:
 
-        def verify(self, *args, **kwargs):
+        def verify(self, *args, **kwargs) -> None:
             self.check_blacklist()
 
-            super().verify(*args, **kwargs)
+            super().verify(*args, **kwargs)  # type: ignore
 
-        def check_blacklist(self):
+        def check_blacklist(self) -> None:
             """
             Checks if this token is present in the token blacklist.  Raises
             `TokenError` if so.
@@ -229,7 +246,7 @@ class BlacklistMixin:
             if BlacklistedToken.objects.filter(token__jti=jti).exists():
                 raise TokenError(_("Token is blacklisted"))
 
-        def blacklist(self):
+        def blacklist(self) -> BlacklistedToken:
             """
             Ensures this token is included in the outstanding token list and
             adds it to the blacklist.
@@ -249,11 +266,11 @@ class BlacklistMixin:
             return BlacklistedToken.objects.get_or_create(token=token)
 
         @classmethod
-        def for_user(cls, user):
+        def for_user(cls, user: AuthUser) -> Token:
             """
             Adds this token to the outstanding token list.
             """
-            token = super().for_user(user)
+            token = super().for_user(user)  # type: ignore
 
             jti = token[api_settings.JTI_CLAIM]
             exp = token["exp"]
@@ -273,7 +290,7 @@ class SlidingToken(BlacklistMixin, Token):
     token_type = "sliding"
     lifetime = api_settings.SLIDING_TOKEN_LIFETIME
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
 
         if self.token is None:
@@ -306,7 +323,7 @@ class RefreshToken(BlacklistMixin, Token):
     access_token_class = AccessToken
 
     @property
-    def access_token(self):
+    def access_token(self) -> AccessToken:
         """
         Returns an access token created from this refresh token.  Copies all
         claims present in this refresh token to the new access token except
@@ -333,7 +350,7 @@ class UntypedToken(Token):
     token_type = "untyped"
     lifetime = timedelta(seconds=0)
 
-    def verify_token_type(self):
+    def verify_token_type(self) -> None:
         """
         Untyped tokens do not verify the "token_type" claim.  This is useful
         when performing general validation of a token's signature and other
