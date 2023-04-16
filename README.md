@@ -5,7 +5,7 @@
 [![PyPI version](https://img.shields.io/pypi/pyversions/django-ninja-jwt.svg)](https://pypi.python.org/pypi/django-ninja-jwt)
 [![PyPI version](https://img.shields.io/pypi/djversions/django-ninja-jwt.svg)](https://pypi.python.org/pypi/django-ninja-jwt)
 [![Codecov](https://img.shields.io/codecov/c/gh/eadwinCode/django-ninja-jwt)](https://codecov.io/gh/eadwinCode/django-ninja-jwt)
-[![Downloads](https://static.pepy.tech/personalized-badge/django-ninja-jwt?period=month&units=international_system&left_color=black&right_color=orange&left_text=Downloads/month)](https://pepy.tech/project/django-ninja-jwt)
+[![Downloads](https://static.pepy.tech/badge/django-ninja-jwt)](https://pepy.tech/project/django-ninja-jwt)
 
 ## Abstract
 
