@@ -14,9 +14,10 @@ from .tokens import RefreshToken, SlidingToken, Token, UntypedToken
 AuthUser = TypeVar("AuthUser", AbstractBaseUser, TokenUser)
 
 if api_settings.ROTATE_REFRESH_TOKENS:
-    from .token_blacklist.models import OutstandingToken
-    from .authentication import JWTAuthentication
     from datetime import datetime
+
+    from .authentication import JWTAuthentication
+    from .token_blacklist.models import OutstandingToken
 
     if api_settings.BLACKLIST_AFTER_ROTATION:
         from .token_blacklist.models import BlacklistedToken
@@ -135,7 +136,7 @@ class TokenRefreshSerializer(serializers.Serializer):
                 jti=refresh[api_settings.JTI_CLAIM],
                 token=str(refresh),
                 created_at=datetime.fromtimestamp(refresh["iat"]),
-                expires_at=datetime.fromtimestamp(refresh["exp"])
+                expires_at=datetime.fromtimestamp(refresh["exp"]),
             )
 
             data["refresh"] = str(refresh)
