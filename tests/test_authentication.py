@@ -6,10 +6,12 @@ from django.test import TestCase
 from rest_framework.test import APIRequestFactory
 
 from rest_framework_simplejwt import authentication
-from rest_framework_simplejwt.exceptions import AuthenticationFailed, InvalidToken
+from rest_framework_simplejwt.exceptions import (AuthenticationFailed,
+                                                 InvalidToken)
 from rest_framework_simplejwt.models import TokenUser
 from rest_framework_simplejwt.settings import api_settings
 from rest_framework_simplejwt.tokens import AccessToken, SlidingToken
+from rest_framework_simplejwt.utils import get_md5_hash_password
 
 from .utils import override_api_settings
 
@@ -152,6 +154,12 @@ class TestJWTAuthentication(TestCase):
 
         u.is_active = True
         u.save()
+
+        # Should raise exception if password hash is different
+        with self.assertRaises(AuthenticationFailed):
+            self.backend.get_user(payload)
+
+        payload["hash_password"] = get_md5_hash_password(u.password)
 
         # Otherwise, should return correct user
         self.assertEqual(self.backend.get_user(payload).id, u.id)
