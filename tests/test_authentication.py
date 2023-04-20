@@ -6,8 +6,7 @@ from django.test import TestCase
 from rest_framework.test import APIRequestFactory
 
 from rest_framework_simplejwt import authentication
-from rest_framework_simplejwt.exceptions import (AuthenticationFailed,
-                                                 InvalidToken)
+from rest_framework_simplejwt.exceptions import AuthenticationFailed, InvalidToken
 from rest_framework_simplejwt.models import TokenUser
 from rest_framework_simplejwt.settings import api_settings
 from rest_framework_simplejwt.tokens import AccessToken, SlidingToken

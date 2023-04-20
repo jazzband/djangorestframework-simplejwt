@@ -135,7 +135,9 @@ class JWTAuthentication(authentication.BaseAuthentication):
             raise AuthenticationFailed(_("User is inactive"), code="user_inactive")
 
         if validated_token.get("hash_password") != get_md5_hash_password(user.password):
-            raise AuthenticationFailed(_("The user's password has been changed."), code="password_changed")
+            raise AuthenticationFailed(
+                _("The user's password has been changed."), code="password_changed"
+            )
 
         return user
 
