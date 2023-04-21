@@ -164,7 +164,7 @@ class TokenVerifySerializer(serializers.Serializer):
 
 
 class TokenBlacklistSerializer(serializers.Serializer):
-    refresh = serializers.CharField()
+    refresh = serializers.CharField(write_only=True)
     token_class = RefreshToken
 
     def validate(self, attrs: Dict[str, Any]) -> Dict[Any, Any]:
