@@ -5,8 +5,8 @@ try:
         from importlib import metadata
     else:
         import importlib_metadata as metadata
-    
-    __version__ =  metadata.version("djangorestframework_simplejwt")
+
+    __version__ = metadata.version("djangorestframework_simplejwt")
 except DistributionNotFound:
     # package is not installed
     __version__ = None
