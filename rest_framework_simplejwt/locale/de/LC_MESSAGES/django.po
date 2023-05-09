@@ -48,7 +48,7 @@ msgstr "Ungültiger oder abgelaufener Token"
 
 #: backends.py:150
 msgid "Invalid algorithm specified"
-msgstr ""
+msgstr "Ungültiger Algorithmus angegeben"
 
 #: serializers.py:30
 msgid "No active account found with the given credentials"
