@@ -40,7 +40,7 @@ msgstr "Sie müssen Kryptografie installiert haben, um {} verwenden zu können."
 
 #: backends.py:88
 msgid "Unrecognized type '{}', 'leeway' must be of type int, float or timedelta."
-msgstr ""
+msgstr "Unbekannter Typ '{}', 'Leeway' muss vom Typ int, float oder timedelta sein."
 
 #: backends.py:102 backends.py:152 exceptions.py:38 tokens.py:44
 msgid "Token is invalid or expired"
