@@ -15,7 +15,7 @@ export async function defineConfig(env) {
   };
   
   const { default: standardLintRules } = await env.$import(
-    "https://cdn.jsdelivr.net/gh/inlang/standard-lint-rules@1.1.1/dist/index.js"
+    "https://cdn.jsdelivr.net/gh/inlang/standard-lint-rules@2/dist/index.js"
   );
 
   return {
