@@ -1,11 +1,15 @@
 # This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <oon.arfiandwi@gmail.com>, 2020.
+#
+# Translators:
+# <oon.arfiandwi@gmail.com>, 2020
+# Kira <kiraware@github.com>, 2023
 msgid ""
 msgstr ""
 "Project-Id-Version: djangorestframework_simplejwt\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-22 17:30+0100\n"
-"Last-Translator: oon arfiandwi <oon.arfiandwi@gmail.com>\n"
+"PO-Revision-Date: 2023-03-09 08:14+0000\n"
+"Last-Translator: Kira <kiraware@github.com>\n"
 "Language: id_ID\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,12 +42,13 @@ msgstr "Jenis algoritma tidak dikenal '{}'"
 
 #: backends.py:73
 msgid "You must have cryptography installed to use {}."
-msgstr "Anda harus memasang kriptografi untuk menggunakan {}."
+msgstr "Anda harus memasang cryptography untuk menggunakan {}."
 
 #: backends.py:88
 msgid ""
 "Unrecognized type '{}', 'leeway' must be of type int, float or timedelta."
 msgstr ""
+"Tipe '{}' tidak dikenali, 'leeway' harus bertipe int, float, atau timedelta."
 
 #: backends.py:102 backends.py:152 exceptions.py:38 tokens.py:44
 msgid "Token is invalid or expired"
