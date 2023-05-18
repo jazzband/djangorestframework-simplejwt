@@ -1,0 +1,118 @@
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <zeack@protonmail.com>, 2020.
+msgid ""
+msgstr ""
+"Project-Id-Version: djangorestframework_simplejwt\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-02-22 17:30+0100\n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: he\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : n==2 ? 1 : n>10 && n"
+"%10==0 ? 2 : 3);\n"
+"X-Generator: Poedit 3.2.2\n"
+
+#: authentication.py:78
+msgid "Authorization header must contain two space-delimited values"
+msgstr "Authorization Header חייבת להכיל שני ערכים מופרדים ברווח"
+
+#: authentication.py:104
+msgid "Given token not valid for any token type"
+msgstr "המזהה הנתון אינו תקף עבור אף סיווג"
+
+#: authentication.py:116 authentication.py:143
+msgid "Token contained no recognizable user identification"
+msgstr "המזהה לא הכיל זיהוי משתמש שניתן לזהות"
+
+#: authentication.py:121
+msgid "User not found"
+msgstr "משתמש לא נמצא"
+
+#: authentication.py:124
+msgid "User is inactive"
+msgstr "המשתמש אינו פעיל"
+
+#: backends.py:67
+msgid "Unrecognized algorithm type '{}'"
+msgstr "סוג אלגוריתם לא מזוהה '{}'"
+
+#: backends.py:73
+msgid "You must have cryptography installed to use {}."
+msgstr "עליך להתקין קריפטוגרפיה כדי להשתמש ב-{}."
+
+#: backends.py:88
+msgid ""
+"Unrecognized type '{}', 'leeway' must be of type int, float or timedelta."
+msgstr ""
+"סוג לא מזוהה '{}', 'leeway' חייב להיות מסוג int, float או timedelta."
+
+#: backends.py:102 backends.py:152 exceptions.py:38 tokens.py:44
+msgid "Token is invalid or expired"
+msgstr "המזהה אינו חוקי או שפג תוקפו"
+
+#: backends.py:150
+msgid "Invalid algorithm specified"
+msgstr "צוין אלגוריתם לא חוקי"
+
+#: serializers.py:30
+msgid "No active account found with the given credentials"
+msgstr "לא נמצא חשבון עם פרטי זיהוי אלו"
+
+#: settings.py:70
+msgid ""
+"The '{}' setting has been removed. Please refer to '{}' for available "
+"settings."
+msgstr ""
+"ההגדרה '{}' הוסרה. בבקשה קראו כאן: '{}' בשביל לראות הגדרות אפשרויות"
+
+#: token_blacklist/admin.py:68
+msgid "jti"
+msgstr "jti"
+
+#: token_blacklist/admin.py:74
+msgid "user"
+msgstr "משתמש"
+
+#: token_blacklist/admin.py:80
+msgid "created at"
+msgstr "נוצר בשעה"
+
+#: token_blacklist/admin.py:86
+msgid "expires at"
+msgstr "פג תוקף בשעה"
+
+#: token_blacklist/apps.py:7
+msgid "Token Blacklist"
+msgstr "רשימה שחורה של מזהים"
+
+#: tokens.py:30
+msgid "Cannot create token with no type or lifetime"
+msgstr "לא ניתן ליצור מזהה ללא סוג או אורך חיים"
+
+#: tokens.py:102
+msgid "Token has no id"
+msgstr "למזהה אין מספר זיהוי"
+
+#: tokens.py:115
+msgid "Token has no type"
+msgstr "למזהה אין סוג"
+
+#: tokens.py:118
+msgid "Token has wrong type"
+msgstr "למזהה יש סוג לא נכון"
+
+#: tokens.py:170
+msgid "Token has no '{}' claim"
+msgstr "למזהה אין '{}'"
+
+#: tokens.py:175
+msgid "Token '{}' claim has expired"
+msgstr "מזהה '{}' פג תוקף"
+
+#: tokens.py:230
+msgid "Token is blacklisted"
+msgstr "המזהה ברשימה השחורה."
