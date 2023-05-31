@@ -55,8 +55,8 @@ setup(
     author="David Sanders",
     author_email="davesque@gmail.com",
     install_requires=[
-        "django",
-        "djangorestframework",
+        "django>=3.2",
+        "djangorestframework>=3.10",
         "pyjwt>=1.7.1,<3",
     ],
     python_requires=">=3.7",
@@ -71,6 +71,7 @@ setup(
         "Framework :: Django :: 3.2",
         "Framework :: Django :: 4.0",
         "Framework :: Django :: 4.1",
+        "Framework :: Django :: 4.2",
         "Intended Audience :: Developers",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
