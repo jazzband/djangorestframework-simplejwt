@@ -7,6 +7,7 @@
 [![Codecov](https://img.shields.io/codecov/c/gh/eadwinCode/django-ninja-jwt)](https://codecov.io/gh/eadwinCode/django-ninja-jwt)
 [![Downloads](https://static.pepy.tech/badge/django-ninja-jwt)](https://pepy.tech/project/django-ninja-jwt)
 
+
 ## Abstract
 
 Ninja JWT is JSON Web Token plugin for Django-Ninja. The library is a fork of [Simple JWT](https://github.com/jazzband/djangorestframework-simplejwt) by Jazzband, a popular  JWT plugin for [Django REST Framework](http://www.django-rest-framework.org).
