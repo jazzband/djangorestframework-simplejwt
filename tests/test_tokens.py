@@ -35,7 +35,7 @@ class TestToken(TestCase):
     def setUpTestData(cls):
         cls.username = "test_user"
         cls.user = User.objects.create_user(
-            username=self.username,
+            username=cls.username,
             password="test_password",
         )
 
