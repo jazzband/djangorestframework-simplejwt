@@ -53,9 +53,7 @@ class TokenObtainSerializer(serializers.Serializer):
 
         self.user = authenticate(**authenticate_kwargs)
 
-        if not user:
-            msg = _("Unable to log in with provided credentials.")
-            raise serializers.ValidationError(msg, code="authorization")
+        test = 1
 
         if not api_settings.USER_AUTHENTICATION_RULE(self.user):
             raise exceptions.AuthenticationFailed(
