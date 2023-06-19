@@ -22,7 +22,6 @@ def reverse_populate_jti_hex(apps, schema_editor):  # pragma: no cover
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("token_blacklist", "0002_outstandingtoken_jti_hex"),
     ]
