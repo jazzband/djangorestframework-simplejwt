@@ -110,7 +110,6 @@ class Token:
             raise TokenError(_("Token has no id"))
 
         if api_settings.TOKEN_TYPE_CLAIM is not None:
-
             self.verify_token_type()
 
     def verify_token_type(self) -> None:
