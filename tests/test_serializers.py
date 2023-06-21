@@ -285,6 +285,10 @@ class TestTokenRefreshSerializer(TestCase):
             access["exp"], datetime_to_epoch(now + api_settings.ACCESS_TOKEN_LIFETIME)
         )
 
+    @override_api_settings(
+        ROTATE_REFRESH_TOKENS=True,
+        BLACKLIST_AFTER_ROTATION=False,
+    )
     def test_it_should_return_refresh_token_if_tokens_should_be_rotated(self):
         refresh = RefreshToken()
 
@@ -298,14 +302,9 @@ class TestTokenRefreshSerializer(TestCase):
 
         now = aware_utcnow() - api_settings.ACCESS_TOKEN_LIFETIME / 2
 
-        with override_api_settings(
-            ROTATE_REFRESH_TOKENS=True, BLACKLIST_AFTER_ROTATION=False
-        ):
-            with patch(
-                "rest_framework_simplejwt.tokens.aware_utcnow"
-            ) as fake_aware_utcnow:
-                fake_aware_utcnow.return_value = now
-                self.assertTrue(ser.is_valid())
+        with patch("rest_framework_simplejwt.tokens.aware_utcnow") as fake_aware_utcnow:
+            fake_aware_utcnow.return_value = now
+            self.assertTrue(ser.is_valid())
 
         access = AccessToken(ser.validated_data["access"])
         new_refresh = RefreshToken(ser.validated_data["refresh"])
@@ -324,6 +323,10 @@ class TestTokenRefreshSerializer(TestCase):
             datetime_to_epoch(now + api_settings.REFRESH_TOKEN_LIFETIME),
         )
 
+    @override_api_settings(
+        ROTATE_REFRESH_TOKENS=True,
+        BLACKLIST_AFTER_ROTATION=True,
+    )
     def test_it_should_blacklist_refresh_token_if_tokens_should_be_rotated_and_blacklisted(
         self,
     ):
@@ -342,14 +345,9 @@ class TestTokenRefreshSerializer(TestCase):
 
         now = aware_utcnow() - api_settings.ACCESS_TOKEN_LIFETIME / 2
 
-        with override_api_settings(
-            ROTATE_REFRESH_TOKENS=True, BLACKLIST_AFTER_ROTATION=True
-        ):
-            with patch(
-                "rest_framework_simplejwt.tokens.aware_utcnow"
-            ) as fake_aware_utcnow:
-                fake_aware_utcnow.return_value = now
-                self.assertTrue(ser.is_valid())
+        with patch("rest_framework_simplejwt.tokens.aware_utcnow") as fake_aware_utcnow:
+            fake_aware_utcnow.return_value = now
+            self.assertTrue(ser.is_valid())
 
         access = AccessToken(ser.validated_data["access"])
         new_refresh = RefreshToken(ser.validated_data["refresh"])
