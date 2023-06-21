@@ -237,25 +237,25 @@ class TokenVerifySerializerShouldHonourBlacklist(MigrationTestCase):
 
         super().setUp()
 
+    @override_api_settings(BLACKLIST_AFTER_ROTATION=True)
     def test_token_verify_serializer_should_honour_blacklist_if_blacklisting_enabled(
         self,
     ):
-        with override_api_settings(BLACKLIST_AFTER_ROTATION=True):
-            refresh_token = RefreshToken.for_user(self.user)
-            refresh_token.blacklist()
+        refresh_token = RefreshToken.for_user(self.user)
+        refresh_token.blacklist()
 
-            serializer = TokenVerifySerializer(data={"token": str(refresh_token)})
-            self.assertFalse(serializer.is_valid())
+        serializer = TokenVerifySerializer(data={"token": str(refresh_token)})
+        self.assertFalse(serializer.is_valid())
 
+    @override_api_settings(BLACKLIST_AFTER_ROTATION=False)
     def test_token_verify_serializer_should_not_honour_blacklist_if_blacklisting_not_enabled(
         self,
     ):
-        with override_api_settings(BLACKLIST_AFTER_ROTATION=False):
-            refresh_token = RefreshToken.for_user(self.user)
-            refresh_token.blacklist()
+        refresh_token = RefreshToken.for_user(self.user)
+        refresh_token.blacklist()
 
-            serializer = TokenVerifySerializer(data={"token": str(refresh_token)})
-            self.assertTrue(serializer.is_valid())
+        serializer = TokenVerifySerializer(data={"token": str(refresh_token)})
+        self.assertTrue(serializer.is_valid())
 
 
 class TestBigAutoFieldIDMigration(MigrationTestCase):

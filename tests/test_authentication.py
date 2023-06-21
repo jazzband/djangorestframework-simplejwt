@@ -40,25 +40,19 @@ class TestJWTAuthentication(TestCase):
         )
         self.assertEqual(self.backend.get_header(request), self.fake_header)
 
-        # Should work with the x_access_token
-        with override_api_settings(AUTH_HEADER_NAME="HTTP_X_ACCESS_TOKEN"):
-            # Should pull correct header off request when using X_ACCESS_TOKEN
-            request = self.factory.get(
-                "/test-url/", HTTP_X_ACCESS_TOKEN=self.fake_header
-            )
-            self.assertEqual(self.backend.get_header(request), self.fake_header)
+    @override_api_settings(AUTH_HEADER_NAME="HTTP_X_ACCESS_TOKEN")
+    def test_get_header_x_access_token(self):
+        # Should pull correct header off request when using X_ACCESS_TOKEN
+        request = self.factory.get("/test-url/", HTTP_X_ACCESS_TOKEN=self.fake_header)
+        self.assertEqual(self.backend.get_header(request), self.fake_header)
 
-            # Should work for unicode headers when using
-            request = self.factory.get(
-                "/test-url/", HTTP_X_ACCESS_TOKEN=self.fake_header.decode("utf-8")
-            )
-            self.assertEqual(self.backend.get_header(request), self.fake_header)
+        # Should work for unicode headers when using
+        request = self.factory.get(
+            "/test-url/", HTTP_X_ACCESS_TOKEN=self.fake_header.decode("utf-8")
+        )
+        self.assertEqual(self.backend.get_header(request), self.fake_header)
 
     def test_get_raw_token(self):
-        # Should return None if header lacks correct type keyword
-        with override_api_settings(AUTH_HEADER_TYPES="JWT"):
-            reload(authentication)
-            self.assertIsNone(self.backend.get_raw_token(self.fake_header))
         reload(authentication)
 
         # Should return None if an empty AUTHORIZATION header is sent
@@ -74,14 +68,21 @@ class TestJWTAuthentication(TestCase):
         # Otherwise, should return unvalidated token in header
         self.assertEqual(self.backend.get_raw_token(self.fake_header), self.fake_token)
 
-        # Should return token if header has one of many valid token types
-        with override_api_settings(AUTH_HEADER_TYPES=("JWT", "Bearer")):
-            reload(authentication)
-            self.assertEqual(
-                self.backend.get_raw_token(self.fake_header),
-                self.fake_token,
-            )
+    @override_api_settings(AUTH_HEADER_TYPES="JWT")
+    def test_get_raw_token_incorrect_header_keyword(self):
+        # Should return None if header lacks correct type keyword
+        # AUTH_HEADER_TYPES is "JWT", but header is "Bearer"
         reload(authentication)
+        self.assertIsNone(self.backend.get_raw_token(self.fake_header))
+
+    @override_api_settings(AUTH_HEADER_TYPES=("JWT", "Bearer"))
+    def test_get_raw_token_multi_header_keyword(self):
+        # Should return token if header has one of many valid token types
+        reload(authentication)
+        self.assertEqual(
+            self.backend.get_raw_token(self.fake_header),
+            self.fake_token,
+        )
 
     def test_get_validated_token(self):
         # Should raise InvalidToken if token not valid
@@ -96,36 +97,39 @@ class TestJWTAuthentication(TestCase):
             self.backend.get_validated_token(str(token)).payload, token.payload
         )
 
+    @override_api_settings(
+        AUTH_TOKEN_CLASSES=("rest_framework_simplejwt.tokens.AccessToken",),
+    )
+    def test_get_validated_token_reject_unknown_token(self):
         # Should not accept tokens not included in AUTH_TOKEN_CLASSES
         sliding_token = SlidingToken()
-        with override_api_settings(
-            AUTH_TOKEN_CLASSES=("rest_framework_simplejwt.tokens.AccessToken",)
-        ):
-            with self.assertRaises(InvalidToken) as e:
-                self.backend.get_validated_token(str(sliding_token))
+        with self.assertRaises(InvalidToken) as e:
+            self.backend.get_validated_token(str(sliding_token))
 
-            messages = e.exception.detail["messages"]
-            self.assertEqual(1, len(messages))
-            self.assertEqual(
-                {
-                    "token_class": "AccessToken",
-                    "token_type": "access",
-                    "message": "Token has wrong type",
-                },
-                messages[0],
-            )
+        messages = e.exception.detail["messages"]
+        self.assertEqual(1, len(messages))
+        self.assertEqual(
+            {
+                "token_class": "AccessToken",
+                "token_type": "access",
+                "message": "Token has wrong type",
+            },
+            messages[0],
+        )
 
+    @override_api_settings(
+        AUTH_TOKEN_CLASSES=(
+            "rest_framework_simplejwt.tokens.AccessToken",
+            "rest_framework_simplejwt.tokens.SlidingToken",
+        ),
+    )
+    def test_get_validated_token_accept_known_token(self):
         # Should accept tokens included in AUTH_TOKEN_CLASSES
         access_token = AccessToken()
         sliding_token = SlidingToken()
-        with override_api_settings(
-            AUTH_TOKEN_CLASSES=(
-                "rest_framework_simplejwt.tokens.AccessToken",
-                "rest_framework_simplejwt.tokens.SlidingToken",
-            )
-        ):
-            self.backend.get_validated_token(str(access_token))
-            self.backend.get_validated_token(str(sliding_token))
+
+        self.backend.get_validated_token(str(access_token))
+        self.backend.get_validated_token(str(sliding_token))
 
     def test_get_user(self):
         payload = {"some_other_id": "foo"}

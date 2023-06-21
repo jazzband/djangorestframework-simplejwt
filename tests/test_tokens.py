@@ -31,6 +31,14 @@ class TestToken(TestCase):
     def setUp(self):
         self.token = MyToken()
 
+    @classmethod
+    def setUpTestData(cls):
+        cls.username = "test_user"
+        cls.user = User.objects.create_user(
+            username=cls.username,
+            password="test_password",
+        )
+
     def test_init_no_token_type_or_lifetime(self):
         class MyTestToken(Token):
             pass
@@ -225,14 +233,14 @@ class TestToken(TestCase):
         self.assertIn("jti", token)
         self.assertNotEqual(old_jti, token["jti"])
 
+    @override_api_settings(JTI_CLAIM=None)
     def test_optional_jti(self):
-        with override_api_settings(JTI_CLAIM=None):
-            token = MyToken()
+        token = MyToken()
         self.assertNotIn("jti", token)
 
+    @override_api_settings(TOKEN_TYPE_CLAIM=None)
     def test_optional_type_token(self):
-        with override_api_settings(TOKEN_TYPE_CLAIM=None):
-            token = MyToken()
+        token = MyToken()
         self.assertNotIn("type", token)
 
     def test_set_exp(self):
@@ -355,25 +363,19 @@ class TestToken(TestCase):
         token.token_backend.leeway = 0
 
     def test_for_user(self):
-        username = "test_user"
-        user = User.objects.create_user(
-            username=username,
-            password="test_password",
-        )
+        token = MyToken.for_user(self.user)
 
-        token = MyToken.for_user(user)
-
-        user_id = getattr(user, api_settings.USER_ID_FIELD)
+        user_id = getattr(self.user, api_settings.USER_ID_FIELD)
         if not isinstance(user_id, int):
             user_id = str(user_id)
 
         self.assertEqual(token[api_settings.USER_ID_CLAIM], user_id)
 
+    @override_api_settings(USER_ID_FIELD="username")
+    def test_for_user_with_username(self):
         # Test with non-int user id
-        with override_api_settings(USER_ID_FIELD="username"):
-            token = MyToken.for_user(user)
-
-        self.assertEqual(token[api_settings.USER_ID_CLAIM], username)
+        token = MyToken.for_user(self.user)
+        self.assertEqual(token[api_settings.USER_ID_CLAIM], self.username)
 
     def test_get_token_backend(self):
         token = MyToken()
