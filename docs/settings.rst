@@ -272,3 +272,18 @@ More about this in the "Sliding tokens" section below.
 
 The claim name that is used to store the expiration time of a sliding token's
 refresh period.  More about this in the "Sliding tokens" section below.
+
+``CHECK_REVOKE_TOKEN``
+--------------------
+
+If this field is set to ``True``, the system will verify whether the token
+has been revoked or not by comparing the md5 hash of the user's current
+password with the value stored in the REVOKE_TOKEN_CLAIM field within the
+payload of the JWT token.
+
+``REVOKE_TOKEN_CLAIM``
+--------------------
+
+The claim name that is used to store a user hash password.
+If the value of this CHECK_REVOKE_TOKEN field is ``True``, this field will be
+included in the JWT payload.
