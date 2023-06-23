@@ -158,7 +158,47 @@ class TestJWTAuthentication(TestCase):
         with self.assertRaises(AuthenticationFailed):
             self.backend.get_user(payload)
 
-        payload["hash_password"] = get_md5_hash_password(u.password)
+        if api_settings.CHECK_REVOKE_TOKEN:
+            payload[api_settings.REVOKE_TOKEN_CLAIM] = get_md5_hash_password(u.password)
+
+        # Otherwise, should return correct user
+        self.assertEqual(self.backend.get_user(payload).id, u.id)
+
+    def test_get_user_with_check_revoke_token(self):
+        with override_api_settings(CHECK_REVOKE_TOKEN=True, REVOKE_TOKEN_CLAIM='revoke_token_claim'):
+            pass
+
+        payload = {"some_other_id": "foo"}
+
+        # Should raise error if no recognizable user identification
+        with self.assertRaises(InvalidToken):
+            self.backend.get_user(payload)
+
+        payload[api_settings.USER_ID_CLAIM] = 42
+
+        # Should raise exception if user not found
+        with self.assertRaises(AuthenticationFailed):
+            self.backend.get_user(payload)
+
+        u = User.objects.create_user(username="markhamill")
+        u.is_active = False
+        u.save()
+
+        payload[api_settings.USER_ID_CLAIM] = getattr(u, api_settings.USER_ID_FIELD)
+
+        # Should raise exception if user is inactive
+        with self.assertRaises(AuthenticationFailed):
+            self.backend.get_user(payload)
+
+        u.is_active = True
+        u.save()
+
+        # Should raise exception if hash password is different
+        with self.assertRaises(AuthenticationFailed):
+            self.backend.get_user(payload)
+
+        if api_settings.CHECK_REVOKE_TOKEN:
+            payload[api_settings.REVOKE_TOKEN_CLAIM] = get_md5_hash_password(u.password)
 
         # Otherwise, should return correct user
         self.assertEqual(self.backend.get_user(payload).id, u.id)
