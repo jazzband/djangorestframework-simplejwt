@@ -209,7 +209,9 @@ class Token:
         token[api_settings.USER_ID_CLAIM] = user_id
 
         if api_settings.CHECK_REVOKE_TOKEN:
-            token[api_settings.REVOKE_TOKEN_CLAIM] = get_md5_hash_password(user.password)
+            token[api_settings.REVOKE_TOKEN_CLAIM] = get_md5_hash_password(
+                user.password
+            )
 
         return token
 

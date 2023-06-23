@@ -165,7 +165,9 @@ class TestJWTAuthentication(TestCase):
         self.assertEqual(self.backend.get_user(payload).id, u.id)
 
     def test_get_user_with_check_revoke_token(self):
-        with override_api_settings(CHECK_REVOKE_TOKEN=True, REVOKE_TOKEN_CLAIM='revoke_token_claim'):
+        with override_api_settings(
+            CHECK_REVOKE_TOKEN=True, REVOKE_TOKEN_CLAIM="revoke_token_claim"
+        ):
             pass
 
         payload = {"some_other_id": "foo"}
