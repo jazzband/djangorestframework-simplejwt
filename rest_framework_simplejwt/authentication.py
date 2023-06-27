@@ -10,6 +10,7 @@ from .exceptions import AuthenticationFailed, InvalidToken, TokenError
 from .models import TokenUser
 from .settings import api_settings
 from .tokens import Token
+from .utils import get_md5_hash_password
 
 AUTH_HEADER_TYPES = api_settings.AUTH_HEADER_TYPES
 
@@ -132,6 +133,14 @@ class JWTAuthentication(authentication.BaseAuthentication):
 
         if not user.is_active:
             raise AuthenticationFailed(_("User is inactive"), code="user_inactive")
+
+        if api_settings.CHECK_REVOKE_TOKEN:
+            if validated_token.get(
+                api_settings.REVOKE_TOKEN_CLAIM
+            ) != get_md5_hash_password(user.password):
+                raise AuthenticationFailed(
+                    _("The user's password has been changed."), code="password_changed"
+                )
 
         return user
 

@@ -11,7 +11,13 @@ from .exceptions import TokenBackendError, TokenError
 from .models import TokenUser
 from .settings import api_settings
 from .token_blacklist.models import BlacklistedToken, OutstandingToken
-from .utils import aware_utcnow, datetime_from_epoch, datetime_to_epoch, format_lazy
+from .utils import (
+    aware_utcnow,
+    datetime_from_epoch,
+    datetime_to_epoch,
+    format_lazy,
+    get_md5_hash_password,
+)
 
 if TYPE_CHECKING:
     from .backends import TokenBackend
@@ -200,6 +206,11 @@ class Token:
 
         token = cls()
         token[api_settings.USER_ID_CLAIM] = user_id
+
+        if api_settings.CHECK_REVOKE_TOKEN:
+            token[api_settings.REVOKE_TOKEN_CLAIM] = get_md5_hash_password(
+                user.password
+            )
 
         return token
 
