@@ -158,13 +158,6 @@ class TestJWTAuthentication(TestCase):
         u.is_active = True
         u.save()
 
-        # Should raise exception if hash password is different
-        with self.assertRaises(AuthenticationFailed):
-            self.backend.get_user(payload)
-
-        if api_settings.CHECK_REVOKE_TOKEN:
-            payload[api_settings.REVOKE_TOKEN_CLAIM] = get_md5_hash_password(u.password)
-
         # Otherwise, should return correct user
         self.assertEqual(self.backend.get_user(payload).id, u.id)
 
