@@ -74,13 +74,16 @@ class BlacklistedTokenAdmin(admin.ModelAdmin):
         call_command("flushexpiredtokens")
         self.message_user(request, "Flushed expired tokens.")
 
-   # Override the changelist_view method to bypass the "no items selected" validation
+    # Override the changelist_view method to bypass the "no items selected" validation
     def changelist_view(self, request, extra_context=None):
         """
         Override the default behavior to allow running the custom command
         without explicitly selecting any items.
         """
-        if 'action' in request.POST and request.POST['action'] == 'flush_expired_tokens':
+        if (
+            "action" in request.POST
+            and request.POST["action"] == "flush_expired_tokens"
+        ):
             # Modify the queryset to include all items
             queryset = self.get_queryset(request)
             self.flush_expired_tokens(request, queryset)
