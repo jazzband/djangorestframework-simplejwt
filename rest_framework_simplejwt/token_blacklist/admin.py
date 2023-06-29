@@ -68,9 +68,9 @@ class BlacklistedTokenAdmin(admin.ModelAdmin):
         "token__jti",
     )
     ordering = ("token__user",)
-    actions = ["flush_expired_tokens_and_devices"]
+    actions = ["flush_expired_tokens"]
 
-    def flush_expired_tokens_and_devices(self, request, queryset):
+    def flush_expired_tokens(self, request, queryset):
         call_command("flushexpiredtokens")
         self.message_user(request, "Flushed expired tokens.")
 
@@ -80,16 +80,16 @@ class BlacklistedTokenAdmin(admin.ModelAdmin):
         Override the default behavior to allow running the custom command
         without explicitly selecting any items.
         """
-        if 'action' in request.POST and request.POST['action'] == 'flush_expired_tokens_and_devices':
+        if 'action' in request.POST and request.POST['action'] == 'flush_expired_tokens':
             # Modify the queryset to include all items
             queryset = self.get_queryset(request)
-            self.flush_expired_tokens_and_devices(request, queryset)
+            self.flush_expired_tokens(request, queryset)
             # Redirect to the changelist after running the command
             return self.response_post_save_change(request, None)
 
         return super().changelist_view(request, extra_context=extra_context)
 
-    flush_expired_tokens_and_devices.short_description = "Flush expired access tokens and devices"
+    flush_expired_tokens.short_description = "Flush expired access tokens"
 
     def get_queryset(self, *args, **kwargs) -> QuerySet:
         qs = super().get_queryset(*args, **kwargs)
