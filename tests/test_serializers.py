@@ -2,6 +2,7 @@ from datetime import timedelta
 from importlib import reload
 from unittest.mock import MagicMock, patch
 
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from rest_framework import exceptions as drf_exceptions
@@ -391,8 +392,11 @@ class TestTokenRefreshSerializer(TestCase):
     def test_blacklist_app_not_installed_should_pass(self):
         from rest_framework_simplejwt import serializers, tokens
 
-        # Remove all app include blacklist app
-        with patch("django.conf.settings.INSTALLED_APPS", ()):
+        # Remove blacklist app
+        new_apps = list(settings.INSTALLED_APPS)
+        new_apps.remove("rest_framework_simplejwt.token_blacklist")
+
+        with self.settings(INSTALLED_APPS=tuple(new_apps)):
             # Reload module that blacklist app not installed
             reload(tokens)
             reload(serializers)
@@ -528,8 +532,11 @@ class TestTokenBlacklistSerializer(TestCase):
     def test_blacklist_app_not_installed_should_pass(self):
         from rest_framework_simplejwt import serializers, tokens
 
-        # Remove all app include blacklist app
-        with patch("django.conf.settings.INSTALLED_APPS", ()):
+        # Remove blacklist app
+        new_apps = list(settings.INSTALLED_APPS)
+        new_apps.remove("rest_framework_simplejwt.token_blacklist")
+
+        with self.settings(INSTALLED_APPS=tuple(new_apps)):
             # Reload module that blacklist app not installed
             reload(tokens)
             reload(serializers)
