@@ -33,9 +33,8 @@ class TestTokenBlacklist(TestCase):
             import rest_framework_simplejwt.token_blacklist.__init__ as blacklist
 
             self.assertEqual(
-                blacklist.default_app_config, (
-                    "rest_framework_simplejwt.token_blacklist.apps.TokenBlacklistConfig"
-                )
+                blacklist.default_app_config,
+                ("rest_framework_simplejwt.token_blacklist.apps.TokenBlacklistConfig"),
             )
 
         # Restore origin module without mock
@@ -139,7 +138,9 @@ class TestTokenBlacklist(TestCase):
         )
         blacklisted = BlacklistedToken.objects.create(token=outstanding)
 
-        expected_outstanding_str = "Token for {} ({})".format(outstanding.user, outstanding.jti)
+        expected_outstanding_str = "Token for {} ({})".format(
+            outstanding.user, outstanding.jti
+        )
         expected_blacklisted_str = f"Blacklisted token for {blacklisted.token.user}"
 
         self.assertEqual(str(outstanding), expected_outstanding_str)

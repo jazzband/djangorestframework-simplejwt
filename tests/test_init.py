@@ -7,7 +7,9 @@ from pkg_resources import DistributionNotFound
 
 class TestInit(SimpleTestCase):
     def test_package_is_not_installed(self):
-        with patch("pkg_resources.get_distribution", Mock(side_effect=DistributionNotFound)):
+        with patch(
+            "pkg_resources.get_distribution", Mock(side_effect=DistributionNotFound)
+        ):
             # Import package mock package is not installed
             import rest_framework_simplejwt.__init__
 

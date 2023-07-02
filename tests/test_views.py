@@ -443,7 +443,9 @@ class TestCustomTokenView(APIViewTestCase):
 
 
 class TestTokenViewBase(APIViewTestCase):
-    def test_serializer_class_not_set_in_settings_and_class_attribute_or_wrong_path(self):
+    def test_serializer_class_not_set_in_settings_and_class_attribute_or_wrong_path(
+        self,
+    ):
         view = TokenViewBase()
         msg = "Could not import serializer '%s'" % view._serializer_class
 
