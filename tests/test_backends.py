@@ -1,3 +1,4 @@
+import builtins
 import uuid
 from datetime import datetime, timedelta
 from importlib import reload
@@ -46,6 +47,7 @@ class UUIDJSONEncoder(JSONEncoder):
 
 class TestTokenBackend(TestCase):
     def setUp(self):
+        self.realimport = builtins.__import__
         self.hmac_token_backend = TokenBackend("HS256", SECRET)
         self.hmac_leeway_token_backend = TokenBackend("HS256", SECRET, leeway=LEEWAY)
         self.rsa_token_backend = TokenBackend("RS256", PRIVATE_KEY, PUBLIC_KEY)
@@ -78,16 +80,13 @@ class TestTokenBackend(TestCase):
                 TokenBackend(algo, "not_secret")
 
     def test_jwk_client_not_available(self):
-        import builtins
-
         from rest_framework_simplejwt import backends
 
         def myimport(name, globals=None, locals=None, fromlist=(), level=0):
             if name == "jwt" and fromlist == ("PyJWKClient", "PyJWKClientError"):
                 raise ImportError
-            return realimport(name, globals, locals, fromlist, level)
+            return self.realimport(name, globals, locals, fromlist, level)
 
-        realimport = builtins.__import__
         builtins.__import__ = myimport
 
         # Reload backends, mock jwk client is not available
@@ -96,7 +95,7 @@ class TestTokenBackend(TestCase):
         self.assertEqual(backends.JWK_CLIENT_AVAILABLE, False)
         self.assertEqual(backends.TokenBackend("HS256").jwks_client, None)
 
-        builtins.__import__ = realimport
+        builtins.__import__ = self.realimport
 
     @patch("jwt.encode", mock.Mock(return_value=b"test"))
     def test_token_encode_should_return_str_for_old_PyJWT(self):
