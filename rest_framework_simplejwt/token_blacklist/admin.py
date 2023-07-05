@@ -68,8 +68,8 @@ class BlacklistedTokenAdmin(admin.ModelAdmin):
         "token__jti",
     )
     ordering = ("token__user",)
-    actions = ["flush_expired_tokens"]
 
+    @admin.action(permissions=["change"], description = _("Flush expired tokens"))
     def flush_expired_tokens(self, request, queryset):
         call_command("flushexpiredtokens")
         self.message_user(request, "Flushed expired tokens.")
@@ -91,8 +91,6 @@ class BlacklistedTokenAdmin(admin.ModelAdmin):
             return self.response_post_save_change(request, None)
 
         return super().changelist_view(request, extra_context=extra_context)
-
-    flush_expired_tokens.short_description = "Flush expired access tokens"
 
     def get_queryset(self, *args, **kwargs) -> QuerySet:
         qs = super().get_queryset(*args, **kwargs)
