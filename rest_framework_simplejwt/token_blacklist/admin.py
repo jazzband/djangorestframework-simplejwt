@@ -69,7 +69,7 @@ class BlacklistedTokenAdmin(admin.ModelAdmin):
     )
     ordering = ("token__user",)
 
-    @admin.action(permissions=["change"], description = _("Flush expired tokens"))
+    @admin.action(permissions=["change"], description=_("Flush expired tokens"))
     def flush_expired_tokens(self, request, queryset):
         call_command("flushexpiredtokens")
         self.message_user(request, "Flushed expired tokens.")
