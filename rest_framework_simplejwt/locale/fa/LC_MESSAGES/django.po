@@ -1,14 +1,14 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# FIRST AUTHOR <mahdi.rahimi95@gmail.com>\>, 2023.
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-07 21:35+0330\n"
+"POT-Creation-Date: 2023-07-04 09:31+0330\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Mahdi Rahimi <mahdi.rahimi95@gmail.com>\n"
 "Language: fa\n"
@@ -16,25 +16,30 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-#: authentication.py:88
+
+#: authentication.py:89
 msgid "Authorization header must contain two space-delimited values"
 msgstr "هدر اعتبارسنجی باید شامل دو مقدار جدا شده با فاصله باشد"
 
-#: authentication.py:114
+#: authentication.py:115
 msgid "Given token not valid for any token type"
 msgstr "توکن داده شده برای هیچ نوع توکنی معتبر نمی‌باشد"
 
-#: authentication.py:126 authentication.py:153
+#: authentication.py:127 authentication.py:162
 msgid "Token contained no recognizable user identification"
 msgstr "توکن شامل هیچ شناسه قابل تشخیصی از کاربر نیست"
 
-#: authentication.py:131
+#: authentication.py:132
 msgid "User not found"
 msgstr "کاربر یافت نشد"
 
-#: authentication.py:134
+#: authentication.py:135
 msgid "User is inactive"
 msgstr "کاربر غیرفعال است"
+
+#: authentication.py:142
+msgid "The user's password has been changed."
+msgstr "رمز عبور کاربر تغییر کرده است"
 
 #: backends.py:69
 msgid "Unrecognized algorithm type '{}'"
@@ -42,14 +47,14 @@ msgstr "نوع الگوریتم ناشناخته '{}'"
 
 #: backends.py:75
 msgid "You must have cryptography installed to use {}."
-msgstr "msgstr "نوع ناشناخته "{}"، leeway باید از نوع int، float یا timedelta باشد.""
+msgstr "برای استفاده از {} باید رمزنگاری را نصب کرده باشید."
 
 #: backends.py:90
 msgid ""
 "Unrecognized type '{}', 'leeway' must be of type int, float or timedelta."
-msgstr ""
+msgstr "نوع ناشناخته '{}'، 'leeway' باید از نوع int، float یا timedelta باشد."
 
-#: backends.py:104 backends.py:154 exceptions.py:47 tokens.py:52
+#: backends.py:104 backends.py:154 exceptions.py:47 tokens.py:58
 msgid "Token is invalid or expired"
 msgstr "توکن نامعتبر است یا منقضی شده است"
 
@@ -61,7 +66,7 @@ msgstr "الگوریتم نامعتبر مشخص شده است"
 msgid "No active account found with the given credentials"
 msgstr "هیچ اکانت فعالی برای اطلاعات داده شده یافت نشد"
 
-#: settings.py:71
+#: settings.py:73
 msgid ""
 "The '{}' setting has been removed. Please refer to '{}' for available "
 "settings."
@@ -87,30 +92,30 @@ msgstr "زمان انقضا"
 msgid "Token Blacklist"
 msgstr "لیست سیاه توکن"
 
-#: tokens.py:38
+#: tokens.py:44
 msgid "Cannot create token with no type or lifetime"
 msgstr "توکن بدون هیچ نوع و طول عمر قابل ساخت نیست"
 
-#: tokens.py:110
+#: tokens.py:116
 msgid "Token has no id"
 msgstr "توکن id ندارد"
 
-#: tokens.py:123
+#: tokens.py:128
 msgid "Token has no type"
 msgstr "توکن نوع ندارد"
 
-#: tokens.py:126
+#: tokens.py:131
 msgid "Token has wrong type"
 msgstr "توکن نوع اشتباهی دارد"
 
-#: tokens.py:185
+#: tokens.py:190
 msgid "Token has no '{}' claim"
 msgstr "توکن دارای '{}' claim نمی‌باشد"
 
-#: tokens.py:190
+#: tokens.py:195
 msgid "Token '{}' claim has expired"
 msgstr "'{}' claim توکن منقضی شده"
 
-#: tokens.py:247
+#: tokens.py:257
 msgid "Token is blacklisted"
 msgstr "توکن به لیست سیاه رفته است"
