@@ -5,6 +5,10 @@ try:
         from importlib import metadata
 
         __version__ = metadata.version("djangorestframework_simplejwt")
+    elif sys.version_info >= (3,7):
+        import importlib_metadata as metadata
+
+        __version__ = metadata.version("djangorestframework_simplejwt")
     else:
         from pkg_resources import DistributionNotFound, get_distribution
 
