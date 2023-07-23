@@ -6,9 +6,8 @@ from django.contrib.auth.models import AbstractBaseUser, update_last_login
 from django.utils.translation import gettext_lazy as _
 from rest_framework import exceptions, serializers
 from rest_framework.exceptions import ValidationError
+
 from .exceptions import TokenError
-
-
 from .models import TokenUser
 from .settings import api_settings
 from .tokens import RefreshToken, SlidingToken, Token, UntypedToken
@@ -110,7 +109,7 @@ class TokenRefreshSerializer(serializers.Serializer):
         try:
             refresh = self.token_class(attrs["refresh"])
         except TokenError:
-            raise serializers.ValidationError('token is not valid')
+            raise serializers.ValidationError("token is not valid")
 
         data = {"access": str(refresh.access_token)}
 
