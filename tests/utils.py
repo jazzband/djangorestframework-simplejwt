@@ -13,8 +13,8 @@ def client_action_wrapper(action):
         if not url and self.view_name is None:
             raise ValueError("Must give value for `view_name` property")
 
-        reverse_args = kwargs.pop("reverse_args", tuple())
-        reverse_kwargs = kwargs.pop("reverse_kwargs", dict())
+        reverse_args = kwargs.pop("reverse_args", ())
+        reverse_kwargs = kwargs.pop("reverse_kwargs", {})
         query_string = kwargs.pop("query_string", None)
 
         if self.header:
@@ -28,7 +28,7 @@ def client_action_wrapper(action):
         response = getattr(self.client, action)(_url, *args, **kwargs)
         try:
             response.data = json.loads(response.content)
-        except (Exception,):
+        except Exception:
             pass
         return response
 
@@ -37,7 +37,7 @@ def client_action_wrapper(action):
 
 class APIViewTestCase:
     client_class = Client
-    header = dict()
+    header = {}
 
     def setUp(self):
         self.client = self.client_class()
@@ -46,7 +46,7 @@ class APIViewTestCase:
         """
         Authenticates requests with the given token.
         """
-        self.header = dict(HTTP_AUTHORIZATION="{} {}".format(type, token))
+        self.header = {"HTTP_AUTHORIZATION": "{} {}".format(type, token)}
 
     view_name = None
 

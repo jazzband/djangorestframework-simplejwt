@@ -18,14 +18,13 @@ install: ## Install dependencies
 lint: ## Run code linters
 	make clean
 	black --check ninja_jwt tests
-	isort --check ninja_jwt tests
-	flake8 ninja_jwt tests
+	ruff check ninja_jwt tests
 # 	mypy  ninja_jwt
 
 fmt format: ## Run code formatters
 	make clean
 	black ninja_jwt tests
-	isort ninja_jwt tests
+	ruff check --fix ninja_jwt tests
 
 test: ## Run tests
 	make clean

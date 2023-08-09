@@ -20,7 +20,7 @@ def token_error(func):
         try:
             return func(*args, **kwargs)
         except exceptions.TokenError as tex:
-            raise exceptions.InvalidToken(str(tex))
+            raise exceptions.InvalidToken(str(tex)) from tex
         except Exception as ex:
             logger.error(f"{func} raised exception: {str(ex)}")
             raise ex
@@ -29,7 +29,7 @@ def token_error(func):
 
 
 def import_callable(path_or_callable):
-    if hasattr(path_or_callable, "__call__"):
+    if callable(path_or_callable):
         return path_or_callable
     else:
         assert isinstance(path_or_callable, string_types)

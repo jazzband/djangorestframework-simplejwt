@@ -39,7 +39,6 @@ class InputSchemaMixin:
 
 
 class TokenInputSchemaMixin(InputSchemaMixin):
-
     _user: Optional[AbstractUser] = None
 
     _default_error_messages = {

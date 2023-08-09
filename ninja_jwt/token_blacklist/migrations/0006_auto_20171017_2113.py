@@ -2,7 +2,6 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("token_blacklist", "0005_remove_outstandingtoken_jti"),
     ]

@@ -1,5 +1,4 @@
 import pytest
-from django.test import TestCase
 
 from ninja_jwt.models import TokenUser
 from ninja_jwt.settings import api_settings

@@ -1,6 +1,6 @@
 import importlib
 from datetime import timedelta
-from typing import Dict, Type
+from typing import Dict
 from unittest.mock import patch
 
 import pytest
@@ -62,7 +62,6 @@ class MyNewObtainTokenSlidingSchemaInput(TokenObtainSlidingInputSchema):
     my_extra_field: str
 
     def check_user_authentication_rule(self) -> bool:
-        my_extra_field = self.my_extra_field
         return api_settings.USER_AUTHENTICATION_RULE(self._user)
 
     @classmethod
@@ -73,7 +72,7 @@ class MyNewObtainTokenSlidingSchemaInput(TokenObtainSlidingInputSchema):
         return MyNewObtainTokenSlidingSchemaOutput(
             first_name=self._user.first_name,
             last_name=self._user.last_name,
-            **self.dict(exclude={"password"})
+            **self.dict(exclude={"password"}),
         )
 
 

@@ -13,11 +13,11 @@ class NinjaJWTUserDefinedSettingsMapper:
         self.__dict__ = data
 
 
-NinjaJWT_SETTINGS_DEFAULTS = dict(
-    USER_AUTHENTICATION_RULE="ninja_jwt.authentication.default_user_authentication_rule",
-    AUTH_TOKEN_CLASSES=["ninja_jwt.tokens.AccessToken"],
-    TOKEN_USER_CLASS="ninja_jwt.models.TokenUser",
-)
+NinjaJWT_SETTINGS_DEFAULTS = {
+    "USER_AUTHENTICATION_RULE": "ninja_jwt.authentication.default_user_authentication_rule",
+    "AUTH_TOKEN_CLASSES": ["ninja_jwt.tokens.AccessToken"],
+    "TOKEN_USER_CLASS": "ninja_jwt.models.TokenUser",
+}
 
 USER_SETTINGS = NinjaJWTUserDefinedSettingsMapper(
     getattr(

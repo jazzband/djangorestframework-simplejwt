@@ -42,8 +42,8 @@ class Token:
             # Decode token
             try:
                 self.payload = token_backend.decode(token, verify=verify)
-            except TokenBackendError:
-                raise TokenError(_("Token is invalid or expired"))
+            except TokenBackendError as e:
+                raise TokenError(_("Token is invalid or expired")) from e
 
             if verify:
                 self.verify()
@@ -112,8 +112,8 @@ class Token:
         """
         try:
             token_type = self.payload[api_settings.TOKEN_TYPE_CLAIM]
-        except KeyError:
-            raise TokenError(_("Token has no type"))
+        except KeyError as e:
+            raise TokenError(_("Token has no type")) from e
 
         if self.token_type != token_type:
             raise TokenError(_("Token has wrong type"))
@@ -172,8 +172,8 @@ class Token:
 
         try:
             claim_value = self.payload[claim]
-        except KeyError:
-            raise TokenError(format_lazy(_("Token has no '{}' claim"), claim))
+        except KeyError as e:
+            raise TokenError(format_lazy(_("Token has no '{}' claim"), claim)) from e
 
         claim_time = datetime_from_epoch(claim_value)
         leeway = self.get_token_backend().get_leeway()

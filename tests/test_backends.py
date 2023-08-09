@@ -6,7 +6,8 @@ from unittest.mock import patch
 
 import jwt
 import pytest
-from jwt import PyJWS, __version__ as jwt_version, algorithms
+from jwt import PyJWS, algorithms
+from jwt import __version__ as jwt_version
 
 from ninja_jwt.backends import JWK_CLIENT_AVAILABLE, TokenBackend
 from ninja_jwt.exceptions import TokenBackendError
