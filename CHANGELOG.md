@@ -1,29 +1,48 @@
-## Unreleased
+## 5.3.0
 
-* Added support for Python 3.11 by @joshuadavidthomas in https://github.com/jazzband/djangorestframework-simplejwt/pull/636.
+#### Notable Changes:
+* Added support for Python 3.11 by @joshuadavidthomas [#636](https://github.com/jazzband/djangorestframework-simplejwt/pull/636)
+* Added support for Django 4.2 by @johnthagen [#711](https://github.com/jazzband/djangorestframework-simplejwt/pull/711)
+* Added support for DRF 3.14 by @Andrew-Chen-Wang [#623](https://github.com/jazzband/djangorestframework-simplejwt/pull/623)
+* Added Inlang to facilitate community translations by @jannesblobel [#662](https://github.com/jazzband/djangorestframework-simplejwt/pull/662)
+* Revoke access token if user password is changed by @mahdirahimi1999 [#719](https://github.com/jazzband/djangorestframework-simplejwt/pull/719)
+* Added type hints by @abczzz13 [#683](https://github.com/jazzband/djangorestframework-simplejwt/pull/683)
+* Improved testing by @kiraware [#688](https://github.com/jazzband/djangorestframework-simplejwt/pull/688)
+* Removed support for Django 2.2 by @kiraware [#688](https://github.com/jazzband/djangorestframework-simplejwt/pull/688)
+
+#### Documentation:
+* Added write_only=True to TokenBlacklistSerializer's refresh field for better doc generation by @Yaser-Amiri [#699](https://github.com/jazzband/djangorestframework-simplejwt/pull/699)
+* Updated docs on serializer customization by @2ykwang [#668](https://github.com/jazzband/djangorestframework-simplejwt/pull/668)
+
+#### Translation Updates:
+* Updated translations for Persian (fa) language by @mahdirahimi1999 [#723](https://github.com/jazzband/djangorestframework-simplejwt/pull/723) and https://github.com/jazzband/djangorestframework-simplejwt/pull/708
+* Updated translations for Indonesian (id) language by @kiraware [#685](https://github.com/jazzband/djangorestframework-simplejwt/pull/685)
+* Added Arabic language translations by @iamjazzar [#690](https://github.com/jazzband/djangorestframework-simplejwt/pull/690)
+* Added Hebrew language translations by @elam91 [#679](https://github.com/jazzband/djangorestframework-simplejwt/pull/679)
+* Added Slovenian language translations by @banDeveloper [#645](https://github.com/jazzband/djangorestframework-simplejwt/pull/645)
 
 ## Version 5.2.2
 
 Major security release
 
-* Revert #605 in https://github.com/jazzband/djangorestframework-simplejwt/pull/629
-* Fix typo in blacklist_app.rst by @cbscsm in https://github.com/jazzband/djangorestframework-simplejwt/pull/593
+* Revert #605 [#629](https://github.com/jazzband/djangorestframework-simplejwt/pull/629)
+* Fix typo in blacklist_app.rst by @cbscsm [#593](https://github.com/jazzband/djangorestframework-simplejwt/pull/593)
 
 ## Version 5.2.1
 
-* Add Swedish translations by @PasinduPrabhashitha in https://github.com/jazzband/djangorestframework-simplejwt/pull/579
-* Fixed issue #543 by @armenak-baburyan in https://github.com/jazzband/djangorestframework-simplejwt/pull/586
-* Fix uncaught exception with JWK by @jerr0328 in https://github.com/jazzband/djangorestframework-simplejwt/pull/600
-* Test on Django 4.1 by @2ykwang in https://github.com/jazzband/djangorestframework-simplejwt/pull/604
+* Add Swedish translations by @PasinduPrabhashitha [#579](https://github.com/jazzband/djangorestframework-simplejwt/pull/579)
+* Fixed issue #543 by @armenak-baburyan [#586](https://github.com/jazzband/djangorestframework-simplejwt/pull/586)
+* Fix uncaught exception with JWK by @jerr0328 [#600](https://github.com/jazzband/djangorestframework-simplejwt/pull/600)
+* Test on Django 4.1 by @2ykwang [#604](https://github.com/jazzband/djangorestframework-simplejwt/pull/604)
 
 ## Version 5.2.0
 
-* Remove the JWTTokenUserAuthentication from the Experimental Features #546 by @byrpatrick in https://github.com/jazzband/djangorestframework-simplejwt/pull/547
-* Fix leeway type error by @2ykwang in https://github.com/jazzband/djangorestframework-simplejwt/pull/554
-* Add info on TokenBlacklistView to the docs by @inti7ary in https://github.com/jazzband/djangorestframework-simplejwt/pull/558
-* Update JWTStatelessUserAuthentication docs by @2ykwang in https://github.com/jazzband/djangorestframework-simplejwt/pull/561
-* Allow none jti claim token type claim by @denniskeends in https://github.com/jazzband/djangorestframework-simplejwt/pull/567
-* Allow customizing token JSON encoding by @vainu-arto in https://github.com/jazzband/djangorestframework-simplejwt/pull/568
+* Remove the JWTTokenUserAuthentication from the Experimental Features #546 by @byrpatrick [#547](https://github.com/jazzband/djangorestframework-simplejwt/pull/547)
+* Fix leeway type error by @2ykwang [#554](https://github.com/jazzband/djangorestframework-simplejwt/pull/554)
+* Add info on TokenBlacklistView to the docs by @inti7ary [#558](https://github.com/jazzband/djangorestframework-simplejwt/pull/558)
+* Update JWTStatelessUserAuthentication docs by @2ykwang [#561](https://github.com/jazzband/djangorestframework-simplejwt/pull/561)
+* Allow none jti claim token type claim by @denniskeends [#567](https://github.com/jazzband/djangorestframework-simplejwt/pull/567)
+* Allow customizing token JSON encoding by @vainu-arto [#568](https://github.com/jazzband/djangorestframework-simplejwt/pull/568)
 
 ## Version 5.1.0
 
