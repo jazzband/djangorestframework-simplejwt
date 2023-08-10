@@ -15,70 +15,74 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: authentication.py:78
+#: authentication.py:89
 msgid "Authorization header must contain two space-delimited values"
 msgstr "授权头必须包含两个用空格分隔的值"
 
-#: authentication.py:104
+#: authentication.py:115
 msgid "Given token not valid for any token type"
 msgstr "此令牌对任何类型的令牌无效"
 
-#: authentication.py:116 authentication.py:143
+#: authentication.py:127 authentication.py:162
 msgid "Token contained no recognizable user identification"
 msgstr "令牌未包含用户标识符"
 
-#: authentication.py:121
+#: authentication.py:132
 msgid "User not found"
 msgstr "未找到该用户"
 
-#: authentication.py:124
+#: authentication.py:135
 msgid "User is inactive"
 msgstr "该用户已禁用"
 
-#: backends.py:67
+#: authentication.py:142
+msgid "The user's password has been changed."
+msgstr ""
+
+#: backends.py:69
 msgid "Unrecognized algorithm type '{}'"
 msgstr "未知算法类型 '{}'"
 
-#: backends.py:73
+#: backends.py:75
 msgid "You must have cryptography installed to use {}."
 msgstr "你必须安装 cryptography 才能使用 {}。"
 
-#: backends.py:88
+#: backends.py:90
 msgid ""
 "Unrecognized type '{}', 'leeway' must be of type int, float or timedelta."
 msgstr ""
 
-#: backends.py:102 backends.py:152 exceptions.py:38 tokens.py:44
+#: backends.py:104 backends.py:154 exceptions.py:47 tokens.py:58
 msgid "Token is invalid or expired"
 msgstr "令牌无效或已过期"
 
-#: backends.py:150
+#: backends.py:152
 msgid "Invalid algorithm specified"
 msgstr "指定的算法无效"
 
-#: serializers.py:30
+#: serializers.py:35
 msgid "No active account found with the given credentials"
 msgstr "找不到指定凭据对应的有效用户"
 
-#: settings.py:70
+#: settings.py:73
 msgid ""
 "The '{}' setting has been removed. Please refer to '{}' for available "
 "settings."
 msgstr "'{}' 配置已被移除。 请参阅 '{}' 获取可用的配置。"
 
-#: token_blacklist/admin.py:68
+#: token_blacklist/admin.py:79
 msgid "jti"
 msgstr "jti"
 
-#: token_blacklist/admin.py:74
+#: token_blacklist/admin.py:85
 msgid "user"
 msgstr "用户"
 
-#: token_blacklist/admin.py:80
+#: token_blacklist/admin.py:91
 msgid "created at"
 msgstr "创建时间"
 
-#: token_blacklist/admin.py:86
+#: token_blacklist/admin.py:97
 msgid "expires at"
 msgstr "过期时间"
 
@@ -86,30 +90,30 @@ msgstr "过期时间"
 msgid "Token Blacklist"
 msgstr "令牌黑名单"
 
-#: tokens.py:30
+#: tokens.py:44
 msgid "Cannot create token with no type or lifetime"
 msgstr "无法创建没有类型或生存期的令牌"
 
-#: tokens.py:102
+#: tokens.py:116
 msgid "Token has no id"
 msgstr "令牌没有标识符"
 
-#: tokens.py:115
+#: tokens.py:128
 msgid "Token has no type"
 msgstr "令牌没有类型"
 
-#: tokens.py:118
+#: tokens.py:131
 msgid "Token has wrong type"
 msgstr "令牌类型错误"
 
-#: tokens.py:170
+#: tokens.py:190
 msgid "Token has no '{}' claim"
 msgstr "令牌没有 '{}' 声明"
 
-#: tokens.py:175
+#: tokens.py:195
 msgid "Token '{}' claim has expired"
 msgstr "令牌 '{}' 声明已过期"
 
-#: tokens.py:230
+#: tokens.py:257
 msgid "Token is blacklisted"
 msgstr "令牌已被加入黑名单"

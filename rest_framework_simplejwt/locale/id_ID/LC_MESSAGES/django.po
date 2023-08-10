@@ -16,53 +16,57 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: authentication.py:78
+#: authentication.py:89
 msgid "Authorization header must contain two space-delimited values"
 msgstr "Header otorisasi harus berisi dua nilai yang dipisahkan spasi"
 
-#: authentication.py:104
+#: authentication.py:115
 msgid "Given token not valid for any token type"
 msgstr "Token yang diberikan tidak valid untuk semua jenis token"
 
-#: authentication.py:116 authentication.py:143
+#: authentication.py:127 authentication.py:162
 msgid "Token contained no recognizable user identification"
 msgstr "Token tidak mengandung identifikasi pengguna yang dapat dikenali"
 
-#: authentication.py:121
+#: authentication.py:132
 msgid "User not found"
 msgstr "Pengguna tidak ditemukan"
 
-#: authentication.py:124
+#: authentication.py:135
 msgid "User is inactive"
 msgstr "Pengguna tidak aktif"
 
-#: backends.py:67
+#: authentication.py:142
+msgid "The user's password has been changed."
+msgstr ""
+
+#: backends.py:69
 msgid "Unrecognized algorithm type '{}'"
 msgstr "Jenis algoritma tidak dikenal '{}'"
 
-#: backends.py:73
+#: backends.py:75
 msgid "You must have cryptography installed to use {}."
 msgstr "Anda harus memasang cryptography untuk menggunakan {}."
 
-#: backends.py:88
+#: backends.py:90
 msgid ""
 "Unrecognized type '{}', 'leeway' must be of type int, float or timedelta."
 msgstr ""
 "Tipe '{}' tidak dikenali, 'leeway' harus bertipe int, float, atau timedelta."
 
-#: backends.py:102 backends.py:152 exceptions.py:38 tokens.py:44
+#: backends.py:104 backends.py:154 exceptions.py:47 tokens.py:58
 msgid "Token is invalid or expired"
 msgstr "Token tidak valid atau kedaluwarsa"
 
-#: backends.py:150
+#: backends.py:152
 msgid "Invalid algorithm specified"
 msgstr "Algoritma yang ditentukan tidak valid"
 
-#: serializers.py:30
+#: serializers.py:35
 msgid "No active account found with the given credentials"
 msgstr "Tidak ada akun aktif yang ditemukan dengan kredensial yang diberikan"
 
-#: settings.py:70
+#: settings.py:73
 msgid ""
 "The '{}' setting has been removed. Please refer to '{}' for available "
 "settings."
@@ -70,19 +74,19 @@ msgstr ""
 "Setelan '{}' telah dihapus. Silakan merujuk ke '{}' untuk pengaturan yang "
 "tersedia."
 
-#: token_blacklist/admin.py:68
+#: token_blacklist/admin.py:79
 msgid "jti"
 msgstr "jti"
 
-#: token_blacklist/admin.py:74
+#: token_blacklist/admin.py:85
 msgid "user"
 msgstr "pengguna"
 
-#: token_blacklist/admin.py:80
+#: token_blacklist/admin.py:91
 msgid "created at"
 msgstr "created at"
 
-#: token_blacklist/admin.py:86
+#: token_blacklist/admin.py:97
 msgid "expires at"
 msgstr "kedaluwarsa pada"
 
@@ -90,30 +94,30 @@ msgstr "kedaluwarsa pada"
 msgid "Token Blacklist"
 msgstr "Daftar Hitam Token"
 
-#: tokens.py:30
+#: tokens.py:44
 msgid "Cannot create token with no type or lifetime"
 msgstr "Tidak dapat membuat token tanpa tipe atau masa pakai"
 
-#: tokens.py:102
+#: tokens.py:116
 msgid "Token has no id"
 msgstr "Token tidak memiliki id"
 
-#: tokens.py:115
+#: tokens.py:128
 msgid "Token has no type"
 msgstr "Token tidak memiliki tipe"
 
-#: tokens.py:118
+#: tokens.py:131
 msgid "Token has wrong type"
 msgstr "Jenis token salah"
 
-#: tokens.py:170
+#: tokens.py:190
 msgid "Token has no '{}' claim"
 msgstr "Token tidak memiliki klaim '{}'"
 
-#: tokens.py:175
+#: tokens.py:195
 msgid "Token '{}' claim has expired"
 msgstr "Klaim token '{}' telah kedaluwarsa"
 
-#: tokens.py:230
+#: tokens.py:257
 msgid "Token is blacklisted"
 msgstr "Token masuk daftar hitam"
