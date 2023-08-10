@@ -15,70 +15,74 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: authentication.py:78
+#: authentication.py:89
 msgid "Authorization header must contain two space-delimited values"
 msgstr "Авторизаційний заголовок має містити два значення розділені пробілом"
 
-#: authentication.py:104
+#: authentication.py:115
 msgid "Given token not valid for any token type"
 msgstr "Наданий токен не відповідає жодному типу ключа"
 
-#: authentication.py:116 authentication.py:143
+#: authentication.py:127 authentication.py:162
 msgid "Token contained no recognizable user identification"
 msgstr "Наданий токен не мітить жодної ідентифікаційної інформації"
 
-#: authentication.py:121
+#: authentication.py:132
 msgid "User not found"
 msgstr "Користувач не знайдений"
 
-#: authentication.py:124
+#: authentication.py:135
 msgid "User is inactive"
 msgstr "Користувач неактивний"
 
-#: backends.py:67
+#: authentication.py:142
+msgid "The user's password has been changed."
+msgstr ""
+
+#: backends.py:69
 msgid "Unrecognized algorithm type '{}'"
 msgstr "Тип алгоритму '{}' не розпізнаний"
 
-#: backends.py:73
+#: backends.py:75
 msgid "You must have cryptography installed to use {}."
 msgstr "Встановіть модуль cryptography щоб використовувати {}"
 
-#: backends.py:88
+#: backends.py:90
 msgid ""
 "Unrecognized type '{}', 'leeway' must be of type int, float or timedelta."
 msgstr ""
 
-#: backends.py:102 backends.py:152 exceptions.py:38 tokens.py:44
+#: backends.py:104 backends.py:154 exceptions.py:47 tokens.py:58
 msgid "Token is invalid or expired"
 msgstr "Токен некоректний або термін його дії вичерпаний"
 
-#: backends.py:150
+#: backends.py:152
 msgid "Invalid algorithm specified"
 msgstr "Вказаний невірний алгоритм"
 
-#: serializers.py:30
+#: serializers.py:35
 msgid "No active account found with the given credentials"
 msgstr "Не знайдено жодного облікового запису по наданих облікових даних"
 
-#: settings.py:70
+#: settings.py:73
 msgid ""
 "The '{}' setting has been removed. Please refer to '{}' for available "
 "settings."
 msgstr "Налаштування '{}' видалене. Подивіться у '{}' для інших доступних"
 
-#: token_blacklist/admin.py:68
+#: token_blacklist/admin.py:79
 msgid "jti"
 msgstr "jti"
 
-#: token_blacklist/admin.py:74
+#: token_blacklist/admin.py:85
 msgid "user"
 msgstr "користувач"
 
-#: token_blacklist/admin.py:80
+#: token_blacklist/admin.py:91
 msgid "created at"
 msgstr "створений о"
 
-#: token_blacklist/admin.py:86
+#: token_blacklist/admin.py:97
 msgid "expires at"
 msgstr "дійстний по"
 
@@ -86,30 +90,30 @@ msgstr "дійстний по"
 msgid "Token Blacklist"
 msgstr "Чорний список токенів"
 
-#: tokens.py:30
+#: tokens.py:44
 msgid "Cannot create token with no type or lifetime"
 msgstr "Неможливо створити токен без типу або строку дії"
 
-#: tokens.py:102
+#: tokens.py:116
 msgid "Token has no id"
 msgstr "У ключі доступу не міститься id"
 
-#: tokens.py:115
+#: tokens.py:128
 msgid "Token has no type"
 msgstr "У ключі доступу не міститься тип"
 
-#: tokens.py:118
+#: tokens.py:131
 msgid "Token has wrong type"
 msgstr "токен позначений невірним типом"
 
-#: tokens.py:170
+#: tokens.py:190
 msgid "Token has no '{}' claim"
 msgstr "У токені не міститься '{}' заголовку"
 
-#: tokens.py:175
+#: tokens.py:195
 msgid "Token '{}' claim has expired"
 msgstr "Заголовок '{}' токена не дійсний"
 
-#: tokens.py:230
+#: tokens.py:257
 msgid "Token is blacklisted"
 msgstr "Токен занесений у чорний список"

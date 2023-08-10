@@ -12,72 +12,76 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: authentication.py:78
+#: authentication.py:89
 msgid "Authorization header must contain two space-delimited values"
 msgstr ""
 "Yetkilendirme header'i boşlukla sınırlandırılmış iki değer bulundurmak "
 "zorunda"
 
-#: authentication.py:104
+#: authentication.py:115
 msgid "Given token not valid for any token type"
 msgstr "Verilen token hiçbir token tipi için geçerli değil"
 
-#: authentication.py:116 authentication.py:143
+#: authentication.py:127 authentication.py:162
 msgid "Token contained no recognizable user identification"
 msgstr "Token tanınabilir bir kullanıcı kimliği içermiyor"
 
-#: authentication.py:121
+#: authentication.py:132
 msgid "User not found"
 msgstr "Kullanıcı bulunamadı"
 
-#: authentication.py:124
+#: authentication.py:135
 msgid "User is inactive"
 msgstr "Kullanıcı etkin değil"
 
-#: backends.py:67
+#: authentication.py:142
+msgid "The user's password has been changed."
+msgstr ""
+
+#: backends.py:69
 msgid "Unrecognized algorithm type '{}'"
 msgstr "Tanınmayan algortima tipi '{}'"
 
-#: backends.py:73
+#: backends.py:75
 msgid "You must have cryptography installed to use {}."
 msgstr "{} kullanmak için cryptography yüklemeniz gerekiyor."
 
-#: backends.py:88
+#: backends.py:90
 msgid ""
 "Unrecognized type '{}', 'leeway' must be of type int, float or timedelta."
 msgstr ""
 
-#: backends.py:102 backends.py:152 exceptions.py:38 tokens.py:44
+#: backends.py:104 backends.py:154 exceptions.py:47 tokens.py:58
 msgid "Token is invalid or expired"
 msgstr "Token geçersiz veya süresi geçmiş"
 
-#: backends.py:150
+#: backends.py:152
 msgid "Invalid algorithm specified"
 msgstr "Geçersiz algoritma belirtildi"
 
-#: serializers.py:30
+#: serializers.py:35
 msgid "No active account found with the given credentials"
 msgstr "Verilen kimlik bilgileriyle aktif bir hesap bulunamadı"
 
-#: settings.py:70
+#: settings.py:73
 msgid ""
 "The '{}' setting has been removed. Please refer to '{}' for available "
 "settings."
 msgstr "'{}' ayarı kaldırıldı. Mevcut ayarlar için '{}' adresini ziyaret edin."
 
-#: token_blacklist/admin.py:68
+#: token_blacklist/admin.py:79
 msgid "jti"
 msgstr "jti"
 
-#: token_blacklist/admin.py:74
+#: token_blacklist/admin.py:85
 msgid "user"
 msgstr "kullanıcı"
 
-#: token_blacklist/admin.py:80
+#: token_blacklist/admin.py:91
 msgid "created at"
 msgstr "oluşturulma tarihi"
 
-#: token_blacklist/admin.py:86
+#: token_blacklist/admin.py:97
 msgid "expires at"
 msgstr "sona erme tarihi"
 
@@ -85,30 +89,30 @@ msgstr "sona erme tarihi"
 msgid "Token Blacklist"
 msgstr "Token Kara Listesi"
 
-#: tokens.py:30
+#: tokens.py:44
 msgid "Cannot create token with no type or lifetime"
 msgstr "Tipi veya geçerlilik süresi olmayan token oluşturulamaz"
 
-#: tokens.py:102
+#: tokens.py:116
 msgid "Token has no id"
 msgstr "Token'in id'si yok"
 
-#: tokens.py:115
+#: tokens.py:128
 msgid "Token has no type"
 msgstr "Token'in tipi yok"
 
-#: tokens.py:118
+#: tokens.py:131
 msgid "Token has wrong type"
 msgstr "Token'in tipi yanlış"
 
-#: tokens.py:170
+#: tokens.py:190
 msgid "Token has no '{}' claim"
 msgstr "Token'in '{}' claim'i yok"
 
-#: tokens.py:175
+#: tokens.py:195
 msgid "Token '{}' claim has expired"
 msgstr "Token'in '{}' claim'i sona erdi"
 
-#: tokens.py:230
+#: tokens.py:257
 msgid "Token is blacklisted"
 msgstr "Token kara listeye alınmış"

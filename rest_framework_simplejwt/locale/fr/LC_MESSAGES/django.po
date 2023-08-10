@@ -11,54 +11,58 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: authentication.py:78
+#: authentication.py:89
 msgid "Authorization header must contain two space-delimited values"
 msgstr ""
 "L'en-tête 'Authorization' doit contenir deux valeurs séparées par des espaces"
 
-#: authentication.py:104
+#: authentication.py:115
 msgid "Given token not valid for any token type"
 msgstr "Le type de jeton fourni n'est pas valide"
 
-#: authentication.py:116 authentication.py:143
+#: authentication.py:127 authentication.py:162
 msgid "Token contained no recognizable user identification"
 msgstr ""
 "Le jeton ne contient aucune information permettant d'identifier l'utilisateur"
 
-#: authentication.py:121
+#: authentication.py:132
 msgid "User not found"
 msgstr "L'utilisateur n'a pas été trouvé"
 
-#: authentication.py:124
+#: authentication.py:135
 msgid "User is inactive"
 msgstr "L'utilisateur est désactivé"
 
-#: backends.py:67
+#: authentication.py:142
+msgid "The user's password has been changed."
+msgstr ""
+
+#: backends.py:69
 msgid "Unrecognized algorithm type '{}'"
 msgstr "Type d'algorithme non reconnu '{}'"
 
-#: backends.py:73
+#: backends.py:75
 msgid "You must have cryptography installed to use {}."
 msgstr "Vous devez installer cryptography afin d'utiliser {}."
 
-#: backends.py:88
+#: backends.py:90
 msgid ""
 "Unrecognized type '{}', 'leeway' must be of type int, float or timedelta."
 msgstr ""
 
-#: backends.py:102 backends.py:152 exceptions.py:38 tokens.py:44
+#: backends.py:104 backends.py:154 exceptions.py:47 tokens.py:58
 msgid "Token is invalid or expired"
 msgstr "Le jeton est invalide ou expiré"
 
-#: backends.py:150
+#: backends.py:152
 msgid "Invalid algorithm specified"
 msgstr "L'algorithme spécifié est invalide"
 
-#: serializers.py:30
+#: serializers.py:35
 msgid "No active account found with the given credentials"
 msgstr "Aucun compte actif n'a été trouvé avec les identifiants fournis"
 
-#: settings.py:70
+#: settings.py:73
 msgid ""
 "The '{}' setting has been removed. Please refer to '{}' for available "
 "settings."
@@ -66,19 +70,19 @@ msgstr ""
 "Le paramètre '{}' a été supprimé. Voir '{}' pour la liste des paramètres "
 "disponibles."
 
-#: token_blacklist/admin.py:68
+#: token_blacklist/admin.py:79
 msgid "jti"
 msgstr "jti"
 
-#: token_blacklist/admin.py:74
+#: token_blacklist/admin.py:85
 msgid "user"
 msgstr "Utilisateur"
 
-#: token_blacklist/admin.py:80
+#: token_blacklist/admin.py:91
 msgid "created at"
 msgstr "Créé le"
 
-#: token_blacklist/admin.py:86
+#: token_blacklist/admin.py:97
 msgid "expires at"
 msgstr "Expire le"
 
@@ -86,30 +90,30 @@ msgstr "Expire le"
 msgid "Token Blacklist"
 msgstr "Liste des jetons bannis"
 
-#: tokens.py:30
+#: tokens.py:44
 msgid "Cannot create token with no type or lifetime"
 msgstr "Ne peut pas créer de jeton sans type ni durée de vie"
 
-#: tokens.py:102
+#: tokens.py:116
 msgid "Token has no id"
 msgstr "Le jeton n'a pas d'id"
 
-#: tokens.py:115
+#: tokens.py:128
 msgid "Token has no type"
 msgstr "Le jeton n'a pas de type"
 
-#: tokens.py:118
+#: tokens.py:131
 msgid "Token has wrong type"
 msgstr "Le jeton a un type erroné"
 
-#: tokens.py:170
+#: tokens.py:190
 msgid "Token has no '{}' claim"
 msgstr "Le jeton n'a pas le privilège '{}'"
 
-#: tokens.py:175
+#: tokens.py:195
 msgid "Token '{}' claim has expired"
 msgstr "Le privilège '{}' du jeton a expiré"
 
-#: tokens.py:230
+#: tokens.py:257
 msgid "Token is blacklisted"
 msgstr "Le jeton a été banni"
