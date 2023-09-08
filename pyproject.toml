@@ -12,7 +12,7 @@ authors = [
    {name = "Ezeudoh Tochukwu", email = "tochukwu.ezeudoh@gmail.com"},
 ]
 dynamic = ["version", "description"]
-requires-python = ">=3.6"
+requires-python = ">=3.7"
 readme = "README.md"
 home-page = "https://github.com/eadwinCode/django-ninja-jwt"
 classifiers = [
@@ -29,7 +29,6 @@ classifiers = [
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.6",
     "Programming Language :: Python :: 3.7",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",

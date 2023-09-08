@@ -68,6 +68,33 @@ from ninja import NinjaAPI
 api = NinjaAPI()
 api.add_router('', tags=['Auth'], router=router)
 ```
+Also, its important to note that `NinjaExtra` registers a handler for `APIException` class which is not available in `NinjaAPI` instance.
+To fix that, you need the extra code below:
+
+```python
+from ninja import NinjaAPI
+from ninja_extra import exceptions
+
+api = NinjaAPI()
+api.add_router('', tags=['Auth'], router=router)
+
+def api_exception_handler(request, exc):
+    headers = {}
+
+    if isinstance(exc.detail, (list, dict)):
+        data = exc.detail
+    else:
+        data = {"detail": exc.detail}
+
+    response = api.create_response(request, data, status=exc.status_code)
+    for k, v in headers.items():
+        response.setdefault(k, v)
+
+    return response
+
+api.exception_handler(exceptions.APIException)(api_exception_handler)
+```
+
 
 
 ### Controller Schema Swapping
