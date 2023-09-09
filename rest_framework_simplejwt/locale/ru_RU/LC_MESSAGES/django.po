@@ -43,7 +43,7 @@ msgstr "Пароль пользователя был изменен"
 
 #: backends.py:69
 msgid "Unrecognized algorithm type '{}'"
-msgstr "Не распознан тип алгоритма '{}'"
+msgstr "Нераспознаный тип алгоритма '{}'"
 
 #: backends.py:75
 msgid "You must have cryptography installed to use {}."
