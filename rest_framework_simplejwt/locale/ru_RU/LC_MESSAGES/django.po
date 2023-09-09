@@ -43,7 +43,7 @@ msgstr "Пароль пользователя был изменен"
 
 #: backends.py:69
 msgid "Unrecognized algorithm type '{}'"
-msgstr "Не распознан тип алгоритма '{}'"
+msgstr "Нераспознаный тип алгоритма '{}'"
 
 #: backends.py:75
 msgid "You must have cryptography installed to use {}."
@@ -95,7 +95,7 @@ msgstr "истекает"
 msgid "Token Blacklist"
 msgstr "Token Blacklist"
 
-#: tokens.py:44
+#: tokens.py:44:
 msgid "Cannot create token with no type or lifetime"
 msgstr "Невозможно создать токен без типа или времени жизни"
 
