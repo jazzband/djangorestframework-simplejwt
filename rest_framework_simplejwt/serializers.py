@@ -2,7 +2,7 @@ from typing import Any, Dict, Optional, Type, TypeVar
 
 from django.conf import settings
 from django.contrib.auth import authenticate, get_user_model
-from django.contrib.auth.models import AbstractBaseUser, update_last_login
+from django.contrib.auth.models import AbstractBaseUser
 from django.utils.translation import gettext_lazy as _
 from rest_framework import exceptions, serializers
 from rest_framework.exceptions import ValidationError
@@ -10,6 +10,7 @@ from rest_framework.exceptions import ValidationError
 from .models import TokenUser
 from .settings import api_settings
 from .tokens import RefreshToken, SlidingToken, Token, UntypedToken
+from django.contrib.auth.signals import user_logged_in
 
 AuthUser = TypeVar("AuthUser", AbstractBaseUser, TokenUser)
 
@@ -78,7 +79,7 @@ class TokenObtainPairSerializer(TokenObtainSerializer):
         data["access"] = str(refresh.access_token)
 
         if api_settings.UPDATE_LAST_LOGIN:
-            update_last_login(None, self.user)
+            user_logged_in.send(sender=self.user.__class__, user=self.user)
 
         return data
 
@@ -94,7 +95,7 @@ class TokenObtainSlidingSerializer(TokenObtainSerializer):
         data["token"] = str(token)
 
         if api_settings.UPDATE_LAST_LOGIN:
-            update_last_login(None, self.user)
+            user_logged_in.send(sender=self.user.__class__, user=self.user)
 
         return data
 
