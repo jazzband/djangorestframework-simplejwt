@@ -3,6 +3,7 @@ from typing import Any, Dict, Optional, Type, TypeVar
 from django.conf import settings
 from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.models import AbstractBaseUser
+from django.contrib.auth.signals import user_logged_in
 from django.utils.translation import gettext_lazy as _
 from rest_framework import exceptions, serializers
 from rest_framework.exceptions import ValidationError
@@ -10,7 +11,6 @@ from rest_framework.exceptions import ValidationError
 from .models import TokenUser
 from .settings import api_settings
 from .tokens import RefreshToken, SlidingToken, Token, UntypedToken
-from django.contrib.auth.signals import user_logged_in
 
 AuthUser = TypeVar("AuthUser", AbstractBaseUser, TokenUser)
 
