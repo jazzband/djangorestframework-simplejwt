@@ -51,7 +51,7 @@ repos:
   rev: 'v3.7.0'
   hooks:
   - id: pyupgrade
-    args: ['--py37-plus', '--keep-mock']
+    args: ['--py38-plus', '--keep-mock']
 
 - repo: https://github.com/Lucas-C/pre-commit-hooks-markup
   rev: v1.0.1
