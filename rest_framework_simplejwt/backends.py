@@ -37,9 +37,9 @@ class TokenBackend:
         Returns an encoded token for the given payload dictionary.
         """
         jwt_payload = payload.copy()
-        if self.audience is not None:
+        if self.audience is not None and jwt_payload.get('aud') is None:
             jwt_payload['aud'] = self.audience
-        if self.issuer is not None:
+        if self.issuer is not None and jwt_payload.get('iss') is None:
             jwt_payload['iss'] = self.issuer
 
         jwt_headers = {}
