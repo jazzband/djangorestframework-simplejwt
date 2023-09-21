@@ -80,7 +80,7 @@ class TokenObtainPairSerializer(TokenObtainSerializer):
 
         if api_settings.UPDATE_LAST_LOGIN:
             user_logged_in.send(
-                sender=self.user.__class__,
+                sender=self.__class__,
                 user=self.user,
                 data=data,
                 request=self.context.get("request"),
@@ -101,7 +101,7 @@ class TokenObtainSlidingSerializer(TokenObtainSerializer):
 
         if api_settings.UPDATE_LAST_LOGIN:
             user_logged_in.send(
-                sender=self.user.__class__,
+                sender=self.__class__,
                 user=self.user,
                 data=data,
                 request=self.context.get("request"),
