@@ -79,7 +79,7 @@ class TokenObtainPairSerializer(TokenObtainSerializer):
         data["access"] = str(refresh.access_token)
 
         if api_settings.UPDATE_LAST_LOGIN:
-            user_logged_in.send(sender=self.user.__class__, user=self.user)
+            user_logged_in.send(sender=self.user.__class__, user=self.user, data=data, request=self.context.get('request'))
 
         return data
 
@@ -95,7 +95,7 @@ class TokenObtainSlidingSerializer(TokenObtainSerializer):
         data["token"] = str(token)
 
         if api_settings.UPDATE_LAST_LOGIN:
-            user_logged_in.send(sender=self.user.__class__, user=self.user)
+            user_logged_in.send(sender=self.user.__class__, user=self.user, data=data, request=self.context.get('request'))
 
         return data
 
