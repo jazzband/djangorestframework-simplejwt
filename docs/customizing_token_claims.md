@@ -154,4 +154,4 @@ Other swappable schemas can be found in [settings](../settings)
 ![token_customization_git](./img/token_customize.gif)
 
 !!! Note
-`Controller Schema Swapping` is only available from **v5.2.4**
+   `Controller Schema Swapping` is only available from **v5.2.4**
