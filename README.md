@@ -72,6 +72,9 @@ INSTALLED_APPS = [
 ]
 ```
 
+## Using Ninja Router
+Also, if you are interested in following NinjaExtra methodology, check out this doc on how to use `Ninja-JWT` with `Django-Ninja` [here](https://eadwincode.github.io/django-ninja-jwt/customizing_token_claims/#use-django-ninja-router)
+
 Usage
 =====
 
