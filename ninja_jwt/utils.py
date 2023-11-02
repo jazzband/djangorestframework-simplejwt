@@ -6,10 +6,15 @@ from importlib import import_module
 
 from django.conf import settings
 from django.utils.functional import lazy
-from django.utils.timezone import is_naive, make_aware, utc
-from six import string_types
+from django.utils.timezone import is_naive, make_aware
 
 from ninja_jwt import exceptions
+
+try:
+    from datetime.timezone import utc
+except ImportError:
+    from django.utils.timezone import utc
+
 
 logger = logging.getLogger("django")
 
@@ -32,7 +37,7 @@ def import_callable(path_or_callable):
     if callable(path_or_callable):
         return path_or_callable
     else:
-        assert isinstance(path_or_callable, string_types)
+        assert isinstance(path_or_callable, str)
         package, attr = path_or_callable.rsplit(".", 1)
         packages = import_module(package)
         return getattr(packages, attr)
