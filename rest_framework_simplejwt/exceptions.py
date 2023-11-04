@@ -1,7 +1,16 @@
-from typing import Any, Dict, Optional, Union
+from typing import TYPE_CHECKING, Any, Optional
 
 from django.utils.translation import gettext_lazy as _
 from rest_framework import exceptions, status
+
+if TYPE_CHECKING:
+    from rest_framework.exceptions import _Detail
+
+    # DetailDictMixin is used with drf APIExceptions
+    BASE_AuthenticationFailed = exceptions.APIException
+else:
+    _Detail = Any
+    BASE_AuthenticationFailed = object
 
 
 class TokenError(Exception):
@@ -12,13 +21,10 @@ class TokenBackendError(Exception):
     pass
 
 
-class DetailDictMixin:
-    default_detail: str
-    default_code: str
-
+class DetailDictMixin(BASE_AuthenticationFailed):
     def __init__(
         self,
-        detail: Union[Dict[str, Any], str, None] = None,
+        detail: Optional[_Detail] = None,
         code: Optional[str] = None,
     ) -> None:
         """
@@ -35,7 +41,7 @@ class DetailDictMixin:
         if code is not None:
             detail_dict["code"] = code
 
-        super().__init__(detail_dict)  # type: ignore
+        super().__init__(detail_dict)
 
 
 class AuthenticationFailed(DetailDictMixin, exceptions.AuthenticationFailed):

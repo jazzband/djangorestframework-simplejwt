@@ -1,16 +1,13 @@
 from datetime import datetime
-from typing import Any, List, Optional, TypeVar
+from typing import Any, List, Optional
 
 from django.contrib import admin
 from django.contrib.auth.models import AbstractBaseUser
 from django.db.models import QuerySet
+from django.http import HttpRequest
 from django.utils.translation import gettext_lazy as _
-from rest_framework.request import Request
 
-from ..models import TokenUser
 from .models import BlacklistedToken, OutstandingToken
-
-AuthUser = TypeVar("AuthUser", AbstractBaseUser, TokenUser)
 
 
 class OutstandingTokenAdmin(admin.ModelAdmin):
@@ -26,7 +23,7 @@ class OutstandingTokenAdmin(admin.ModelAdmin):
     )
     ordering = ("user",)
 
-    def get_queryset(self, *args, **kwargs) -> QuerySet:
+    def get_queryset(self, *args: Any, **kwargs: Any) -> QuerySet:
         qs = super().get_queryset(*args, **kwargs)
 
         return qs.select_related("user")
@@ -34,17 +31,17 @@ class OutstandingTokenAdmin(admin.ModelAdmin):
     # Read-only behavior defined below
     actions = None
 
-    def get_readonly_fields(self, *args, **kwargs) -> List[Any]:
+    def get_readonly_fields(self, *args: Any, **kwargs: Any) -> List[Any]:
         return [f.name for f in self.model._meta.fields]
 
-    def has_add_permission(self, *args, **kwargs) -> bool:
+    def has_add_permission(self, *args: Any, **kwargs: Any) -> bool:
         return False
 
-    def has_delete_permission(self, *args, **kwargs) -> bool:
+    def has_delete_permission(self, *args: Any, **kwargs: Any) -> bool:
         return False
 
     def has_change_permission(
-        self, request: Request, obj: Optional[object] = None
+        self, request: HttpRequest, obj: Optional[object] = None
     ) -> bool:
         return request.method in ["GET", "HEAD"] and super().has_change_permission(
             request, obj
@@ -68,7 +65,7 @@ class BlacklistedTokenAdmin(admin.ModelAdmin):
     )
     ordering = ("token__user",)
 
-    def get_queryset(self, *args, **kwargs) -> QuerySet:
+    def get_queryset(self, *args: Any, **kwargs: Any) -> QuerySet:
         qs = super().get_queryset(*args, **kwargs)
 
         return qs.select_related("token__user")
@@ -79,13 +76,13 @@ class BlacklistedTokenAdmin(admin.ModelAdmin):
     token_jti.short_description = _("jti")  # type: ignore
     token_jti.admin_order_field = "token__jti"  # type: ignore
 
-    def token_user(self, obj: BlacklistedToken) -> AuthUser:
+    def token_user(self, obj: BlacklistedToken) -> Optional[AbstractBaseUser]:
         return obj.token.user
 
     token_user.short_description = _("user")  # type: ignore
     token_user.admin_order_field = "token__user"  # type: ignore
 
-    def token_created_at(self, obj: BlacklistedToken) -> datetime:
+    def token_created_at(self, obj: BlacklistedToken) -> Optional[datetime]:
         return obj.token.created_at
 
     token_created_at.short_description = _("created at")  # type: ignore

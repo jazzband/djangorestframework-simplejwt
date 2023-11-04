@@ -1,8 +1,10 @@
+from typing import Any, Optional, Type, cast
+
 from django.utils.module_loading import import_string
 from rest_framework import generics, status
 from rest_framework.request import Request
 from rest_framework.response import Response
-from rest_framework.serializers import Serializer
+from rest_framework.serializers import BaseSerializer
 
 from .authentication import AUTH_HEADER_TYPES
 from .exceptions import InvalidToken, TokenError
@@ -13,12 +15,12 @@ class TokenViewBase(generics.GenericAPIView):
     permission_classes = ()
     authentication_classes = ()
 
-    serializer_class = None
+    serializer_class: Optional[Type[BaseSerializer]] = None
     _serializer_class = ""
 
     www_authenticate_realm = "api"
 
-    def get_serializer_class(self) -> Serializer:
+    def get_serializer_class(self) -> Type[BaseSerializer]:
         """
         If serializer_class is set, use it directly. Otherwise get the class from settings.
         """
@@ -26,7 +28,7 @@ class TokenViewBase(generics.GenericAPIView):
         if self.serializer_class:
             return self.serializer_class
         try:
-            return import_string(self._serializer_class)
+            return cast(Type[BaseSerializer], import_string(self._serializer_class))
         except ImportError:
             msg = "Could not import serializer '%s'" % self._serializer_class
             raise ImportError(msg)
@@ -37,7 +39,7 @@ class TokenViewBase(generics.GenericAPIView):
             self.www_authenticate_realm,
         )
 
-    def post(self, request: Request, *args, **kwargs) -> Response:
+    def post(self, request: Request, *args: Any, **kwargs: Any) -> Response:
         serializer = self.get_serializer(data=request.data)
 
         try:

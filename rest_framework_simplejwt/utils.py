@@ -1,7 +1,7 @@
 import hashlib
 from calendar import timegm
 from datetime import datetime, timezone
-from typing import Callable
+from typing import Any, Callable
 
 from django.conf import settings
 from django.utils.functional import lazy
@@ -34,8 +34,8 @@ def datetime_from_epoch(ts: float) -> datetime:
     return make_utc(datetime.utcfromtimestamp(ts))
 
 
-def format_lazy(s: str, *args, **kwargs) -> str:
+def _format_lazy(s: str, *args: Any, **kwargs: Any) -> str:
     return s.format(*args, **kwargs)
 
 
-format_lazy: Callable = lazy(format_lazy, str)
+format_lazy: Callable = lazy(_format_lazy, str)

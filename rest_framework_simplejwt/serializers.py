@@ -1,4 +1,4 @@
-from typing import Any, Dict, Optional, Type, TypeVar
+from typing import Any, Dict, Generic, Type, TypeVar, cast
 
 from django.conf import settings
 from django.contrib.auth import authenticate, get_user_model
@@ -7,18 +7,17 @@ from django.utils.translation import gettext_lazy as _
 from rest_framework import exceptions, serializers
 from rest_framework.exceptions import ValidationError
 
-from .models import TokenUser
 from .settings import api_settings
 from .tokens import RefreshToken, SlidingToken, Token, UntypedToken
-
-AuthUser = TypeVar("AuthUser", AbstractBaseUser, TokenUser)
 
 if api_settings.BLACKLIST_AFTER_ROTATION:
     from .token_blacklist.models import BlacklistedToken
 
+T = TypeVar("T", bound=Token)
+
 
 class PasswordField(serializers.CharField):
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         kwargs.setdefault("style", {})
 
         kwargs["style"]["input_type"] = "password"
@@ -27,15 +26,16 @@ class PasswordField(serializers.CharField):
         super().__init__(*args, **kwargs)
 
 
-class TokenObtainSerializer(serializers.Serializer):
+class TokenObtainSerializer(serializers.Serializer, Generic[T]):
     username_field = get_user_model().USERNAME_FIELD
-    token_class: Optional[Type[Token]] = None
+    token_class: Type[T]  # Subclasses should set this attribute
+    user: AbstractBaseUser
 
     default_error_messages = {
         "no_active_account": _("No active account found with the given credentials")
     }
 
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
 
         self.fields[self.username_field] = serializers.CharField(write_only=True)
@@ -51,22 +51,21 @@ class TokenObtainSerializer(serializers.Serializer):
         except KeyError:
             pass
 
-        self.user = authenticate(**authenticate_kwargs)
+        self.user = authenticate(**authenticate_kwargs)  # type: ignore # Will be validated to not be None in the next line
 
         if not api_settings.USER_AUTHENTICATION_RULE(self.user):
             raise exceptions.AuthenticationFailed(
                 self.error_messages["no_active_account"],
                 "no_active_account",
             )
-
         return {}
 
     @classmethod
-    def get_token(cls, user: AuthUser) -> Token:
-        return cls.token_class.for_user(user)  # type: ignore
+    def get_token(cls, user: AbstractBaseUser) -> T:
+        return cast(T, cls.token_class.for_user(user))
 
 
-class TokenObtainPairSerializer(TokenObtainSerializer):
+class TokenObtainPairSerializer(TokenObtainSerializer[RefreshToken]):
     token_class = RefreshToken
 
     def validate(self, attrs: Dict[str, Any]) -> Dict[str, str]:
@@ -78,12 +77,12 @@ class TokenObtainPairSerializer(TokenObtainSerializer):
         data["access"] = str(refresh.access_token)
 
         if api_settings.UPDATE_LAST_LOGIN:
-            update_last_login(None, self.user)
+            update_last_login(None, self.user)  # type: ignore # Manual call can pass None
 
         return data
 
 
-class TokenObtainSlidingSerializer(TokenObtainSerializer):
+class TokenObtainSlidingSerializer(TokenObtainSerializer[SlidingToken]):
     token_class = SlidingToken
 
     def validate(self, attrs: Dict[str, Any]) -> Dict[str, str]:
@@ -94,7 +93,7 @@ class TokenObtainSlidingSerializer(TokenObtainSerializer):
         data["token"] = str(token)
 
         if api_settings.UPDATE_LAST_LOGIN:
-            update_last_login(None, self.user)
+            update_last_login(None, self.user)  # type: ignore # Manual call can pass None
 
         return data
 
@@ -156,7 +155,7 @@ class TokenVerifySerializer(serializers.Serializer):
             api_settings.BLACKLIST_AFTER_ROTATION
             and "rest_framework_simplejwt.token_blacklist" in settings.INSTALLED_APPS
         ):
-            jti = token.get(api_settings.JTI_CLAIM)
+            jti: str = token.get(api_settings.JTI_CLAIM)
             if BlacklistedToken.objects.filter(token__jti=jti).exists():
                 raise ValidationError("Token is blacklisted")
 
