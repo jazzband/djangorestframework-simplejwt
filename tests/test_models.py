@@ -1,3 +1,4 @@
+import pytest
 from django.test import TestCase
 
 from rest_framework_simplejwt.models import TokenUser
@@ -105,3 +106,13 @@ class TestTokenUser(TestCase):
 
     def test_get_username(self):
         self.assertEqual(self.user.get_username(), "deep-thought")
+
+    def test_getattr_returns_token_data(self):
+        self.assertEqual(self.user.__getattr__("some_other_stuff"), "arstarst")
+
+    def test_getattr_raises_attribute_error(self):
+        with pytest.raises(AttributeError):
+            self.user.__getattr__("_not_an_attribute")
+
+    def test_hasattr_for_missing_attribute(self):
+        self.assertFalse(hasattr(self.user, "_not_an_attribute"))
