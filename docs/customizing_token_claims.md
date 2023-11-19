@@ -148,8 +148,22 @@ NINJA_JWT = {
     'TOKEN_OBTAIN_PAIR_INPUT_SCHEMA': 'project.schema.MyTokenObtainPairInputSchema',
 }
 ```
+Other swappable schemas can be follow as shown below:
+```python
+# project/settings.py
 
-Other swappable schemas can be found in [settings](../settings)
+NINJA_JWT = {
+    # FOR OBTAIN PAIR
+    'TOKEN_OBTAIN_PAIR_INPUT_SCHEMA': "project.schema.MyTokenObtainPairInputSchema",
+    'TOKEN_OBTAIN_PAIR_REFRESH_INPUT_SCHEMA': "for.obtain_pair.refresh_input.schema",
+    # FOR SLIDING TOKEN
+    'TOKEN_OBTAIN_SLIDING_INPUT_SCHEMA':  "for.obtain_sliding.input.schema",
+    'TOKEN_OBTAIN_SLIDING_REFRESH_INPUT_SCHEMA': "for.obtain_pair.refresh_input.schema",
+
+    'TOKEN_BLACKLIST_INPUT_SCHEMA':  "for.blacklist_input.schema",
+    'TOKEN_VERIFY_INPUT_SCHEMA':  "for.verify_input.schema",
+}
+```
 
 ![token_customization_git](./img/token_customize.gif)
 
