@@ -23,7 +23,7 @@ jobs:
       - name: Install core
         run: pip install "Django${{ matrix.django-version }}"
       - name: Install tests
-        run: pip install pytest pytest-asyncio ninja-schema pytest-django django-ninja-extra python-jose==3.3.0 pyjwt[crypto]
+        run: pip install pytest pytest-asyncio pytest-django django-ninja-extra python-jose==3.3.0 pyjwt[crypto]
       - name: Test
         run: pytest
   codestyle:

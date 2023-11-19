@@ -72,7 +72,7 @@ class MyNewObtainTokenSlidingSchemaInput(TokenObtainSlidingInputSchema):
         return MyNewObtainTokenSlidingSchemaOutput(
             first_name=self._user.first_name,
             last_name=self._user.last_name,
-            **self.dict(exclude={"password"}),
+            **self.get_response_schema_init_kwargs(),
         )
 
 
@@ -226,8 +226,8 @@ class TestTokenObtainSlidingViewCustomSchema:
             "detail": [
                 {
                     "loc": ["body", "user_token", "my_extra_field"],
-                    "msg": "field required",
-                    "type": "value_error.missing",
+                    "msg": "Field required",
+                    "type": "missing",
                 }
             ]
         }

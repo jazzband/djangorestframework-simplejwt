@@ -3,9 +3,8 @@ from typing import Any, List, Optional, Union
 
 from django.conf import settings
 from django.test.signals import setting_changed
-from ninja import Schema
 from ninja_extra.lazy import LazyStrImport
-from pydantic import AnyUrl, Field, root_validator
+from pydantic.v1 import AnyUrl, BaseModel, Field, root_validator
 
 
 class NinjaJWTUserDefinedSettingsMapper:
@@ -28,7 +27,7 @@ USER_SETTINGS = NinjaJWTUserDefinedSettingsMapper(
 )
 
 
-class NinjaJWTSettings(Schema):
+class NinjaJWTSettings(BaseModel):
     class Config:
         orm_mode = True
         validate_assignment = True
