@@ -11,9 +11,9 @@ from django.utils.timezone import is_naive, make_aware
 from ninja_jwt import exceptions
 
 try:
-    from datetime.timezone import utc
+    from datetime import timezone
 except ImportError:
-    from django.utils.timezone import utc
+    from django.utils import timezone
 
 
 logger = logging.getLogger("django")
@@ -45,7 +45,7 @@ def import_callable(path_or_callable):
 
 def make_utc(dt):
     if settings.USE_TZ and is_naive(dt):
-        return make_aware(dt, timezone=utc)
+        return make_aware(dt, timezone=timezone.utc)
 
     return dt
 
