@@ -27,7 +27,7 @@ class MyTokenObtainPairOutSchema(Schema):
 
 class MyTokenObtainPairSchema(TokenObtainPairInputSchema):
     def output_schema(self):
-        out_dict = self.dict(exclude={"password"})
+        out_dict = self.get_response_schema_init_kwargs()
         out_dict.update(user=UserSchema.from_orm(self._user))
         return MyTokenObtainPairOutSchema(**out_dict)
 
