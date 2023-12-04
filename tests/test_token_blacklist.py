@@ -1,9 +1,11 @@
+from importlib import reload
 from unittest.mock import patch
 
 from django.contrib.auth.models import User
 from django.core.management import call_command
 from django.db.models import BigAutoField
 from django.test import TestCase
+from django.utils import timezone
 
 from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.serializers import TokenVerifySerializer
@@ -24,6 +26,19 @@ class TestTokenBlacklist(TestCase):
             username="test_user",
             password="test_password",
         )
+
+    def test_token_blacklist_old_django(self):
+        with patch("django.VERSION", (3, 1)):
+            # Import package mock blacklist old django
+            import rest_framework_simplejwt.token_blacklist.__init__ as blacklist
+
+            self.assertEqual(
+                blacklist.default_app_config,
+                ("rest_framework_simplejwt.token_blacklist.apps.TokenBlacklistConfig"),
+            )
+
+        # Restore origin module without mock
+        reload(blacklist)
 
     def test_sliding_tokens_are_added_to_outstanding_list(self):
         token = SlidingToken.for_user(self.user)
@@ -113,6 +128,23 @@ class TestTokenBlacklist(TestCase):
         self.assertTrue(created)
 
         self.assertEqual(OutstandingToken.objects.count(), 2)
+
+    def test_outstanding_token_and_blacklisted_token_expected_str(self):
+        outstanding = OutstandingToken.objects.create(
+            user=self.user,
+            jti="abc",
+            token="xyz",
+            expires_at=timezone.now(),
+        )
+        blacklisted = BlacklistedToken.objects.create(token=outstanding)
+
+        expected_outstanding_str = "Token for {} ({})".format(
+            outstanding.user, outstanding.jti
+        )
+        expected_blacklisted_str = f"Blacklisted token for {blacklisted.token.user}"
+
+        self.assertEqual(str(outstanding), expected_outstanding_str)
+        self.assertEqual(str(blacklisted), expected_blacklisted_str)
 
 
 class TestTokenBlacklistFlushExpiredTokens(TestCase):

@@ -1,6 +1,8 @@
 from datetime import timedelta
+from importlib import reload
 from unittest.mock import MagicMock, patch
 
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from rest_framework import exceptions as drf_exceptions
@@ -75,6 +77,17 @@ class TestTokenObtainSerializer(TestCase):
 
         with self.assertRaises(drf_exceptions.AuthenticationFailed):
             s.is_valid()
+
+    def test_it_should_pass_validate_if_request_not_in_context(self):
+        s = TokenObtainSerializer(
+            context={},
+            data={
+                "username": self.username,
+                "password": self.password,
+            },
+        )
+
+        s.is_valid()
 
     def test_it_should_raise_if_user_not_active(self):
         self.user.is_active = False
@@ -372,6 +385,32 @@ class TestTokenRefreshSerializer(TestCase):
         # Assert old refresh token is blacklisted
         self.assertEqual(BlacklistedToken.objects.first().token.jti, old_jti)
 
+    @override_api_settings(
+        ROTATE_REFRESH_TOKENS=True,
+        BLACKLIST_AFTER_ROTATION=True,
+    )
+    def test_blacklist_app_not_installed_should_pass(self):
+        from rest_framework_simplejwt import serializers, tokens
+
+        # Remove blacklist app
+        new_apps = list(settings.INSTALLED_APPS)
+        new_apps.remove("rest_framework_simplejwt.token_blacklist")
+
+        with self.settings(INSTALLED_APPS=tuple(new_apps)):
+            # Reload module that blacklist app not installed
+            reload(tokens)
+            reload(serializers)
+
+            refresh = tokens.RefreshToken()
+
+            # Serializer validates
+            ser = serializers.TokenRefreshSerializer(data={"refresh": str(refresh)})
+            ser.validate({"refresh": str(refresh)})
+
+        # Restore origin module without mock
+        reload(tokens)
+        reload(serializers)
+
 
 class TestTokenVerifySerializer(TestCase):
     def test_it_should_raise_token_error_if_token_invalid(self):
@@ -489,3 +528,25 @@ class TestTokenBlacklistSerializer(TestCase):
 
         # Assert old refresh token is blacklisted
         self.assertEqual(BlacklistedToken.objects.first().token.jti, old_jti)
+
+    def test_blacklist_app_not_installed_should_pass(self):
+        from rest_framework_simplejwt import serializers, tokens
+
+        # Remove blacklist app
+        new_apps = list(settings.INSTALLED_APPS)
+        new_apps.remove("rest_framework_simplejwt.token_blacklist")
+
+        with self.settings(INSTALLED_APPS=tuple(new_apps)):
+            # Reload module that blacklist app not installed
+            reload(tokens)
+            reload(serializers)
+
+            refresh = tokens.RefreshToken()
+
+            # Serializer validates
+            ser = serializers.TokenBlacklistSerializer(data={"refresh": str(refresh)})
+            ser.validate({"refresh": str(refresh)})
+
+        # Restore origin module without mock
+        reload(tokens)
+        reload(serializers)

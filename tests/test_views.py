@@ -440,3 +440,16 @@ class TestCustomTokenView(APIViewTestCase):
         request = factory.post("/", {}, format="json")
         res = view(request)
         self.assertEqual(res.status_code, 400)
+
+
+class TestTokenViewBase(APIViewTestCase):
+    def test_serializer_class_not_set_in_settings_and_class_attribute_or_wrong_path(
+        self,
+    ):
+        view = TokenViewBase()
+        msg = "Could not import serializer '%s'" % view._serializer_class
+
+        with self.assertRaises(ImportError) as e:
+            view.get_serializer_class()
+
+            self.assertEqual(e.exception.msg, msg)

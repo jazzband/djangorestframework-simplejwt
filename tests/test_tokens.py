@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from importlib import reload
 from unittest.mock import patch
 
 from django.contrib.auth import get_user_model
@@ -38,6 +39,18 @@ class TestToken(TestCase):
             username=cls.username,
             password="test_password",
         )
+
+    def test_type_checking(self):
+        from rest_framework_simplejwt import tokens
+
+        with patch("typing.TYPE_CHECKING", True):
+            # Reload tokens, mock type checking
+            reload(tokens)
+
+            self.assertEqual(tokens.TYPE_CHECKING, True)
+
+        # Restore origin module without mock
+        reload(tokens)
 
     def test_init_no_token_type_or_lifetime(self):
         class MyTestToken(Token):
@@ -376,6 +389,11 @@ class TestToken(TestCase):
         # Test with non-int user id
         token = MyToken.for_user(self.user)
         self.assertEqual(token[api_settings.USER_ID_CLAIM], self.username)
+
+    @override_api_settings(CHECK_REVOKE_TOKEN=True)
+    def test_revoke_token_claim_included_in_authorization_token(self):
+        token = MyToken.for_user(self.user)
+        self.assertIn(api_settings.REVOKE_TOKEN_CLAIM, token)
 
     def test_get_token_backend(self):
         token = MyToken()
