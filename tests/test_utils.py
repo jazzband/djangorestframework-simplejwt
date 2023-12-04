@@ -1,7 +1,6 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 from django.test import TestCase
-from datetime import timezone
 from freezegun import freeze_time
 
 from rest_framework_simplejwt.utils import (
