@@ -6,6 +6,7 @@ from setuptools import find_packages, setup
 extras_require = {
     "test": [
         "cryptography",
+        "freezegun",
         "pytest-cov",
         "pytest-django",
         "pytest-xdist",

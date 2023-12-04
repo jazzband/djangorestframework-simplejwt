@@ -23,7 +23,11 @@ def make_utc(dt: datetime) -> datetime:
 
 
 def aware_utcnow() -> datetime:
-    return make_utc(datetime.utcnow())
+    dt = datetime.now(tz=timezone.utc)
+    if not settings.USE_TZ:
+        dt = dt.replace(tzinfo=None)
+
+    return dt
 
 
 def datetime_to_epoch(dt: datetime) -> int:
@@ -31,7 +35,11 @@ def datetime_to_epoch(dt: datetime) -> int:
 
 
 def datetime_from_epoch(ts: float) -> datetime:
-    return make_utc(datetime.utcfromtimestamp(ts))
+    dt = datetime.fromtimestamp(ts, tz=timezone.utc)
+    if not settings.USE_TZ:
+        dt = dt.replace(tzinfo=None)
+
+    return dt
 
 
 def format_lazy(s: str, *args, **kwargs) -> str:
