@@ -28,7 +28,7 @@ class TokenViewBase(generics.GenericAPIView):
         try:
             return import_string(self._serializer_class)
         except ImportError:
-            msg = "Could not import serializer '%s'" % self._serializer_class
+            msg = f"Could not import serializer '{self._serializer_class}'"
             raise ImportError(msg)
 
     def get_authenticate_header(self, request: Request) -> str:
