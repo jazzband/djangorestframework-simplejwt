@@ -22,7 +22,7 @@ from .utils import (
 if TYPE_CHECKING:
     from .backends import TokenBackend
 
-T = TypeVar('T', bound='Token')
+T = TypeVar("T", bound="Token")
 
 AuthUser = TypeVar("AuthUser", AbstractBaseUser, TokenUser)
 
@@ -298,7 +298,7 @@ class BlacklistMixin(Generic[T]):
             return token
 
 
-class SlidingToken(BlacklistMixin['SlidingToken'], Token):
+class SlidingToken(BlacklistMixin["SlidingToken"], Token):
     token_type = "sliding"
     lifetime = api_settings.SLIDING_TOKEN_LIFETIME
 
@@ -319,7 +319,7 @@ class AccessToken(Token):
     lifetime = api_settings.ACCESS_TOKEN_LIFETIME
 
 
-class RefreshToken(BlacklistMixin['RefreshToken'], Token):
+class RefreshToken(BlacklistMixin["RefreshToken"], Token):
     token_type = "refresh"
     lifetime = api_settings.REFRESH_TOKEN_LIFETIME
     no_copy_claims = (
