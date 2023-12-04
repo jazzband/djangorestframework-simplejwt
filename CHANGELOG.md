@@ -1,3 +1,13 @@
+## 5.3.1
+
+## What's Changed
+* Remove EOL Python, Django and DRF version support by @KOliver94 in [#754](https://github.com/jazzband/djangorestframework-simplejwt/pull/754)
+* Declare support for type checking (closes #664) by @PedroPerpetua in [#760](https://github.com/jazzband/djangorestframework-simplejwt/pull/760)
+* Remove usages of deprecated datetime.utcnow() and datetime.utcfromtimestamp() in [#765](https://github.com/jazzband/djangorestframework-simplejwt/pull/765)
+
+#### Translation Updates:
+* Update Korean translations by @TGoddessana in https://github.com/jazzband/djangorestframework-simplejwt/pull/753
+
 ## 5.3.0
 
 #### Notable Changes:
