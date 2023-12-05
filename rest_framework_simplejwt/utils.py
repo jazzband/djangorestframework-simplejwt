@@ -5,7 +5,6 @@ from typing import Callable
 
 from django.conf import settings
 from django.utils.functional import lazy
-from django.utils.timezone import is_naive, make_aware
 
 
 def get_md5_hash_password(password: str) -> str:
@@ -16,8 +15,8 @@ def get_md5_hash_password(password: str) -> str:
 
 
 def make_utc(dt: datetime) -> datetime:
-    if settings.USE_TZ and is_naive(dt):
-        return make_aware(dt, timezone=timezone.utc)
+    if settings.USE_TZ and dt.tzinfo is None:
+        return dt.replace(tzinfo=timezone.utc)
 
     return dt
 
