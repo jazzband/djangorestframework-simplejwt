@@ -10,6 +10,8 @@ jobs:
   locale-updater:
     name: Locale updater
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
     steps:
     - name: Checkout repo
       uses: actions/checkout@v2
@@ -47,7 +49,7 @@ jobs:
         python ../scripts/i18n_updater.py
 
     - name: Create Pull Request
-      uses: peter-evans/create-pull-request@v3
+      uses: peter-evans/create-pull-request@v5
       id: auto-commit-action
       with:
         branch: i18n-auto-update
@@ -55,6 +57,7 @@ jobs:
         body: "Updated locale files on master branch"
         commit-message: "Update locale files"
         add-paths: rest_framework_simplejwt/locale/**
+        delete-branch: true
 
     - name: Tell whether locale updated
       run: echo "Locale files updated"
