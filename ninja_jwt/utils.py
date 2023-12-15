@@ -51,7 +51,11 @@ def make_utc(dt):
 
 
 def aware_utcnow():
-    return make_utc(datetime.utcnow())
+    dt = datetime.now(tz=timezone.utc)
+    if not settings.USE_TZ:
+        dt = dt.replace(tzinfo=None)
+
+    return dt
 
 
 def datetime_to_epoch(dt):
@@ -59,7 +63,11 @@ def datetime_to_epoch(dt):
 
 
 def datetime_from_epoch(ts):
-    return make_utc(datetime.utcfromtimestamp(ts))
+    dt = datetime.fromtimestamp(ts, tz=timezone.utc)
+    if not settings.USE_TZ:
+        dt = dt.replace(tzinfo=None)
+
+    return dt
 
 
 def format_lazy(s, *args, **kwargs):
