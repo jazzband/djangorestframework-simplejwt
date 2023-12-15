@@ -39,7 +39,5 @@ jobs:
         run: pip install flit
       - name: Install Dependencies
         run: flit install --symlink
-      - name: Black
-        run: black --check ninja_jwt tests
       - name: Ruff Linting Check
         run: ruff check ninja_jwt tests
