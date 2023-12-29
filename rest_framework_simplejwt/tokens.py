@@ -197,7 +197,7 @@ class Token:
             raise TokenError(format_lazy(_("Token '{}' claim has expired"), claim))
 
     @classmethod
-    def for_user(cls, user: AuthUser) -> "Token":
+    def for_user(cls: Type[T], user: AuthUser) -> T:
         """
         Returns an authorization token for the given user that will be provided
         after authenticating the user's credentials.
