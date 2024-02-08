@@ -6,7 +6,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
@@ -15,29 +14,43 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='OutstandingToken',
+            name="OutstandingToken",
             fields=[
-                ('id', models.BigAutoField(primary_key=True, serialize=False)),
-                ('jti', models.CharField(max_length=255, unique=True)),
-                ('token', models.TextField()),
-                ('created_at', models.DateTimeField(blank=True, null=True)),
-                ('expires_at', models.DateTimeField()),
-                ('user', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL)),
+                ("id", models.BigAutoField(primary_key=True, serialize=False)),
+                ("jti", models.CharField(max_length=255, unique=True)),
+                ("token", models.TextField()),
+                ("created_at", models.DateTimeField(blank=True, null=True)),
+                ("expires_at", models.DateTimeField()),
+                (
+                    "user",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             options={
-                'ordering': ('user',),
-                'abstract': False,
+                "ordering": ("user",),
+                "abstract": False,
             },
         ),
         migrations.CreateModel(
-            name='BlacklistedToken',
+            name="BlacklistedToken",
             fields=[
-                ('id', models.BigAutoField(primary_key=True, serialize=False)),
-                ('blacklisted_at', models.DateTimeField(auto_now_add=True)),
-                ('token', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to='token_blacklist.outstandingtoken')),
+                ("id", models.BigAutoField(primary_key=True, serialize=False)),
+                ("blacklisted_at", models.DateTimeField(auto_now_add=True)),
+                (
+                    "token",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="token_blacklist.outstandingtoken",
+                    ),
+                ),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
     ]
