@@ -17,30 +17,31 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-    - name: Checkout Repository
-      uses: actions/checkout@v4
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.12'
-        cache: 'pip'
-        cache-dependency-path: setup.py
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+          cache-dependency-path: setup.py
 
-    - name: Install dependencies
-      run: |
-        sudo apt-get install -y gettext 
-        python -m pip install --upgrade pip wheel setuptools
-        pip install -e .[dev]
+      - name: Install dependencies
+        run: |
+          sudo apt-get install -y gettext 
+          python -m pip install --upgrade pip wheel setuptools
+          pip install -e .[dev]
 
-    - name: Run locale Update Script
-      run: python scripts/i18n_updater.py
+      - name: Run locale Update Script
+        run: python scripts/i18n_updater.py
 
-    - name: Create Pull Request
-      uses: peter-evans/create-pull-request@v6
-      with:
-        branch: i18n-auto-update
-        title: "[i18n] Update"
-        body: "Updated locale files on trunk"
-        commit-message: "Update locale files"
-        add-paths: rest_framework_simplejwt/locale/**
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: i18n-auto-update
+          title: "[i18n] Update"
+          body: "Updated locale files on trunk"
+          commit-message: "Update locale files"
+          add-paths: rest_framework_simplejwt/locale/**
+          delete-branch: true
