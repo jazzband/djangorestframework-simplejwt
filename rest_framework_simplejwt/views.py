@@ -119,7 +119,7 @@ class TokenBlacklistView(TokenViewBase):
     def post(self, request: Request, *args, **kwargs) -> Response:
         response = super().post(request, *args, **kwargs)
         serializer_data = response.data
-        serializer_data['Token detail'] = 'Token blacklisted'
+        serializer_data['message'] = 'Token blacklisted'
 
         return Response(serializer_data, status=response.status_code)
 
