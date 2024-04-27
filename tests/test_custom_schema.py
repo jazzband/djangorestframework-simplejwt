@@ -91,7 +91,22 @@ class MyTokenRefreshSlidingInputSchema(TokenRefreshSlidingInputSchema):
 
 
 class MyTokenVerifyInputSchema(TokenVerifyInputSchema):
-    pass
+    @classmethod
+    def get_response_schema(cls):
+        class NewResponseSchema(Schema):
+            refresh: str
+            access: str
+            user: dict
+
+        return NewResponseSchema
+
+    def to_response_schema(self):
+        values = {
+            "refresh": "your_refresh_token_here",
+            "access": self.token,
+            "user": {},
+        }
+        return values
 
 
 class MyTokenBlacklistInputSchema(TokenBlacklistInputSchema):
@@ -330,7 +345,11 @@ class TestTokenVerifyViewCustomSchema:
                 "/verify", json={"token": str(token)}, content_type="application/json"
             )
         assert res.status_code == 200
-        assert res.json() == {}
+        data = res.json()
+
+        assert "refresh" in data
+        assert "user" in data
+        assert "access" in data
 
 
 @pytest.mark.django_db

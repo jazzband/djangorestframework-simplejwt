@@ -1,4 +1,3 @@
-from ninja import Schema
 from ninja.router import Router
 
 from ninja_jwt.schema_control import SchemaControl
@@ -11,7 +10,7 @@ schema = SchemaControl(api_settings)
 
 @blacklist_router.post(
     "/blacklist",
-    response={200: Schema},
+    response={200: schema.blacklist_schema.get_response_schema()},
     url_name="token_blacklist",
     auth=None,
 )
