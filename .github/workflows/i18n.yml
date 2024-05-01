@@ -6,12 +6,12 @@ on:
       - main
       - master
 
-permissions:
-  pull-requests: write
-  contents: write
 
 jobs:
   locale-updater:
+    permissions:
+      pull-requests: write
+      contents: write
     if: github.repository == 'jazzband/djangorestframework-simplejwt'
     name: Locale updater
     runs-on: ubuntu-latest
