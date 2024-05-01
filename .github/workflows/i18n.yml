@@ -1,63 +1,47 @@
-name: Locale Updater
+name: Update locale files
 
 on:
   push:
     branches:
-      - master
       - main
+      - master
+
 
 jobs:
   locale-updater:
-    name: Locale updater
-    runs-on: ubuntu-latest
     permissions:
       pull-requests: write
+      contents: write
+    if: github.repository == 'jazzband/djangorestframework-simplejwt'
+    name: Locale updater
+    runs-on: ubuntu-latest
     steps:
-    - name: Checkout repo
-      uses: actions/checkout@v2
-      with:
-        ref: ${{ github.head_ref }}
 
-    - name: Set up Python 3.9
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.9'
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
-    - name: Get pip cache dir
-      id: pip-cache
-      run: |
-        echo "::set-output name=dir::$(pip cache dir)"
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+          cache-dependency-path: setup.py
 
-    - name: Cache
-      uses: actions/cache@v2
-      with:
-        path: ${{ steps.pip-cache.outputs.dir }}
-        key:
-          3.9-v1-${{ hashFiles('**/setup.py') }}
-        restore-keys: |
-          3.9-v1-
+      - name: Install dependencies
+        run: |
+          sudo apt-get install -y gettext 
+          python -m pip install --upgrade pip wheel setuptools
+          pip install -e .[dev]
 
-    - name: Install dependencies
-      run: |
-        sudo apt-get install -y gettext 
-        python -m pip install --upgrade pip wheel setuptools
-        pip install -e .[dev]
+      - name: Run locale Update Script
+        run: python scripts/i18n_updater.py
 
-    - name: Run locale
-      working-directory: rest_framework_simplejwt
-      run: |
-        python ../scripts/i18n_updater.py
-
-    - name: Create Pull Request
-      uses: peter-evans/create-pull-request@v5
-      id: auto-commit-action
-      with:
-        branch: i18n-auto-update
-        title: "[i18n] Update"
-        body: "Updated locale files on master branch"
-        commit-message: "Update locale files"
-        add-paths: rest_framework_simplejwt/locale/**
-        delete-branch: true
-
-    - name: Tell whether locale updated
-      run: echo "Locale files updated"
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: i18n-auto-update
+          title: "[i18n] Update"
+          body: "Updated locale files on trunk"
+          commit-message: "Update locale files"
+          add-paths: rest_framework_simplejwt/locale/**
+          delete-branch: true
