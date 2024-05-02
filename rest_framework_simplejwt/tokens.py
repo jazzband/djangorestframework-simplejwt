@@ -206,6 +206,11 @@ class Token:
         if not isinstance(user_id, int):
             user_id = str(user_id)
 
+        # Prevent incorrect usage of Token.for_user (when creating tokens manually)
+        # see https://github.com/jazzband/djangorestframework-simplejwt/issues/779
+        if not api_settings.USER_AUTHENTICATION_RULE(user):
+            raise TokenError(_("Token is invalid or expired"))
+
         token = cls()
         token[api_settings.USER_ID_CLAIM] = user_id
 
