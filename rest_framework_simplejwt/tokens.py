@@ -202,14 +202,17 @@ class Token:
         Returns an authorization token for the given user that will be provided
         after authenticating the user's credentials.
         """
-        user_id = getattr(user, api_settings.USER_ID_FIELD)
-        if not isinstance(user_id, int):
-            user_id = str(user_id)
-
         # Prevent incorrect usage of Token.for_user (when creating tokens manually)
         # see https://github.com/jazzband/djangorestframework-simplejwt/issues/779
         if not api_settings.USER_AUTHENTICATION_RULE(user):
             raise TokenError(_("Token is invalid or expired"))
+        return cls.for_validated_user(user)
+
+    @classmethod
+    def for_validated_user(cls: Type[T], user: AuthUser) -> T:
+        user_id = getattr(user, api_settings.USER_ID_FIELD)
+        if not isinstance(user_id, int):
+            user_id = str(user_id)
 
         token = cls()
         token[api_settings.USER_ID_CLAIM] = user_id
@@ -283,11 +286,11 @@ class BlacklistMixin(Generic[T]):
             return BlacklistedToken.objects.get_or_create(token=token)
 
         @classmethod
-        def for_user(cls: Type[T], user: AuthUser) -> T:
+        def for_validated_user(cls: Type[T], user: AuthUser) -> T:
             """
             Adds this token to the outstanding token list.
             """
-            token = super().for_user(user)  # type: ignore
+            token = super().for_validated_user(user)  # type: ignore
 
             jti = token[api_settings.JTI_CLAIM]
             exp = token["exp"]
