@@ -24,7 +24,7 @@ from ninja_jwt.authentication import JWTAuth
 router = router('')
 
 @router.get('/some-endpoint', auth=JWTAuth())
-def some_endpoint(self):
+def some_endpoint(request):
     ...
 ```
 
