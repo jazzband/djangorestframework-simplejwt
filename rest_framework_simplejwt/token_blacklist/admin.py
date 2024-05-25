@@ -24,12 +24,8 @@ class OutstandingTokenAdmin(admin.ModelAdmin):
         "user__id",
         "jti",
     )
+    list_select_related = ("user", )
     ordering = ("user",)
-
-    def get_queryset(self, *args, **kwargs) -> QuerySet:
-        qs = super().get_queryset(*args, **kwargs)
-
-        return qs.select_related("user")
 
     # Read-only behavior defined below
     actions = None
@@ -66,12 +62,8 @@ class BlacklistedTokenAdmin(admin.ModelAdmin):
         "token__user__id",
         "token__jti",
     )
+    list_select_related = ("token__user",)
     ordering = ("token__user",)
-
-    def get_queryset(self, *args, **kwargs) -> QuerySet:
-        qs = super().get_queryset(*args, **kwargs)
-
-        return qs.select_related("token__user")
 
     def token_jti(self, obj: BlacklistedToken) -> str:
         return obj.token.jti
