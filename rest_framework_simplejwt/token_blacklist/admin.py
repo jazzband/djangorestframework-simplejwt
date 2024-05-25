@@ -24,7 +24,7 @@ class OutstandingTokenAdmin(admin.ModelAdmin):
         "user__id",
         "jti",
     )
-    list_select_related = ("user", )
+    list_select_related = ("user",)
     ordering = ("user",)
 
     # Read-only behavior defined below
