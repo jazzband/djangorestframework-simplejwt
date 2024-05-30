@@ -146,6 +146,20 @@ class TestTokenBlacklist(TestCase):
         self.assertEqual(str(outstanding), expected_outstanding_str)
         self.assertEqual(str(blacklisted), expected_blacklisted_str)
 
+    def test_outstanding_token_and_blacklisted_token_created_at(self):
+        token = RefreshToken.for_user(self.user)
+
+        token.blacklist()
+        outstanding_token = OutstandingToken.objects.get(token=token)
+        self.assertEqual(outstanding_token.created_at, token.current_time)
+
+    def test_outstanding_token_and_blacklisted_token_user(self):
+        token = RefreshToken.for_user(self.user)
+
+        token.blacklist()
+        outstanding_token = OutstandingToken.objects.get(token=token)
+        self.assertEqual(outstanding_token.user, self.user)
+
 
 class TestTokenBlacklistFlushExpiredTokens(TestCase):
     def setUp(self):
