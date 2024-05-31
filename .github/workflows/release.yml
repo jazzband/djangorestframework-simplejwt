@@ -22,9 +22,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          sudo apt-get install -y gettext 
+          sudo apt-get install -y gettext
           python -m pip install -U pip
-          python -m pip install -U setuptools twine wheel
           pip install -e .[dev]
 
       - name: Check locale
@@ -36,8 +35,7 @@ jobs:
 
       - name: Build package
         run: |
-          python setup.py --version
-          python setup.py sdist --format=gztar bdist_wheel
+          python -m build
           twine check dist/*
 
       - name: Upload packages to Jazzband
@@ -46,4 +44,4 @@ jobs:
         with:
           user: jazzband
           password: ${{ secrets.JAZZBAND_RELEASE_KEY }}
-          repository_url: https://jazzband.co/projects/djangorestframework-simplejwt/upload
+          repository-url: https://jazzband.co/projects/djangorestframework-simplejwt/upload

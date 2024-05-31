@@ -3,9 +3,7 @@ clean: clean-build clean-pyc
 
 .PHONY: clean-build
 clean-build:
-	rm -fr build/
 	rm -fr dist/
-	rm -fr *.egg-info
 
 .PHONY: clean-pyc
 clean-pyc:
@@ -33,7 +31,6 @@ test-all:
 .PHONY: build-docs
 build-docs:
 	sphinx-apidoc -o docs/ . \
-		setup.py \
 		*confest* \
 		tests/* \
 		rest_framework_simplejwt/token_blacklist/* \
@@ -59,10 +56,10 @@ pushversion:
 
 .PHONY: publish
 publish:
-	python setup.py sdist bdist_wheel
+	python -m build --wheel
 	twine upload dist/*
 
 .PHONY: dist
 dist: clean
-	python setup.py sdist bdist_wheel
+	python -m build --wheel
 	ls -l dist
