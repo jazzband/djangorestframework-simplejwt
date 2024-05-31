@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING, Any, Dict, Generic, Optional, Type, TypeVar
 from uuid import uuid4
 
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractBaseUser
 from django.utils.module_loading import import_string
 from django.utils.translation import gettext_lazy as _
@@ -246,7 +247,14 @@ class BlacklistMixin(Generic[T]):
         def verify(self, *args, **kwargs) -> None:
             self.check_blacklist()
 
+            self.check_user_active()
+
             super().verify(*args, **kwargs)  # type: ignore
+
+        def check_user_active(self):
+            user_id = self.payload.get(api_settings.USER_ID_CLAIM, None)
+            if user_id and not get_user_model().objects.get(**{api_settings.USER_ID_FIELD: user_id}).is_active:
+                raise TokenError(_("User is inactive"))
 
         def check_blacklist(self) -> None:
             """
