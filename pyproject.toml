@@ -1,0 +1,92 @@
+[build-system]
+requires = ["hatchling>=1.23.0", "hatch-vcs"]
+build-backend = "hatchling.build"
+
+[project]
+name = "djangorestframework-simplejwt"
+dynamic = ["version"]
+description = "A minimal JSON Web Token authentication plugin for Django REST Framework"
+readme = "README.rst"
+license = "MIT"
+license-files = { globs = ["LICENSE*", "licenses/*"] }
+requires-python = ">=3.8"
+authors = [
+  { name = "David Sanders", email = "davesque@gmail.com" },
+]
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Environment :: Web Environment",
+  "Framework :: Django",
+  "Framework :: Django :: 3.2",
+  "Framework :: Django :: 4.1",
+  "Framework :: Django :: 4.2",
+  "Framework :: Django :: 5.0",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Internet :: WWW/HTTP",
+]
+dependencies = [
+  "django>=3.2",
+  "djangorestframework>=3.12",
+  "pyjwt>=1.7.1,<3",
+]
+
+[project.optional-dependencies]
+crypto = [
+  "cryptography>=3.3.1",
+]
+dev = [
+  "build",
+  "ipython",
+  "pytest-watch",
+  "twine",
+  "wheel",
+  "djangorestframework-simplejwt[doc,lint,test,python-jose]",
+]
+doc = [
+  "Sphinx>=1.6.5,<2",
+  "sphinx_rtd_theme>=0.1.9",
+]
+lint = [
+  "flake8",
+  "isort",
+  "pep8",
+]
+python-jose = [
+  "python-jose==3.3.0",
+]
+test = [
+  "cryptography",
+  "freezegun",
+  "pytest",
+  "pytest-cov",
+  "pytest-django",
+  "pytest-xdist",
+  "tox",
+]
+
+[project.urls]
+Homepage = "https://github.com/jazzband/djangorestframework-simplejwt"
+
+[tool.hatch.version]
+source = "vcs"
+raw-options = { version_scheme = "post-release" }
+
+[tool.hatch.build.targets.wheel]
+# Jazzband's release process is limited to 2.2 metadata
+# - see https://github.com/jazzband/help/issues/360
+core-metadata-version = "2.2"
+packages = ["rest_framework_simplejwt"]
+
+[tool.hatch.build.targets.sdist]
+# Jazzband's release process is limited to 2.2 metadata
+# - see https://github.com/jazzband/help/issues/360
+core-metadata-version = "2.2"
