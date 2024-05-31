@@ -253,7 +253,12 @@ class BlacklistMixin(Generic[T]):
 
         def check_user_active(self):
             user_id = self.payload.get(api_settings.USER_ID_CLAIM, None)
-            if user_id and not get_user_model().objects.get(**{api_settings.USER_ID_FIELD: user_id}).is_active:
+            if (
+                user_id
+                and not get_user_model()
+                .objects.get(**{api_settings.USER_ID_FIELD: user_id})
+                .is_active
+            ):
                 raise TokenError(_("User is inactive"))
 
         def check_blacklist(self) -> None:
