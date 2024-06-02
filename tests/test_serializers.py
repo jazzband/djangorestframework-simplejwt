@@ -34,7 +34,7 @@ from .utils import override_api_settings
 User = get_user_model()
 
 
-class TestTokenObtainSerializer(TestCase):
+class SerializerTestCase(TestCase):
     def setUp(self):
         self.username = "test_user"
         self.password = "test_password"
@@ -44,6 +44,8 @@ class TestTokenObtainSerializer(TestCase):
             password=self.password,
         )
 
+
+class TestTokenObtainSerializer(SerializerTestCase):
     def test_it_should_not_validate_if_any_fields_missing(self):
         s = TokenObtainSerializer(data={})
         self.assertFalse(s.is_valid())
@@ -105,16 +107,7 @@ class TestTokenObtainSerializer(TestCase):
             s.is_valid()
 
 
-class TestTokenObtainSlidingSerializer(TestCase):
-    def setUp(self):
-        self.username = "test_user"
-        self.password = "test_password"
-
-        self.user = User.objects.create_user(
-            username=self.username,
-            password=self.password,
-        )
-
+class TestTokenObtainSlidingSerializer(SerializerTestCase):
     def test_it_should_produce_a_json_web_token_when_valid(self):
         s = TokenObtainSlidingSerializer(
             context=MagicMock(),
@@ -133,16 +126,7 @@ class TestTokenObtainSlidingSerializer(TestCase):
         SlidingToken(s.validated_data["token"])
 
 
-class TestTokenObtainPairSerializer(TestCase):
-    def setUp(self):
-        self.username = "test_user"
-        self.password = "test_password"
-
-        self.user = User.objects.create_user(
-            username=self.username,
-            password=self.password,
-        )
-
+class TestTokenObtainPairSerializer(SerializerTestCase):
     def test_it_should_produce_a_json_web_token_when_valid(self):
         s = TokenObtainPairSerializer(
             context=MagicMock(),
@@ -246,7 +230,7 @@ class TestTokenRefreshSlidingSerializer(TestCase):
         self.assertTrue(old_exp < new_exp)
 
 
-class TestTokenRefreshSerializer(TestCase):
+class TestTokenRefreshSerializer(SerializerTestCase):
     def test_it_should_raise_token_error_if_token_invalid(self):
         token = RefreshToken()
         del token["exp"]
@@ -303,11 +287,15 @@ class TestTokenRefreshSerializer(TestCase):
         BLACKLIST_AFTER_ROTATION=False,
     )
     def test_it_should_return_refresh_token_if_tokens_should_be_rotated(self):
-        refresh = RefreshToken()
+        self.assertEqual(OutstandingToken.objects.count(), 0)
+        refresh = RefreshToken.for_user(self.user)
+        self.assertEqual(OutstandingToken.objects.count(), 1)
 
         refresh["test_claim"] = "arst"
 
         old_jti = refresh["jti"]
+        outstanding1 = OutstandingToken.objects.first()
+        self.assertEqual(outstanding1.jti, old_jti)
         old_exp = refresh["exp"]
 
         # Serializer validates
@@ -319,8 +307,12 @@ class TestTokenRefreshSerializer(TestCase):
             fake_aware_utcnow.return_value = now
             self.assertTrue(ser.is_valid())
 
+        self.assertEqual(OutstandingToken.objects.count(), 2)
+
         access = AccessToken(ser.validated_data["access"])
         new_refresh = RefreshToken(ser.validated_data["refresh"])
+        outstanding2 = OutstandingToken.objects.get(jti=new_refresh["jti"])
+        self.assertNotEqual(outstanding2.jti, refresh["jti"])
 
         self.assertEqual(refresh["test_claim"], access["test_claim"])
         self.assertEqual(refresh["test_claim"], new_refresh["test_claim"])
@@ -346,7 +338,8 @@ class TestTokenRefreshSerializer(TestCase):
         self.assertEqual(OutstandingToken.objects.count(), 0)
         self.assertEqual(BlacklistedToken.objects.count(), 0)
 
-        refresh = RefreshToken()
+        refresh = RefreshToken.for_user(self.user)
+        self.assertEqual(OutstandingToken.objects.count(), 1)
 
         refresh["test_claim"] = "arst"
 
@@ -379,7 +372,7 @@ class TestTokenRefreshSerializer(TestCase):
             datetime_to_epoch(now + api_settings.REFRESH_TOKEN_LIFETIME),
         )
 
-        self.assertEqual(OutstandingToken.objects.count(), 1)
+        self.assertEqual(OutstandingToken.objects.count(), 2)
         self.assertEqual(BlacklistedToken.objects.count(), 1)
 
         # Assert old refresh token is blacklisted
@@ -412,7 +405,7 @@ class TestTokenRefreshSerializer(TestCase):
         reload(serializers)
 
 
-class TestTokenVerifySerializer(TestCase):
+class TestTokenVerifySerializer(SerializerTestCase):
     def test_it_should_raise_token_error_if_token_invalid(self):
         token = RefreshToken()
         del token["exp"]
@@ -442,7 +435,8 @@ class TestTokenVerifySerializer(TestCase):
         self.assertTrue(s.is_valid())
 
     def test_it_should_return_given_token_if_everything_ok(self):
-        refresh = RefreshToken()
+
+        refresh = RefreshToken.for_user(self.user)
         refresh["test_claim"] = "arst"
 
         # Serializer validates
