@@ -3,7 +3,6 @@ from typing import TYPE_CHECKING, Any, Dict, Generic, Optional, Type, TypeVar
 from uuid import uuid4
 
 from django.conf import settings
-from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractBaseUser
 from django.utils.module_loading import import_string
 from django.utils.translation import gettext_lazy as _
