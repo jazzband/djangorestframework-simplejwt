@@ -247,6 +247,43 @@ class TestTokenRefreshSlidingSerializer(TestCase):
 
 
 class TestTokenRefreshSerializer(TestCase):
+    def setUp(self):
+        self.username = "test_user"
+        self.password = "test_password"
+
+        self.user = User.objects.create_user(
+            username=self.username,
+            password=self.password,
+        )
+
+    def test_it_should_raise_error_for_inactive_users(self):
+        refresh = RefreshToken.for_user(self.user)
+        self.user.is_active = False
+        self.user.save()
+
+        s = TokenRefreshSerializer(data={"refresh": str(refresh)})
+        
+        with self.assertRaises(drf_exceptions.AuthenticationFailed) as e:
+            s.is_valid()
+
+        self.assertIn("No active account", e.exception.args[0])
+
+    def test_it_should_return_access_token_for_active_users(self):
+        refresh = RefreshToken.for_user(self.user)
+
+        s = TokenRefreshSerializer(data={"refresh": str(refresh)})
+
+        now = aware_utcnow() - api_settings.ACCESS_TOKEN_LIFETIME / 2
+        with patch("rest_framework_simplejwt.tokens.aware_utcnow") as fake_aware_utcnow:
+            fake_aware_utcnow.return_value = now
+            s.is_valid()
+
+        access = AccessToken(s.validated_data["access"])
+
+        self.assertEqual(
+            access["exp"], datetime_to_epoch(now + api_settings.ACCESS_TOKEN_LIFETIME)
+        )
+
     def test_it_should_raise_token_error_if_token_invalid(self):
         token = RefreshToken()
         del token["exp"]
