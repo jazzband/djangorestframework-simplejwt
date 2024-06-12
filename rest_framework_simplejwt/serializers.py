@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.models import AbstractBaseUser, update_last_login
 from django.utils.translation import gettext_lazy as _
 from rest_framework import exceptions, serializers
-from rest_framework.exceptions import ValidationError, AuthenticationFailed
+from rest_framework.exceptions import AuthenticationFailed, ValidationError
 
 from .models import TokenUser
 from .settings import api_settings
@@ -112,7 +112,11 @@ class TokenRefreshSerializer(serializers.Serializer):
         refresh = self.token_class(attrs["refresh"])
 
         user_id = refresh.payload.get(api_settings.USER_ID_CLAIM, None)
-        if user_id and (user := get_user_model().objects.get(**{api_settings.USER_ID_FIELD: user_id})):
+        if user_id and (
+            user := get_user_model().objects.get(
+                **{api_settings.USER_ID_FIELD: user_id}
+            )
+        ):
             if not api_settings.USER_AUTHENTICATION_RULE(user):
                 raise AuthenticationFailed(
                     self.error_messages["no_active_account"],

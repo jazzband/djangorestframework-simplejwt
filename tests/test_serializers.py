@@ -262,7 +262,7 @@ class TestTokenRefreshSerializer(TestCase):
         self.user.save()
 
         s = TokenRefreshSerializer(data={"refresh": str(refresh)})
-        
+
         with self.assertRaises(drf_exceptions.AuthenticationFailed) as e:
             s.is_valid()
 
