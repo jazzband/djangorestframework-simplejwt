@@ -105,7 +105,7 @@ class TokenRefreshSerializer(serializers.Serializer):
     token_class = RefreshToken
 
     default_error_messages = {
-        "no_active_account": _("No active account found with the given credentials")
+        "no_active_account": _("No active account found for the given token.")
     }
 
     def validate(self, attrs: Dict[str, Any]) -> Dict[str, str]:
