@@ -4,9 +4,9 @@ from unittest.mock import MagicMock, patch
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.core import exceptions as django_exceptions
 from django.test import TestCase
 from rest_framework import exceptions as drf_exceptions
-from django.core import exceptions as django_exceptions
 
 from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.serializers import (
@@ -267,7 +267,6 @@ class TestTokenRefreshSerializer(TestCase):
             s.is_valid()
 
         self.assertIn("does not exist", str(e.exception))
-
 
     def test_it_should_raise_error_for_inactive_users(self):
         refresh = RefreshToken.for_user(self.user)
