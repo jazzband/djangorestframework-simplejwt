@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.models import AbstractBaseUser, update_last_login
 from django.utils.translation import gettext_lazy as _
 from rest_framework import exceptions, serializers
-from rest_framework.exceptions import ValidationError
+from rest_framework.exceptions import AuthenticationFailed, ValidationError
 
 from .models import TokenUser
 from .settings import api_settings
@@ -104,8 +104,24 @@ class TokenRefreshSerializer(serializers.Serializer):
     access = serializers.CharField(read_only=True)
     token_class = RefreshToken
 
+    default_error_messages = {
+        "no_active_account": _("No active account found for the given token.")
+    }
+
     def validate(self, attrs: Dict[str, Any]) -> Dict[str, str]:
         refresh = self.token_class(attrs["refresh"])
+
+        user_id = refresh.payload.get(api_settings.USER_ID_CLAIM, None)
+        if user_id and (
+            user := get_user_model().objects.get(
+                **{api_settings.USER_ID_FIELD: user_id}
+            )
+        ):
+            if not api_settings.USER_AUTHENTICATION_RULE(user):
+                raise AuthenticationFailed(
+                    self.error_messages["no_active_account"],
+                    "no_active_account",
+                )
 
         data = {"access": str(refresh.access_token)}
 
