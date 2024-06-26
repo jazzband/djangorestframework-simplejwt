@@ -212,7 +212,7 @@ class Token:
     def for_validated_user(cls: Type[T], user: AuthUser) -> T:
         """
         Returns an authorization token for the given user.
-        
+
         This DOES NOT check if the provided user validates the ``USER_AUTHENTICATION_RULE``.
         Use :meth:`for_user` to have the user validated.
         """
