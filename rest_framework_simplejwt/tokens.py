@@ -210,6 +210,12 @@ class Token:
 
     @classmethod
     def for_validated_user(cls: Type[T], user: AuthUser) -> T:
+        """
+        Returns an authorization token for the given user.
+        
+        This DOES NOT check if the provided user validates the ``USER_AUTHENTICATION_RULE``.
+        Use :meth:`for_user` to have the user validated.
+        """
         user_id = getattr(user, api_settings.USER_ID_FIELD)
         if not isinstance(user_id, int):
             user_id = str(user_id)
