@@ -34,8 +34,7 @@ class TokenVerificationController(ControllerBase):
         url_name="token_verify",
     )
     def verify_token(self, token: schema.verify_schema):
-        asas = token.to_response_schema()
-        return asas
+        return token.to_response_schema()
 
 
 class TokenBlackListController(ControllerBase):
