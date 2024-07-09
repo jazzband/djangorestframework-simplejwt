@@ -53,8 +53,13 @@ INSTALLED_APPS = [
 ]
 ```
 
-Usage
-=====
+## Using Ninja Router
+
+If you prefer not to follow the NinjaExtra methodology,
+refer to this [documentation](https://eadwincode.github.io/django-ninja-jwt/customizing_token_claims/#use-django-ninja-router)
+on how to use `Ninja-JWT` with `Django-Ninja Router`.
+
+## Usage
 
 To verify that Ninja JWT is working, you can use curl to issue a couple
 of test requests:
@@ -96,8 +101,7 @@ curl \
 {"access":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX3BrIjoxLCJ0b2tlbl90eXBlIjoiYWNjZX...", "refresh":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX3BrIjoxLCJ0b2tlbl90eXBlIjoicmVm..."}
 ```
 
-Cryptographic Dependencies (Optional)
--------------------------------------
+## Cryptographic Dependencies (Optional)
 
 If you are planning on encoding or decoding tokens using certain digital
 signature algorithms (i.e. RSA and ECDSA; visit PyJWT for other algorithms), you will need to install the
@@ -107,7 +111,7 @@ extra in the `django-ninja-jwt` requirement:
     pip install django-ninja-jwt[crypto]
 
 
-The `django-ninja-jwt[crypto]` format is recommended in requirements
+The `django-ninja-jwt[crypto]` format is recommended in requirement
 files in projects using `Ninja JWT`, as a separate `cryptography` requirement
 line may later be mistaken for an unused requirement and removed.
 [cryptography](https://cryptography.io)

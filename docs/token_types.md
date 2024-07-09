@@ -17,13 +17,12 @@ paths may be present in the list of auth token classes. If they are both
 present, then both of those token types may be used to prove
 authentication.
 
-Sliding tokens
-==============
+## Sliding tokens
 
 Sliding tokens offer a more convenient experience to users of tokens
 with the trade-offs of being less secure and, in the case that the
 blacklist app is being used, less performant. A sliding token is one
-which contains both an expiration claim and a refresh expiration claim.
+that contains both an expiration claim and a refresh expiration claim.
 As long as the timestamp in a sliding token\'s expiration claim has not
 passed, it can be used to prove authentication. Additionally, as long as
 the timestamp in its refresh expiration claim has not passed, it may

@@ -4,8 +4,8 @@ views, create a subclass for the desired controller as well as a subclass for
 its corresponding serializer. Here\'s an example :
 
 !!! info
-if you are interested in Asynchronous version of the class, use `AsyncNinjaJWTDefaultController` and `AsyncNinjaJWTSlidingController`.
-Also note, it's only available for Django versions that supports asynchronous actions.
+if you are interested in an Asynchronous version of the class, use `AsyncNinjaJWTDefaultController` and `AsyncNinjaJWTSlidingController`.
+Also note, it's only available for Django versions that support asynchronous actions.
 
 ```python
 from ninja_jwt.schema import TokenObtainPairInputSchema
@@ -46,7 +46,7 @@ As with the standard controller, you\'ll also need to include register the contr
 
 #### Use Django Ninja Router
 
-If you interested in using functions rather than classes, then you are also covered.
+If you are interested in using functions rather than classes, then you are also covered.
 Here is an example
 
 ```python
