@@ -12,6 +12,7 @@ verify_router = Router()
     "/verify",
     response={200: schema.verify_schema.get_response_schema()},
     url_name="token_verify",
+    operation_id="token_verify",
     auth=None,
 )
 def verify_token(request, token: schema.verify_schema):

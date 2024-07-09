@@ -12,6 +12,7 @@ schema = SchemaControl(api_settings)
     "/blacklist",
     response={200: schema.blacklist_schema.get_response_schema()},
     url_name="token_blacklist",
+    operation_id="token_blacklist",
     auth=None,
 )
 def blacklist_token(request, refresh: schema.blacklist_schema):

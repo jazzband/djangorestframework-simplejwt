@@ -32,6 +32,7 @@ class TokenVerificationController(ControllerBase):
         "/verify",
         response={200: schema.verify_schema.get_response_schema()},
         url_name="token_verify",
+        operation_id="token_verify",
     )
     def verify_token(self, token: schema.verify_schema):
         return token.to_response_schema()
@@ -44,6 +45,7 @@ class TokenBlackListController(ControllerBase):
         "/blacklist",
         response={200: schema.blacklist_schema.get_response_schema()},
         url_name="token_blacklist",
+        operation_id="token_blacklist",
     )
     def blacklist_token(self, refresh: schema.blacklist_schema):
         return refresh.to_response_schema()
@@ -56,6 +58,7 @@ class TokenObtainPairController(ControllerBase):
         "/pair",
         response=schema.obtain_pair_schema.get_response_schema(),
         url_name="token_obtain_pair",
+        operation_id="token_obtain_pair",
     )
     def obtain_token(self, user_token: schema.obtain_pair_schema):
         user_token.check_user_authentication_rule()
@@ -65,6 +68,7 @@ class TokenObtainPairController(ControllerBase):
         "/refresh",
         response=schema.obtain_pair_refresh_schema.get_response_schema(),
         url_name="token_refresh",
+        operation_id="token_refresh",
     )
     def refresh_token(self, refresh_token: schema.obtain_pair_refresh_schema):
         return refresh_token.to_response_schema()
@@ -77,6 +81,7 @@ class TokenObtainSlidingController(TokenObtainPairController):
         "/sliding",
         response=schema.obtain_sliding_schema.get_response_schema(),
         url_name="token_obtain_sliding",
+        operation_id="token_obtain_sliding",
     )
     def obtain_token(self, user_token: schema.obtain_sliding_schema):
         user_token.check_user_authentication_rule()
@@ -86,6 +91,7 @@ class TokenObtainSlidingController(TokenObtainPairController):
         "/sliding/refresh",
         response=schema.obtain_sliding_refresh_schema.get_response_schema(),
         url_name="token_refresh_sliding",
+        operation_id="token_refresh_sliding",
     )
     def refresh_token(self, refresh_token: schema.obtain_sliding_refresh_schema):
         return refresh_token.to_response_schema()
@@ -115,6 +121,7 @@ class AsyncTokenVerificationController(TokenVerificationController):
         "/verify",
         response={200: schema.verify_schema.get_response_schema()},
         url_name="token_verify",
+        operation_id="token_verify_async",
     )
     async def verify_token(self, token: schema.verify_schema):
         return token.to_response_schema()
@@ -127,6 +134,7 @@ class AsyncTokenBlackListController(TokenBlackListController):
         "/blacklist",
         response={200: schema.blacklist_schema.get_response_schema()},
         url_name="token_blacklist",
+        operation_id="token_blacklist_async",
     )
     async def blacklist_token(self, refresh: schema.blacklist_schema):
         return refresh.to_response_schema()
@@ -137,6 +145,7 @@ class AsyncTokenObtainPairController(TokenObtainPairController):
         "/pair",
         response=schema.obtain_pair_schema.get_response_schema(),
         url_name="token_obtain_pair",
+        operation_id="token_obtain_pair_async",
     )
     async def obtain_token(self, user_token: schema.obtain_pair_schema):
         await sync_to_async(user_token.check_user_authentication_rule)()
@@ -146,6 +155,7 @@ class AsyncTokenObtainPairController(TokenObtainPairController):
         "/refresh",
         response=schema.obtain_pair_refresh_schema.get_response_schema(),
         url_name="token_refresh",
+        operation_id="token_refresh_async",
     )
     async def refresh_token(self, refresh_token: schema.obtain_pair_refresh_schema):
         refresh = await sync_to_async(refresh_token.to_response_schema)()
@@ -157,6 +167,7 @@ class AsyncTokenObtainSlidingController(TokenObtainSlidingController):
         "/sliding",
         response=schema.obtain_sliding_schema.get_response_schema(),
         url_name="token_obtain_sliding",
+        operation_id="token_obtain_sliding_async",
     )
     async def obtain_token(self, user_token: schema.obtain_sliding_schema):
         await sync_to_async(user_token.check_user_authentication_rule)()
@@ -166,6 +177,7 @@ class AsyncTokenObtainSlidingController(TokenObtainSlidingController):
         "/sliding/refresh",
         response=schema.obtain_sliding_refresh_schema.get_response_schema(),
         url_name="token_refresh_sliding",
+        operation_id="token_refresh_sliding_async",
     )
     async def refresh_token(self, refresh_token: schema.obtain_sliding_refresh_schema):
         refresh = await sync_to_async(refresh_token.to_response_schema)()

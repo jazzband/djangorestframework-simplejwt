@@ -13,6 +13,7 @@ sliding_router = Router()
     "/pair",
     response=schema.obtain_pair_schema.get_response_schema(),
     url_name="token_obtain_pair",
+    operation_id="token_obtain_pair",
     auth=None,
 )
 def obtain_token(request, user_token: schema.obtain_pair_schema):
@@ -24,6 +25,7 @@ def obtain_token(request, user_token: schema.obtain_pair_schema):
     "/refresh",
     response=schema.obtain_pair_refresh_schema.get_response_schema(),
     url_name="token_refresh",
+    operation_id="token_refresh",
     auth=None,
 )
 def refresh_token(request, refresh_token: schema.obtain_pair_refresh_schema):
@@ -34,6 +36,7 @@ def refresh_token(request, refresh_token: schema.obtain_pair_refresh_schema):
     "/sliding",
     response=schema.obtain_sliding_schema.get_response_schema(),
     url_name="token_obtain_sliding",
+    operation_id="token_obtain_sliding",
     auth=None,
 )
 def obtain_token_sliding_token(request, user_token: schema.obtain_sliding_schema):
@@ -45,6 +48,7 @@ def obtain_token_sliding_token(request, user_token: schema.obtain_sliding_schema
     "/sliding/refresh",
     response=schema.obtain_sliding_refresh_schema.get_response_schema(),
     url_name="token_refresh_sliding",
+    operation_id="token_refresh_sliding",
     auth=None,
 )
 def refresh_token_sliding(request, refresh_token: schema.obtain_sliding_refresh_schema):
