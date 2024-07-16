@@ -1,8 +1,10 @@
+from typing import Optional, Type
 from django.utils.module_loading import import_string
 from rest_framework import generics, status
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.serializers import Serializer
+from rest_framework import serializers
 
 from .authentication import AUTH_HEADER_TYPES
 from .exceptions import InvalidToken, TokenError
@@ -13,7 +15,7 @@ class TokenViewBase(generics.GenericAPIView):
     permission_classes = ()
     authentication_classes = ()
 
-    serializer_class = None
+    serializer_class: Optional[Type[serializers.Serializer]] = None
     _serializer_class = ""
 
     www_authenticate_realm = "api"
