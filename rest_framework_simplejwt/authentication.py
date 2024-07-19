@@ -33,6 +33,8 @@ class JWTAuthentication(authentication.BaseAuthentication):
     www_authenticate_realm = "api"
     media_type = "application/json"
 
+    access_token_classes = api_settings.AUTH_TOKEN_CLASSES
+
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.user_model = get_user_model()
@@ -98,7 +100,7 @@ class JWTAuthentication(authentication.BaseAuthentication):
         wrapper object.
         """
         messages = []
-        for AuthToken in api_settings.AUTH_TOKEN_CLASSES:
+        for AuthToken in self.access_token_classes:
             try:
                 return AuthToken(raw_token)
             except TokenError as e:
