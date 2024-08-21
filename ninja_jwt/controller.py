@@ -25,7 +25,7 @@ __all__ = [
 schema = SchemaControl(api_settings)
 
 
-class TokenVerificationController(ControllerBase):
+class TokenVerificationController:
     auto_import = False
 
     @http_post(
@@ -38,7 +38,7 @@ class TokenVerificationController(ControllerBase):
         return token.to_response_schema()
 
 
-class TokenBlackListController(ControllerBase):
+class TokenBlackListController:
     auto_import = False
 
     @http_post(
@@ -51,7 +51,7 @@ class TokenBlackListController(ControllerBase):
         return refresh.to_response_schema()
 
 
-class TokenObtainPairController(ControllerBase):
+class TokenObtainPairController:
     auto_import = False
 
     @http_post(
@@ -98,7 +98,9 @@ class TokenObtainSlidingController(TokenObtainPairController):
 
 
 @api_controller("/token", permissions=[AllowAny], tags=["token"], auth=None)
-class NinjaJWTDefaultController(TokenVerificationController, TokenObtainPairController):
+class NinjaJWTDefaultController(
+    ControllerBase, TokenVerificationController, TokenObtainPairController
+):
     """NinjaJWT Default controller for obtaining and refreshing tokens"""
 
     auto_import = False
@@ -106,7 +108,7 @@ class NinjaJWTDefaultController(TokenVerificationController, TokenObtainPairCont
 
 @api_controller("/token", permissions=[AllowAny], tags=["token"], auth=None)
 class NinjaJWTSlidingController(
-    TokenVerificationController, TokenObtainSlidingController
+    ControllerBase, TokenVerificationController, TokenObtainSlidingController
 ):
     """
     NinjaJWT Sliding controller for obtaining and refreshing tokens
@@ -186,7 +188,7 @@ class AsyncTokenObtainSlidingController(TokenObtainSlidingController):
 
 @api_controller("/token", permissions=[AllowAny], tags=["token"], auth=None)
 class AsyncNinjaJWTDefaultController(
-    AsyncTokenVerificationController, AsyncTokenObtainPairController
+    ControllerBase, AsyncTokenVerificationController, AsyncTokenObtainPairController
 ):
     """NinjaJWT Async Default controller for obtaining and refreshing tokens"""
 
@@ -195,7 +197,7 @@ class AsyncNinjaJWTDefaultController(
 
 @api_controller("/token", permissions=[AllowAny], tags=["token"], auth=None)
 class AsyncNinjaJWTSlidingController(
-    AsyncTokenVerificationController, AsyncTokenObtainSlidingController
+    ControllerBase, AsyncTokenVerificationController, AsyncTokenObtainSlidingController
 ):
     """
     NinjaJWT Async Sliding controller for obtaining and refreshing tokens

@@ -5,6 +5,7 @@ from typing import Any, Dict, Optional, Type, cast
 from django.conf import settings
 from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.models import AbstractUser, update_last_login
+from django.http import HttpRequest
 from django.utils.translation import gettext_lazy as _
 from ninja import ModelSchema, Schema
 from ninja.schema import DjangoGetter
@@ -52,7 +53,7 @@ class TokenInputSchemaMixin(InputSchemaMixin):
             )
 
     @classmethod
-    def validate_values(cls, values: Dict) -> Dict:
+    def validate_values(cls, request: HttpRequest, values: Dict) -> Dict:
         if user_name_field not in values and "password" not in values:
             raise exceptions.ValidationError(
                 {
@@ -69,7 +70,7 @@ class TokenInputSchemaMixin(InputSchemaMixin):
         if not values.get("password"):
             raise exceptions.ValidationError({"password": "password is required"})
 
-        _user = authenticate(**values)
+        _user = authenticate(request, **values)
         cls._user = _user
 
         if not (_user is not None and _user.is_active):
@@ -103,8 +104,11 @@ class TokenObtainInputSchemaBase(ModelSchema, TokenInputSchemaMixin):
     @model_validator(mode="before")
     def validate_inputs(cls, values: DjangoGetter) -> DjangoGetter:
         input_values = values._obj
+        request = values._context.get("request")
         if isinstance(input_values, dict):
-            values._obj.update(cls.validate_values(input_values))
+            values._obj.update(
+                cls.validate_values(request=request, values=input_values)
+            )
             return values
         return values
 
