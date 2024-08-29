@@ -28,7 +28,7 @@ ALLOWED_ALGORITHMS = {
     "ES256",
     "ES384",
     "ES512",
-}
+}.union(algorithms.requires_cryptography)
 
 
 class TokenBackend:
