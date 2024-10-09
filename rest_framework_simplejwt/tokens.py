@@ -202,6 +202,8 @@ class Token:
         Returns an authorization token for the given user that will be provided
         after authenticating the user's credentials.
         """
+        if not user.is_active:
+            raise Exception("User is inactive.")
         user_id = getattr(user, api_settings.USER_ID_FIELD)
         if not isinstance(user_id, int):
             user_id = str(user_id)
