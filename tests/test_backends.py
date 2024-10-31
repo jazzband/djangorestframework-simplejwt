@@ -14,7 +14,10 @@ from jwt import __version__ as jwt_version
 from jwt import algorithms
 
 from rest_framework_simplejwt.backends import JWK_CLIENT_AVAILABLE, TokenBackend
-from rest_framework_simplejwt.exceptions import TokenBackendError
+from rest_framework_simplejwt.exceptions import (
+    TokenBackendError,
+    TokenBackendExpiredToken,
+)
 from rest_framework_simplejwt.utils import aware_utcnow, datetime_to_epoch, make_utc
 from tests.keys import (
     ES256_PRIVATE_KEY,
@@ -191,7 +194,7 @@ class TestTokenBackend(TestCase):
                     self.payload, backend.signing_key, algorithm=backend.algorithm
                 )
 
-                with self.assertRaises(TokenBackendError):
+                with self.assertRaises(TokenBackendExpiredToken):
                     backend.decode(expired_token)
 
     def test_decode_with_invalid_sig(self):
@@ -346,9 +349,7 @@ class TestTokenBackend(TestCase):
                 "RS256", PRIVATE_KEY, PUBLIC_KEY, AUDIENCE, ISSUER, JWK_URL
             )
 
-            with self.assertRaisesRegex(
-                TokenBackendError, "Token is invalid or expired"
-            ):
+            with self.assertRaisesRegex(TokenBackendError, "Token is invalid"):
                 jwk_token_backend.decode(token)
 
     def test_decode_when_algorithm_not_available(self):

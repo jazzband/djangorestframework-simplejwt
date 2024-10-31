@@ -12,6 +12,10 @@ class TokenBackendError(Exception):
     pass
 
 
+class TokenBackendExpiredToken(TokenBackendError):
+    pass
+
+
 class DetailDictMixin:
     default_detail: str
     default_code: str

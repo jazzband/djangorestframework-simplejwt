@@ -5,9 +5,14 @@ from typing import Any, Dict, Optional, Type, Union
 
 import jwt
 from django.utils.translation import gettext_lazy as _
-from jwt import InvalidAlgorithmError, InvalidTokenError, algorithms
+from jwt import (
+    ExpiredSignatureError,
+    InvalidAlgorithmError,
+    InvalidTokenError,
+    algorithms,
+)
 
-from .exceptions import TokenBackendError
+from .exceptions import TokenBackendError, TokenBackendExpiredToken
 from .tokens import Token
 from .utils import format_lazy
 
@@ -101,7 +106,7 @@ class TokenBackend:
             try:
                 return self.jwks_client.get_signing_key_from_jwt(token).key
             except PyJWKClientError as ex:
-                raise TokenBackendError(_("Token is invalid or expired")) from ex
+                raise TokenBackendError(_("Token is invalid")) from ex
 
         return self.verifying_key
 
@@ -150,5 +155,7 @@ class TokenBackend:
             )
         except InvalidAlgorithmError as ex:
             raise TokenBackendError(_("Invalid algorithm specified")) from ex
+        except ExpiredSignatureError as ex:
+            raise TokenBackendExpiredToken(_("Token is expired")) from ex
         except InvalidTokenError as ex:
-            raise TokenBackendError(_("Token is invalid or expired")) from ex
+            raise TokenBackendError(_("Token is invalid")) from ex
