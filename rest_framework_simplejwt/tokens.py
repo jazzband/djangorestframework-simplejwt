@@ -7,7 +7,12 @@ from django.contrib.auth.models import AbstractBaseUser
 from django.utils.module_loading import import_string
 from django.utils.translation import gettext_lazy as _
 
-from .exceptions import TokenBackendError, TokenError
+from .exceptions import (
+    ExpiredTokenError,
+    TokenBackendError,
+    TokenBackendExpiredToken,
+    TokenError,
+)
 from .models import TokenUser
 from .settings import api_settings
 from .token_blacklist.models import BlacklistedToken, OutstandingToken
@@ -56,8 +61,10 @@ class Token:
             # Decode token
             try:
                 self.payload = token_backend.decode(token, verify=verify)
+            except TokenBackendExpiredToken:
+                raise ExpiredTokenError(_("Token is expired"))
             except TokenBackendError:
-                raise TokenError(_("Token is invalid or expired"))
+                raise TokenError(_("Token is invalid"))
 
             if verify:
                 self.verify()

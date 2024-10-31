@@ -8,6 +8,10 @@ class TokenError(Exception):
     pass
 
 
+class ExpiredTokenError(TokenError):
+    pass
+
+
 class TokenBackendError(Exception):
     pass
 

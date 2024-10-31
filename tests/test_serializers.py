@@ -183,7 +183,7 @@ class TestTokenRefreshSlidingSerializer(TestCase):
         with self.assertRaises(TokenError) as e:
             s.is_valid()
 
-        self.assertIn("invalid or expired", e.exception.args[0])
+        self.assertIn("expired", e.exception.args[0])
 
     def test_it_should_raise_token_error_if_token_has_no_refresh_exp_claim(self):
         token = SlidingToken()
@@ -314,7 +314,7 @@ class TestTokenRefreshSerializer(TestCase):
         with self.assertRaises(TokenError) as e:
             s.is_valid()
 
-        self.assertIn("invalid or expired", e.exception.args[0])
+        self.assertIn("expired", e.exception.args[0])
 
     def test_it_should_raise_token_error_if_token_has_wrong_type(self):
         token = RefreshToken()
@@ -480,7 +480,7 @@ class TestTokenVerifySerializer(TestCase):
         with self.assertRaises(TokenError) as e:
             s.is_valid()
 
-        self.assertIn("invalid or expired", e.exception.args[0])
+        self.assertIn("expired", e.exception.args[0])
 
     def test_it_should_not_raise_token_error_if_token_has_wrong_type(self):
         token = RefreshToken()
@@ -525,7 +525,7 @@ class TestTokenBlacklistSerializer(TestCase):
         with self.assertRaises(TokenError) as e:
             s.is_valid()
 
-        self.assertIn("invalid or expired", e.exception.args[0])
+        self.assertIn("expired", e.exception.args[0])
 
     def test_it_should_raise_token_error_if_token_has_wrong_type(self):
         token = RefreshToken()
