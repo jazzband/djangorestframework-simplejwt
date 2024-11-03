@@ -32,3 +32,8 @@ Translations
 ------------
 
 Contribute translations directly with PRs or via inlang https://inlang.com/editor/github.com/jazzband/djangorestframework-simplejwt
+
+Translation status
+.. image:: https://inlang.com/badge?url=github.com/jazzband/djangorestframework-simplejwt
+   :target: https://inlang.com/editor/github.com/jazzband/djangorestframework-simplejwt?ref=badge
+   :alt: translation badge
