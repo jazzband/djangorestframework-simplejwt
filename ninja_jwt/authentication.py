@@ -43,7 +43,7 @@ class JWTBaseAuthentication:
             }
         )
 
-    def get_user(self, validated_token) -> Type[AbstractUser]:
+    def get_user(self, validated_token) -> AbstractUser:
         """
         Attempts to find and return a user using the given validated token.
         """
@@ -64,7 +64,7 @@ class JWTBaseAuthentication:
 
         return user
 
-    def jwt_authenticate(self, request: HttpRequest, token: str) -> Type[AbstractUser]:
+    def jwt_authenticate(self, request: HttpRequest, token: str) -> AbstractUser:
         request.user = AnonymousUser()
         validated_token = self.get_validated_token(token)
         user = self.get_user(validated_token)

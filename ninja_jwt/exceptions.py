@@ -3,8 +3,8 @@ from ninja_extra import exceptions, status
 
 
 class DetailDictMixin:
-    default_detail = ""
-    default_code = ""
+    default_detail: str
+    default_code: str
 
     def __init__(self, detail=None, code=None) -> None:
         """
