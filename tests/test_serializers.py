@@ -106,11 +106,11 @@ class TestTokenObtainSerializer(TestCase):
             s.is_valid()
 
     @override_settings(
-    AUTHENTICATION_BACKENDS=[
-        'django.contrib.auth.backends.AllowAllUsersModelBackend',
-        'django.contrib.auth.backends.ModelBackend',
-    ]
-)
+        AUTHENTICATION_BACKENDS=[
+            "django.contrib.auth.backends.AllowAllUsersModelBackend",
+            "django.contrib.auth.backends.ModelBackend",
+        ]
+    )
     @override_api_settings(
         USER_AUTHENTICATION_RULE="rest_framework_simplejwt.authentication.allow_inactive_users_authentication_rule"
     )
@@ -125,7 +125,7 @@ class TestTokenObtainSerializer(TestCase):
                 "password": self.password,
             },
         )
-        
+
         self.assertTrue(s.is_valid())
 
 

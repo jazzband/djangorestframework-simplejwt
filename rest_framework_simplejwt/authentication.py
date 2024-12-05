@@ -212,8 +212,8 @@ def default_user_authentication_rule(user: AuthUser) -> bool:
 def allow_inactive_users_authentication_rule(user: AuthUser) -> bool:
     """
     Authentication rule that allows both active and inactive users.
-    
-    This rule differs from the default authentication rule by 
+
+    This rule differs from the default authentication rule by
     removing the is_active check.
     """
     return user is not None
