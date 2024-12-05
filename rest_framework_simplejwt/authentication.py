@@ -164,6 +164,37 @@ class JWTStatelessUserAuthentication(JWTAuthentication):
         return api_settings.TOKEN_USER_CLASS(validated_token)
 
 
+class JWTInactiveUserAuthentication(JWTAuthentication):
+    """
+    An authentication plugin that authenticates requests through a JSON web
+    token provided in a request header, allowing inactive users to authenticate.
+    """
+
+    def get_user(self, validated_token: Token) -> AuthUser:
+        """
+        Attempts to find and return a user using the given validated token.
+        """
+        try:
+            user_id = validated_token[api_settings.USER_ID_CLAIM]
+        except KeyError:
+            raise InvalidToken(_("Token contained no recognizable user identification"))
+
+        try:
+            user = self.user_model.objects.get(**{api_settings.USER_ID_FIELD: user_id})
+        except self.user_model.DoesNotExist:
+            raise AuthenticationFailed(_("User not found"), code="user_not_found")
+
+        if api_settings.CHECK_REVOKE_TOKEN:
+            if validated_token.get(
+                api_settings.REVOKE_TOKEN_CLAIM
+            ) != get_md5_hash_password(user.password):
+                raise AuthenticationFailed(
+                    _("The user's password has been changed."), code="password_changed"
+                )
+
+        return user
+
+
 JWTTokenUserAuthentication = JWTStatelessUserAuthentication
 
 
@@ -176,3 +207,13 @@ def default_user_authentication_rule(user: AuthUser) -> bool:
     # users from authenticating to enforce a reasonable policy and provide
     # sensible backwards compatibility with older Django versions.
     return user is not None and user.is_active
+
+
+def allow_inactive_users_authentication_rule(user: AuthUser) -> bool:
+    """
+    Authentication rule that allows both active and inactive users.
+    
+    This rule differs from the default authentication rule by 
+    removing the is_active check.
+    """
+    return user is not None
