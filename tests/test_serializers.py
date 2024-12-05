@@ -5,7 +5,7 @@ from unittest.mock import MagicMock, patch
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core import exceptions as django_exceptions
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from rest_framework import exceptions as drf_exceptions
 
 from rest_framework_simplejwt.exceptions import TokenError
@@ -104,6 +104,29 @@ class TestTokenObtainSerializer(TestCase):
 
         with self.assertRaises(drf_exceptions.AuthenticationFailed):
             s.is_valid()
+
+    @override_settings(
+    AUTHENTICATION_BACKENDS=[
+        'django.contrib.auth.backends.AllowAllUsersModelBackend',
+        'django.contrib.auth.backends.ModelBackend',
+    ]
+)
+    @override_api_settings(
+        USER_AUTHENTICATION_RULE="rest_framework_simplejwt.authentication.allow_inactive_users_authentication_rule"
+    )
+    def test_it_should_validate_if_user_inactive_but_rule_allows(self):
+        self.user.is_active = False
+        self.user.save()
+
+        s = TokenObtainSerializer(
+            context=MagicMock(),
+            data={
+                TokenObtainSerializer.username_field: self.username,
+                "password": self.password,
+            },
+        )
+        
+        self.assertTrue(s.is_valid())
 
 
 class TestTokenObtainSlidingSerializer(TestCase):
