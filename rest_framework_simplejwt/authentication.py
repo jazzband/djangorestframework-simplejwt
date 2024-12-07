@@ -131,7 +131,8 @@ class JWTAuthentication(authentication.BaseAuthentication):
         except self.user_model.DoesNotExist:
             raise AuthenticationFailed(_("User not found"), code="user_not_found")
 
-        if not user.is_active:
+        # Ensure authentication rule passes
+        if not api_settings.USER_AUTHENTICATION_RULE(user):
             raise AuthenticationFailed(_("User is inactive"), code="user_inactive")
 
         if api_settings.CHECK_REVOKE_TOKEN:
@@ -206,14 +207,4 @@ def default_user_authentication_rule(user: AuthUser) -> bool:
     # `AllowAllUsersModelBackend`.  However, we explicitly prevent inactive
     # users from authenticating to enforce a reasonable policy and provide
     # sensible backwards compatibility with older Django versions.
-    return user is not None and user.is_active
-
-
-def allow_inactive_users_authentication_rule(user: AuthUser) -> bool:
-    """
-    Authentication rule that allows both active and inactive users.
-
-    This rule differs from the default authentication rule by
-    removing the is_active check.
-    """
-    return user is not None
+    return user is not None and (not api_settings.CHECK_USER_IS_ACTIVE or user.is_active)
