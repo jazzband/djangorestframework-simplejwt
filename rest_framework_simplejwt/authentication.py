@@ -207,4 +207,6 @@ def default_user_authentication_rule(user: AuthUser) -> bool:
     # `AllowAllUsersModelBackend`.  However, we explicitly prevent inactive
     # users from authenticating to enforce a reasonable policy and provide
     # sensible backwards compatibility with older Django versions.
-    return user is not None and (not api_settings.CHECK_USER_IS_ACTIVE or user.is_active)
+    return user is not None and (
+        not api_settings.CHECK_USER_IS_ACTIVE or user.is_active
+    )
