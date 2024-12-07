@@ -112,7 +112,7 @@ class TestTokenObtainSerializer(TestCase):
         ]
     )
     @override_api_settings(
-        USER_AUTHENTICATION_RULE="rest_framework_simplejwt.authentication.allow_inactive_users_authentication_rule"
+        CHECK_USER_IS_ACTIVE=False,
     )
     def test_it_should_validate_if_user_inactive_but_rule_allows(self):
         self.user.is_active = False
