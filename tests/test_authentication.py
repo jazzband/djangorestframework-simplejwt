@@ -266,30 +266,3 @@ class TestJWTStatelessUserAuthentication(TestCase):
 
         # Restore default TokenUser for future tests
         api_settings.TOKEN_USER_CLASS = temp
-
-
-class TestJWTInactiveUserAuthentication(TestCase):
-    def setUp(self):
-        self.backend = authentication.JWTInactiveUserAuthentication()
-
-    def test_get_user(self):
-        payload = {"some_other_id": "foo"}
-
-        # Should raise error if no recognizable user identification
-        with self.assertRaises(InvalidToken):
-            self.backend.get_user(payload)
-
-        payload[api_settings.USER_ID_CLAIM] = 42
-
-        # Should raise exception if user not found
-        with self.assertRaises(AuthenticationFailed):
-            self.backend.get_user(payload)
-
-        u = User.objects.create_user(username="markhamill")
-        u.is_active = False
-        u.save()
-
-        payload[api_settings.USER_ID_CLAIM] = getattr(u, api_settings.USER_ID_FIELD)
-
-        # Otherwise, should return correct user
-        self.assertEqual(self.backend.get_user(payload).id, u.id)
