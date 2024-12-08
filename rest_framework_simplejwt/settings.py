@@ -44,6 +44,7 @@ DEFAULTS = {
     "SLIDING_TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
     "CHECK_REVOKE_TOKEN": False,
     "REVOKE_TOKEN_CLAIM": "hash_password",
+    "CHECK_USER_IS_ACTIVE": True,
 }
 
 IMPORT_STRINGS = (
