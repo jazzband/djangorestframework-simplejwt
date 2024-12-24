@@ -39,7 +39,7 @@ msgstr "Пользователь неактивен"
 
 #: authentication.py:142
 msgid "The user's password has been changed."
-msgstr ""
+msgstr "Пароль пользователя был изменен"
 
 #: backends.py:69
 msgid "Unrecognized algorithm type '{}'"
@@ -47,12 +47,13 @@ msgstr "Нераспознанный тип алгоритма '{}'"
 
 #: backends.py:75
 msgid "You must have cryptography installed to use {}."
-msgstr ""
+msgstr "У вас должна быть установлена криптография чтобы использовать {}."
 
 #: backends.py:90
 msgid ""
 "Unrecognized type '{}', 'leeway' must be of type int, float or timedelta."
 msgstr ""
+"Не распознан тип '{}', 'leeway' должен иметь тип int, float или timedelta."
 
 #: backends.py:104 backends.py:154 exceptions.py:47 tokens.py:58
 msgid "Token is invalid or expired"
@@ -60,7 +61,7 @@ msgstr "Токен недействителен или просрочен"
 
 #: backends.py:152
 msgid "Invalid algorithm specified"
-msgstr ""
+msgstr "Указан неверный алгоритм"
 
 #: serializers.py:35
 msgid "No active account found with the given credentials"
@@ -94,7 +95,7 @@ msgstr "истекает"
 msgid "Token Blacklist"
 msgstr "Token Blacklist"
 
-#: tokens.py:44
+#: tokens.py:44:
 msgid "Cannot create token with no type or lifetime"
 msgstr "Невозможно создать токен без типа или времени жизни"
 
