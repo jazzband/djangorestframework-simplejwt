@@ -146,6 +146,7 @@ class TokenBackend:
                 options={
                     "verify_aud": self.audience is not None,
                     "verify_signature": verify,
+                    "verify_sub": False,
                 },
             )
         except InvalidAlgorithmError as ex:
