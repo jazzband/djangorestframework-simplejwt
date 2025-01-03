@@ -32,10 +32,16 @@ directory:
 .. code-block:: bash
 
   pyenv install 3.9.x
-  pyenv install 3.8.x
+  pyenv install 3.10.x
+  pyenv install 3.11.x
+  pyenv install 3.12.x
+  pyenv install 3.13.x
   cat > .python-version <<EOF
   3.9.x
-  3.8.x
+  3.10.x
+  3.11.x
+  3.12.x
+  3.13.x
   EOF
 
 Above, the ``x`` in each case should be replaced with the latest corresponding
