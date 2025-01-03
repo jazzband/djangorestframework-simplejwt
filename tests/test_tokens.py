@@ -6,7 +6,11 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 from jose import jwt
 
-from rest_framework_simplejwt.exceptions import TokenBackendError, TokenError
+from rest_framework_simplejwt.exceptions import (
+    ExpiredTokenError,
+    TokenBackendError,
+    TokenError,
+)
 from rest_framework_simplejwt.settings import api_settings
 from rest_framework_simplejwt.state import token_backend
 from rest_framework_simplejwt.tokens import (
@@ -157,7 +161,7 @@ class TestToken(TestCase):
         t = MyToken()
         t.set_exp(lifetime=-timedelta(seconds=1))
 
-        with self.assertRaises(TokenError):
+        with self.assertRaises(ExpiredTokenError):
             MyToken(str(t))
 
     def test_init_no_type_token_given(self):
