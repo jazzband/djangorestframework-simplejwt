@@ -92,6 +92,9 @@ signing key:
       ...
   ]
 
+The ``TokenVerifyView`` provides no information about a token's fitness for a particular use,
+it only verifies if a token is valid or not, and return a 200 or 401 status code respectively.
+
 If you wish to use localizations/translations, simply add
 ``rest_framework_simplejwt`` to ``INSTALLED_APPS``.
 
