@@ -58,7 +58,7 @@ setup(
     install_requires=[
         "django>=3.2",
         "djangorestframework>=3.12",
-        "pyjwt>=1.7.1,<3",
+        "pyjwt>=1.7.1,<2.10.0",
     ],
     python_requires=">=3.8",
     extras_require=extras_require,
