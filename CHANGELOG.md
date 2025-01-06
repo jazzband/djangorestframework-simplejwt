@@ -7,6 +7,7 @@
 * Add option to allow inactive user authentication and token generation by @zxkeyy in https://github.com/jazzband/djangorestframework-simplejwt/pull/834
 * Drop Django <4.2, DRF <3.14, Python <3.9 by @Andrew-Chen-Wang in https://github.com/jazzband/djangorestframework-simplejwt/pull/839
   * Note, many deprecated versions are only officially not supported but probably still work fine.
+* Add support for EdDSA and other algorithms in jwt.algorithms.requires_cryptography (#822) https://github.com/jazzband/djangorestframework-simplejwt/pull/823
 
 ## 5.3.1
 
