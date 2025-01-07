@@ -1,3 +1,14 @@
+## 5.4.0
+* Changed string formatting in views by @Egor-oop in https://github.com/jazzband/djangorestframework-simplejwt/pull/750
+* Enhance BlacklistMixin with Generic Type for Accurate Type Inference by @Dresdn in https://github.com/jazzband/djangorestframework-simplejwt/pull/768
+* Improve type of `Token.for_user` to allow subclasses by @sterliakov in https://github.com/jazzband/djangorestframework-simplejwt/pull/776
+* Fix the `Null` value of the `OutstandingToken` of the `BlacklistMixin.blacklist` by @JaeHyuckSa in https://github.com/jazzband/djangorestframework-simplejwt/pull/806
+* Fix: Disable refresh token for inactive user. by @ajay09 in https://github.com/jazzband/djangorestframework-simplejwt/pull/814
+* Add option to allow inactive user authentication and token generation by @zxkeyy in https://github.com/jazzband/djangorestframework-simplejwt/pull/834
+* Drop Django <4.2, DRF <3.14, Python <3.9 by @Andrew-Chen-Wang in https://github.com/jazzband/djangorestframework-simplejwt/pull/839
+  * Note, many deprecated versions are only officially not supported but probably still work fine.
+* Add support for EdDSA and other algorithms in jwt.algorithms.requires_cryptography (#822) https://github.com/jazzband/djangorestframework-simplejwt/pull/823
+
 ## 5.3.1
 
 ## What's Changed
