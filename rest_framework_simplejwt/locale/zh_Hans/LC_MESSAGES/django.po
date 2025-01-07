@@ -52,7 +52,7 @@ msgid ""
 "Unrecognized type '{}', 'leeway' must be of type int, float or timedelta."
 msgstr ""
 
-#: backends.py:104 backends.py:154 exceptions.py:47 tokens.py:58
+#: backends.py:104 backends.py:154 exceptions.py:47 tokens.py:60
 msgid "Token is invalid or expired"
 msgstr "令牌无效或已过期"
 
@@ -64,7 +64,13 @@ msgstr "指定的算法无效"
 msgid "No active account found with the given credentials"
 msgstr "找不到指定凭据对应的有效用户"
 
-#: settings.py:73
+#: serializers.py:108
+#, fuzzy
+#| msgid "No active account found with the given credentials"
+msgid "No active account found for the given token."
+msgstr "找不到指定凭据对应的有效用户"
+
+#: settings.py:74
 msgid ""
 "The '{}' setting has been removed. Please refer to '{}' for available "
 "settings."
@@ -90,30 +96,30 @@ msgstr "过期时间"
 msgid "Token Blacklist"
 msgstr "令牌黑名单"
 
-#: tokens.py:44
+#: tokens.py:46
 msgid "Cannot create token with no type or lifetime"
 msgstr "无法创建没有类型或生存期的令牌"
 
-#: tokens.py:116
+#: tokens.py:118
 msgid "Token has no id"
 msgstr "令牌没有标识符"
 
-#: tokens.py:128
+#: tokens.py:130
 msgid "Token has no type"
 msgstr "令牌没有类型"
 
-#: tokens.py:131
+#: tokens.py:133
 msgid "Token has wrong type"
 msgstr "令牌类型错误"
 
-#: tokens.py:190
+#: tokens.py:192
 msgid "Token has no '{}' claim"
 msgstr "令牌没有 '{}' 声明"
 
-#: tokens.py:195
+#: tokens.py:197
 msgid "Token '{}' claim has expired"
 msgstr "令牌 '{}' 声明已过期"
 
-#: tokens.py:257
+#: tokens.py:259
 msgid "Token is blacklisted"
 msgstr "令牌已被加入黑名单"

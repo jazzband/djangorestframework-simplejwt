@@ -51,7 +51,7 @@ msgid ""
 msgstr ""
 "نوع غير معروف '{}'. يجب أن تكون 'leeway' عددًا صحيحًا أو عددًا نسبيًا أو فرق وقت."
 
-#: backends.py:104 backends.py:154 exceptions.py:47 tokens.py:58
+#: backends.py:104 backends.py:154 exceptions.py:47 tokens.py:60
 msgid "Token is invalid or expired"
 msgstr "تأشيرة المرور غير صالحة أو منتهية الصلاحية"
 
@@ -63,7 +63,13 @@ msgstr "تم تحديد خوارزمية غير صالحة"
 msgid "No active account found with the given credentials"
 msgstr "لم يتم العثور على حساب نشط للبيانات المقدمة"
 
-#: settings.py:73
+#: serializers.py:108
+#, fuzzy
+#| msgid "No active account found with the given credentials"
+msgid "No active account found for the given token."
+msgstr "لم يتم العثور على حساب نشط للبيانات المقدمة"
+
+#: settings.py:74
 msgid ""
 "The '{}' setting has been removed. Please refer to '{}' for available "
 "settings."
@@ -90,30 +96,30 @@ msgstr "تنتهي في"
 msgid "Token Blacklist"
 msgstr "قائمة تأشيرات المرور السوداء"
 
-#: tokens.py:44
+#: tokens.py:46
 msgid "Cannot create token with no type or lifetime"
 msgstr "لا يمكن إنشاء تأشيرة مرور بدون نوع أو عمر"
 
-#: tokens.py:116
+#: tokens.py:118
 msgid "Token has no id"
 msgstr "التأشيرة ليس لها معرف"
 
-#: tokens.py:128
+#: tokens.py:130
 msgid "Token has no type"
 msgstr "التأشيرة ليس لها نوع"
 
-#: tokens.py:131
+#: tokens.py:133
 msgid "Token has wrong type"
 msgstr "التأشيرة لها نوع خاطئ"
 
-#: tokens.py:190
+#: tokens.py:192
 msgid "Token has no '{}' claim"
 msgstr "التأشيرة ليس لديها مطالبة '{}'"
 
-#: tokens.py:195
+#: tokens.py:197
 msgid "Token '{}' claim has expired"
 msgstr "انتهى عمر المطالبة بالتأشيرة '{}'"
 
-#: tokens.py:257
+#: tokens.py:259
 msgid "Token is blacklisted"
 msgstr "التأشيرة مدرجة في القائمة السوداء"

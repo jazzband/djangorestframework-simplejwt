@@ -53,7 +53,7 @@ msgid ""
 "Unrecognized type '{}', 'leeway' must be of type int, float or timedelta."
 msgstr "סוג לא מזוהה '{}', 'leeway' חייב להיות מסוג int, float או timedelta."
 
-#: backends.py:104 backends.py:154 exceptions.py:47 tokens.py:58
+#: backends.py:104 backends.py:154 exceptions.py:47 tokens.py:60
 msgid "Token is invalid or expired"
 msgstr "המזהה אינו חוקי או שפג תוקפו"
 
@@ -65,7 +65,13 @@ msgstr "צוין אלגוריתם לא חוקי"
 msgid "No active account found with the given credentials"
 msgstr "לא נמצא חשבון עם פרטי זיהוי אלו"
 
-#: settings.py:73
+#: serializers.py:108
+#, fuzzy
+#| msgid "No active account found with the given credentials"
+msgid "No active account found for the given token."
+msgstr "לא נמצא חשבון עם פרטי זיהוי אלו"
+
+#: settings.py:74
 msgid ""
 "The '{}' setting has been removed. Please refer to '{}' for available "
 "settings."
@@ -91,30 +97,30 @@ msgstr "פג תוקף בשעה"
 msgid "Token Blacklist"
 msgstr "רשימה שחורה של מזהים"
 
-#: tokens.py:44
+#: tokens.py:46
 msgid "Cannot create token with no type or lifetime"
 msgstr "לא ניתן ליצור מזהה ללא סוג או אורך חיים"
 
-#: tokens.py:116
+#: tokens.py:118
 msgid "Token has no id"
 msgstr "למזהה אין מספר זיהוי"
 
-#: tokens.py:128
+#: tokens.py:130
 msgid "Token has no type"
 msgstr "למזהה אין סוג"
 
-#: tokens.py:131
+#: tokens.py:133
 msgid "Token has wrong type"
 msgstr "למזהה יש סוג לא נכון"
 
-#: tokens.py:190
+#: tokens.py:192
 msgid "Token has no '{}' claim"
 msgstr "למזהה אין '{}'"
 
-#: tokens.py:195
+#: tokens.py:197
 msgid "Token '{}' claim has expired"
 msgstr "מזהה '{}' פג תוקף"
 
-#: tokens.py:257
+#: tokens.py:259
 msgid "Token is blacklisted"
 msgstr "המזהה ברשימה השחורה."

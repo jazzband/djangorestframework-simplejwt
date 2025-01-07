@@ -51,7 +51,7 @@ msgid ""
 "Unrecognized type '{}', 'leeway' must be of type int, float or timedelta."
 msgstr ""
 
-#: backends.py:104 backends.py:154 exceptions.py:47 tokens.py:58
+#: backends.py:104 backends.py:154 exceptions.py:47 tokens.py:60
 msgid "Token is invalid or expired"
 msgstr "Token geçersiz veya süresi geçmiş"
 
@@ -63,7 +63,13 @@ msgstr "Geçersiz algoritma belirtildi"
 msgid "No active account found with the given credentials"
 msgstr "Verilen kimlik bilgileriyle aktif bir hesap bulunamadı"
 
-#: settings.py:73
+#: serializers.py:108
+#, fuzzy
+#| msgid "No active account found with the given credentials"
+msgid "No active account found for the given token."
+msgstr "Verilen kimlik bilgileriyle aktif bir hesap bulunamadı"
+
+#: settings.py:74
 msgid ""
 "The '{}' setting has been removed. Please refer to '{}' for available "
 "settings."
@@ -89,30 +95,30 @@ msgstr "sona erme tarihi"
 msgid "Token Blacklist"
 msgstr "Token Kara Listesi"
 
-#: tokens.py:44
+#: tokens.py:46
 msgid "Cannot create token with no type or lifetime"
 msgstr "Tipi veya geçerlilik süresi olmayan token oluşturulamaz"
 
-#: tokens.py:116
+#: tokens.py:118
 msgid "Token has no id"
 msgstr "Token'in id'si yok"
 
-#: tokens.py:128
+#: tokens.py:130
 msgid "Token has no type"
 msgstr "Token'in tipi yok"
 
-#: tokens.py:131
+#: tokens.py:133
 msgid "Token has wrong type"
 msgstr "Token'in tipi yanlış"
 
-#: tokens.py:190
+#: tokens.py:192
 msgid "Token has no '{}' claim"
 msgstr "Token'in '{}' claim'i yok"
 
-#: tokens.py:195
+#: tokens.py:197
 msgid "Token '{}' claim has expired"
 msgstr "Token'in '{}' claim'i sona erdi"
 
-#: tokens.py:257
+#: tokens.py:259
 msgid "Token is blacklisted"
 msgstr "Token kara listeye alınmış"

@@ -6,7 +6,6 @@ on:
       - main
       - master
 
-
 jobs:
   locale-updater:
     permissions:
@@ -34,7 +33,9 @@ jobs:
           pip install -e .[dev]
 
       - name: Run locale Update Script
-        run: python scripts/i18n_updater.py
+        working-directory:
+          rest_framework_simplejwt
+        run: python ../scripts/i18n_updater.py
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v6
