@@ -48,7 +48,7 @@ msgid ""
 "Unrecognized type '{}', 'leeway' must be of type int, float or timedelta."
 msgstr "نوع ناشناخته '{}'، 'leeway' باید از نوع int، float یا timedelta باشد."
 
-#: backends.py:104 backends.py:154 exceptions.py:47 tokens.py:58
+#: backends.py:104 backends.py:154 exceptions.py:47 tokens.py:60
 msgid "Token is invalid or expired"
 msgstr "توکن نامعتبر است یا منقضی شده است"
 
@@ -60,7 +60,13 @@ msgstr "الگوریتم نامعتبر مشخص شده است"
 msgid "No active account found with the given credentials"
 msgstr "هیچ اکانت فعالی برای اطلاعات داده شده یافت نشد"
 
-#: settings.py:73
+#: serializers.py:108
+#, fuzzy
+#| msgid "No active account found with the given credentials"
+msgid "No active account found for the given token."
+msgstr "هیچ اکانت فعالی برای اطلاعات داده شده یافت نشد"
+
+#: settings.py:74
 msgid ""
 "The '{}' setting has been removed. Please refer to '{}' for available "
 "settings."
@@ -86,30 +92,30 @@ msgstr "زمان انقضا"
 msgid "Token Blacklist"
 msgstr "لیست سیاه توکن"
 
-#: tokens.py:44
+#: tokens.py:46
 msgid "Cannot create token with no type or lifetime"
 msgstr "توکن بدون هیچ نوع و طول عمر قابل ساخت نیست"
 
-#: tokens.py:116
+#: tokens.py:118
 msgid "Token has no id"
 msgstr "توکن id ندارد"
 
-#: tokens.py:128
+#: tokens.py:130
 msgid "Token has no type"
 msgstr "توکن نوع ندارد"
 
-#: tokens.py:131
+#: tokens.py:133
 msgid "Token has wrong type"
 msgstr "توکن نوع اشتباهی دارد"
 
-#: tokens.py:190
+#: tokens.py:192
 msgid "Token has no '{}' claim"
 msgstr "توکن دارای '{}' claim نمی‌باشد"
 
-#: tokens.py:195
+#: tokens.py:197
 msgid "Token '{}' claim has expired"
 msgstr "'{}' claim توکن منقضی شده"
 
-#: tokens.py:257
+#: tokens.py:259
 msgid "Token is blacklisted"
 msgstr "توکن به لیست سیاه رفته است"

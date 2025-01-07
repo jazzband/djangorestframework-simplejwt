@@ -53,7 +53,7 @@ msgid ""
 "Unrecognized type '{}', 'leeway' must be of type int, float or timedelta."
 msgstr ""
 
-#: backends.py:104 backends.py:154 exceptions.py:47 tokens.py:58
+#: backends.py:104 backends.py:154 exceptions.py:47 tokens.py:60
 msgid "Token is invalid or expired"
 msgstr "Il token non è valido o è scaduto"
 
@@ -65,7 +65,13 @@ msgstr "L'algoritmo specificato non è valido"
 msgid "No active account found with the given credentials"
 msgstr "Nessun account attivo trovato con queste credenziali"
 
-#: settings.py:73
+#: serializers.py:108
+#, fuzzy
+#| msgid "No active account found with the given credentials"
+msgid "No active account found for the given token."
+msgstr "Nessun account attivo trovato con queste credenziali"
+
+#: settings.py:74
 msgid ""
 "The '{}' setting has been removed. Please refer to '{}' for available "
 "settings."
@@ -93,30 +99,30 @@ msgstr "scade il"
 msgid "Token Blacklist"
 msgstr "Blacklist dei token"
 
-#: tokens.py:44
+#: tokens.py:46
 msgid "Cannot create token with no type or lifetime"
 msgstr "Impossibile creare un token senza tipo o durata"
 
-#: tokens.py:116
+#: tokens.py:118
 msgid "Token has no id"
 msgstr "Il token non ha un id"
 
-#: tokens.py:128
+#: tokens.py:130
 msgid "Token has no type"
 msgstr "Il token non ha un tipo"
 
-#: tokens.py:131
+#: tokens.py:133
 msgid "Token has wrong type"
 msgstr "Il token ha un tipo sbagliato"
 
-#: tokens.py:190
+#: tokens.py:192
 msgid "Token has no '{}' claim"
 msgstr "Il token non contiene il parametro '{}'"
 
-#: tokens.py:195
+#: tokens.py:197
 msgid "Token '{}' claim has expired"
 msgstr "Il parametro '{}' del token è scaduto"
 
-#: tokens.py:257
+#: tokens.py:259
 msgid "Token is blacklisted"
 msgstr "Il token è stato inserito nella blacklist"

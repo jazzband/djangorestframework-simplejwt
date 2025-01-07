@@ -54,7 +54,7 @@ msgid ""
 msgstr ""
 "Neprepoznana vrsta '{}', 'leeway' mora biti vrste int, float ali timedelta."
 
-#: backends.py:104 backends.py:154 exceptions.py:47 tokens.py:58
+#: backends.py:104 backends.py:154 exceptions.py:47 tokens.py:60
 msgid "Token is invalid or expired"
 msgstr "Žeton je neveljaven ali potekel"
 
@@ -66,7 +66,13 @@ msgstr "Naveden algoritem je neveljaven"
 msgid "No active account found with the given credentials"
 msgstr "Aktiven račun s podanimi poverilnicami ni najden"
 
-#: settings.py:73
+#: serializers.py:108
+#, fuzzy
+#| msgid "No active account found with the given credentials"
+msgid "No active account found for the given token."
+msgstr "Aktiven račun s podanimi poverilnicami ni najden"
+
+#: settings.py:74
 msgid ""
 "The '{}' setting has been removed. Please refer to '{}' for available "
 "settings."
@@ -94,30 +100,30 @@ msgstr "poteče ob"
 msgid "Token Blacklist"
 msgstr "Črni seznam žetonov"
 
-#: tokens.py:44
+#: tokens.py:46
 msgid "Cannot create token with no type or lifetime"
 msgstr "Ni mogoče ustvariti žetona brez vrste ali življenjske dobe"
 
-#: tokens.py:116
+#: tokens.py:118
 msgid "Token has no id"
 msgstr "Žetonu manjka id"
 
-#: tokens.py:128
+#: tokens.py:130
 msgid "Token has no type"
 msgstr "Žetonu manjka vrsta"
 
-#: tokens.py:131
+#: tokens.py:133
 msgid "Token has wrong type"
 msgstr "Žeton je napačne vrste"
 
-#: tokens.py:190
+#: tokens.py:192
 msgid "Token has no '{}' claim"
 msgstr "Žeton nima '{}' zahtevka"
 
-#: tokens.py:195
+#: tokens.py:197
 msgid "Token '{}' claim has expired"
 msgstr "'{}' zahtevek žetona je potekel"
 
-#: tokens.py:257
+#: tokens.py:259
 msgid "Token is blacklisted"
 msgstr "Žeton je na črnem seznamu"

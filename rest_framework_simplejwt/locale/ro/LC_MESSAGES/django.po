@@ -53,7 +53,7 @@ msgstr ""
 "Tipul '{}' nu este recunoscut, 'leeway' trebuie să fie de tip int, float sau "
 "timedelta."
 
-#: backends.py:104 backends.py:154 exceptions.py:47 tokens.py:58
+#: backends.py:104 backends.py:154 exceptions.py:47 tokens.py:60
 msgid "Token is invalid or expired"
 msgstr "Token nu este valid sau a expirat"
 
@@ -65,7 +65,13 @@ msgstr "Algoritm nevalid specificat"
 msgid "No active account found with the given credentials"
 msgstr "Nu a fost găsit cont activ cu aceste date de autentificare"
 
-#: settings.py:73
+#: serializers.py:108
+#, fuzzy
+#| msgid "No active account found with the given credentials"
+msgid "No active account found for the given token."
+msgstr "Nu a fost găsit cont activ cu aceste date de autentificare"
+
+#: settings.py:74
 msgid ""
 "The '{}' setting has been removed. Please refer to '{}' for available "
 "settings."
@@ -92,30 +98,30 @@ msgstr "expiră la"
 msgid "Token Blacklist"
 msgstr "Listă de token-uri blocate"
 
-#: tokens.py:44
+#: tokens.py:46
 msgid "Cannot create token with no type or lifetime"
 msgstr "Nu se poate crea token fără tip sau durată de viață"
 
-#: tokens.py:116
+#: tokens.py:118
 msgid "Token has no id"
 msgstr "Tokenul nu are id"
 
-#: tokens.py:128
+#: tokens.py:130
 msgid "Token has no type"
 msgstr "Tokenul nu are tip"
 
-#: tokens.py:131
+#: tokens.py:133
 msgid "Token has wrong type"
 msgstr "Tokenul are tipul greșit"
 
-#: tokens.py:190
+#: tokens.py:192
 msgid "Token has no '{}' claim"
 msgstr "Tokenul nu are reclamația '{}'"
 
-#: tokens.py:195
+#: tokens.py:197
 msgid "Token '{}' claim has expired"
 msgstr "Reclamația tokenului '{}' a expirat"
 
-#: tokens.py:257
+#: tokens.py:259
 msgid "Token is blacklisted"
 msgstr "Tokenul este în listă de tokenuri blocate"
