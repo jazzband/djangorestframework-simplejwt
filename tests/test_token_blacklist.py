@@ -6,7 +6,6 @@ from django.core.management import call_command
 from django.db.models import BigAutoField
 from django.test import TestCase
 from django.utils import timezone
-
 from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.serializers import TokenVerifySerializer
 from rest_framework_simplejwt.settings import api_settings
@@ -159,6 +158,35 @@ class TestTokenBlacklist(TestCase):
         token.blacklist()
         outstanding_token = OutstandingToken.objects.get(token=token)
         self.assertEqual(outstanding_token.user, self.user)
+
+    @override_api_settings(USER_ID_FIELD="email", USER_ID_CLAIM="email")
+    def test_outstanding_token_and_blacklisted_token_created_at_with_modified_user_id_field(
+        self,
+    ):
+        token = RefreshToken.for_user(self.user)
+
+        token.blacklist()
+        outstanding_token = OutstandingToken.objects.get(token=token)
+        self.assertEqual(outstanding_token.created_at, token.current_time)
+
+    @override_api_settings(USER_ID_FIELD="email", USER_ID_CLAIM="email")
+    def test_outstanding_token_and_blacklisted_token_user_with_modifed_user_id_field(
+        self,
+    ):
+        token = RefreshToken.for_user(self.user)
+
+        token.blacklist()
+        outstanding_token = OutstandingToken.objects.get(token=token)
+        self.assertEqual(outstanding_token.user, self.user)
+
+
+    @override_api_settings(USER_ID_FIELD="email", USER_ID_CLAIM="email")
+    def test_outstanding_token_with_deleted_user_and_modifed_user_id_field(self):
+        self.assertFalse(BlacklistedToken.objects.exists())
+        token = RefreshToken.for_user(self.user)
+        self.user.delete()
+        token.blacklist()
+        self.assertTrue(BlacklistedToken.objects.count(), 1)
 
 
 class TestTokenBlacklistFlushExpiredTokens(TestCase):
