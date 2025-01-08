@@ -6,6 +6,7 @@ from django.core.management import call_command
 from django.db.models import BigAutoField
 from django.test import TestCase
 from django.utils import timezone
+
 from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.serializers import TokenVerifySerializer
 from rest_framework_simplejwt.settings import api_settings
