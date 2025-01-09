@@ -266,12 +266,13 @@ class BlacklistMixin(Generic[T]):
             jti = self.payload[api_settings.JTI_CLAIM]
             exp = self.payload["exp"]
             user_id = self.payload.get(api_settings.USER_ID_CLAIM)
+            user_id_field = {api_settings.USER_ID_FIELD: user_id}
 
             # Ensure outstanding token exists with given jti
             token, _ = OutstandingToken.objects.get_or_create(
                 jti=jti,
                 defaults={
-                    "user_id": user_id,
+                    **user_id_field,
                     "created_at": self.current_time,
                     "token": str(self),
                     "expires_at": datetime_from_epoch(exp),
