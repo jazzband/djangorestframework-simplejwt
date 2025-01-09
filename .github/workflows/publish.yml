@@ -23,6 +23,6 @@ jobs:
       - name: Build distribution
         run: python -m build
       - name: Publish
-        uses: pypa/gh-action-pypi-publish@v1.12.2
+        uses: pypa/gh-action-pypi-publish@v1.12.3
         with:
           password: ${{ secrets.PYPI_API_TOKEN }}
