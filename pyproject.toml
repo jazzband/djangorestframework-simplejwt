@@ -68,7 +68,7 @@ test = [
     "ruff ==0.8.4",
     "django-stubs",
     "python-jose==3.3.0",
-    "click==8.1.7",
+    "click==8.1.8",
     "freezegun"
 ]
 
