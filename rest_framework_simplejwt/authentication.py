@@ -1,4 +1,4 @@
-from typing import Optional, Set, Tuple, TypeVar
+from typing import Optional, TypeVar
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractBaseUser

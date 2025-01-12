@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Any, List, Optional, TypeVar
+from typing import Any, Optional, TypeVar
 
 from django.contrib import admin
 from django.contrib.auth.models import AbstractBaseUser
