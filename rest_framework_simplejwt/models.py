@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Any, List, Optional, Union
+from typing import TYPE_CHECKING, Any, Optional, Union
 
 from django.contrib.auth import models as auth_models
 from django.db.models.manager import EmptyManager

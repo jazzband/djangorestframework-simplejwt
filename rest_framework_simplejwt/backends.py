@@ -1,7 +1,7 @@
 import json
 from collections.abc import Iterable
 from datetime import timedelta
-from typing import Any, Dict, Optional, Type, Union
+from typing import Any, Optional, Union
 
 import jwt
 from django.utils.translation import gettext_lazy as _

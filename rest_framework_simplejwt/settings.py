@@ -1,5 +1,5 @@
 from datetime import timedelta
-from typing import Any, Dict
+from typing import Any
 
 from django.conf import settings
 from django.test.signals import setting_changed

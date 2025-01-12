@@ -1,4 +1,4 @@
-from typing import Any, Dict, Optional, Union
+from typing import Any, Optional, Union
 
 from django.utils.translation import gettext_lazy as _
 from rest_framework import exceptions, status
