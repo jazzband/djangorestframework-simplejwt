@@ -302,7 +302,6 @@ class TestTokenBackend(TestCase):
         # Payload copied
         self.payload["exp"] = datetime_to_epoch(self.payload["exp"])
 
-        mock_jwk_module = mock.MagicMock()
         with patch("rest_framework_simplejwt.backends.PyJWKClient") as mock_jwk_module:
             mock_jwk_client = mock.MagicMock()
             mock_signing_key = mock.MagicMock()
@@ -335,7 +334,6 @@ class TestTokenBackend(TestCase):
             headers={"kid": "230498151c214b788dd97f22b85410a5"},
         )
 
-        mock_jwk_module = mock.MagicMock()
         with patch("rest_framework_simplejwt.backends.PyJWKClient") as mock_jwk_module:
             mock_jwk_client = mock.MagicMock()
 
