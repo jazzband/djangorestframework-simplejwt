@@ -14,9 +14,12 @@ extras_require = {
         "tox",
     ],
     "lint": [
-        "flake8",
-        "pep8",
+        "ruff",
         "isort",
+        "black",
+        "yesqa",
+        "pyupgrade",
+        "pre-commit",
     ],
     "doc": [
         "Sphinx>=1.6.5,<2",
