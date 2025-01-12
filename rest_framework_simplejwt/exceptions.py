@@ -26,7 +26,7 @@ class DetailDictMixin:
 
     def __init__(
         self,
-        detail: Union[Dict[str, Any], str, None] = None,
+        detail: Union[dict[str, Any], str, None] = None,
         code: Optional[str] = None,
     ) -> None:
         """

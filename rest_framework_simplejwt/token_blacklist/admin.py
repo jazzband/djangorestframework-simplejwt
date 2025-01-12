@@ -34,7 +34,7 @@ class OutstandingTokenAdmin(admin.ModelAdmin):
     # Read-only behavior defined below
     actions = None
 
-    def get_readonly_fields(self, *args, **kwargs) -> List[Any]:
+    def get_readonly_fields(self, *args, **kwargs) -> list[Any]:
         return [f.name for f in self.model._meta.fields]
 
     def has_add_permission(self, *args, **kwargs) -> bool:

@@ -29,7 +29,7 @@ class PasswordField(serializers.CharField):
 
 class TokenObtainSerializer(serializers.Serializer):
     username_field = get_user_model().USERNAME_FIELD
-    token_class: Optional[Type[Token]] = None
+    token_class: Optional[type[Token]] = None
 
     default_error_messages = {
         "no_active_account": _("No active account found with the given credentials")
@@ -41,7 +41,7 @@ class TokenObtainSerializer(serializers.Serializer):
         self.fields[self.username_field] = serializers.CharField(write_only=True)
         self.fields["password"] = PasswordField()
 
-    def validate(self, attrs: Dict[str, Any]) -> Dict[Any, Any]:
+    def validate(self, attrs: dict[str, Any]) -> dict[Any, Any]:
         authenticate_kwargs = {
             self.username_field: attrs[self.username_field],
             "password": attrs["password"],
@@ -69,7 +69,7 @@ class TokenObtainSerializer(serializers.Serializer):
 class TokenObtainPairSerializer(TokenObtainSerializer):
     token_class = RefreshToken
 
-    def validate(self, attrs: Dict[str, Any]) -> Dict[str, str]:
+    def validate(self, attrs: dict[str, Any]) -> dict[str, str]:
         data = super().validate(attrs)
 
         refresh = self.get_token(self.user)
@@ -86,7 +86,7 @@ class TokenObtainPairSerializer(TokenObtainSerializer):
 class TokenObtainSlidingSerializer(TokenObtainSerializer):
     token_class = SlidingToken
 
-    def validate(self, attrs: Dict[str, Any]) -> Dict[str, str]:
+    def validate(self, attrs: dict[str, Any]) -> dict[str, str]:
         data = super().validate(attrs)
 
         token = self.get_token(self.user)
@@ -108,7 +108,7 @@ class TokenRefreshSerializer(serializers.Serializer):
         "no_active_account": _("No active account found for the given token.")
     }
 
-    def validate(self, attrs: Dict[str, Any]) -> Dict[str, str]:
+    def validate(self, attrs: dict[str, Any]) -> dict[str, str]:
         refresh = self.token_class(attrs["refresh"])
 
         user_id = refresh.payload.get(api_settings.USER_ID_CLAIM, None)
@@ -148,7 +148,7 @@ class TokenRefreshSlidingSerializer(serializers.Serializer):
     token = serializers.CharField()
     token_class = SlidingToken
 
-    def validate(self, attrs: Dict[str, Any]) -> Dict[str, str]:
+    def validate(self, attrs: dict[str, Any]) -> dict[str, str]:
         token = self.token_class(attrs["token"])
 
         # Check that the timestamp in the "refresh_exp" claim has not
@@ -165,7 +165,7 @@ class TokenRefreshSlidingSerializer(serializers.Serializer):
 class TokenVerifySerializer(serializers.Serializer):
     token = serializers.CharField(write_only=True)
 
-    def validate(self, attrs: Dict[str, None]) -> Dict[Any, Any]:
+    def validate(self, attrs: dict[str, None]) -> dict[Any, Any]:
         token = UntypedToken(attrs["token"])
 
         if (
@@ -183,7 +183,7 @@ class TokenBlacklistSerializer(serializers.Serializer):
     refresh = serializers.CharField(write_only=True)
     token_class = RefreshToken
 
-    def validate(self, attrs: Dict[str, Any]) -> Dict[Any, Any]:
+    def validate(self, attrs: dict[str, Any]) -> dict[Any, Any]:
         refresh = self.token_class(attrs["refresh"])
         try:
             refresh.blacklist()

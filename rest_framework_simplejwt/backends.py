@@ -46,7 +46,7 @@ class TokenBackend:
         issuer: Optional[str] = None,
         jwk_url: Optional[str] = None,
         leeway: Union[float, int, timedelta, None] = None,
-        json_encoder: Optional[Type[json.JSONEncoder]] = None,
+        json_encoder: Optional[type[json.JSONEncoder]] = None,
     ) -> None:
         self._validate_algorithm(algorithm)
 
@@ -110,7 +110,7 @@ class TokenBackend:
 
         return self.verifying_key
 
-    def encode(self, payload: Dict[str, Any]) -> str:
+    def encode(self, payload: dict[str, Any]) -> str:
         """
         Returns an encoded token for the given payload dictionary.
         """
@@ -132,7 +132,7 @@ class TokenBackend:
         # For PyJWT >= 2.0.0a1
         return token
 
-    def decode(self, token: Token, verify: bool = True) -> Dict[str, Any]:
+    def decode(self, token: Token, verify: bool = True) -> dict[str, Any]:
         """
         Performs a validation of the given token and returns its payload
         dictionary.

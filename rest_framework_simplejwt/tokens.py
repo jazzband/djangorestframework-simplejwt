@@ -204,7 +204,7 @@ class Token:
             raise TokenError(format_lazy(_("Token '{}' claim has expired"), claim))
 
     @classmethod
-    def for_user(cls: Type[T], user: AuthUser) -> T:
+    def for_user(cls: type[T], user: AuthUser) -> T:
         """
         Returns an authorization token for the given user that will be provided
         after authenticating the user's credentials.
@@ -246,7 +246,7 @@ class BlacklistMixin(Generic[T]):
     membership in a token blacklist.
     """
 
-    payload: Dict[str, Any]
+    payload: dict[str, Any]
 
     if "rest_framework_simplejwt.token_blacklist" in settings.INSTALLED_APPS:
 
@@ -288,7 +288,7 @@ class BlacklistMixin(Generic[T]):
             return BlacklistedToken.objects.get_or_create(token=token)
 
         @classmethod
-        def for_user(cls: Type[T], user: AuthUser) -> T:
+        def for_user(cls: type[T], user: AuthUser) -> T:
             """
             Adds this token to the outstanding token list.
             """

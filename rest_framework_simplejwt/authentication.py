@@ -17,7 +17,7 @@ AUTH_HEADER_TYPES = api_settings.AUTH_HEADER_TYPES
 if not isinstance(api_settings.AUTH_HEADER_TYPES, (list, tuple)):
     AUTH_HEADER_TYPES = (AUTH_HEADER_TYPES,)
 
-AUTH_HEADER_TYPE_BYTES: Set[bytes] = {
+AUTH_HEADER_TYPE_BYTES: set[bytes] = {
     h.encode(HTTP_HEADER_ENCODING) for h in AUTH_HEADER_TYPES
 }
 
@@ -37,7 +37,7 @@ class JWTAuthentication(authentication.BaseAuthentication):
         super().__init__(*args, **kwargs)
         self.user_model = get_user_model()
 
-    def authenticate(self, request: Request) -> Optional[Tuple[AuthUser, Token]]:
+    def authenticate(self, request: Request) -> Optional[tuple[AuthUser, Token]]:
         header = self.get_header(request)
         if header is None:
             return None
