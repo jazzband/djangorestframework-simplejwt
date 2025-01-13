@@ -15,8 +15,6 @@ extras_require = {
     ],
     "lint": [
         "ruff",
-        "isort",
-        "black",
         "yesqa",
         "pyupgrade",
         "pre-commit",
