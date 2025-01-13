@@ -1,61 +1,61 @@
 repos:
-  - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: "v4.5.0"
-    hooks:
-      - id: check-merge-conflict
-  - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.9.1
-    hooks:
-      - id: ruff
-        types_or: [python, pyi]
-        args: [--select, I, --fix]
-        files: "^tests/|^rest_framework_simplejwt/"
-      - id: ruff-format
-        types_or: [python, pyi]
-        files: "^tests/|^rest_framework_simplejwt/"
-  - repo: https://github.com/asottile/yesqa
-    rev: v1.5.0
-    hooks:
-      - id: yesqa
-  - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: "v4.5.0"
-    hooks:
-      - id: end-of-file-fixer
-        exclude: >-
-          ^docs/[^/]*\.svg$
-      - id: requirements-txt-fixer
-      - id: trailing-whitespace
-        types: [python]
-      - id: file-contents-sorter
-        files: |
-          CONTRIBUTORS.txt|
-          docs/spelling_wordlist.txt|
-          .gitignore|
-          .gitattributes
-      - id: check-case-conflict
-      - id: check-json
-      - id: check-xml
-      - id: check-executables-have-shebangs
-      - id: check-toml
-      - id: check-xml
-      - id: check-yaml
-      - id: debug-statements
-      - id: check-added-large-files
-      - id: check-symlinks
-      - id: debug-statements
-      - id: detect-aws-credentials
-        args: ["--allow-missing-credentials"]
-      - id: detect-private-key
-        exclude: ^tests/
-  - repo: https://github.com/asottile/pyupgrade
-    rev: "v3.15.0"
-    hooks:
-      - id: pyupgrade
-        args: ["--py39-plus", "--keep-mock"]
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: 'v4.5.0'
+  hooks:
+  - id: check-merge-conflict
+- repo: https://github.com/astral-sh/ruff-pre-commit
+  rev: v0.9.1
+  hooks:
+  - id: ruff
+    types_or: [ python, pyi ]
+    args: [--select, I, --fix,]
+    files: "^tests/|^rest_framework_simplejwt/"
+  - id: ruff-format
+    types_or: [python, pyi]
+    files: "^tests/|^rest_framework_simplejwt/"
+- repo: https://github.com/asottile/yesqa
+  rev: v1.5.0
+  hooks:
+  - id: yesqa
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: 'v4.5.0'
+  hooks:
+  - id: end-of-file-fixer
+    exclude: >-
+      ^docs/[^/]*\.svg$
+  - id: requirements-txt-fixer
+  - id: trailing-whitespace
+    types: [python]
+  - id: file-contents-sorter
+    files: |
+      CONTRIBUTORS.txt|
+      docs/spelling_wordlist.txt|
+      .gitignore|
+      .gitattributes
+  - id: check-case-conflict
+  - id: check-json
+  - id: check-xml
+  - id: check-executables-have-shebangs
+  - id: check-toml
+  - id: check-xml
+  - id: check-yaml
+  - id: debug-statements
+  - id: check-added-large-files
+  - id: check-symlinks
+  - id: debug-statements
+  - id: detect-aws-credentials
+    args: ['--allow-missing-credentials']
+  - id: detect-private-key
+    exclude: ^tests/
+- repo: https://github.com/asottile/pyupgrade
+  rev: 'v3.15.0'
+  hooks:
+  - id: pyupgrade
+    args: ['--py39-plus', '--keep-mock']
 
-  - repo: https://github.com/Lucas-C/pre-commit-hooks-markup
-    rev: v1.0.1
-    hooks:
-      - id: rst-linter
-        files: >-
-          ^[^/]+[.]rst$
+- repo: https://github.com/Lucas-C/pre-commit-hooks-markup
+  rev: v1.0.1
+  hooks:
+  - id: rst-linter
+    files: >-
+      ^[^/]+[.]rst$
