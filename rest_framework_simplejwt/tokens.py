@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING, Any, Generic, Optional, TypeVar
 from uuid import uuid4
 
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractBaseUser
 from django.utils.module_loading import import_string
 from django.utils.translation import gettext_lazy as _
@@ -273,12 +274,17 @@ class BlacklistMixin(Generic[T]):
             jti = self.payload[api_settings.JTI_CLAIM]
             exp = self.payload["exp"]
             user_id = self.payload.get(api_settings.USER_ID_CLAIM)
+            User = get_user_model()
+            try:
+                user = User.objects.get(**{api_settings.USER_ID_FIELD: user_id})
+            except User.DoesNotExist:
+                user = None
 
             # Ensure outstanding token exists with given jti
             token, _ = OutstandingToken.objects.get_or_create(
                 jti=jti,
                 defaults={
-                    "user_id": user_id,
+                    "user": user,
                     "created_at": self.current_time,
                     "token": str(self),
                     "expires_at": datetime_from_epoch(exp),

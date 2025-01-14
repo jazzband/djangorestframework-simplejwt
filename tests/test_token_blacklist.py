@@ -160,6 +160,26 @@ class TestTokenBlacklist(TestCase):
         outstanding_token = OutstandingToken.objects.get(token=token)
         self.assertEqual(outstanding_token.user, self.user)
 
+    @override_api_settings(USER_ID_FIELD="email", USER_ID_CLAIM="email")
+    def test_outstanding_token_and_blacklisted_token_created_at_with_modified_user_id_field(
+        self,
+    ):
+        token = RefreshToken.for_user(self.user)
+
+        token.blacklist()
+        outstanding_token = OutstandingToken.objects.get(token=token)
+        self.assertEqual(outstanding_token.created_at, token.current_time)
+
+    @override_api_settings(USER_ID_FIELD="email", USER_ID_CLAIM="email")
+    def test_outstanding_token_and_blacklisted_token_user_with_modifed_user_id_field(
+        self,
+    ):
+        token = RefreshToken.for_user(self.user)
+
+        token.blacklist()
+        outstanding_token = OutstandingToken.objects.get(token=token)
+        self.assertEqual(outstanding_token.user, self.user)
+
 
 class TestTokenBlacklistFlushExpiredTokens(TestCase):
     def setUp(self):
