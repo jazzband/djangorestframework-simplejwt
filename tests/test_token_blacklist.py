@@ -6,6 +6,7 @@ from django.core.management import call_command
 from django.db.models import BigAutoField
 from django.test import TestCase
 from django.utils import timezone
+
 from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.serializers import TokenVerifySerializer
 from rest_framework_simplejwt.settings import api_settings
@@ -178,7 +179,6 @@ class TestTokenBlacklist(TestCase):
         token.blacklist()
         outstanding_token = OutstandingToken.objects.get(token=token)
         self.assertEqual(outstanding_token.user, self.user)
-
 
     @override_api_settings(USER_ID_FIELD="email", USER_ID_CLAIM="email")
     def test_outstanding_token_with_deleted_user_and_modifed_user_id_field(self):
