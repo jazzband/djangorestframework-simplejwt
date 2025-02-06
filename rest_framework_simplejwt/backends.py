@@ -1,7 +1,7 @@
-from functools import cached_property
 import json
 from collections.abc import Iterable
 from datetime import timedelta
+from functools import cached_property
 from typing import Any, Optional, Union
 
 import jwt
@@ -64,7 +64,7 @@ class TokenBackend:
 
         self.leeway = leeway
         self.json_encoder = json_encoder
-        
+
     @cached_property
     def signing_key(self) -> Any:
         jws_alg = jwt.PyJWS().get_algorithm_by_name(self.algorithm)
