@@ -1,3 +1,4 @@
+from functools import cached_property
 import json
 from collections.abc import Iterable
 from datetime import timedelta
@@ -51,7 +52,7 @@ class TokenBackend:
         self._validate_algorithm(algorithm)
 
         self.algorithm = algorithm
-        self.signing_key = signing_key
+        self.raw_signing_key = signing_key
         self.verifying_key = verifying_key
         self.audience = audience
         self.issuer = issuer
@@ -63,6 +64,11 @@ class TokenBackend:
 
         self.leeway = leeway
         self.json_encoder = json_encoder
+        
+    @cached_property
+    def signing_key(self) -> Any:
+        jws_alg = jwt.PyJWS().get_algorithm_by_name(self.algorithm)
+        return jws_alg.prepare_key(self.raw_signing_key)
 
     def _validate_algorithm(self, algorithm: str) -> None:
         """
