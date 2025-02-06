@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: djangorestframework_simplejwt\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-22 17:30+0100\n"
-"Last-Translator: Bruno Ducraux <bruno.drx@gmail.com>\n"
+"POT-Creation-Date: 2024-04-15 09:35-0300\n"
+"Last-Translator: Daniel Dương <daniel.duong@outlook.com>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,7 +35,7 @@ msgstr "Usuário está inativo"
 
 #: authentication.py:142
 msgid "The user's password has been changed."
-msgstr ""
+msgstr "A senha do usuário foi alterada."
 
 #: backends.py:69
 msgid "Unrecognized algorithm type '{}'"
@@ -49,6 +49,7 @@ msgstr "Você deve ter criptografia instalada para usar {}."
 msgid ""
 "Unrecognized type '{}', 'leeway' must be of type int, float or timedelta."
 msgstr ""
+"Tipo '{}' não reconhecido, 'leeway' deve ser do tipo int, float ou timedelta."
 
 #: backends.py:104 backends.py:154 exceptions.py:47 tokens.py:60
 msgid "Token is invalid or expired"

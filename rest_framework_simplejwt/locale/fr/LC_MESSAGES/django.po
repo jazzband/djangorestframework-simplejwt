@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: djangorestframework_simplejwt\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-22 17:30+0100\n"
-"Last-Translator: Stéphane Malta e Sousa <stephane.maltaesousa@ne.ch>\n"
+"POT-Creation-Date: 2024-04-15 09:29-0300\n"
+"Last-Translator: Daniel Dương <daniel.duong@outlook.com>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,7 +35,7 @@ msgstr "L'utilisateur est désactivé"
 
 #: authentication.py:142
 msgid "The user's password has been changed."
-msgstr ""
+msgstr "Le mot de passe de l'utilisateur a été modifié"
 
 #: backends.py:69
 msgid "Unrecognized algorithm type '{}'"
@@ -49,6 +49,7 @@ msgstr "Vous devez installer cryptography afin d'utiliser {}."
 msgid ""
 "Unrecognized type '{}', 'leeway' must be of type int, float or timedelta."
 msgstr ""
+"Type non reconnu '{}', 'leeway' doit être de type int, float ou timedelta."
 
 #: backends.py:104 backends.py:154 exceptions.py:47 tokens.py:60
 msgid "Token is invalid or expired"
@@ -82,15 +83,15 @@ msgstr "jti"
 
 #: token_blacklist/admin.py:85
 msgid "user"
-msgstr "Utilisateur"
+msgstr "utilisateur"
 
 #: token_blacklist/admin.py:91
 msgid "created at"
-msgstr "Créé le"
+msgstr "créé le"
 
 #: token_blacklist/admin.py:97
 msgid "expires at"
-msgstr "Expire le"
+msgstr "expire le"
 
 #: token_blacklist/apps.py:7
 msgid "Token Blacklist"
