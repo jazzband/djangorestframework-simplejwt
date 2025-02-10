@@ -67,6 +67,8 @@ class TokenBackend:
 
     @cached_property
     def signing_key(self) -> Any:
+        if self.raw_signing_key is None:
+            return None
         jws_alg = jwt.PyJWS().get_algorithm_by_name(self.algorithm)
         return jws_alg.prepare_key(self.raw_signing_key)
 
