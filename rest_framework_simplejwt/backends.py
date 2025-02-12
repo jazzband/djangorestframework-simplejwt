@@ -73,7 +73,7 @@ class TokenBackend:
     def prepared_verifying_key(self) -> Any:
         return self._prepare_key(self.verifying_key)
 
-    def _prepare_key(self, key: str | None) -> Any:
+    def _prepare_key(self, key: Optional[str]) -> Any:
         # Support for PyJWT 1.7.1 or empty signing key
         if key is None or not getattr(jwt.PyJWS, "get_algorithm_by_name", None):
             return key
