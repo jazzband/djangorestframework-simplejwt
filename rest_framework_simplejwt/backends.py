@@ -52,7 +52,7 @@ class TokenBackend:
         self._validate_algorithm(algorithm)
 
         self.algorithm = algorithm
-        self.raw_signing_key = signing_key
+        self.signing_key = signing_key
         self.verifying_key = verifying_key
         self.audience = audience
         self.issuer = issuer
@@ -66,14 +66,19 @@ class TokenBackend:
         self.json_encoder = json_encoder
 
     @cached_property
-    def signing_key(self) -> Any:
+    def prepared_signing_key(self) -> Any:
+        return self._prepare_key(self.signing_key)
+
+    @cached_property
+    def prepared_verifying_key(self) -> Any:
+        return self._prepare_key(self.verifying_key)
+
+    def _prepare_key(self, key: str | None) -> Any:
         # Support for PyJWT 1.7.1 or empty signing key
-        if self.raw_signing_key is None or not getattr(
-            jwt.PyJWS, "get_algorithm_by_name", None
-        ):
-            return self.raw_signing_key
+        if key is None or not getattr(jwt.PyJWS, "get_algorithm_by_name", None):
+            return key
         jws_alg = jwt.PyJWS().get_algorithm_by_name(self.algorithm)
-        return jws_alg.prepare_key(self.raw_signing_key)
+        return jws_alg.prepare_key(key)
 
     def _validate_algorithm(self, algorithm: str) -> None:
         """
@@ -109,9 +114,9 @@ class TokenBackend:
                 )
             )
 
-    def get_verifying_key(self, token: Token) -> Optional[str]:
+    def get_verifying_key(self, token: Token) -> Any:
         if self.algorithm.startswith("HS"):
-            return self.signing_key
+            return self.prepared_signing_key
 
         if self.jwks_client:
             try:
@@ -119,7 +124,7 @@ class TokenBackend:
             except PyJWKClientError as ex:
                 raise TokenBackendError(_("Token is invalid")) from ex
 
-        return self.verifying_key
+        return self.prepared_verifying_key
 
     def encode(self, payload: dict[str, Any]) -> str:
         """
@@ -133,7 +138,7 @@ class TokenBackend:
 
         token = jwt.encode(
             jwt_payload,
-            self.signing_key,
+            self.prepared_signing_key,
             algorithm=self.algorithm,
             json_encoder=self.json_encoder,
         )
