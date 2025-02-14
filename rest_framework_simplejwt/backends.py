@@ -1,6 +1,7 @@
 import json
 from collections.abc import Iterable
 from datetime import timedelta
+from functools import cached_property
 from typing import Any, Optional, Union
 
 import jwt
@@ -64,6 +65,21 @@ class TokenBackend:
         self.leeway = leeway
         self.json_encoder = json_encoder
 
+    @cached_property
+    def prepared_signing_key(self) -> Any:
+        return self._prepare_key(self.signing_key)
+
+    @cached_property
+    def prepared_verifying_key(self) -> Any:
+        return self._prepare_key(self.verifying_key)
+
+    def _prepare_key(self, key: Optional[str]) -> Any:
+        # Support for PyJWT 1.7.1 or empty signing key
+        if key is None or not getattr(jwt.PyJWS, "get_algorithm_by_name", None):
+            return key
+        jws_alg = jwt.PyJWS().get_algorithm_by_name(self.algorithm)
+        return jws_alg.prepare_key(key)
+
     def _validate_algorithm(self, algorithm: str) -> None:
         """
         Ensure that the nominated algorithm is recognized, and that cryptography is installed for those
@@ -98,9 +114,9 @@ class TokenBackend:
                 )
             )
 
-    def get_verifying_key(self, token: Token) -> Optional[str]:
+    def get_verifying_key(self, token: Token) -> Any:
         if self.algorithm.startswith("HS"):
-            return self.signing_key
+            return self.prepared_signing_key
 
         if self.jwks_client:
             try:
@@ -108,7 +124,7 @@ class TokenBackend:
             except PyJWKClientError as ex:
                 raise TokenBackendError(_("Token is invalid")) from ex
 
-        return self.verifying_key
+        return self.prepared_verifying_key
 
     def encode(self, payload: dict[str, Any]) -> str:
         """
@@ -122,7 +138,7 @@ class TokenBackend:
 
         token = jwt.encode(
             jwt_payload,
-            self.signing_key,
+            self.prepared_signing_key,
             algorithm=self.algorithm,
             json_encoder=self.json_encoder,
         )
