@@ -13,8 +13,13 @@ from .tokens import RefreshToken, SlidingToken, Token, UntypedToken
 
 AuthUser = TypeVar("AuthUser", AbstractBaseUser, TokenUser)
 
-if api_settings.BLACKLIST_AFTER_ROTATION:
-    from .token_blacklist.models import BlacklistedToken
+if api_settings.ROTATE_REFRESH_TOKENS:
+    from .token_blacklist.models import OutstandingToken
+    from .authentication import JWTAuthentication
+    from datetime import datetime
+
+    if api_settings.BLACKLIST_AFTER_ROTATION:
+        from .token_blacklist.models import BlacklistedToken
 
 
 class PasswordField(serializers.CharField):
@@ -140,6 +145,16 @@ class TokenRefreshSerializer(serializers.Serializer):
             refresh.set_iat()
 
             data["refresh"] = str(refresh)
+
+            auth = JWTAuthentication()
+            user = auth.get_user(validated_token=refresh)
+            OutstandingToken.objects.create(
+                user=user,
+                jti=refresh[api_settings.JTI_CLAIM],
+                token=data["refresh"],
+                created_at=datetime.fromtimestamp(refresh["iat"]),
+                expires_at=datetime.fromtimestamp(refresh["exp"]),
+            )
 
         return data
 
