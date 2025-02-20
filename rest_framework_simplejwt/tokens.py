@@ -203,7 +203,7 @@ class Token:
         leeway = self.get_token_backend().get_leeway()
         if claim_time <= current_time - leeway:
             raise TokenError(format_lazy(_("Token '{}' claim has expired"), claim))
-    
+
     def outstand(self) -> OutstandingToken:
         """
         Ensures this token is included in the outstanding token list and
