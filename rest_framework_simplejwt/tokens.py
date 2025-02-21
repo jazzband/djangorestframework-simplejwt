@@ -204,6 +204,31 @@ class Token:
         if claim_time <= current_time - leeway:
             raise TokenError(format_lazy(_("Token '{}' claim has expired"), claim))
 
+    def outstand(self) -> OutstandingToken:
+        """
+        Ensures this token is included in the outstanding token list and
+        adds it to the outstanding token list if not.
+        """
+        jti = self.payload[api_settings.JTI_CLAIM]
+        exp = self.payload["exp"]
+        user_id = self.payload.get(api_settings.USER_ID_CLAIM)
+        User = get_user_model()
+        try:
+            user = User.objects.get(**{api_settings.USER_ID_FIELD: user_id})
+        except User.DoesNotExist:
+            user = None
+
+        # Ensure outstanding token exists with given jti
+        return OutstandingToken.objects.get_or_create(
+            jti=jti,
+            defaults={
+                "user": user,
+                "created_at": self.current_time,
+                "token": str(self),
+                "expires_at": datetime_from_epoch(exp),
+            },
+        )
+
     @classmethod
     def for_user(cls: type[T], user: AuthUser) -> T:
         """

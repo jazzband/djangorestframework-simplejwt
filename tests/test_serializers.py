@@ -451,7 +451,7 @@ class TestTokenRefreshSerializer(TestCase):
             datetime_to_epoch(now + api_settings.REFRESH_TOKEN_LIFETIME),
         )
 
-        self.assertEqual(OutstandingToken.objects.count(), 1)
+        self.assertEqual(OutstandingToken.objects.count(), 2)
         self.assertEqual(BlacklistedToken.objects.count(), 1)
 
         # Assert old refresh token is blacklisted
