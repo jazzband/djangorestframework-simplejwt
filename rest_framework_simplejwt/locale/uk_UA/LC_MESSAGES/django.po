@@ -39,26 +39,38 @@ msgstr "Користувач неактивний"
 msgid "The user's password has been changed."
 msgstr ""
 
-#: backends.py:69
+#: backends.py:90
 msgid "Unrecognized algorithm type '{}'"
 msgstr "Тип алгоритму '{}' не розпізнаний"
 
-#: backends.py:75
+#: backends.py:96
 msgid "You must have cryptography installed to use {}."
 msgstr "Встановіть модуль cryptography щоб використовувати {}"
 
-#: backends.py:90
+#: backends.py:111
 msgid ""
 "Unrecognized type '{}', 'leeway' must be of type int, float or timedelta."
 msgstr ""
 
-#: backends.py:104 backends.py:154 exceptions.py:47 tokens.py:60
-msgid "Token is invalid or expired"
+#: backends.py:125 backends.py:177 tokens.py:68
+#, fuzzy
+#| msgid "Token is invalid or expired"
+msgid "Token is invalid"
 msgstr "Токен некоректний або термін його дії вичерпаний"
 
-#: backends.py:152
+#: backends.py:173
 msgid "Invalid algorithm specified"
 msgstr "Вказаний невірний алгоритм"
+
+#: backends.py:175 tokens.py:66
+#, fuzzy
+#| msgid "Token is invalid or expired"
+msgid "Token is expired"
+msgstr "Токен некоректний або термін його дії вичерпаний"
+
+#: exceptions.py:55
+msgid "Token is invalid or expired"
+msgstr "Токен некоректний або термін його дії вичерпаний"
 
 #: serializers.py:35
 msgid "No active account found with the given credentials"
@@ -96,30 +108,30 @@ msgstr "дійстний по"
 msgid "Token Blacklist"
 msgstr "Чорний список токенів"
 
-#: tokens.py:46
+#: tokens.py:52
 msgid "Cannot create token with no type or lifetime"
 msgstr "Неможливо створити токен без типу або строку дії"
 
-#: tokens.py:118
+#: tokens.py:126
 msgid "Token has no id"
 msgstr "У ключі доступу не міститься id"
 
-#: tokens.py:130
+#: tokens.py:138
 msgid "Token has no type"
 msgstr "У ключі доступу не міститься тип"
 
-#: tokens.py:133
+#: tokens.py:141
 msgid "Token has wrong type"
 msgstr "токен позначений невірним типом"
 
-#: tokens.py:192
+#: tokens.py:200
 msgid "Token has no '{}' claim"
 msgstr "У токені не міститься '{}' заголовку"
 
-#: tokens.py:197
+#: tokens.py:205
 msgid "Token '{}' claim has expired"
 msgstr "Заголовок '{}' токена не дійсний"
 
-#: tokens.py:259
+#: tokens.py:292
 msgid "Token is blacklisted"
 msgstr "Токен занесений у чорний список"

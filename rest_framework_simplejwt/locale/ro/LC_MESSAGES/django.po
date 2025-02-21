@@ -38,28 +38,40 @@ msgstr "Utilizatorul este inactiv"
 msgid "The user's password has been changed."
 msgstr ""
 
-#: backends.py:69
+#: backends.py:90
 msgid "Unrecognized algorithm type '{}'"
 msgstr "Tipul de algoritm '{}' nu este recunoscut"
 
-#: backends.py:75
+#: backends.py:96
 msgid "You must have cryptography installed to use {}."
 msgstr "Trebuie să aveți instalată criptografia pentru a utiliza {}."
 
-#: backends.py:90
+#: backends.py:111
 msgid ""
 "Unrecognized type '{}', 'leeway' must be of type int, float or timedelta."
 msgstr ""
 "Tipul '{}' nu este recunoscut, 'leeway' trebuie să fie de tip int, float sau "
 "timedelta."
 
-#: backends.py:104 backends.py:154 exceptions.py:47 tokens.py:60
-msgid "Token is invalid or expired"
+#: backends.py:125 backends.py:177 tokens.py:68
+#, fuzzy
+#| msgid "Token is invalid or expired"
+msgid "Token is invalid"
 msgstr "Token nu este valid sau a expirat"
 
-#: backends.py:152
+#: backends.py:173
 msgid "Invalid algorithm specified"
 msgstr "Algoritm nevalid specificat"
+
+#: backends.py:175 tokens.py:66
+#, fuzzy
+#| msgid "Token is invalid or expired"
+msgid "Token is expired"
+msgstr "Token nu este valid sau a expirat"
+
+#: exceptions.py:55
+msgid "Token is invalid or expired"
+msgstr "Token nu este valid sau a expirat"
 
 #: serializers.py:35
 msgid "No active account found with the given credentials"
@@ -98,30 +110,30 @@ msgstr "expiră la"
 msgid "Token Blacklist"
 msgstr "Listă de token-uri blocate"
 
-#: tokens.py:46
+#: tokens.py:52
 msgid "Cannot create token with no type or lifetime"
 msgstr "Nu se poate crea token fără tip sau durată de viață"
 
-#: tokens.py:118
+#: tokens.py:126
 msgid "Token has no id"
 msgstr "Tokenul nu are id"
 
-#: tokens.py:130
+#: tokens.py:138
 msgid "Token has no type"
 msgstr "Tokenul nu are tip"
 
-#: tokens.py:133
+#: tokens.py:141
 msgid "Token has wrong type"
 msgstr "Tokenul are tipul greșit"
 
-#: tokens.py:192
+#: tokens.py:200
 msgid "Token has no '{}' claim"
 msgstr "Tokenul nu are reclamația '{}'"
 
-#: tokens.py:197
+#: tokens.py:205
 msgid "Token '{}' claim has expired"
 msgstr "Reclamația tokenului '{}' a expirat"
 
-#: tokens.py:259
+#: tokens.py:292
 msgid "Token is blacklisted"
 msgstr "Tokenul este în listă de tokenuri blocate"
