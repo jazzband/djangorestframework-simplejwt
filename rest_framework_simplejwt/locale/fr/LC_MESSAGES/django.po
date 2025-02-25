@@ -37,26 +37,38 @@ msgstr "L'utilisateur est désactivé"
 msgid "The user's password has been changed."
 msgstr ""
 
-#: backends.py:69
+#: backends.py:90
 msgid "Unrecognized algorithm type '{}'"
 msgstr "Type d'algorithme non reconnu '{}'"
 
-#: backends.py:75
+#: backends.py:96
 msgid "You must have cryptography installed to use {}."
 msgstr "Vous devez installer cryptography afin d'utiliser {}."
 
-#: backends.py:90
+#: backends.py:111
 msgid ""
 "Unrecognized type '{}', 'leeway' must be of type int, float or timedelta."
 msgstr ""
 
-#: backends.py:104 backends.py:154 exceptions.py:47 tokens.py:60
-msgid "Token is invalid or expired"
+#: backends.py:125 backends.py:177 tokens.py:68
+#, fuzzy
+#| msgid "Token is invalid or expired"
+msgid "Token is invalid"
 msgstr "Le jeton est invalide ou expiré"
 
-#: backends.py:152
+#: backends.py:173
 msgid "Invalid algorithm specified"
 msgstr "L'algorithme spécifié est invalide"
+
+#: backends.py:175 tokens.py:66
+#, fuzzy
+#| msgid "Token is invalid or expired"
+msgid "Token is expired"
+msgstr "Le jeton est invalide ou expiré"
+
+#: exceptions.py:55
+msgid "Token is invalid or expired"
+msgstr "Le jeton est invalide ou expiré"
 
 #: serializers.py:35
 msgid "No active account found with the given credentials"
@@ -96,30 +108,30 @@ msgstr "Expire le"
 msgid "Token Blacklist"
 msgstr "Liste des jetons bannis"
 
-#: tokens.py:46
+#: tokens.py:52
 msgid "Cannot create token with no type or lifetime"
 msgstr "Ne peut pas créer de jeton sans type ni durée de vie"
 
-#: tokens.py:118
+#: tokens.py:126
 msgid "Token has no id"
 msgstr "Le jeton n'a pas d'id"
 
-#: tokens.py:130
+#: tokens.py:138
 msgid "Token has no type"
 msgstr "Le jeton n'a pas de type"
 
-#: tokens.py:133
+#: tokens.py:141
 msgid "Token has wrong type"
 msgstr "Le jeton a un type erroné"
 
-#: tokens.py:192
+#: tokens.py:200
 msgid "Token has no '{}' claim"
 msgstr "Le jeton n'a pas le privilège '{}'"
 
-#: tokens.py:197
+#: tokens.py:205
 msgid "Token '{}' claim has expired"
 msgstr "Le privilège '{}' du jeton a expiré"
 
-#: tokens.py:259
+#: tokens.py:292
 msgid "Token is blacklisted"
 msgstr "Le jeton a été banni"
