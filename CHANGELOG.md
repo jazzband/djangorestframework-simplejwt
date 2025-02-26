@@ -1,3 +1,10 @@
+## 5.5.0
+* Cap PyJWT version to <2.10.0 to avoid incompatibility with subject claim type requirement by @grayver in https://github.com/jazzband/djangorestframework-simplejwt/pull/843
+* Add specific "token expired" exceptions by @vainu-arto in https://github.com/jazzband/djangorestframework-simplejwt/pull/830
+* Fix user_id type mismatch when user claim is not pk by @jdg-journeyfront in https://github.com/jazzband/djangorestframework-simplejwt/pull/851
+* Caching signing key by @henryfool91 in https://github.com/jazzband/djangorestframework-simplejwt/pull/859
+* Adds new refresh tokens to OutstandingToken db. by @thecarpetjasp in https://github.com/jazzband/djangorestframework-simplejwt/pull/866
+
 ## 5.4.0
 * Changed string formatting in views by @Egor-oop in https://github.com/jazzband/djangorestframework-simplejwt/pull/750
 * Enhance BlacklistMixin with Generic Type for Accurate Type Inference by @Dresdn in https://github.com/jazzband/djangorestframework-simplejwt/pull/768
