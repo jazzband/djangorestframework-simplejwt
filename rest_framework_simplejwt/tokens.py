@@ -237,7 +237,7 @@ class Token:
         after authenticating the user's credentials.
         """
 
-        if not user.is_active:
+        if hasattr(user, "is_active") and not user.is_active:
             logger.warning(
                 f"Creating token for inactive user: {user.id}. If this is not intentional, consider checking the user's status before calling the `for_user` method."
             )
