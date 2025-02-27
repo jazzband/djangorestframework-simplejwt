@@ -6,11 +6,19 @@ Creating tokens manually
 Sometimes, you may wish to manually create a token for a user.  This could be
 done as follows:
 
+.. warning::
+    The ``for_user`` method does not check if the user is active. If you need to verify the user's status,
+    this check needs to be done before creating the tokens.
+
 .. code-block:: python
 
   from rest_framework_simplejwt.tokens import RefreshToken
+  from rest_framework_simplejwt.exceptions import AuthenticationFailed
 
   def get_tokens_for_user(user):
+      if not user.is_active:
+        raise AuthenticationFailed("User is not active")
+
       refresh = RefreshToken.for_user(user)
 
       return {
