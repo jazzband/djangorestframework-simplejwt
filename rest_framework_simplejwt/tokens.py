@@ -23,6 +23,7 @@ from .utils import (
     datetime_to_epoch,
     format_lazy,
     get_md5_hash_password,
+    logger,
 )
 
 if TYPE_CHECKING:
@@ -235,6 +236,12 @@ class Token:
         Returns an authorization token for the given user that will be provided
         after authenticating the user's credentials.
         """
+
+        if hasattr(user, "is_active") and not user.is_active:
+            logger.warning(
+                f"Creating token for inactive user: {user.id}. If this is not intentional, consider checking the user's status before calling the `for_user` method."
+            )
+
         user_id = getattr(user, api_settings.USER_ID_FIELD)
         if not isinstance(user_id, int):
             user_id = str(user_id)
