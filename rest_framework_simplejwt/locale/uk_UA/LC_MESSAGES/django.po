@@ -23,19 +23,19 @@ msgstr "Авторизаційний заголовок має містити д
 msgid "Given token not valid for any token type"
 msgstr "Наданий токен не відповідає жодному типу ключа"
 
-#: authentication.py:127 authentication.py:162
+#: authentication.py:128 authentication.py:166
 msgid "Token contained no recognizable user identification"
 msgstr "Наданий токен не мітить жодної ідентифікаційної інформації"
 
-#: authentication.py:132
+#: authentication.py:135
 msgid "User not found"
 msgstr "Користувач не знайдений"
 
-#: authentication.py:135
+#: authentication.py:139
 msgid "User is inactive"
 msgstr "Користувач неактивний"
 
-#: authentication.py:142
+#: authentication.py:146
 msgid "The user's password has been changed."
 msgstr ""
 
