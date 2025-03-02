@@ -1,4 +1,4 @@
-from typing import Optional, Type
+from typing import Optional
 
 from django.utils.module_loading import import_string
 from rest_framework import generics, status
