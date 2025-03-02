@@ -15,12 +15,12 @@ class TokenViewBase(generics.GenericAPIView):
     permission_classes = ()
     authentication_classes = ()
 
-    serializer_class: Optional[Type[Serializer]] = None
+    serializer_class: Optional[type[Serializer]] = None
     _serializer_class = ""
 
     www_authenticate_realm = "api"
 
-    def get_serializer_class(self) -> Type[Serializer]:
+    def get_serializer_class(self) -> type[Serializer]:
         """
         If serializer_class is set, use it directly. Otherwise get the class from settings.
         """
