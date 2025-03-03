@@ -130,6 +130,8 @@ class TokenRefreshSerializer(serializers.Serializer):
                 try:
                     # Attempt to blacklist the given refresh token
                     refresh.blacklist()
+                    # Outstand the token only if the `blacklist` app is installed
+                    refresh.outstand()
                 except AttributeError:
                     # If blacklist app not installed, `blacklist` method will
                     # not be present
@@ -138,7 +140,6 @@ class TokenRefreshSerializer(serializers.Serializer):
             refresh.set_jti()
             refresh.set_exp()
             refresh.set_iat()
-            refresh.outstand()
 
             data["refresh"] = str(refresh)
 
