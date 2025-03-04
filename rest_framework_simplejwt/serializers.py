@@ -138,7 +138,8 @@ class TokenRefreshSerializer(serializers.Serializer):
             refresh.set_jti()
             refresh.set_exp()
             refresh.set_iat()
-            refresh.outstand()
+            if "rest_framework_simplejwt.token_blacklist" in settings.INSTALLED_APPS:
+                refresh.outstand()
 
             data["refresh"] = str(refresh)
 
