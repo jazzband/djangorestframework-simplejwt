@@ -212,6 +212,13 @@ class Token:
         """
         return None
 
+    def blacklist(self) -> Optional[BlacklistedToken]:
+        """
+        Ensures this token is included in the outstanding token list and
+        adds it to the outstanding token list if not.
+        """
+        return None
+
     @classmethod
     def for_user(cls: type[T], user: AuthUser) -> T:
         """
@@ -280,7 +287,7 @@ class BlacklistMixin(Generic[T]):
             if BlacklistedToken.objects.filter(token__jti=jti).exists():
                 raise TokenError(_("Token is blacklisted"))
 
-        def blacklist(self) -> BlacklistedToken:
+        def blacklist(self) -> Optional[BlacklistedToken]:
             """
             Ensures this token is included in the outstanding token list and
             adds it to the blacklist.
