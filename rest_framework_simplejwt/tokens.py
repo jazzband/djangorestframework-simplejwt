@@ -320,7 +320,7 @@ class BlacklistMixin(Generic[T]):
                 user = User.objects.get(**{api_settings.USER_ID_FIELD: user_id})
             except User.DoesNotExist:
                 user = None
-    
+
             # Ensure outstanding token exists with given jti
             return OutstandingToken.objects.get_or_create(
                 jti=jti,
@@ -331,7 +331,7 @@ class BlacklistMixin(Generic[T]):
                     "expires_at": datetime_from_epoch(exp),
                 },
             )
-        
+
         @classmethod
         def for_user(cls: type[T], user: AuthUser) -> T:
             """
