@@ -386,6 +386,7 @@ class RefreshToken(BlacklistMixin["RefreshToken"], Token):
         # we wouldn't want to copy either one.
         api_settings.JTI_CLAIM,
         "jti",
+        "iat",
     )
     access_token_class = AccessToken
 
