@@ -225,8 +225,7 @@ class Token:
             )
 
         user_id = getattr(user, api_settings.USER_ID_FIELD)
-        if not isinstance(user_id, int):
-            user_id = str(user_id)
+        user_id = str(user_id)
 
         token = cls()
         token[api_settings.USER_ID_CLAIM] = user_id
