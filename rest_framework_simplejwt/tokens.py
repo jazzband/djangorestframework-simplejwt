@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from typing import TYPE_CHECKING, Any, Generic, Optional, TypeVar
+from typing import TYPE_CHECKING, Any, Generic, Optional, TypeVar, Union
 from uuid import uuid4
 
 from django.conf import settings
@@ -205,7 +205,7 @@ class Token:
         if claim_time <= current_time - leeway:
             raise TokenError(format_lazy(_("Token '{}' claim has expired"), claim))
 
-    def outstand(self) -> OutstandingToken | None:
+    def outstand(self) -> Union[OutstandingToken, None]:
         """
         Ensures this token is included in the outstanding token list and
         adds it to the outstanding token list if not.
@@ -307,7 +307,7 @@ class BlacklistMixin(Generic[T]):
 
             return BlacklistedToken.objects.get_or_create(token=token)
 
-        def outstand(self) -> OutstandingToken | None:
+        def outstand(self) -> Union[OutstandingToken, None]:
             """
             Ensures this token is included in the outstanding token list and
             adds it to the outstanding token list if not.
