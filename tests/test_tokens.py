@@ -383,8 +383,7 @@ class TestToken(TestCase):
         token = MyToken.for_user(self.user)
 
         user_id = getattr(self.user, api_settings.USER_ID_FIELD)
-        if not isinstance(user_id, int):
-            user_id = str(user_id)
+        user_id = str(user_id)
 
         self.assertEqual(token[api_settings.USER_ID_CLAIM], user_id)
 
@@ -403,6 +402,10 @@ class TestToken(TestCase):
         token = MyToken()
 
         self.assertEqual(token.get_token_backend(), token_backend)
+
+    def test_token_user_id_claim_should_always_be_string(self):
+        token = MyToken.for_user(self.user)
+        self.assertIsInstance(token[api_settings.USER_ID_CLAIM], str)
 
 
 class TestSlidingToken(TestCase):
