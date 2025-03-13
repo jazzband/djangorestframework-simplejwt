@@ -148,7 +148,7 @@ class TokenBackend:
         # For PyJWT >= 2.0.0a1
         return token
 
-    def decode(self, token: Token, verify: bool = True) -> dict[str, Any]:
+    def decode(self, token: Union[bytes, str], verify: bool = True) -> dict[str, Any]:
         """
         Performs a validation of the given token and returns its payload
         dictionary.

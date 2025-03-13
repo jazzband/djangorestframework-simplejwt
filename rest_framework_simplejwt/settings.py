@@ -1,5 +1,5 @@
 from datetime import timedelta
-from typing import Any
+from typing import TYPE_CHECKING, Any, Callable, Optional, Tuple, Type
 
 from django.conf import settings
 from django.test.signals import setting_changed
@@ -7,6 +7,13 @@ from django.utils.translation import gettext_lazy as _
 from rest_framework.settings import APISettings as _APISettings
 
 from .utils import format_lazy
+
+if TYPE_CHECKING:
+    import json
+
+    from .authentication import AuthUser
+    from .models import TokenUser
+    from .tokens import Token
 
 USER_SETTINGS = getattr(settings, "SIMPLE_JWT", None)
 
@@ -63,6 +70,11 @@ REMOVED_SETTINGS = (
 
 
 class APISettings(_APISettings):  # pragma: no cover
+    AUTH_TOKEN_CLASSES: "Tuple[Type[Token], ...]"
+    JSON_ENCODER: "Optional[Type[json.JSONEncoder]]"
+    TOKEN_USER_CLASS: "Type[TokenUser]"
+    USER_AUTHENTICATION_RULE: "Callable[[AuthUser], bool]"
+
     def __check_user_settings(self, user_settings: dict[str, Any]) -> dict[str, Any]:
         SETTINGS_DOC = "https://django-rest-framework-simplejwt.readthedocs.io/en/latest/settings.html"
 
