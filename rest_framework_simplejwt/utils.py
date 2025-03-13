@@ -42,10 +42,10 @@ def datetime_from_epoch(ts: float) -> datetime:
     return dt
 
 
-def format_lazy(s: str, *args, **kwargs) -> str:
+def _format_lazy(s: str, *args, **kwargs) -> str:
     return s.format(*args, **kwargs)
 
 
-format_lazy: Callable = lazy(format_lazy, str)
+format_lazy: Callable = lazy(_format_lazy, str)
 
 logger = logging.getLogger("rest_framework_simplejwt")
