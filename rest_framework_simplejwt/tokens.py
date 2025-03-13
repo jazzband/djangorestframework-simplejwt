@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from typing import TYPE_CHECKING, Any, Generic, Optional, TypeVar, Union
+from typing import TYPE_CHECKING, Any, Generic, Optional, TypeVar
 from uuid import uuid4
 
 from django.conf import settings
@@ -27,7 +27,7 @@ from .utils import (
 )
 
 if TYPE_CHECKING:
-    from .backends import TokenBackend
+    from .backends import RawToken, TokenBackend
 
 T = TypeVar("T", bound="Token")
 
@@ -45,7 +45,7 @@ class Token:
 
     def __init__(
         self,
-        token: Union[None, bytes, str] = None,
+        token: Optional["RawToken"] = None,
         verify: bool = True,
     ) -> None:
         """
