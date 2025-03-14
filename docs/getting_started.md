@@ -37,7 +37,7 @@ from ninja_jwt.controller import TokenObtainPairController
 
 @api_controller('token', tags=['Auth'])
 class MyCustomController(TokenObtainPairController):
-    """obtain_token and refresh_token only"
+    """obtain_token and refresh_token only"""
 ...
 api.register_controllers(MyCustomController)
 ```
