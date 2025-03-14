@@ -15,7 +15,7 @@ INSTALLED_APPS = (
 )
 ```
 
-Also, make sure to run `python manage.py migrate` to run the app\'s
+Also, make sure to run `python manage.py migrate` to run the app's
 migrations.
 
 If the blacklist app is detected in `INSTALLED_APPS`, Ninja JWT will
