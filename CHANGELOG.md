@@ -1,3 +1,14 @@
+$$ 5.5.1
+* :globe_with_meridians: Fix typos and improve clarity in es_AR translations by @fabianfalon in https://github.com/jazzband/djangorestframework-simplejwt/pull/876
+* docs: Add warning in docs for `for_user` usage by @vgrozdanic in https://github.com/jazzband/djangorestframework-simplejwt/pull/872
+* feat: log warning if token is being created for inactive user by @vgrozdanic in https://github.com/jazzband/djangorestframework-simplejwt/pull/873
+* ref: full tracebacks on exceptions by @vgrozdanic in https://github.com/jazzband/djangorestframework-simplejwt/pull/870
+* #858 New i18n messages by @Cloves23 in https://github.com/jazzband/djangorestframework-simplejwt/pull/879
+* Repair the type annotations in the TokenViewBase class. by @triplepoint in https://github.com/jazzband/djangorestframework-simplejwt/pull/880
+* fix: Token.outstand forces users to install blacklist app by @Andrew-Chen-Wang in https://github.com/jazzband/djangorestframework-simplejwt/pull/884
+* fix: PytestConfigWarning Unknown config option: python_paths by @vgrozdanic in https://github.com/jazzband/djangorestframework-simplejwt/pull/886
+* fix: Do not copy `iat` claim from refresh token by @vgrozdanic in https://github.com/jazzband/djangorestframework-simplejwt/pull/888
+
 ## 5.5.0
 * Cap PyJWT version to <2.10.0 to avoid incompatibility with subject claim type requirement by @grayver in https://github.com/jazzband/djangorestframework-simplejwt/pull/843
 * Add specific "token expired" exceptions by @vainu-arto in https://github.com/jazzband/djangorestframework-simplejwt/pull/830
