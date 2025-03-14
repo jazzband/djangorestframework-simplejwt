@@ -18,7 +18,7 @@ sliding_router = Router()
 )
 def obtain_token(request, user_token: schema.obtain_pair_schema):
     user_token.check_user_authentication_rule()
-    return user_token.output_schema()
+    return user_token.to_response_schema()
 
 
 @obtain_pair_router.post(

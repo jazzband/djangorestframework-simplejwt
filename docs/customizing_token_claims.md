@@ -26,7 +26,7 @@ class MyTokenObtainPairOutSchema(Schema):
 
 
 class MyTokenObtainPairSchema(TokenObtainPairInputSchema):
-    def output_schema(self):
+    def to_response_schema(self):
         out_dict = self.get_response_schema_init_kwargs()
         out_dict.update(user=UserSchema.from_orm(self._user))
         return MyTokenObtainPairOutSchema(**out_dict)
@@ -38,7 +38,7 @@ class MyTokenObtainPairController(TokenObtainPairController):
         "/pair", response=MyTokenObtainPairOutSchema, url_name="token_obtain_pair"
     )
     def obtain_token(self, user_token: MyTokenObtainPairSchema):
-        return user_token.output_schema()
+        return user_token.to_response_schema()
 
 ```
 
