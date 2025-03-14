@@ -1,10 +1,9 @@
 from datetime import datetime, timedelta
-from typing import TYPE_CHECKING, Any, Generic, Optional, TypeVar
+from typing import TYPE_CHECKING, Any, Optional, TypeAlias, TypeVar
 from uuid import uuid4
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
-from django.contrib.auth.models import AbstractBaseUser
 from django.utils.module_loading import import_string
 from django.utils.translation import gettext_lazy as _
 
@@ -14,7 +13,7 @@ from .exceptions import (
     TokenBackendExpiredToken,
     TokenError,
 )
-from .models import TokenUser
+from .models import TokenUserBase
 from .settings import api_settings
 from .token_blacklist.models import BlacklistedToken, OutstandingToken
 from .utils import (
@@ -29,9 +28,12 @@ from .utils import (
 if TYPE_CHECKING:
     from .backends import TokenBackend
 
-T = TypeVar("T", bound="Token")
+    TokenBase: TypeAlias = "Token"
+else:
+    TokenBase = object
 
-AuthUser = TypeVar("AuthUser", AbstractBaseUser, TokenUser)
+
+T = TypeVar("T", bound=TokenBase)
 
 
 class Token:
@@ -164,13 +166,13 @@ class Token:
         See here:
         https://tools.ietf.org/html/rfc7519#section-4.1.4
         """
-        if from_time is None:
-            from_time = self.current_time
+        from_time_datetime = from_time or self.current_time
+        lifetime_timedelta = lifetime or self.lifetime
 
-        if lifetime is None:
-            lifetime = self.lifetime
+        if TYPE_CHECKING:
+            assert lifetime_timedelta
 
-        self.payload[claim] = datetime_to_epoch(from_time + lifetime)
+        self.payload[claim] = datetime_to_epoch(from_time_datetime + lifetime_timedelta)
 
     def set_iat(self, claim: str = "iat", at_time: Optional[datetime] = None) -> None:
         """
@@ -213,7 +215,7 @@ class Token:
         return None
 
     @classmethod
-    def for_user(cls: type[T], user: AuthUser) -> T:
+    def for_user(cls: type[T], user: TokenUserBase) -> T:
         """
         Returns an authorization token for the given user that will be provided
         after authenticating the user's credentials.
@@ -221,7 +223,7 @@ class Token:
 
         if hasattr(user, "is_active") and not user.is_active:
             logger.warning(
-                f"Creating token for inactive user: {user.id}. If this is not intentional, consider checking the user's status before calling the `for_user` method."
+                f"Creating token for inactive user: {user.pk}. If this is not intentional, consider checking the user's status before calling the `for_user` method."
             )
 
         user_id = getattr(user, api_settings.USER_ID_FIELD)
@@ -253,7 +255,7 @@ class Token:
         return self.token_backend
 
 
-class BlacklistMixin(Generic[T]):
+class BlacklistMixin(TokenBase):
     """
     If the `rest_framework_simplejwt.token_blacklist` app was configured to be
     used, tokens created from `BlacklistMixin` subclasses will insert
@@ -333,7 +335,7 @@ class BlacklistMixin(Generic[T]):
             )
 
         @classmethod
-        def for_user(cls: type[T], user: AuthUser) -> T:
+        def for_user(cls: type[T], user: TokenUserBase) -> T:
             """
             Adds this token to the outstanding token list.
             """
@@ -353,7 +355,7 @@ class BlacklistMixin(Generic[T]):
             return token
 
 
-class SlidingToken(BlacklistMixin["SlidingToken"], Token):
+class SlidingToken(BlacklistMixin, Token):
     token_type = "sliding"
     lifetime = api_settings.SLIDING_TOKEN_LIFETIME
 
@@ -374,7 +376,7 @@ class AccessToken(Token):
     lifetime = api_settings.ACCESS_TOKEN_LIFETIME
 
 
-class RefreshToken(BlacklistMixin["RefreshToken"], Token):
+class RefreshToken(BlacklistMixin, Token):
     token_type = "refresh"
     lifetime = api_settings.REFRESH_TOKEN_LIFETIME
     no_copy_claims = (
