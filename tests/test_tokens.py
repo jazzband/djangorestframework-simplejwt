@@ -4,6 +4,7 @@ from unittest.mock import patch
 
 from django.contrib.auth import get_user_model
 from django.test import TestCase
+from freezegun import freeze_time
 from jose import jwt
 
 from rest_framework_simplejwt.exceptions import (
@@ -434,10 +435,13 @@ class TestRefreshToken(TestCase):
 
     def test_access_token(self):
         # Should create an access token from a refresh token
-        refresh = RefreshToken()
-        refresh["test_claim"] = "arst"
+        with freeze_time("2025-01-01"):
+            refresh = RefreshToken()
+            refresh["test_claim"] = "arst"
 
-        access = refresh.access_token
+        with freeze_time("2025-01-02"):
+            # Ensure iat is different
+            access = refresh.access_token
 
         self.assertIsInstance(access, AccessToken)
         self.assertEqual(access[api_settings.TOKEN_TYPE_CLAIM], "access")
