@@ -2,7 +2,7 @@ import json
 from collections.abc import Iterable
 from datetime import timedelta
 from functools import cached_property
-from typing import Any, Optional, Union
+from typing import TYPE_CHECKING, Any, Optional, Union, cast
 
 import jwt
 from django.utils.translation import gettext_lazy as _
@@ -122,7 +122,8 @@ class TokenBackend:
         if self.jwks_client:
             try:
                 if isinstance(token, bytes):
-                    token = token.decode("utf-8")
+                    # https://github.com/jpadilla/pyjwt/issues/1047
+                    token = cast(str, token)
                 return self.jwks_client.get_signing_key_from_jwt(token).key
             except PyJWKClientError as e:
                 raise TokenBackendError(_("Token is invalid")) from e
