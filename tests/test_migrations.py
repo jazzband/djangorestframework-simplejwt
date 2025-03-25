@@ -1,8 +1,10 @@
-import pytest
+from io import StringIO
 from typing import Optional
+
+import pytest
 from django.core.management import call_command
 from django.test import TestCase
-from io import StringIO
+
 
 class MigrationTestCase(TestCase):
     def test_no_missing_migrations(self):
@@ -22,19 +24,19 @@ class MigrationTestCase(TestCase):
 
         try:
             # Check for pending migrations without actually creating them
-            call_command("makemigrations", "--check", "--dry-run", stdout=output, stderr=output)
+            call_command(
+                "makemigrations", "--check", "--dry-run", stdout=output, stderr=output
+            )
         except SystemExit as e:
             # Capture the SystemExit if migrations are needed (the command will had ended with exit code 1)
             exec = e
-        
 
-         # If an exception was raised, verify it indicates no migration changes are required
+        # If an exception was raised, verify it indicates no migration changes are required
         if exec is not None:
             self.assertEqual(
                 exec.code,
-                0, # 0 means no migrations needed
+                0,  # 0 means no migrations needed
                 f"Model changes detected that require migrations!\n"
                 f"Please run `python manage.py makemigrations` to create the necessary migrations.\n\n"
-                f"Detected Changes:\n{output.getvalue()}"
+                f"Detected Changes:\n{output.getvalue()}",
             )
-
