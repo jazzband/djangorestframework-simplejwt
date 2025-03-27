@@ -75,7 +75,7 @@ msgstr "هیچ اکانت فعالی برای اطلاعات داده شده ی�
 
 #: serializers.py:108
 msgid "No active account found for the given token."
-msgstr "هیچ اکانت فعالی برای این توکن یافت نشد."
+msgstr "هیچ اکانت فعالی برای این توکن یافت نشد"
 
 #: serializers.py:178 tokens.py:281
 msgid "Token is blacklisted"
@@ -139,7 +139,7 @@ msgstr "توکن بدون نوع یا طول عمر قابل ایجاد نیست
 
 #: tokens.py:127
 msgid "Token has no id"
-msgstr "توکن شناسه‌ای ندارد"
+msgstr "توکن id ندارد"
 
 #: tokens.py:139
 msgid "Token has no type"
@@ -155,4 +155,4 @@ msgstr "توکن دارای '{}' claim نمی‌باشد"
 
 #: tokens.py:206
 msgid "Token '{}' claim has expired"
-msgstr "'{}' claim توکن منقضی شده است"
+msgstr "'{}' claim توکن منقضی شده"
