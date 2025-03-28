@@ -137,3 +137,9 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
+
+# macOS system files
+*.DS_Store
+
+# Process ID files
+*.pid
