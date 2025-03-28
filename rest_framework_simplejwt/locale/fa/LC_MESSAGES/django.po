@@ -1,14 +1,13 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <mahdi.rahimi95@gmail.com>\>, 2023.
+# FIRST AUTHOR <mahdi.rahimi95@gmail.com>, 2023.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-28 15:09-0300\n"
+"POT-Creation-Date: 2025-03-27 15:19+0330\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Mahdi Rahimi <mahdi.rahimi95@gmail.com>\n"
 "Language: fa\n"
@@ -25,19 +24,19 @@ msgstr "هدر اعتبارسنجی باید شامل دو مقدار جدا ش�
 msgid "Given token not valid for any token type"
 msgstr "توکن داده شده برای هیچ نوع توکنی معتبر نمی‌باشد"
 
-#: authentication.py:127 authentication.py:162
+#: authentication.py:128 authentication.py:166
 msgid "Token contained no recognizable user identification"
 msgstr "توکن شامل هیچ شناسه قابل تشخیصی از کاربر نیست"
 
-#: authentication.py:132
+#: authentication.py:135
 msgid "User not found"
 msgstr "کاربر یافت نشد"
 
-#: authentication.py:135
+#: authentication.py:139
 msgid "User is inactive"
 msgstr "کاربر غیرفعال است"
 
-#: authentication.py:142
+#: authentication.py:146
 msgid "The user's password has been changed."
 msgstr "رمز عبور کاربر تغییر کرده است"
 
@@ -55,20 +54,16 @@ msgid ""
 msgstr "نوع ناشناخته '{}'، 'leeway' باید از نوع int، float یا timedelta باشد."
 
 #: backends.py:125 backends.py:177 tokens.py:69
-#, fuzzy
-#| msgid "Token is invalid or expired"
 msgid "Token is invalid"
-msgstr "توکن نامعتبر است یا منقضی شده است"
+msgstr "توکن نامعتبر است"
 
 #: backends.py:173
 msgid "Invalid algorithm specified"
 msgstr "الگوریتم نامعتبر مشخص شده است"
 
 #: backends.py:175 tokens.py:67
-#, fuzzy
-#| msgid "Token is invalid or expired"
 msgid "Token is expired"
-msgstr "توکن نامعتبر است یا منقضی شده است"
+msgstr "توکن منقضی شده است"
 
 #: exceptions.py:55
 msgid "Token is invalid or expired"
@@ -79,24 +74,22 @@ msgid "No active account found with the given credentials"
 msgstr "هیچ اکانت فعالی برای اطلاعات داده شده یافت نشد"
 
 #: serializers.py:108
-#, fuzzy
-#| msgid "No active account found with the given credentials"
 msgid "No active account found for the given token."
-msgstr "هیچ اکانت فعالی برای اطلاعات داده شده یافت نشد"
+msgstr "هیچ اکانت فعالی برای این توکن یافت نشد"
 
-#: serializers.py:178 tokens.py:299
+#: serializers.py:178 tokens.py:281
 msgid "Token is blacklisted"
-msgstr "توکن به لیست سیاه رفته است"
+msgstr "توکن در لیست سیاه قرار گرفته است"
 
 #: settings.py:74
 msgid ""
 "The '{}' setting has been removed. Please refer to '{}' for available "
 "settings."
-msgstr "تنظیمات '{}' حذف شده است. لطفا به '{}' برای تنظیمات موجود مراجعه کنید."
+msgstr "تنظیمات '{}' حذف شده است. لطفاً به '{}' برای تنظیمات موجود مراجعه کنید."
 
 #: token_blacklist/admin.py:79
 msgid "jti"
-msgstr "jti"
+msgstr "شناسه توکن (jti)"
 
 #: token_blacklist/admin.py:85
 msgid "user"
@@ -116,33 +109,33 @@ msgstr "لیست سیاه توکن"
 
 #: token_blacklist/models.py:19
 msgid "Outstanding Token"
-msgstr ""
+msgstr "توکن برجسته"
 
 #: token_blacklist/models.py:20
 msgid "Outstanding Tokens"
-msgstr ""
+msgstr "توکن‌های برجسته"
 
 #: token_blacklist/models.py:32
 #, python-format
 msgid "Token for %(user)s (%(jti)s)"
-msgstr ""
+msgstr "توکن برای %(user)s (%(jti)s)"
 
 #: token_blacklist/models.py:45
 msgid "Blacklisted Token"
-msgstr ""
+msgstr "توکن لیست سیاه شده"
 
 #: token_blacklist/models.py:46
 msgid "Blacklisted Tokens"
-msgstr ""
+msgstr "توکن‌های لیست سیاه شده"
 
 #: token_blacklist/models.py:57
 #, python-format
 msgid "Blacklisted token for %(user)s"
-msgstr ""
+msgstr "توکن لیست سیاه شده برای %(user)s"
 
 #: tokens.py:53
 msgid "Cannot create token with no type or lifetime"
-msgstr "توکن بدون هیچ نوع و طول عمر قابل ساخت نیست"
+msgstr "توکن بدون نوع یا طول عمر قابل ایجاد نیست"
 
 #: tokens.py:127
 msgid "Token has no id"
@@ -150,11 +143,11 @@ msgstr "توکن id ندارد"
 
 #: tokens.py:139
 msgid "Token has no type"
-msgstr "توکن نوع ندارد"
+msgstr "توکن نوعی ندارد"
 
 #: tokens.py:142
 msgid "Token has wrong type"
-msgstr "توکن نوع اشتباهی دارد"
+msgstr "توکن دارای نوع نادرستی است"
 
 #: tokens.py:201
 msgid "Token has no '{}' claim"
