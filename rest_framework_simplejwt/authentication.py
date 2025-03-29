@@ -1,4 +1,4 @@
-from typing import Optional, TypeVar
+from typing import TYPE_CHECKING, Optional, TypeVar
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractBaseUser
@@ -11,6 +11,9 @@ from .models import TokenUser
 from .settings import api_settings
 from .tokens import Token
 from .utils import get_md5_hash_password
+
+if TYPE_CHECKING:
+    from .backends import RawToken
 
 AUTH_HEADER_TYPES = api_settings.AUTH_HEADER_TYPES
 
@@ -92,7 +95,7 @@ class JWTAuthentication(authentication.BaseAuthentication):
 
         return parts[1]
 
-    def get_validated_token(self, raw_token: bytes) -> Token:
+    def get_validated_token(self, raw_token: "RawToken") -> Token:
         """
         Validates an encoded JSON web token and returns a validated token
         wrapper object.
