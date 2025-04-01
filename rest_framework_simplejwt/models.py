@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Any, Optional, Union
+from typing import TYPE_CHECKING, Any, Optional, TypeAlias, Union
 
 from django.contrib.auth import models as auth_models
 from django.db.models.manager import EmptyManager
@@ -7,10 +7,17 @@ from django.utils.functional import cached_property
 from .settings import api_settings
 
 if TYPE_CHECKING:
+    from django.contrib.auth.models import AbstractBaseUser
+
     from .tokens import Token
 
+    TokenUserBase: TypeAlias = AbstractBaseUser
 
-class TokenUser:
+else:
+    TokenUserBase = object
+
+
+class TokenUser(TokenUserBase):
     """
     A dummy user class modeled after django.contrib.auth.models.AnonymousUser.
     Used in conjunction with the `JWTStatelessUserAuthentication` backend to
