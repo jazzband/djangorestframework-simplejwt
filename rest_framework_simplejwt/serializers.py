@@ -10,6 +10,7 @@ from rest_framework.exceptions import AuthenticationFailed, ValidationError
 from .models import TokenUser
 from .settings import api_settings
 from .tokens import RefreshToken, SlidingToken, Token, UntypedToken
+from .exceptions import TokenBlacklistNotConfigured
 
 AuthUser = TypeVar("AuthUser", AbstractBaseUser, TokenUser)
 
@@ -189,5 +190,6 @@ class TokenBlacklistSerializer(serializers.Serializer):
         try:
             refresh.blacklist()
         except AttributeError:
-            pass
-        return {}
+            raise TokenBlacklistNotConfigured()
+        
+        return {"message": "Token blacklisted"}
