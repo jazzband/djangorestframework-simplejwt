@@ -58,5 +58,7 @@ class InvalidToken(AuthenticationFailed):
 
 class TokenBlacklistNotConfigured(DetailDictMixin, exceptions.APIException):
     status_code = status.HTTP_501_NOT_IMPLEMENTED
-    default_detail = _("Token blacklist functionality is not enabled or available. Please check your configuration.")
+    default_detail = _(
+        "Token blacklist functionality is not enabled or available. Please check your configuration."
+    )
     default_code = "blacklist_not_configured"

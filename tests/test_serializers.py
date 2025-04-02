@@ -8,7 +8,7 @@ from django.core import exceptions as django_exceptions
 from django.test import TestCase, override_settings
 from rest_framework import exceptions as drf_exceptions
 
-from rest_framework_simplejwt.exceptions import TokenError, TokenBlacklistNotConfigured
+from rest_framework_simplejwt.exceptions import TokenBlacklistNotConfigured, TokenError
 from rest_framework_simplejwt.serializers import (
     TokenBlacklistSerializer,
     TokenObtainPairSerializer,
@@ -601,7 +601,9 @@ class TestTokenBlacklistSerializer(TestCase):
         # Assert old refresh token is blacklisted
         self.assertEqual(BlacklistedToken.objects.first().token.jti, old_jti)
 
-    def test_blacklist_app_not_installed_should_raise_token_blacklist_not_configured(self):
+    def test_blacklist_app_not_installed_should_raise_token_blacklist_not_configured(
+        self,
+    ):
         from rest_framework_simplejwt import serializers, tokens
 
         # Remove blacklist app
@@ -617,8 +619,10 @@ class TestTokenBlacklistSerializer(TestCase):
                 refresh = tokens.RefreshToken()
 
                 # Serializer validates
-                ser = serializers.TokenBlacklistSerializer(data={"refresh": str(refresh)})
-                
+                ser = serializers.TokenBlacklistSerializer(
+                    data={"refresh": str(refresh)}
+                )
+
                 with self.assertRaises(TokenBlacklistNotConfigured):
                     ser.validate({"refresh": str(refresh)})
         finally:

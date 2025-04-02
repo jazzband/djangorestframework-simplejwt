@@ -7,10 +7,10 @@ from django.utils.translation import gettext_lazy as _
 from rest_framework import exceptions, serializers
 from rest_framework.exceptions import AuthenticationFailed, ValidationError
 
+from .exceptions import TokenBlacklistNotConfigured
 from .models import TokenUser
 from .settings import api_settings
 from .tokens import RefreshToken, SlidingToken, Token, UntypedToken
-from .exceptions import TokenBlacklistNotConfigured
 
 AuthUser = TypeVar("AuthUser", AbstractBaseUser, TokenUser)
 
@@ -191,5 +191,5 @@ class TokenBlacklistSerializer(serializers.Serializer):
             refresh.blacklist()
         except AttributeError:
             raise TokenBlacklistNotConfigured()
-        
+
         return {"message": "Token blacklisted"}
