@@ -1,4 +1,5 @@
 import hashlib
+import logging
 from calendar import timegm
 from datetime import datetime, timezone
 from typing import Callable
@@ -46,3 +47,5 @@ def format_lazy(s: str, *args, **kwargs) -> str:
 
 
 format_lazy: Callable = lazy(format_lazy, str)
+
+logger = logging.getLogger("rest_framework_simplejwt")
