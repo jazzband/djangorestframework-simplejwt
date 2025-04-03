@@ -210,7 +210,7 @@ class Token:
         Ensures this token is included in the outstanding token list and
         adds it to the outstanding token list if not.
         """
-        
+
         if not "rest_framework_simplejwt.token_blacklist" in settings.INSTALLED_APPS:
             return
 
