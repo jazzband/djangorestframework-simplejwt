@@ -209,6 +209,10 @@ class Token:
         Ensures this token is included in the outstanding token list and
         adds it to the outstanding token list if not.
         """
+
+        if not "rest_framework_simplejwt.token_blacklist" in settings.INSTALLED_APPS:
+            return
+
         jti = self.payload[api_settings.JTI_CLAIM]
         exp = self.payload["exp"]
         user_id = self.payload.get(api_settings.USER_ID_CLAIM)
