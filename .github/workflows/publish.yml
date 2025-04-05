@@ -17,7 +17,7 @@ jobs:
       - name: Install Flit
         run: pip install flit
       - name: Install Dependencies
-        run: flit install --symlink
+        run: make install
       - name: Install build dependencies
         run: pip install build
       - name: Build distribution

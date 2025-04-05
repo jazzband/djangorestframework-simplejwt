@@ -82,7 +82,7 @@ class TokenInputSchemaMixin(InputSchemaMixin):
 
     def output_schema(self) -> Schema:
         warnings.warn(
-            "output_schema() is deprecated in favor of " "to_response_schema()",
+            "output_schema() is deprecated in favor of to_response_schema()",
             DeprecationWarning,
             stacklevel=2,
         )

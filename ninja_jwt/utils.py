@@ -1,4 +1,5 @@
 import logging
+import typing as t
 from calendar import timegm
 from datetime import datetime
 from functools import wraps
@@ -6,7 +7,6 @@ from importlib import import_module
 
 from django.conf import settings
 from django.utils.functional import lazy
-from django.utils.timezone import is_naive, make_aware
 
 from ninja_jwt import exceptions
 
@@ -43,14 +43,14 @@ def import_callable(path_or_callable):
         return getattr(packages, attr)
 
 
-def make_utc(dt):
-    if settings.USE_TZ and is_naive(dt):
-        return make_aware(dt, timezone=timezone.utc)
+def make_utc(dt: datetime) -> datetime:
+    if settings.USE_TZ and dt.tzinfo is None:
+        return dt.replace(tzinfo=timezone.utc)
 
     return dt
 
 
-def aware_utcnow():
+def aware_utcnow() -> datetime:
     dt = datetime.now(tz=timezone.utc)
     if not settings.USE_TZ:
         dt = dt.replace(tzinfo=None)
@@ -58,11 +58,11 @@ def aware_utcnow():
     return dt
 
 
-def datetime_to_epoch(dt):
+def datetime_to_epoch(dt: datetime) -> int:
     return timegm(dt.utctimetuple())
 
 
-def datetime_from_epoch(ts):
+def datetime_from_epoch(ts: float) -> datetime:
     dt = datetime.fromtimestamp(ts, tz=timezone.utc)
     if not settings.USE_TZ:
         dt = dt.replace(tzinfo=None)
@@ -70,8 +70,8 @@ def datetime_from_epoch(ts):
     return dt
 
 
-def format_lazy(s, *args, **kwargs):
+def format_lazy(s: str, *args, **kwargs) -> str:
     return s.format(*args, **kwargs)
 
 
-format_lazy = lazy(format_lazy, str)
+format_lazy: t.Callable = lazy(format_lazy, str)

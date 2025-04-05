@@ -50,7 +50,7 @@ dependencies = [
     "Django >= 2.1",
     "pyjwt>=1.7.1,<3",
     "pyjwt[crypto]",
-    "django-ninja-extra >= 0.20.0",
+    "django-ninja-extra >= 0.22.9",
 ]
 
 
@@ -59,36 +59,9 @@ Documentation = "https://github.com/eadwinCode/django-ninja-jwt"
 Source = "https://github.com/eadwinCode/django-ninja-jwt"
 
 [project.optional-dependencies]
-test = [
-    "cryptography",
-    "pytest",
-    "pytest-cov",
-    "pytest-django",
-    "pytest-asyncio",
-    "ruff ==0.11.2",
-    "django-stubs",
-    "python-jose==3.4.0",
-    "click==8.1.8",
-    "freezegun"
-]
-
 crypto = [
     "cryptography>=3.3.1",
 ]
-
-dev = [
-    "pre-commit"
-]
-
-doc = [
-"mkdocs >=1.1.2,<2.0.0",
-"mkdocs-material",
-"markdown-include",
-"mdx-include >=1.4.1,<2.0.0",
-"mkdocs-markdownextradata-plugin >=0.1.7,<0.3.0",
-"mkdocstrings"
-]
-
 
 [tool.ruff]
 select = [

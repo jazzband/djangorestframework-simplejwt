@@ -1,7 +1,6 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 from django.test.utils import override_settings
-from django.utils import timezone
 from freezegun import freeze_time
 
 from ninja_jwt.utils import (
@@ -24,11 +23,11 @@ class TestMakeUtc:
 
         with override_settings(USE_TZ=False):
             dt = make_utc(dt)
-            assert timezone.is_naive(dt)
+            assert dt.tzinfo is None
 
         with override_settings(USE_TZ=True):
             dt = make_utc(dt)
-            assert timezone.is_aware(dt)
+            assert dt.tzinfo is not None
             assert dt.utcoffset() == timedelta(seconds=0)
 
 
@@ -39,7 +38,7 @@ class TestAwareUtcnow:
         with freeze_time(now):
             # Should return aware utcnow if USE_TZ == True
             with override_settings(USE_TZ=True):
-                assert timezone.make_aware(now, timezone=timezone.utc) == aware_utcnow()
+                assert now.replace(tzinfo=timezone.utc) == aware_utcnow()
 
             # Should return naive utcnow if USE_TZ == False
             with override_settings(USE_TZ=False):

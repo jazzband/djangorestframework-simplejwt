@@ -12,7 +12,10 @@ clean: ## Removing cached python compiled files
 	find . -name .ruff_cache  | xargs  rm -rfv
 
 install:clean ## Install dependencies
-	flit install --deps develop --symlink
+	pip install -r requirements.txt
+	flit install --symlink
+
+install-full:install ## Install dependencies
 	pre-commit install -f
 
 lint:fmt ## Run code linters
