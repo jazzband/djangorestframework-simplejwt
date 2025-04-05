@@ -1,6 +1,6 @@
 import typing
 import warnings
-from typing import Any, Dict, Optional, Type, cast
+from typing import Any, Dict, Optional, Type, Union, cast
 
 from django.conf import settings
 from django.contrib.auth import authenticate, get_user_model
@@ -9,7 +9,9 @@ from django.http import HttpRequest
 from django.utils.translation import gettext_lazy as _
 from ninja import ModelSchema, Schema
 from ninja.schema import DjangoGetter
-from pydantic import model_validator
+from ninja_extra import service_resolver
+from ninja_extra.context import RouteContext
+from pydantic import ConfigDict, model_validator
 
 import ninja_jwt.exceptions as exceptions
 from ninja_jwt.utils import token_error
@@ -21,6 +23,26 @@ if api_settings.BLACKLIST_AFTER_ROTATION:
     from .token_blacklist.models import BlacklistedToken
 
 user_name_field = get_user_model().USERNAME_FIELD  # type: ignore
+
+SCHEMA_INPUT = Union[DjangoGetter, Dict]
+
+
+class SchemaInputService:
+    def __init__(self, values: SCHEMA_INPUT, model_config: ConfigDict) -> None:
+        self.model_config = model_config
+        self.values = values
+
+    def get_request(self) -> HttpRequest:
+        if self.model_config.get("extra") == "forbid":
+            return service_resolver(RouteContext).request
+        return self.values._context.get("request")
+
+    def get_values(self) -> Dict:
+        if self.model_config.get("extra") == "forbid":
+            return self.values
+        if isinstance(self.values, DjangoGetter):
+            return self.values._obj
+        return self.values
 
 
 class AuthUserSchema(ModelSchema):
@@ -100,15 +122,16 @@ class TokenObtainInputSchemaBase(ModelSchema, TokenInputSchemaMixin):
         # extra = "allow"
         model = get_user_model()
         model_fields = ["password", user_name_field]
+        extra = "forbid"
 
     @model_validator(mode="before")
-    def validate_inputs(cls, values: DjangoGetter) -> DjangoGetter:
-        input_values = values._obj
-        request = values._context.get("request")
+    def validate_inputs(cls, values: SCHEMA_INPUT) -> dict:
+        schema_input = SchemaInputService(values, cls.model_config)
+        input_values = schema_input.get_values()
+        request = schema_input.get_request()
+
         if isinstance(input_values, dict):
-            values._obj.update(
-                cls.validate_values(request=request, values=input_values)
-            )
+            values.update(cls.validate_values(request=request, values=input_values))
             return values
         return values
 
@@ -190,8 +213,9 @@ class TokenRefreshInputSchema(Schema, InputSchemaMixin):
     refresh: str
 
     @model_validator(mode="before")
-    def validate_schema(cls, values: DjangoGetter) -> dict:
-        values = values._obj
+    def validate_schema(cls, values: SCHEMA_INPUT) -> dict:
+        schema_input = SchemaInputService(values, cls.model_config)
+        values = schema_input.get_values()
 
         if isinstance(values, dict):
             if not values.get("refresh"):
@@ -209,8 +233,9 @@ class TokenRefreshOutputSchema(Schema):
 
     @model_validator(mode="before")
     @token_error
-    def validate_schema(cls, values: DjangoGetter) -> typing.Any:
-        values = values._obj
+    def validate_schema(cls, values: SCHEMA_INPUT) -> typing.Any:
+        schema_input = SchemaInputService(values, cls.model_config)
+        values = schema_input.get_values()
 
         if isinstance(values, dict):
             if not values.get("refresh"):
@@ -245,8 +270,9 @@ class TokenRefreshSlidingInputSchema(Schema, InputSchemaMixin):
     token: str
 
     @model_validator(mode="before")
-    def validate_schema(cls, values: DjangoGetter) -> dict:
-        values = values._obj
+    def validate_schema(cls, values: SCHEMA_INPUT) -> dict:
+        schema_input = SchemaInputService(values, cls.model_config)
+        values = schema_input.get_values()
 
         if isinstance(values, dict):
             if not values.get("token"):
@@ -263,8 +289,9 @@ class TokenRefreshSlidingOutputSchema(Schema):
 
     @model_validator(mode="before")
     @token_error
-    def validate_schema(cls, values: DjangoGetter) -> dict:
-        values = values._obj
+    def validate_schema(cls, values: SCHEMA_INPUT) -> dict:
+        schema_input = SchemaInputService(values, cls.model_config)
+        values = schema_input.get_values()
 
         if isinstance(values, dict):
             if not values.get("token"):
@@ -288,8 +315,9 @@ class TokenVerifyInputSchema(Schema, InputSchemaMixin):
 
     @model_validator(mode="before")
     @token_error
-    def validate_schema(cls, values: DjangoGetter) -> Dict:
-        values = values._obj
+    def validate_schema(cls, values: SCHEMA_INPUT) -> Dict:
+        schema_input = SchemaInputService(values, cls.model_config)
+        values = schema_input.get_values()
 
         if isinstance(values, dict):
             if not values.get("token"):
@@ -320,7 +348,8 @@ class TokenBlacklistInputSchema(Schema, InputSchemaMixin):
     @model_validator(mode="before")
     @token_error
     def validate_schema(cls, values: DjangoGetter) -> dict:
-        values = values._obj
+        schema_input = SchemaInputService(values, cls.model_config)
+        values = schema_input.get_values()
 
         if isinstance(values, dict):
             if not values.get("refresh"):

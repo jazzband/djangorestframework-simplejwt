@@ -1,4 +1,4 @@
-from ninja.router import Router
+from ninja_extra.router import Router
 
 from ninja_jwt.schema_control import SchemaControl
 from ninja_jwt.settings import api_settings
