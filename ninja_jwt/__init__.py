@@ -1,3 +1,3 @@
 """Django Ninja JWT - JSON Web Token for Django-Ninja"""
 
-__version__ = "5.3.5"
+__version__ = "5.3.7"
