@@ -108,15 +108,23 @@ class TestTokenObtainPairView(APIViewTestCase):
 
     def test_on_login_failed_is_called(self):
         # Patch the ON_LOGIN_FAILED setting
-        with mock.patch("rest_framework_simplejwt.settings.api_settings.ON_LOGIN_FAILED") as mocked_hook:
-
+        with mock.patch(
+            "rest_framework_simplejwt.settings.api_settings.ON_LOGIN_FAILED"
+        ) as mocked_hook:
             self.test_credentials_wrong()
             mocked_hook.assert_called_once()
 
             # Optional: check exact arguments
             args, kwargs = mocked_hook.call_args
             credentials, request = args
-            self.assertEqual(credentials, {User.USERNAME_FIELD: self.username, "password": "********************"})
+            self.assertEqual(
+                credentials,
+                {
+                    User.USERNAME_FIELD: self.username,
+                    "password": "********************",
+                },
+            )
+
 
 class TestTokenRefreshView(APIViewTestCase):
     view_name = "token_refresh"

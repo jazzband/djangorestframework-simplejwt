@@ -1,7 +1,7 @@
 from typing import Any, Optional, TypeVar
 
 from django.conf import settings
-from django.contrib.auth import authenticate, get_user_model, _clean_credentials
+from django.contrib.auth import _clean_credentials, authenticate, get_user_model
 from django.contrib.auth.models import AbstractBaseUser, update_last_login
 from django.utils.translation import gettext_lazy as _
 from rest_framework import exceptions, serializers
@@ -55,7 +55,9 @@ class TokenObtainSerializer(serializers.Serializer):
         self.user = authenticate(**authenticate_kwargs)
 
         if not api_settings.USER_AUTHENTICATION_RULE(self.user):
-            api_settings.ON_LOGIN_FAILED(_clean_credentials(attrs), self.context.get("request"))
+            api_settings.ON_LOGIN_FAILED(
+                _clean_credentials(attrs), self.context.get("request")
+            )
             raise exceptions.AuthenticationFailed(
                 self.error_messages["no_active_account"],
                 "no_active_account",
