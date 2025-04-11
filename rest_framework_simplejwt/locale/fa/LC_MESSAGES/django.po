@@ -85,7 +85,7 @@ msgstr "توکن در لیست سیاه قرار گرفته است"
 msgid ""
 "The '{}' setting has been removed. Please refer to '{}' for available "
 "settings."
-msgstr "تنظیمات '{}' حذف شده است. لطفاً به '{}' برای تنظیمات موجود مراجعه کنید."
+msgstr "تنظیمات '{}' حذف شده است. لطفا به '{}' برای تنظیمات موجود مراجعه کنید."
 
 #: token_blacklist/admin.py:79
 msgid "jti"
@@ -122,16 +122,16 @@ msgstr "توکن برای %(user)s (%(jti)s)"
 
 #: token_blacklist/models.py:45
 msgid "Blacklisted Token"
-msgstr "توکن لیست سیاه شده"
+msgstr "توکن در لیست سیاه"
 
 #: token_blacklist/models.py:46
 msgid "Blacklisted Tokens"
-msgstr "توکن‌های لیست سیاه شده"
+msgstr "توکن‌های لیست سیاه"
 
 #: token_blacklist/models.py:57
 #, python-format
 msgid "Blacklisted token for %(user)s"
-msgstr "توکن لیست سیاه شده برای %(user)s"
+msgstr "توکن لیست سیاه برای %(user)s"
 
 #: tokens.py:53
 msgid "Cannot create token with no type or lifetime"
