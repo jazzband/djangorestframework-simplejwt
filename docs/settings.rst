@@ -184,6 +184,10 @@ requiring authentication would look for a header with the following format:
 tuple of possible header types (e.g. ``('Bearer', 'JWT')``).  If a list or
 tuple is used in this way, and authentication fails, the first item in the
 collection will be used to build the "WWW-Authenticate" header in the response.
+As per As per RFC7235 auth scheme is case insensitive. For example, setting the header
+types to ``('Bearer', 'JWT')`` will correctly auth ``Authorization: Bearer <token>`` as
+well as ``Authorization: bearer <token>`` and ``Authorization: jwt <token>`` headers.
+
 
 ``AUTH_HEADER_NAME``
 ----------------------------

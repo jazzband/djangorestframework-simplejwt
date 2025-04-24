@@ -17,8 +17,9 @@ AUTH_HEADER_TYPES = api_settings.AUTH_HEADER_TYPES
 if not isinstance(api_settings.AUTH_HEADER_TYPES, (list, tuple)):
     AUTH_HEADER_TYPES = (AUTH_HEADER_TYPES,)
 
+
 AUTH_HEADER_TYPE_BYTES: set[bytes] = {
-    h.encode(HTTP_HEADER_ENCODING) for h in AUTH_HEADER_TYPES
+    h.lower().encode(HTTP_HEADER_ENCODING) for h in AUTH_HEADER_TYPES
 }
 
 AuthUser = TypeVar("AuthUser", AbstractBaseUser, TokenUser)
@@ -80,7 +81,7 @@ class JWTAuthentication(authentication.BaseAuthentication):
             # Empty AUTHORIZATION header sent
             return None
 
-        if parts[0] not in AUTH_HEADER_TYPE_BYTES:
+        if parts[0].lower() not in AUTH_HEADER_TYPE_BYTES:
             # Assume the header does not contain a JSON web token
             return None
 
