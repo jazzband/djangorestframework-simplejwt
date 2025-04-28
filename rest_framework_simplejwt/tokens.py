@@ -18,7 +18,7 @@ from .exceptions import (
 from .models import TokenUser
 from .settings import api_settings
 from .token_blacklist.models import BlacklistedToken, OutstandingToken
-from .token_family.models import TokenFamily, TokenFamilyBlacklist
+from .token_family.models import TokenFamily, BlacklistedTokenFamily
 from .utils import (
     aware_utcnow,
     datetime_from_epoch,
@@ -377,7 +377,7 @@ class FamilyMixin(Generic[T]):
             
             super().verify(*args, **kwargs)  # type: ignore
         
-        def blacklist_family(self) -> TokenFamilyBlacklist:
+        def blacklist_family(self) -> BlacklistedTokenFamily:
             """
             Blacklists the token family.
             """
@@ -396,7 +396,7 @@ class FamilyMixin(Generic[T]):
             )
             
             # Blacklist the entire family
-            return TokenFamilyBlacklist.objects.get_or_create(family=family)[0]
+            return BlacklistedTokenFamily.objects.get_or_create(family=family)[0]
 
         def get_family_id(self) -> Optional[str]:
             return self.payload.get(api_settings.TOKEN_FAMILY_CLAIM, None)
@@ -442,7 +442,7 @@ class FamilyMixin(Generic[T]):
                 logger.warning(f"Token of user:{user_id} does not have a family_id. Skipping family blacklist check.")
                 return
             
-            if TokenFamilyBlacklist.objects.filter(family__family_id=family_id).exists():
+            if BlacklistedTokenFamily.objects.filter(family__family_id=family_id).exists():
                 raise TokenError(_("Token family is blacklisted"))
         
         @staticmethod

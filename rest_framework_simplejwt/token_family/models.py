@@ -21,6 +21,17 @@ class TokenFamily(models.Model):
     class Meta:
         verbose_name = _("Token Family")
         verbose_name_plural = _("Token Families")
+        # Work around for a bug in Django:
+        # https://code.djangoproject.com/ticket/19422
+        #
+        # Also see corresponding ticket:
+        # https://github.com/encode/django-rest-framework/issues/705
+        # 
+        # NOTE: Although this issue did not manifest in the Django shell (calling save()
+        # raised an error as expected), it did occur when running the tests.
+        abstract = (
+            "rest_framework_simplejwt.token_family" not in settings.INSTALLED_APPS
+        )
   
     def __str__(self) -> str:
         return _("Token Family for %(user)s (%(family_id)s)") % {
@@ -29,7 +40,7 @@ class TokenFamily(models.Model):
         }
 
 
-class TokenFamilyBlacklist(models.Model):
+class BlacklistedTokenFamily(models.Model):
     id = models.BigAutoField(primary_key=True, serialize=False)
     family = models.OneToOneField(TokenFamily, on_delete=models.CASCADE, related_name="blacklisted")
 
@@ -38,6 +49,17 @@ class TokenFamilyBlacklist(models.Model):
     class Meta:
         verbose_name = _("Token Family Blacklist")
         verbose_name_plural = _("Blacklisted Token Families")
+        # Work around for a bug in Django:
+        # https://code.djangoproject.com/ticket/19422
+        #
+        # Also see corresponding ticket:
+        # https://github.com/encode/django-rest-framework/issues/705
+        # 
+        # NOTE: Although this issue did not manifest in the Django shell (calling save()
+        # raised an error as expected), it did occur when running the tests.
+        abstract = (
+            "rest_framework_simplejwt.token_family" not in settings.INSTALLED_APPS
+        )
 
     def __str__(self) -> str:
         return _("Blacklisted Token Family (%(family_id)s) for %(user)s") % {
