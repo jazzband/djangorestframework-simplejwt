@@ -81,8 +81,10 @@ class TestJWTAuthentication(TestCase):
         # Should return token if header keyword matches case-insensitive.
         # AUTH_HEADER_TYPES is "BeAreR", but header is "Bearer"
         reload(authentication)
-        self.assertEqual(self.backend.get_raw_token(self.fake_header),
-            self.fake_token, )
+        self.assertEqual(
+            self.backend.get_raw_token(self.fake_header),
+            self.fake_token,
+        )
 
     @override_api_settings(AUTH_HEADER_TYPES=("JWT", "Bearer"))
     def test_get_raw_token_multi_header_keyword(self):
@@ -98,8 +100,10 @@ class TestJWTAuthentication(TestCase):
         # Should return token if header has one of many valid token types, even if the
         # case differs.
         reload(authentication)
-        self.assertEqual(self.backend.get_raw_token(self.fake_header),
-            self.fake_token, )
+        self.assertEqual(
+            self.backend.get_raw_token(self.fake_header),
+            self.fake_token,
+        )
 
     def test_get_validated_token(self):
         # Should raise InvalidToken if token not valid
