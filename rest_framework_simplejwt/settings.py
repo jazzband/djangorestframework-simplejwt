@@ -29,6 +29,8 @@ DEFAULTS = {
     "USER_ID_FIELD": "id",
     "USER_ID_CLAIM": "user_id",
     "USER_AUTHENTICATION_RULE": "rest_framework_simplejwt.authentication.default_user_authentication_rule",
+    "ON_LOGIN_SUCCESS": "rest_framework_simplejwt.serializers.default_on_login_success",
+    "ON_LOGIN_FAILED": "rest_framework_simplejwt.serializers.default_on_login_failed",
     "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
     "TOKEN_TYPE_CLAIM": "token_type",
     "JTI_CLAIM": "jti",
@@ -52,6 +54,8 @@ IMPORT_STRINGS = (
     "JSON_ENCODER",
     "TOKEN_USER_CLASS",
     "USER_AUTHENTICATION_RULE",
+    "ON_LOGIN_SUCCESS",
+    "ON_LOGIN_FAILED",
 )
 
 REMOVED_SETTINGS = (
