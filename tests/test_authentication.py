@@ -225,6 +225,17 @@ class TestJWTAuthentication(TestCase):
         # Otherwise, should return correct user
         self.assertEqual(self.backend.get_user(payload).id, u.id)
 
+    def test_get_user_with_str_user_id_claim(self):
+        """
+        Verify that even though the user id is an int, it can be verified
+        and retrieved if the user id claim value is a string
+        """
+
+        user = User.objects.create_user(username="testuser")
+        payload = {api_settings.USER_ID_CLAIM: str(user.id)}
+        auth_user = self.backend.get_user(payload)
+        self.assertEqual(auth_user.id, user.id)
+
 
 class TestJWTStatelessUserAuthentication(TestCase):
     def setUp(self):
