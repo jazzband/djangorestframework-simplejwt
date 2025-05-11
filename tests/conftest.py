@@ -43,6 +43,17 @@ def pytest_configure():
         SIMPLE_JWT={
             "BLACKLIST_AFTER_ROTATION": True,
             "TOKEN_FAMILY_ENABLED": True,
+            "SJWT_CACHE_NAME": "default",
+        },
+        CACHES={
+            "default": {
+                "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+                "LOCATION": "unique-snowflake",
+            },
+            "alternate": {
+                "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+                "LOCATION": "alternate-snowflake",
+            },
         },
     )
 
