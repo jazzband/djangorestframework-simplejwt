@@ -27,6 +27,7 @@ from .utils import (
     get_md5_hash_password,
     logger,
 )
+from .cache import blacklist_cache
 
 if TYPE_CHECKING:
     from .backends import TokenBackend
@@ -278,6 +279,12 @@ class BlacklistMixin(Generic[T]):
             """
             jti = self.payload[api_settings.JTI_CLAIM]
 
+            if (
+                blacklist_cache.is_refresh_tokens_cache_enabled and  
+                blacklist_cache.is_refresh_token_blacklisted(jti)
+            ):
+                raise RefreshTokenBlacklistedError(_("Token is blacklisted"))
+
             if BlacklistedToken.objects.filter(token__jti=jti).exists():
                 raise RefreshTokenBlacklistedError(_("Token is blacklisted"))
 
@@ -306,7 +313,12 @@ class BlacklistMixin(Generic[T]):
                 },
             )
 
-            return BlacklistedToken.objects.get_or_create(token=token)
+            blacklisted_token, created = BlacklistedToken.objects.get_or_create(token=token)
+            
+            if blacklist_cache.is_refresh_tokens_cache_enabled:
+                blacklist_cache.add_refresh_token(jti)
+
+            return blacklisted_token, created
 
         def outstand(self) -> Optional[OutstandingToken]:
             """
@@ -396,7 +408,12 @@ class FamilyMixin(Generic[T]):
             )
             
             # Blacklist the entire family
-            return BlacklistedTokenFamily.objects.get_or_create(family=family)[0]
+            blacklisted_fam, created = BlacklistedTokenFamily.objects.get_or_create(family=family)
+            
+            if blacklist_cache.is_families_cache_enabled:
+                blacklist_cache.add_token_family(family_id)
+
+            return blacklisted_fam
 
         def get_family_id(self) -> Optional[str]:
             return self.payload.get(api_settings.TOKEN_FAMILY_CLAIM, None)
@@ -442,6 +459,12 @@ class FamilyMixin(Generic[T]):
                 logger.warning(f"Token of user:{user_id} does not have a family_id. Skipping family blacklist check.")
                 return
             
+            if (
+                blacklist_cache.is_families_cache_enabled and
+                blacklist_cache.is_token_family_blacklisted(family_id)
+            ):
+                raise TokenError(_("Token family is blacklisted"))
+
             if BlacklistedTokenFamily.objects.filter(family__family_id=family_id).exists():
                 raise TokenError(_("Token family is blacklisted"))
         

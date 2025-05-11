@@ -13,6 +13,7 @@ from .models import TokenUser
 from .settings import api_settings
 from .tokens import RefreshToken, SlidingToken, Token, UntypedToken, FamilyMixin
 from .utils import get_md5_hash_password
+from .cache import blacklist_cache
 
 AuthUser = TypeVar("AuthUser", AbstractBaseUser, TokenUser)
 
@@ -266,6 +267,12 @@ class TokenVerifySerializer(serializers.Serializer):
             and "rest_framework_simplejwt.token_blacklist" in settings.INSTALLED_APPS
         ):
             jti = token.get(api_settings.JTI_CLAIM)
+            if (
+                blacklist_cache.is_refresh_tokens_cache_enabled
+                and blacklist_cache.is_refresh_token_blacklisted(jti)
+            ):
+                raise ValidationError(_("Token is blacklisted"))
+
             if BlacklistedToken.objects.filter(token__jti=jti).exists():
                 raise ValidationError(_("Token is blacklisted"))
             
