@@ -34,6 +34,14 @@ Some of Simple JWT's behavior can be customized through settings variables in
       "JWK_URL": None,
       "LEEWAY": 0,
 
+      "SJWT_CACHE_NAME": "default",
+      "CACHE_BLACKLISTED_REFRESH_TOKENS": False,
+      "CACHE_BLACKLISTED_FAMILIES": False,
+      "CACHE_TTL_BLACKLISTED_REFRESH_TOKENS": 3600,  # time is seconds
+      "CACHE_TTL_BLACKLISTED_FAMILIES": 3600,  # time in seconds
+      "CACHE_KEY_PREFIX_BLACKLISTED_REFRESH_TOKENS": "sjwt_brt",
+      "CACHE_KEY_PREFIX_BLACKLISTED_FAMILIES": "sjwt_btf",
+
       "AUTH_HEADER_TYPES": ("Bearer",),
       "AUTH_HEADER_NAME": "HTTP_AUTHORIZATION",
       "USER_ID_FIELD": "id",
@@ -224,6 +232,47 @@ integer for seconds or a ``datetime.timedelta``. Please reference
 https://pyjwt.readthedocs.io/en/latest/usage.html#expiration-time-claim-exp
 for more information.
 
+``SJWT_CACHE_NAME``
+---------------------
+
+Specifies the Django cache alias to use. This must match a defined entry
+in Django's ``CACHES`` setting.
+
+Learn more about :doc:`/cache_support`.
+
+``CACHE_BLACKLISTED_REFRESH_TOKENS``
+--------------------------------------
+
+When set to ``True``, enables caching of blacklisted refresh tokens.
+Blacklisted refresh token entries will be cached for a period defined
+by ``CACHE_TTL_BLACKLISTED_REFRESH_TOKENS``.
+
+``CACHE_BLACKLISTED_FAMILIES``
+--------------------------------
+
+When set to ``True``, enables caching of blacklisted token families.
+Blacklisted family entries will be cached for a period defined 
+by ``CACHE_TTL_BLACKLISTED_FAMILIES``.
+
+``CACHE_TTL_BLACKLISTED_REFRESH_TOKENS``
+------------------------------------------
+
+Time-to-live (TTL) in seconds for cached refresh token blacklist entries.
+
+``CACHE_TTL_BLACKLISTED_FAMILIES``
+------------------------------------
+
+Time-to-live (TTL) in seconds for cached token family blacklist entries.
+
+``CACHE_KEY_PREFIX_BLACKLISTED_REFRESH_TOKENS``
+-------------------------------------------------
+
+Prefix used for cache keys when storing blacklisted refresh tokens.
+
+``CACHE_KEY_PREFIX_BLACKLISTED_FAMILIES``
+-------------------------------------------
+
+Prefix used for cache keys when storing blacklisted token families.
 
 ``AUTH_HEADER_TYPES``
 ---------------------

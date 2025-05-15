@@ -53,6 +53,7 @@ Contents
     blacklist_app
     family_app
     stateless_user_authentication
+    cache_support
     development_and_contributing
     drf_yasg_integration
     rest_framework_simplejwt
