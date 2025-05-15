@@ -51,6 +51,7 @@ Contents
     creating_tokens_manually
     token_types
     blacklist_app
+    family_app
     stateless_user_authentication
     development_and_contributing
     drf_yasg_integration
