@@ -288,7 +288,7 @@ class BlacklistMixin(Generic[T]):
             if BlacklistedToken.objects.filter(token__jti=jti).exists():
                 raise RefreshTokenBlacklistedError(_("Token is blacklisted"))
 
-        def blacklist(self) -> BlacklistedToken:
+        def blacklist(self) -> tuple[BlacklistedToken, bool]:
             """
             Ensures this token is included in the outstanding token list and
             adds it to the blacklist.
@@ -389,7 +389,7 @@ class FamilyMixin(Generic[T]):
             
             super().verify(*args, **kwargs)  # type: ignore
         
-        def blacklist_family(self) -> BlacklistedTokenFamily:
+        def blacklist_family(self) -> tuple[BlacklistedTokenFamily, bool]:
             """
             Blacklists the token family.
             """
@@ -413,7 +413,7 @@ class FamilyMixin(Generic[T]):
             if blacklist_cache.is_families_cache_enabled:
                 blacklist_cache.add_token_family(family_id)
 
-            return blacklisted_fam
+            return blacklisted_fam, created
 
         def get_family_id(self) -> Optional[str]:
             return self.payload.get(api_settings.TOKEN_FAMILY_CLAIM, None)

@@ -14,11 +14,9 @@ from .settings import api_settings
 from .tokens import RefreshToken, SlidingToken, Token, UntypedToken, FamilyMixin
 from .utils import get_md5_hash_password
 from .cache import blacklist_cache
+from .token_blacklist.models import BlacklistedToken
 
 AuthUser = TypeVar("AuthUser", AbstractBaseUser, TokenUser)
-
-if api_settings.BLACKLIST_AFTER_ROTATION:
-    from .token_blacklist.models import BlacklistedToken
 
 
 class PasswordField(serializers.CharField):
@@ -263,7 +261,7 @@ class TokenVerifySerializer(serializers.Serializer):
         token = UntypedToken(attrs["token"])
 
         if (
-            api_settings.BLACKLIST_AFTER_ROTATION
+            token.get(api_settings.TOKEN_TYPE_CLAIM) == RefreshToken.token_type
             and "rest_framework_simplejwt.token_blacklist" in settings.INSTALLED_APPS
         ):
             jti = token.get(api_settings.JTI_CLAIM)

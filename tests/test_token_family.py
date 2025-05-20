@@ -243,12 +243,13 @@ class TestTokenFamilyInRefreshTokens(TestCase):
         self.assertEqual(TokenFamily.objects.count(), 1)
 
         # Add family to blacklist
-        blacklisted_fam = token.blacklist_family()
+        blacklisted_fam, created = token.blacklist_family()
 
         # Should not add family to tokenfamily list if already present
         self.assertEqual(TokenFamily.objects.count(), 1)
 
         # Should return blacklist record
+        self.assertTrue(created)
         self.assertEqual(blacklisted_fam.family.family_id, token.get_family_id())
 
         with self.assertRaises(TokenError) as cm:
