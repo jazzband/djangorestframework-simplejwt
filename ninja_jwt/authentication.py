@@ -2,7 +2,7 @@ from typing import Any, Type
 
 import django
 from django.contrib.auth import get_user_model
-from django.contrib.auth.models import AbstractUser, AnonymousUser
+from django.contrib.auth.models import AbstractBaseUser, AnonymousUser
 from django.http import HttpRequest
 from django.utils.translation import gettext_lazy as _
 from ninja_extra.security import AsyncHttpBearer, HttpBearer
@@ -43,7 +43,7 @@ class JWTBaseAuthentication:
             }
         )
 
-    def get_user(self, validated_token) -> AbstractUser:
+    def get_user(self, validated_token) -> AbstractBaseUser:
         """
         Attempts to find and return a user using the given validated token.
         """
@@ -64,7 +64,7 @@ class JWTBaseAuthentication:
 
         return user
 
-    def jwt_authenticate(self, request: HttpRequest, token: str) -> AbstractUser:
+    def jwt_authenticate(self, request: HttpRequest, token: str) -> AbstractBaseUser:
         request.user = AnonymousUser()
         validated_token = self.get_validated_token(token)
         user = self.get_user(validated_token)
@@ -86,7 +86,7 @@ class JWTStatelessUserAuthentication(JWTBaseAuthentication, HttpBearer):
     def authenticate(self, request: HttpRequest, token: str) -> Any:
         return self.jwt_authenticate(request, token)
 
-    def get_user(self, validated_token: Any) -> Type[AbstractUser]:
+    def get_user(self, validated_token: Any) -> Type[AbstractBaseUser]:
         """
         Returns a stateless user object which is backed by the given validated
         token.
@@ -119,7 +119,7 @@ if not django.VERSION < (3, 1):
     class AsyncJWTBaseAuthentication(JWTBaseAuthentication):
         async def async_jwt_authenticate(
             self, request: HttpRequest, token: str
-        ) -> Type[AbstractUser]:
+        ) -> Type[AbstractBaseUser]:
             request.user = AnonymousUser()
             get_validated_token = sync_to_async(self.get_validated_token)
             validated_token = await get_validated_token(token)
