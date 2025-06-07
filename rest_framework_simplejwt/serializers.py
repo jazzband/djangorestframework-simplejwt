@@ -1,17 +1,17 @@
-from typing import Any, Optional, TypeVar
+from typing import TYPE_CHECKING, Any, Generic, TypeVar
 
 from django.conf import settings
 from django.contrib.auth import authenticate, get_user_model
-from django.contrib.auth.models import AbstractBaseUser, update_last_login
+from django.contrib.auth.models import update_last_login
 from django.utils.translation import gettext_lazy as _
 from rest_framework import exceptions, serializers
 from rest_framework.exceptions import AuthenticationFailed, ValidationError
 
-from .models import TokenUser
+from .models import TokenUserBase
 from .settings import api_settings
 from .tokens import RefreshToken, SlidingToken, Token, UntypedToken
 
-AuthUser = TypeVar("AuthUser", AbstractBaseUser, TokenUser)
+TokenTypeVar = TypeVar("TokenTypeVar", bound=Token)
 
 if api_settings.BLACKLIST_AFTER_ROTATION:
     from .token_blacklist.models import BlacklistedToken
@@ -27,9 +27,9 @@ class PasswordField(serializers.CharField):
         super().__init__(*args, **kwargs)
 
 
-class TokenObtainSerializer(serializers.Serializer):
+class TokenObtainSerializer(Generic[TokenTypeVar], serializers.Serializer):
     username_field = get_user_model().USERNAME_FIELD
-    token_class: Optional[type[Token]] = None
+    token_class: type[TokenTypeVar]
 
     default_error_messages = {
         "no_active_account": _("No active account found with the given credentials")
@@ -62,15 +62,18 @@ class TokenObtainSerializer(serializers.Serializer):
         return {}
 
     @classmethod
-    def get_token(cls, user: AuthUser) -> Token:
-        return cls.token_class.for_user(user)  # type: ignore
+    def get_token(cls, user: TokenUserBase) -> TokenTypeVar:
+        return cls.token_class.for_user(user)
 
 
-class TokenObtainPairSerializer(TokenObtainSerializer):
+class TokenObtainPairSerializer(TokenObtainSerializer[RefreshToken]):
     token_class = RefreshToken
 
     def validate(self, attrs: dict[str, Any]) -> dict[str, str]:
         data = super().validate(attrs)
+
+        if TYPE_CHECKING:
+            assert self.user
 
         refresh = self.get_token(self.user)
 
@@ -78,23 +81,26 @@ class TokenObtainPairSerializer(TokenObtainSerializer):
         data["access"] = str(refresh.access_token)
 
         if api_settings.UPDATE_LAST_LOGIN:
-            update_last_login(None, self.user)
+            update_last_login(type(self.user), self.user)
 
         return data
 
 
-class TokenObtainSlidingSerializer(TokenObtainSerializer):
+class TokenObtainSlidingSerializer(TokenObtainSerializer[SlidingToken]):
     token_class = SlidingToken
 
     def validate(self, attrs: dict[str, Any]) -> dict[str, str]:
         data = super().validate(attrs)
+
+        if TYPE_CHECKING:
+            assert self.user
 
         token = self.get_token(self.user)
 
         data["token"] = str(token)
 
         if api_settings.UPDATE_LAST_LOGIN:
-            update_last_login(None, self.user)
+            update_last_login(type(self.user), self.user)
 
         return data
 
