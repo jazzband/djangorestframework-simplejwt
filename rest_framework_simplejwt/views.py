@@ -120,3 +120,15 @@ class TokenBlacklistView(TokenViewBase):
 
 
 token_blacklist = TokenBlacklistView.as_view()
+
+
+class TokenFamilyBlacklistView(TokenViewBase):
+    """
+    Takes a token's family and blacklists it. Must be used with the
+    `rest_framework_simplejwt.token_family` app installed.
+    """
+
+    _serializer_class = api_settings.TOKEN_FAMILY_BLACKLIST_SERIALIZER
+
+
+token_family_blacklist = TokenFamilyBlacklistView.as_view()
