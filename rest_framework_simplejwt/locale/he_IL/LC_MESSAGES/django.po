@@ -24,19 +24,19 @@ msgstr "Authorization Header חייבת להכיל שני ערכים מופרד�
 msgid "Given token not valid for any token type"
 msgstr "המזהה הנתון אינו תקף עבור אף סיווג"
 
-#: authentication.py:127 authentication.py:162
+#: authentication.py:128 authentication.py:166
 msgid "Token contained no recognizable user identification"
 msgstr "המזהה לא הכיל זיהוי משתמש שניתן לזהות"
 
-#: authentication.py:132
+#: authentication.py:135
 msgid "User not found"
 msgstr "משתמש לא נמצא"
 
-#: authentication.py:135
+#: authentication.py:139
 msgid "User is inactive"
 msgstr "המשתמש אינו פעיל"
 
-#: authentication.py:142
+#: authentication.py:146
 msgid "The user's password has been changed."
 msgstr ""
 
@@ -83,7 +83,7 @@ msgstr "לא נמצא חשבון עם פרטי זיהוי אלו"
 msgid "No active account found for the given token."
 msgstr "לא נמצא חשבון עם פרטי זיהוי אלו"
 
-#: serializers.py:178 tokens.py:299
+#: serializers.py:178 tokens.py:281
 msgid "Token is blacklisted"
 msgstr "המזהה ברשימה השחורה."
 
