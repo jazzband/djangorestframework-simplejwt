@@ -1,4 +1,4 @@
-.. _drf_yasg_integration
+.. _drf_yasg_integration:
 
 ``drf-yasg`` Integration
 ------------------------
