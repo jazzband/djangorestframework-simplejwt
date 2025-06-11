@@ -20,7 +20,7 @@ extras_require = {
         "pre-commit",
     ],
     "doc": [
-        "Sphinx>=1.6.5,<2",
+        "Sphinx",
         "sphinx_rtd_theme>=0.1.9",
     ],
     "dev": [
