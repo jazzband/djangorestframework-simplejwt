@@ -1,10 +1,10 @@
 .. _stateless_user_authentication:
 
 Stateless User Authentication
-=====================
+=============================
 
 JWTStatelessUserAuthentication backend
-----------------------------------
+--------------------------------------
 
 The ``JWTStatelessUserAuthentication`` backend's ``authenticate`` method does not
 perform a database lookup to obtain a user instance.  Instead, it returns a
