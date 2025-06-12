@@ -34,11 +34,11 @@ class TokenUser:
         return f"TokenUser {self.id}"
 
     @cached_property
-    def id(self) -> Union[int, str]:
+    def id(self) -> str:
         return self.token[api_settings.USER_ID_CLAIM]
 
     @cached_property
-    def pk(self) -> Union[int, str]:
+    def pk(self) -> str:
         return self.id
 
     @cached_property
