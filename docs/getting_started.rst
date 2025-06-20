@@ -106,6 +106,19 @@ If you wish to use localizations/translations, simply add
       ...
   ]
 
+Alternatively, if you do not want to add ``rest_framework_simplejwt`` to
+``INSTALLED_APPS``, you can enable translations by adding its locale directory to
+``LOCALE_PATHS`` in your ``settings.py``:
+
+.. code-block:: python
+
+    import os
+    from rest_framework_simplejwt import __file__ as simplejwt_file
+
+    LOCALE_PATHS = [
+        os.path.join(os.path.dirname(simplejwt_file), 'locale'),
+    ]
+
 
 Usage
 -----
