@@ -366,7 +366,7 @@ class TestTranslations(SimpleTestCase):
             "fa_IR": "کاربر",
             "ar": "مستخدم",
             "de": "Benutzer",
-            "fr": "Utilisateur",
+            "fr": "utilisateur",
             "tr": "kullanıcı",
             "cs": "uživatel",
             "es": "usuario",
