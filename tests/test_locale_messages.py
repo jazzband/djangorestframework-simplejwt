@@ -2,11 +2,14 @@ import os
 
 import polib
 from django.test import SimpleTestCase
-from django.utils.translation import activate, gettext as _
+from django.utils.translation import activate
+from django.utils.translation import gettext as _
 
 
 class TestTranslations(SimpleTestCase):
-    LOCALE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '../rest_framework_simplejwt/locale'))
+    LOCALE_DIR = os.path.abspath(
+        os.path.join(os.path.dirname(__file__), "../rest_framework_simplejwt/locale")
+    )
     MESSAGES = {
         "Authorization header must contain two space-delimited values": {
             "fa": "هدر اعتبارسنجی باید شامل دو مقدار جدا شده با فاصله باشد",
@@ -860,9 +863,29 @@ class TestTranslations(SimpleTestCase):
         },
     }
     LANGUAGES = {
-        'fa', 'fa_IR', 'ar', 'de', 'fr', 'tr', 'cs', 'es', 'es_AR', 'es_CL',
-        'it_IT', 'nl_NL', 'pl_PL', 'pt_BR', 'ru_RU', 'uk_UA', 'zh_Hans', 'ko_KR',
-        'id_ID', 'he_IL', 'ro', 'sl', 'sv',
+        "fa",
+        "fa_IR",
+        "ar",
+        "de",
+        "fr",
+        "tr",
+        "cs",
+        "es",
+        "es_AR",
+        "es_CL",
+        "it_IT",
+        "nl_NL",
+        "pl_PL",
+        "pt_BR",
+        "ru_RU",
+        "uk_UA",
+        "zh_Hans",
+        "ko_KR",
+        "id_ID",
+        "he_IL",
+        "ro",
+        "sl",
+        "sv",
     }
 
     def test_translations(self):
@@ -878,7 +901,9 @@ class TestTranslations(SimpleTestCase):
                     translated = _(msg_key)
                     expected = translations.get(lang)
                     if expected is None:
-                        errors.append(f"Missing translation for '{msg_key}' in {lang} (not found in MESSAGES)")
+                        errors.append(
+                            f"Missing translation for '{msg_key}' in {lang} (not found in MESSAGES)"
+                        )
                     elif translated != expected:
                         errors.append(
                             f'Translation mismatch for "{msg_key}" in "{lang}": '
@@ -895,11 +920,13 @@ class TestTranslations(SimpleTestCase):
         key_messages = set(self.MESSAGES.keys())
         for lang in os.listdir(self.LOCALE_DIR):
             lang_dir = os.path.join(self.LOCALE_DIR, lang)
-            po_path = os.path.join(lang_dir, 'LC_MESSAGES', 'django.po')
+            po_path = os.path.join(lang_dir, "LC_MESSAGES", "django.po")
             if not os.path.exists(po_path):
-                self.fail(f"Missing .po file for language '{lang}' at expected path: {po_path}")
+                self.fail(
+                    f"Missing .po file for language '{lang}' at expected path: {po_path}"
+                )
             po = polib.pofile(po_path)
-            po_messages = set(entry.msgid for entry in po)
+            po_messages = {entry.msgid for entry in po}
             missing_keys = key_messages - po_messages
             extra_keys = po_messages - key_messages
 
@@ -966,9 +993,11 @@ class TestTranslations(SimpleTestCase):
                 )
                 continue
             lang_dir = os.path.join(self.LOCALE_DIR, lang)
-            po_path = os.path.join(lang_dir, 'LC_MESSAGES', 'django.po')
+            po_path = os.path.join(lang_dir, "LC_MESSAGES", "django.po")
             if not os.path.exists(po_path):
-                errors.append(f"Missing .po file for language '{lang}' at expected path: {po_path}")
+                errors.append(
+                    f"Missing .po file for language '{lang}' at expected path: {po_path}"
+                )
                 continue
             po = polib.pofile(po_path)
             activate(lang)
@@ -976,7 +1005,9 @@ class TestTranslations(SimpleTestCase):
                 if entry.msgid and not entry.obsolete:
                     expected_translation = self.MESSAGES.get(entry.msgid, {}).get(lang)
                     if expected_translation is None:
-                        errors.append(f"Missing translation for '{entry.msgid}' in {lang} (not found in MESSAGES)")
+                        errors.append(
+                            f"Missing translation for '{entry.msgid}' in {lang} (not found in MESSAGES)"
+                        )
                     elif _(entry.msgid) != expected_translation:
                         errors.append(
                             f"Translation mismatch for '{entry.msgid}' in {lang}: "
