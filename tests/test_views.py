@@ -406,7 +406,7 @@ class TestTokenBlacklistView(APIViewTestCase):
 
         self.assertEqual(res.status_code, 200)
 
-        self.assertDictEqual(res.data, {})
+        self.assertDictEqual(res.data, {"message": "Token blacklisted"})
 
     def test_it_should_return_401_if_token_is_blacklisted(self):
         refresh = RefreshToken()
