@@ -1,4 +1,22 @@
-$$ 5.5.1
+## 5.5.1
+
+Missing Migration for rest_framework_simplejwt.token_blacklist app. A previously missing migration (0013_blacklist) has now been added. This issue arose because the migration file was mistakenly not generated earlier. This migration was never part of an official release, but users following the latest master branch may have encountered it.
+
+**Notes for Users**
+If you previously ran makemigrations in production and have a 0013_blacklist migration in your django_migrations table, follow these steps before upgrading:
+
+1. Roll back to the last known migration:
+```bash
+python manage.py migrate rest_framework_simplejwt.token_blacklist 0012
+```
+2. Upgrade djangorestframework-simplejwt to the latest version.
+3. Apply the migrations correctly:
+```bash
+python manage.py migrate
+```
+**Important**: If other migrations depend on 0013_blacklist, be cautious when removing it. You may need to adjust or regenerate dependent migrations to ensure database integrity.
+
+* fix:  add missing migration for token_blacklist app by @juanbailon in https://github.com/jazzband/djangorestframework-simplejwt/pull/894
 * :globe_with_meridians: Fix typos and improve clarity in es_AR translations by @fabianfalon in https://github.com/jazzband/djangorestframework-simplejwt/pull/876
 * docs: Add warning in docs for `for_user` usage by @vgrozdanic in https://github.com/jazzband/djangorestframework-simplejwt/pull/872
 * feat: log warning if token is being created for inactive user by @vgrozdanic in https://github.com/jazzband/djangorestframework-simplejwt/pull/873
