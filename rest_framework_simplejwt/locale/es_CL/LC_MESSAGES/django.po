@@ -21,19 +21,19 @@ msgstr ""
 msgid "Given token not valid for any token type"
 msgstr "El token provisto no es válido para ningún tipo de token"
 
-#: authentication.py:127 authentication.py:162
+#: authentication.py:128 authentication.py:166
 msgid "Token contained no recognizable user identification"
 msgstr "El token no contiene identificación de usuario reconocible"
 
-#: authentication.py:132
+#: authentication.py:135
 msgid "User not found"
 msgstr "Usuario no encontrado"
 
-#: authentication.py:135
+#: authentication.py:139
 msgid "User is inactive"
 msgstr "El usuario está inactivo"
 
-#: authentication.py:142
+#: authentication.py:146
 msgid "The user's password has been changed."
 msgstr ""
 
@@ -82,7 +82,7 @@ msgid "No active account found for the given token."
 msgstr ""
 "No se encontró una cuenta de usuario activa para las credenciales provistas"
 
-#: serializers.py:178 tokens.py:299
+#: serializers.py:178 tokens.py:280
 msgid "Token is blacklisted"
 msgstr "Token está en la blacklist"
 

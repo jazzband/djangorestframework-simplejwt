@@ -20,20 +20,20 @@ msgstr ""
 msgid "Given token not valid for any token type"
 msgstr "Le type de jeton fourni n'est pas valide"
 
-#: authentication.py:127 authentication.py:162
+#: authentication.py:128 authentication.py:166
 msgid "Token contained no recognizable user identification"
 msgstr ""
 "Le jeton ne contient aucune information permettant d'identifier l'utilisateur"
 
-#: authentication.py:132
+#: authentication.py:135
 msgid "User not found"
 msgstr "L'utilisateur n'a pas été trouvé"
 
-#: authentication.py:135
+#: authentication.py:139
 msgid "User is inactive"
 msgstr "L'utilisateur est désactivé"
 
-#: authentication.py:142
+#: authentication.py:146
 msgid "The user's password has been changed."
 msgstr ""
 
@@ -80,7 +80,7 @@ msgstr "Aucun compte actif n'a été trouvé avec les identifiants fournis"
 msgid "No active account found for the given token."
 msgstr "Aucun compte actif n'a été trouvé avec les identifiants fournis"
 
-#: serializers.py:178 tokens.py:299
+#: serializers.py:178 tokens.py:280
 msgid "Token is blacklisted"
 msgstr "Le jeton a été banni"
 

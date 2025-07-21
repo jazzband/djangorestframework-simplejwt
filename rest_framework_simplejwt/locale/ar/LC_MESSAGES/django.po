@@ -21,19 +21,19 @@ msgstr "يجب أن يحتوي رأس التفويض على قيمتين مفص�
 msgid "Given token not valid for any token type"
 msgstr "تأشيرة المرور غير صالحة لأي نوع من أنواع التأشيرات"
 
-#: authentication.py:127 authentication.py:162
+#: authentication.py:128 authentication.py:166
 msgid "Token contained no recognizable user identification"
 msgstr "لا تحتوي تأشيرة المرور على هوية مستخدم يمكن التعرف عليها"
 
-#: authentication.py:132
+#: authentication.py:135
 msgid "User not found"
 msgstr "لم يتم العثور على المستخدم"
 
-#: authentication.py:135
+#: authentication.py:139
 msgid "User is inactive"
 msgstr "الحساب غير مفعل"
 
-#: authentication.py:142
+#: authentication.py:146
 msgid "The user's password has been changed."
 msgstr ""
 
@@ -81,7 +81,7 @@ msgstr "لم يتم العثور على حساب نشط للبيانات الم�
 msgid "No active account found for the given token."
 msgstr "لم يتم العثور على حساب نشط للبيانات المقدمة"
 
-#: serializers.py:178 tokens.py:299
+#: serializers.py:178 tokens.py:280
 msgid "Token is blacklisted"
 msgstr "التأشيرة مدرجة في القائمة السوداء"
 

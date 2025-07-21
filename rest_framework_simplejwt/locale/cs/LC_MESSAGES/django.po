@@ -19,19 +19,19 @@ msgstr "Autorizační hlavička musí obsahovat dvě hodnoty oddělené mezerou"
 msgid "Given token not valid for any token type"
 msgstr "Daný token není validní pro žádný typ tokenu"
 
-#: authentication.py:127 authentication.py:162
+#: authentication.py:128 authentication.py:166
 msgid "Token contained no recognizable user identification"
 msgstr "Token neobsahoval žádnou rozpoznatelnou identifikaci uživatele"
 
-#: authentication.py:132
+#: authentication.py:135
 msgid "User not found"
 msgstr "Uživatel nenalezen"
 
-#: authentication.py:135
+#: authentication.py:139
 msgid "User is inactive"
 msgstr "Uživatel není aktivní"
 
-#: authentication.py:142
+#: authentication.py:146
 msgid "The user's password has been changed."
 msgstr ""
 
@@ -78,7 +78,7 @@ msgstr "Žádný aktivní účet s danými údaji nebyl nalezen"
 msgid "No active account found for the given token."
 msgstr "Žádný aktivní účet s danými údaji nebyl nalezen"
 
-#: serializers.py:178 tokens.py:299
+#: serializers.py:178 tokens.py:280
 msgid "Token is blacklisted"
 msgstr "Token je na černé listině"
 

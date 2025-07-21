@@ -20,19 +20,19 @@ msgstr "Auktoriseringshuvudet måste innehålla två mellanslagsavgränsade vär
 msgid "Given token not valid for any token type"
 msgstr "Givet token är inte giltigt för någon tokentyp"
 
-#: authentication.py:127 authentication.py:162
+#: authentication.py:128 authentication.py:166
 msgid "Token contained no recognizable user identification"
 msgstr "Token innehöll ingen identifiering av användaren"
 
-#: authentication.py:132
+#: authentication.py:135
 msgid "User not found"
 msgstr "Användaren hittades inte"
 
-#: authentication.py:135
+#: authentication.py:139
 msgid "User is inactive"
 msgstr "Användaren är inaktiv"
 
-#: authentication.py:142
+#: authentication.py:146
 msgid "The user's password has been changed."
 msgstr ""
 
@@ -79,7 +79,7 @@ msgstr "Inget aktivt konto hittades med de angivna användaruppgifterna"
 msgid "No active account found for the given token."
 msgstr "Inget aktivt konto hittades med de angivna användaruppgifterna"
 
-#: serializers.py:178 tokens.py:299
+#: serializers.py:178 tokens.py:280
 msgid "Token is blacklisted"
 msgstr "Token är svartlistad"
 
