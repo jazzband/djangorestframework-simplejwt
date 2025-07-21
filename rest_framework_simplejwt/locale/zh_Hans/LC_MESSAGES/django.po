@@ -23,19 +23,19 @@ msgstr "授权头必须包含两个用空格分隔的值"
 msgid "Given token not valid for any token type"
 msgstr "此令牌对任何类型的令牌无效"
 
-#: authentication.py:127 authentication.py:162
+#: authentication.py:128 authentication.py:166
 msgid "Token contained no recognizable user identification"
 msgstr "令牌未包含用户标识符"
 
-#: authentication.py:132
+#: authentication.py:135
 msgid "User not found"
 msgstr "未找到该用户"
 
-#: authentication.py:135
+#: authentication.py:139
 msgid "User is inactive"
 msgstr "该用户已禁用"
 
-#: authentication.py:142
+#: authentication.py:146
 msgid "The user's password has been changed."
 msgstr ""
 
@@ -82,7 +82,7 @@ msgstr "找不到指定凭据对应的有效用户"
 msgid "No active account found for the given token."
 msgstr "找不到指定凭据对应的有效用户"
 
-#: serializers.py:178 tokens.py:299
+#: serializers.py:178 tokens.py:280
 msgid "Token is blacklisted"
 msgstr "令牌已被加入黑名单"
 

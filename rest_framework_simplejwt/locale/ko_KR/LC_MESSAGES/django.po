@@ -20,19 +20,19 @@ msgstr "인증 헤더에는 공백으로 구분 된 두 개의 값이 포함되�
 msgid "Given token not valid for any token type"
 msgstr "이 토큰은 모든 타입의 토큰에 대해 유효하지 않습니다"
 
-#: authentication.py:127 authentication.py:162
+#: authentication.py:128 authentication.py:166
 msgid "Token contained no recognizable user identification"
 msgstr "토큰에 사용자 식별자가 포함되어 있지 않습니다"
 
-#: authentication.py:132
+#: authentication.py:135
 msgid "User not found"
 msgstr "찾을 수 없는 사용자입니다"
 
-#: authentication.py:135
+#: authentication.py:139
 msgid "User is inactive"
 msgstr "비활성화된 사용자입니다"
 
-#: authentication.py:142
+#: authentication.py:146
 msgid "The user's password has been changed."
 msgstr "사용자의 비밀번호가 바뀌었습니다."
 
@@ -81,7 +81,7 @@ msgstr "지정된 자격 증명에 해당하는 활성화된 사용자를 찾을
 msgid "No active account found for the given token."
 msgstr "지정된 자격 증명에 해당하는 활성화된 사용자를 찾을 수 없습니다"
 
-#: serializers.py:178 tokens.py:299
+#: serializers.py:178 tokens.py:280
 msgid "Token is blacklisted"
 msgstr "블랙리스트에 추가된 토큰입니다"
 

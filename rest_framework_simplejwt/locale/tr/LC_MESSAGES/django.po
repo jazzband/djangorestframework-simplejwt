@@ -22,19 +22,19 @@ msgstr ""
 msgid "Given token not valid for any token type"
 msgstr "Verilen token hiçbir token tipi için geçerli değil"
 
-#: authentication.py:127 authentication.py:162
+#: authentication.py:128 authentication.py:166
 msgid "Token contained no recognizable user identification"
 msgstr "Token tanınabilir bir kullanıcı kimliği içermiyor"
 
-#: authentication.py:132
+#: authentication.py:135
 msgid "User not found"
 msgstr "Kullanıcı bulunamadı"
 
-#: authentication.py:135
+#: authentication.py:139
 msgid "User is inactive"
 msgstr "Kullanıcı etkin değil"
 
-#: authentication.py:142
+#: authentication.py:146
 msgid "The user's password has been changed."
 msgstr ""
 
@@ -81,7 +81,7 @@ msgstr "Verilen kimlik bilgileriyle aktif bir hesap bulunamadı"
 msgid "No active account found for the given token."
 msgstr "Verilen kimlik bilgileriyle aktif bir hesap bulunamadı"
 
-#: serializers.py:178 tokens.py:299
+#: serializers.py:178 tokens.py:280
 msgid "Token is blacklisted"
 msgstr "Token kara listeye alınmış"
 

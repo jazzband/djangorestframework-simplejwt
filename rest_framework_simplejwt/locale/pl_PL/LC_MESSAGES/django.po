@@ -19,19 +19,19 @@ msgstr "Nagłówek autoryzacji musi zawierać dwie wartości rodzielone spacjami
 msgid "Given token not valid for any token type"
 msgstr "Podany token jest błędny dla każdego typu tokena"
 
-#: authentication.py:127 authentication.py:162
+#: authentication.py:128 authentication.py:166
 msgid "Token contained no recognizable user identification"
 msgstr "Token nie zawierał rozpoznawalnej identyfikacji użytkownika"
 
-#: authentication.py:132
+#: authentication.py:135
 msgid "User not found"
 msgstr "Użytkownik nie znaleziony"
 
-#: authentication.py:135
+#: authentication.py:139
 msgid "User is inactive"
 msgstr "Użytkownik jest nieaktywny"
 
-#: authentication.py:142
+#: authentication.py:146
 msgid "The user's password has been changed."
 msgstr ""
 
@@ -78,7 +78,7 @@ msgstr "Nie znaleziono aktywnego konta dla podanych danych uwierzytelniających"
 msgid "No active account found for the given token."
 msgstr "Nie znaleziono aktywnego konta dla podanych danych uwierzytelniających"
 
-#: serializers.py:178 tokens.py:299
+#: serializers.py:178 tokens.py:280
 msgid "Token is blacklisted"
 msgstr "Token znajduję się na czarnej liście"
 

@@ -72,7 +72,7 @@ msgstr "هیچ اکانت فعالی برای اطلاعات داده شده ی�
 msgid "No active account found for the given token."
 msgstr "هیچ اکانت فعالی برای توکن داده شده یافت نشد"
 
-#: serializers.py:178 tokens.py:281
+#: serializers.py:178 tokens.py:280
 msgid "Token is blacklisted"
 msgstr "توکن به لیست سیاه رفته است"
 
