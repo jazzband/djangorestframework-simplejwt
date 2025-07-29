@@ -37,10 +37,12 @@ build-docs:
 		*confest* \
 		tests/* \
 		rest_framework_simplejwt/token_blacklist/* \
+		rest_framework_simplejwt/token_family/* \
 		rest_framework_simplejwt/backends.py \
 		rest_framework_simplejwt/exceptions.py \
 		rest_framework_simplejwt/settings.py \
-		rest_framework_simplejwt/state.py
+		rest_framework_simplejwt/state.py \
+		rest_framework_simplejwt/cache.py
 	$(MAKE) -C docs clean
 	$(MAKE) -C docs html
 	$(MAKE) -C docs doctest
