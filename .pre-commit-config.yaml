@@ -64,3 +64,4 @@ repos:
   hooks:
     - id: mypy
       args: ["rest_framework_simplejwt"]
+      
