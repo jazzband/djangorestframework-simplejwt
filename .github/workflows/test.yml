@@ -56,7 +56,7 @@ jobs:
         tox -v
     - name: Run mypy
       run: |
-        pip install mypy==1.17.1
+        pip install mypy
         mypy rest_framework_simplejwt
     
       env:
