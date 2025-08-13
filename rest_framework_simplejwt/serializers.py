@@ -135,7 +135,9 @@ class TokenRefreshSerializer(serializers.Serializer):
         user_id = refresh.payload.get(api_settings.USER_ID_CLAIM, None)
         if user_id:
             try:
-                user = get_user_model().objects.get(**{api_settings.USER_ID_FIELD: user_id})
+                user = get_user_model().objects.get(
+                    **{api_settings.USER_ID_FIELD: user_id}
+                )
             except get_user_model().DoesNotExist:
                 # This handles the case where the user has been deleted.
                 raise AuthenticationFailed(
@@ -154,14 +156,18 @@ class TokenRefreshSerializer(serializers.Serializer):
                 if token_hash != user_hash:
                     # If the password has changed, we blacklist the token
                     # to prevent any further use.
-                    if "rest_framework_simplejwt.token_blacklist" in settings.INSTALLED_APPS:
+                    if (
+                        "rest_framework_simplejwt.token_blacklist"
+                        in settings.INSTALLED_APPS
+                    ):
                         try:
                             refresh.blacklist()
                         except AttributeError:
                             pass
 
                     raise AuthenticationFailed(
-                        _("The user's password has been changed."), code="password_changed"
+                        _("The user's password has been changed."),
+                        code="password_changed",
                     )
 
         return data
