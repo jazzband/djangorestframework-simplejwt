@@ -10,6 +10,7 @@ from rest_framework.exceptions import AuthenticationFailed, ValidationError
 from .models import TokenUser
 from .settings import api_settings
 from .tokens import RefreshToken, SlidingToken, Token, UntypedToken
+from .utils import get_md5_hash_password
 
 AuthUser = TypeVar("AuthUser", AbstractBaseUser, TokenUser)
 
@@ -111,19 +112,6 @@ class TokenRefreshSerializer(serializers.Serializer):
     def validate(self, attrs: dict[str, Any]) -> dict[str, str]:
         refresh = self.token_class(attrs["refresh"])
 
-        user_id = refresh.payload.get(api_settings.USER_ID_CLAIM, None)
-        if user_id:
-            user = (
-                get_user_model()
-                .objects.filter(**{api_settings.USER_ID_FIELD: user_id})
-                .first()
-            )
-            if not user or not api_settings.USER_AUTHENTICATION_RULE(user):
-                raise AuthenticationFailed(
-                    self.error_messages["no_active_account"],
-                    "no_active_account",
-                )
-
         data = {"access": str(refresh.access_token)}
 
         if api_settings.ROTATE_REFRESH_TOKENS:
@@ -142,6 +130,39 @@ class TokenRefreshSerializer(serializers.Serializer):
             refresh.outstand()
 
             data["refresh"] = str(refresh)
+
+        # We handle user-related validation in a single, efficient block.
+        user_id = refresh.payload.get(api_settings.USER_ID_CLAIM, None)
+        if user_id:
+            try:
+                user = get_user_model().objects.get(**{api_settings.USER_ID_FIELD: user_id})
+            except get_user_model().DoesNotExist:
+                # This handles the case where the user has been deleted.
+                raise AuthenticationFailed(
+                    self.error_messages["no_active_account"], "no_active_account"
+                )
+
+            if not api_settings.USER_AUTHENTICATION_RULE(user):
+                raise AuthenticationFailed(
+                    self.error_messages["no_active_account"], "no_active_account"
+                )
+
+            if api_settings.CHECK_REVOKE_TOKEN:
+                token_hash = refresh.payload.get(api_settings.REVOKE_TOKEN_CLAIM)
+                user_hash = get_md5_hash_password(user.password)
+
+                if token_hash != user_hash:
+                    # If the password has changed, we blacklist the token
+                    # to prevent any further use.
+                    if "rest_framework_simplejwt.token_blacklist" in settings.INSTALLED_APPS:
+                        try:
+                            refresh.blacklist()
+                        except AttributeError:
+                            pass
+
+                    raise AuthenticationFailed(
+                        _("The user's password has been changed."), code="password_changed"
+                    )
 
         return data
 
