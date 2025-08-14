@@ -114,23 +114,6 @@ class TokenRefreshSerializer(serializers.Serializer):
 
         data = {"access": str(refresh.access_token)}
 
-        if api_settings.ROTATE_REFRESH_TOKENS:
-            if api_settings.BLACKLIST_AFTER_ROTATION:
-                try:
-                    # Attempt to blacklist the given refresh token
-                    refresh.blacklist()
-                except AttributeError:
-                    # If blacklist app not installed, `blacklist` method will
-                    # not be present
-                    pass
-
-            refresh.set_jti()
-            refresh.set_exp()
-            refresh.set_iat()
-            refresh.outstand()
-
-            data["refresh"] = str(refresh)
-
         # We handle user-related validation in a single, efficient block.
         user_id = refresh.payload.get(api_settings.USER_ID_CLAIM, None)
         if user_id:
@@ -169,6 +152,23 @@ class TokenRefreshSerializer(serializers.Serializer):
                         _("The user's password has been changed."),
                         code="password_changed",
                     )
+
+        if api_settings.ROTATE_REFRESH_TOKENS:
+            if api_settings.BLACKLIST_AFTER_ROTATION:
+                try:
+                    # Attempt to blacklist the given refresh token
+                    refresh.blacklist()
+                except AttributeError:
+                    # If blacklist app not installed, `blacklist` method will
+                    # not be present
+                    pass
+
+            refresh.set_jti()
+            refresh.set_exp()
+            refresh.set_iat()
+            refresh.outstand()
+
+            data["refresh"] = str(refresh)
 
         return data
 
