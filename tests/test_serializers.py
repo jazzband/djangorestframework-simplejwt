@@ -187,6 +187,15 @@ class TestTokenObtainPairSerializer(TestCase):
 
 
 class TestTokenRefreshSlidingSerializer(TestCase):
+    def setUp(self):
+        self.username = "test_user"
+        self.password = "test_password"
+
+        self.user = User.objects.create_user(
+            username=self.username,
+            password=self.password,
+        )
+
     def test_it_should_not_validate_if_token_invalid(self):
         token = SlidingToken()
         del token["exp"]
@@ -267,6 +276,74 @@ class TestTokenRefreshSlidingSerializer(TestCase):
         new_exp = datetime_from_epoch(new_token["exp"])
 
         self.assertTrue(old_exp < new_exp)
+
+    def test_it_should_raise_error_for_deleted_users(self):
+        token = SlidingToken.for_user(self.user)
+        self.user.delete()
+
+        s = TokenRefreshSlidingSerializer(data={"token": str(token)})
+
+        # It should raise AuthenticationFailed instead of ObjectDoesNotExist
+        with self.assertRaises(drf_exceptions.AuthenticationFailed) as e:
+            s.is_valid()
+
+        self.assertEqual(e.exception.get_codes(), "no_active_account")
+
+    def test_it_should_raise_error_for_inactive_users(self):
+        token = SlidingToken.for_user(self.user)
+        self.user.is_active = False
+        self.user.save()
+
+        s = TokenRefreshSlidingSerializer(data={"token": str(token)})
+
+        with self.assertRaises(drf_exceptions.AuthenticationFailed) as e:
+            s.is_valid()
+
+        self.assertEqual(e.exception.get_codes(), "no_active_account")
+
+    @override_api_settings(
+        CHECK_REVOKE_TOKEN=True,
+        REVOKE_TOKEN_CLAIM="hash_password",
+        BLACKLIST_AFTER_ROTATION=False,
+    )
+    def test_sliding_token_should_fail_after_password_change(self):
+        """
+        Tests that sliding token refresh fails if CHECK_REVOKE_TOKEN is True and the
+        user's password has changed.
+        """
+        token = SlidingToken.for_user(self.user)
+        self.user.set_password("new_password")
+        self.user.save()
+
+        s = TokenRefreshSlidingSerializer(data={"token": str(token)})
+
+        with self.assertRaises(drf_exceptions.AuthenticationFailed) as e:
+            s.is_valid(raise_exception=True)
+
+        self.assertEqual(e.exception.get_codes(), "password_changed")
+
+    @override_api_settings(
+        CHECK_REVOKE_TOKEN=True,
+        REVOKE_TOKEN_CLAIM="hash_password",
+        BLACKLIST_AFTER_ROTATION=True,
+    )
+    def test_sliding_token_should_blacklist_after_password_change(self):
+        """
+        Tests that if sliding token refresh fails due to a password change, the
+        offending token is blacklisted.
+        """
+        token = SlidingToken.for_user(self.user)
+        self.user.set_password("new_password")
+        self.user.save()
+
+        s = TokenRefreshSlidingSerializer(data={"token": str(token)})
+        with self.assertRaises(drf_exceptions.AuthenticationFailed):
+            s.is_valid(raise_exception=True)
+
+        # Check that the token is now in the blacklist
+        jti = token[api_settings.JTI_CLAIM]
+        self.assertTrue(OutstandingToken.objects.filter(jti=jti).exists())
+        self.assertTrue(BlacklistedToken.objects.filter(token__jti=jti).exists())
 
 
 class TestTokenRefreshSerializer(TestCase):
@@ -514,11 +591,6 @@ class TestTokenRefreshSerializer(TestCase):
         Tests that if token refresh fails due to a password change, the
         offending refresh token is blacklisted.
         """
-        from rest_framework_simplejwt.token_blacklist.models import (
-            BlacklistedToken,
-            OutstandingToken,
-        )
-
         refresh = RefreshToken.for_user(self.user)
         self.user.set_password("new_password")
         self.user.save()
