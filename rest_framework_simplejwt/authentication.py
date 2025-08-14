@@ -147,7 +147,8 @@ class JWTAuthentication(authentication.BaseAuthentication):
                 api_settings.REVOKE_TOKEN_CLAIM
             ) != get_md5_hash_password(user.password):
                 raise AuthenticationFailed(
-                    self.default_error_messages["password_changed"], code="password_changed"
+                    self.default_error_messages["password_changed"],
+                    code="password_changed",
                 )
 
         return user
