@@ -106,7 +106,8 @@ class TokenRefreshSerializer(serializers.Serializer):
     token_class = RefreshToken
 
     default_error_messages = {
-        "no_active_account": _("No active account found for the given token.")
+        "no_active_account": _("No active account found for the given token."),
+        "password_changed": _("The user's password has been changed."),
     }
 
     def validate(self, attrs: dict[str, Any]) -> dict[str, str]:
@@ -149,7 +150,7 @@ class TokenRefreshSerializer(serializers.Serializer):
                             pass
 
                     raise AuthenticationFailed(
-                        _("The user's password has been changed."),
+                        self.error_messages["password_changed"],
                         code="password_changed",
                     )
 
