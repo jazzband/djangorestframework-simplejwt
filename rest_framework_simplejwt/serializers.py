@@ -131,10 +131,7 @@ class TokenRefreshSerializer(serializers.Serializer):
                 )
 
             if api_settings.CHECK_REVOKE_TOKEN:
-                token_hash = refresh.payload.get(api_settings.REVOKE_TOKEN_CLAIM)
-                user_hash = get_md5_hash_password(user.password)
-
-                if token_hash != user_hash:
+                if refresh.payload.get(api_settings.REVOKE_TOKEN_CLAIM) != get_md5_hash_password(user.password):
                     # If the password has changed, we blacklist the token
                     # to prevent any further use.
                     if (
@@ -201,10 +198,7 @@ class TokenRefreshSlidingSerializer(serializers.Serializer):
                 )
 
             if api_settings.CHECK_REVOKE_TOKEN:
-                token_hash = token.payload.get(api_settings.REVOKE_TOKEN_CLAIM)
-                user_hash = get_md5_hash_password(user.password)
-
-                if token_hash != user_hash:
+                if token.payload.get(api_settings.REVOKE_TOKEN_CLAIM) != get_md5_hash_password(user.password):
                     # If the password has changed, we blacklist the token
                     # to prevent any further use.
                     if (
