@@ -34,6 +34,8 @@ Some of Simple JWT's behavior can be customized through settings variables in
       "USER_ID_FIELD": "id",
       "USER_ID_CLAIM": "user_id",
       "USER_AUTHENTICATION_RULE": "rest_framework_simplejwt.authentication.default_user_authentication_rule",
+      "ON_LOGIN_SUCCESS": "rest_framework_simplejwt.serializers.default_on_login_success",
+      "ON_LOGIN_FAILED": "rest_framework_simplejwt.serializers.default_on_login_failed",
 
       "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
       "TOKEN_TYPE_CLAIM": "token_type",
@@ -222,6 +224,20 @@ is applied after a valid token is processed. The user object is passed
 to the callable as an argument. The default rule is to check that the ``is_active``
 flag is still ``True``. The callable must return a boolean, ``True`` if authorized,
 ``False`` otherwise resulting in a 401 status code.
+
+``ON_LOGIN_SUCCESS``
+----------------------------
+
+Callable to add logic whenever a login attempt succeeded. ``UPDATE_LAST_LOGIN``
+must be set to ``True``. The callable does not return anything.
+The default callable updates last_login field in the auth_user table upon login
+(TokenObtainPairView).
+
+``ON_LOGIN_FAILED``
+----------------------------
+
+Callable to add logic whenever a login attempt failed. The callable does not
+return anything. The default callable does nothing (``pass``)
 
 ``AUTH_TOKEN_CLASSES``
 ----------------------
