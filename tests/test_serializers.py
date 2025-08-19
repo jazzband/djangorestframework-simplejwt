@@ -7,7 +7,7 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase, override_settings
 from rest_framework import exceptions as drf_exceptions
 
-from rest_framework_simplejwt.exceptions import TokenError
+from rest_framework_simplejwt.exceptions import TokenBlacklistNotConfigured, TokenError
 from rest_framework_simplejwt.serializers import (
     TokenBlacklistSerializer,
     TokenObtainPairSerializer,
@@ -560,7 +560,7 @@ class TestTokenBlacklistSerializer(TestCase):
 
         self.assertIn("wrong type", e.exception.args[0])
 
-    def test_it_should_return_nothing_if_everything_ok(self):
+    def test_it_should_return_message_if_everything_ok(self):
         refresh = RefreshToken()
         refresh["test_claim"] = "arst"
 
@@ -573,7 +573,7 @@ class TestTokenBlacklistSerializer(TestCase):
             fake_aware_utcnow.return_value = now
             self.assertTrue(s.is_valid())
 
-        self.assertDictEqual(s.validated_data, {})
+        self.assertDictEqual(s.validated_data, {"message": "Token blacklisted"})
 
     def test_it_should_blacklist_refresh_token_if_everything_ok(self):
         self.assertEqual(OutstandingToken.objects.count(), 0)
@@ -600,24 +600,31 @@ class TestTokenBlacklistSerializer(TestCase):
         # Assert old refresh token is blacklisted
         self.assertEqual(BlacklistedToken.objects.first().token.jti, old_jti)
 
-    def test_blacklist_app_not_installed_should_pass(self):
+    def test_blacklist_app_not_installed_should_raise_token_blacklist_not_configured(
+        self,
+    ):
         from rest_framework_simplejwt import serializers, tokens
 
         # Remove blacklist app
         new_apps = list(settings.INSTALLED_APPS)
         new_apps.remove("rest_framework_simplejwt.token_blacklist")
 
-        with self.settings(INSTALLED_APPS=tuple(new_apps)):
-            # Reload module that blacklist app not installed
+        try:
+            with self.settings(INSTALLED_APPS=tuple(new_apps)):
+                # Reload module that blacklist app not installed
+                reload(tokens)
+                reload(serializers)
+
+                refresh = tokens.RefreshToken()
+
+                # Serializer validates
+                ser = serializers.TokenBlacklistSerializer(
+                    data={"refresh": str(refresh)}
+                )
+
+                with self.assertRaises(TokenBlacklistNotConfigured):
+                    ser.validate({"refresh": str(refresh)})
+        finally:
+            # Restore origin module without mock
             reload(tokens)
             reload(serializers)
-
-            refresh = tokens.RefreshToken()
-
-            # Serializer validates
-            ser = serializers.TokenBlacklistSerializer(data={"refresh": str(refresh)})
-            ser.validate({"refresh": str(refresh)})
-
-        # Restore origin module without mock
-        reload(tokens)
-        reload(serializers)

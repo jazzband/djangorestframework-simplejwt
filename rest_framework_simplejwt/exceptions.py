@@ -54,3 +54,11 @@ class InvalidToken(AuthenticationFailed):
     status_code = status.HTTP_401_UNAUTHORIZED
     default_detail = _("Token is invalid or expired")
     default_code = "token_not_valid"
+
+
+class TokenBlacklistNotConfigured(DetailDictMixin, exceptions.APIException):
+    status_code = status.HTTP_501_NOT_IMPLEMENTED
+    default_detail = _(
+        "Token blacklist functionality is not enabled or available. Please check your configuration."
+    )
+    default_code = "blacklist_not_configured"
