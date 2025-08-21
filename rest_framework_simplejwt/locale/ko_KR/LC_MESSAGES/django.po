@@ -12,29 +12,29 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: authentication.py:89
+#: authentication.py:37 serializers.py:110 serializers.py:180
+msgid "The user's password has been changed."
+msgstr "사용자의 비밀번호가 바뀌었습니다."
+
+#: authentication.py:93
 msgid "Authorization header must contain two space-delimited values"
 msgstr "인증 헤더에는 공백으로 구분 된 두 개의 값이 포함되어야 합니다"
 
-#: authentication.py:115
+#: authentication.py:119
 msgid "Given token not valid for any token type"
 msgstr "이 토큰은 모든 타입의 토큰에 대해 유효하지 않습니다"
 
-#: authentication.py:128 authentication.py:166
+#: authentication.py:132 authentication.py:171
 msgid "Token contained no recognizable user identification"
 msgstr "토큰에 사용자 식별자가 포함되어 있지 않습니다"
 
-#: authentication.py:135
+#: authentication.py:139
 msgid "User not found"
 msgstr "찾을 수 없는 사용자입니다"
 
-#: authentication.py:139
+#: authentication.py:143
 msgid "User is inactive"
 msgstr "비활성화된 사용자입니다"
-
-#: authentication.py:146
-msgid "The user's password has been changed."
-msgstr "사용자의 비밀번호가 바뀌었습니다."
 
 #: backends.py:90
 msgid "Unrecognized algorithm type '{}'"
@@ -71,17 +71,17 @@ msgstr "유효하지 않거나 만료된 토큰입니다"
 msgid "Token is invalid or expired"
 msgstr "유효하지 않거나 만료된 토큰입니다"
 
-#: serializers.py:35
+#: serializers.py:36
 msgid "No active account found with the given credentials"
 msgstr "지정된 자격 증명에 해당하는 활성화된 사용자를 찾을 수 없습니다"
 
-#: serializers.py:108
+#: serializers.py:109 serializers.py:179
 #, fuzzy
 #| msgid "No active account found with the given credentials"
 msgid "No active account found for the given token."
 msgstr "지정된 자격 증명에 해당하는 활성화된 사용자를 찾을 수 없습니다"
 
-#: serializers.py:178 tokens.py:280
+#: serializers.py:245 tokens.py:280
 msgid "Token is blacklisted"
 msgstr "블랙리스트에 추가된 토큰입니다"
 
