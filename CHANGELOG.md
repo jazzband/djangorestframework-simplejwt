@@ -1,3 +1,13 @@
+## [Unreleased]
+
+### Changed
+- **BREAKING:** In `serializers.py`, when a user linked to a token is missing or deleted, the code now raises `AuthenticationFailed("no_active_account")` instead of allowing `DoesNotExist` to propagate.
+  - Response changed from **404 Not Found** → **401 Unauthorized**.
+  - Improves security by not leaking whether a user/token exists.
+  - Follows RFC 7235, where authentication failures should return 401.
+  - Clearer for clients: signals an auth issue instead of suggesting the endpoint is missing.
+
+
 ## 5.5.1
 
 Missing Migration for rest_framework_simplejwt.token_blacklist app. A previously missing migration (0013_blacklist) has now been added. This issue arose because the migration file was mistakenly not generated earlier. This migration was never part of an official release, but users following the latest master branch may have encountered it.

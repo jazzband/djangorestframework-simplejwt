@@ -33,6 +33,10 @@ class JWTAuthentication(authentication.BaseAuthentication):
     www_authenticate_realm = "api"
     media_type = "application/json"
 
+    default_error_messages = {
+        "password_changed": _("The user's password has been changed."),
+    }
+
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.user_model = get_user_model()
@@ -143,7 +147,8 @@ class JWTAuthentication(authentication.BaseAuthentication):
                 api_settings.REVOKE_TOKEN_CLAIM
             ) != get_md5_hash_password(user.password):
                 raise AuthenticationFailed(
-                    _("The user's password has been changed."), code="password_changed"
+                    self.default_error_messages["password_changed"],
+                    code="password_changed",
                 )
 
         return user
