@@ -11,31 +11,31 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: authentication.py:89
+#: authentication.py:37 serializers.py:110 serializers.py:180
+msgid "The user's password has been changed."
+msgstr ""
+
+#: authentication.py:93
 msgid "Authorization header must contain two space-delimited values"
 msgstr ""
 "L'en-tête 'Authorization' doit contenir deux valeurs séparées par des espaces"
 
-#: authentication.py:115
+#: authentication.py:119
 msgid "Given token not valid for any token type"
 msgstr "Le type de jeton fourni n'est pas valide"
 
-#: authentication.py:128 authentication.py:166
+#: authentication.py:132 authentication.py:171
 msgid "Token contained no recognizable user identification"
 msgstr ""
 "Le jeton ne contient aucune information permettant d'identifier l'utilisateur"
 
-#: authentication.py:135
+#: authentication.py:139
 msgid "User not found"
 msgstr "L'utilisateur n'a pas été trouvé"
 
-#: authentication.py:139
+#: authentication.py:143
 msgid "User is inactive"
 msgstr "L'utilisateur est désactivé"
-
-#: authentication.py:146
-msgid "The user's password has been changed."
-msgstr ""
 
 #: backends.py:90
 msgid "Unrecognized algorithm type '{}'"
@@ -70,17 +70,17 @@ msgstr "Le jeton est invalide ou expiré"
 msgid "Token is invalid or expired"
 msgstr "Le jeton est invalide ou expiré"
 
-#: serializers.py:35
+#: serializers.py:36
 msgid "No active account found with the given credentials"
 msgstr "Aucun compte actif n'a été trouvé avec les identifiants fournis"
 
-#: serializers.py:108
+#: serializers.py:109 serializers.py:179
 #, fuzzy
 #| msgid "No active account found with the given credentials"
 msgid "No active account found for the given token."
 msgstr "Aucun compte actif n'a été trouvé avec les identifiants fournis"
 
-#: serializers.py:178 tokens.py:280
+#: serializers.py:245 tokens.py:280
 msgid "Token is blacklisted"
 msgstr "Le jeton a été banni"
 

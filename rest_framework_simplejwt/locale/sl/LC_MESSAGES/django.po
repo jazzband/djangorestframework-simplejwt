@@ -15,30 +15,30 @@ msgstr ""
 "X-Generator: Poedit 2.0.6\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: authentication.py:89
+#: authentication.py:37 serializers.py:110 serializers.py:180
+msgid "The user's password has been changed."
+msgstr ""
+
+#: authentication.py:93
 msgid "Authorization header must contain two space-delimited values"
 msgstr ""
 "Glava 'Authorization' mora vsebovati dve vrednosti, ločeni s presledkom"
 
-#: authentication.py:115
+#: authentication.py:119
 msgid "Given token not valid for any token type"
 msgstr "Podan žeton ni veljaven za nobeno vrsto žetona"
 
-#: authentication.py:128 authentication.py:166
+#: authentication.py:132 authentication.py:171
 msgid "Token contained no recognizable user identification"
 msgstr "Žeton ni vseboval prepoznavne identifikacije uporabnika"
 
-#: authentication.py:135
+#: authentication.py:139
 msgid "User not found"
 msgstr "Uporabnik ni najden"
 
-#: authentication.py:139
+#: authentication.py:143
 msgid "User is inactive"
 msgstr "Uporabnik je neaktiven"
-
-#: authentication.py:146
-msgid "The user's password has been changed."
-msgstr ""
 
 #: backends.py:90
 msgid "Unrecognized algorithm type '{}'"
@@ -74,17 +74,17 @@ msgstr "Žeton je neveljaven ali potekel"
 msgid "Token is invalid or expired"
 msgstr "Žeton je neveljaven ali potekel"
 
-#: serializers.py:35
+#: serializers.py:36
 msgid "No active account found with the given credentials"
 msgstr "Aktiven račun s podanimi poverilnicami ni najden"
 
-#: serializers.py:108
+#: serializers.py:109 serializers.py:179
 #, fuzzy
 #| msgid "No active account found with the given credentials"
 msgid "No active account found for the given token."
 msgstr "Aktiven račun s podanimi poverilnicami ni najden"
 
-#: serializers.py:178 tokens.py:280
+#: serializers.py:245 tokens.py:280
 msgid "Token is blacklisted"
 msgstr "Žeton je na črnem seznamu"
 

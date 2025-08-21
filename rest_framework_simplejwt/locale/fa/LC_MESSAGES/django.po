@@ -16,29 +16,29 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: authentication.py:89
+#: authentication.py:37 serializers.py:110 serializers.py:180
+msgid "The user's password has been changed."
+msgstr "رمز عبور کاربر تغییر کرده است"
+
+#: authentication.py:93
 msgid "Authorization header must contain two space-delimited values"
 msgstr "هدر اعتبارسنجی باید شامل دو مقدار جدا شده با فاصله باشد"
 
-#: authentication.py:115
+#: authentication.py:119
 msgid "Given token not valid for any token type"
 msgstr "توکن داده شده برای هیچ نوع توکنی معتبر نمی‌باشد"
 
-#: authentication.py:128 authentication.py:166
+#: authentication.py:132 authentication.py:171
 msgid "Token contained no recognizable user identification"
 msgstr "توکن شامل هیچ شناسه قابل تشخیصی از کاربر نیست"
 
-#: authentication.py:135
+#: authentication.py:139
 msgid "User not found"
 msgstr "کاربر یافت نشد"
 
-#: authentication.py:139
+#: authentication.py:143
 msgid "User is inactive"
 msgstr "کاربر غیرفعال است"
-
-#: authentication.py:146
-msgid "The user's password has been changed."
-msgstr "رمز عبور کاربر تغییر کرده است"
 
 #: backends.py:90
 msgid "Unrecognized algorithm type '{}'"
@@ -69,15 +69,15 @@ msgstr "توکن منقضی شده است"
 msgid "Token is invalid or expired"
 msgstr "توکن نامعتبر است یا منقضی شده است"
 
-#: serializers.py:35
+#: serializers.py:36
 msgid "No active account found with the given credentials"
 msgstr "هیچ اکانت فعالی برای اطلاعات داده شده یافت نشد"
 
-#: serializers.py:108
+#: serializers.py:109 serializers.py:179
 msgid "No active account found for the given token."
 msgstr "هیچ اکانت فعالی برای این توکن یافت نشد"
 
-#: serializers.py:178 tokens.py:280
+#: serializers.py:245 tokens.py:280
 msgid "Token is blacklisted"
 msgstr "توکن در لیست سیاه قرار گرفته است"
 
