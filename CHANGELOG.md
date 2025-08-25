@@ -38,7 +38,7 @@ python manage.py migrate
 * fix: Do not copy `iat` claim from refresh token by @vgrozdanic in https://github.com/jazzband/djangorestframework-simplejwt/pull/888
 * fix:  add missing migration for token_blacklist app by @juanbailon in https://github.com/jazzband/djangorestframework-simplejwt/pull/894
 * Update Persian translations (fa, fa_IR) for Django application by @mahdirahimi1999 in https://github.com/jazzband/djangorestframework-simplejwt/pull/897
-* fix: always stringify user_id claim ([#887](https://github.com/jazzband/djangorestframework-simplejwt/pull/887))
+* fix: always stringify user_id claim in https://github.com/jazzband/djangorestframework-simplejwt/pull/887
 
 ## 5.5.0
 * Cap PyJWT version to <2.10.0 to avoid incompatibility with subject claim type requirement by @grayver in https://github.com/jazzband/djangorestframework-simplejwt/pull/843
