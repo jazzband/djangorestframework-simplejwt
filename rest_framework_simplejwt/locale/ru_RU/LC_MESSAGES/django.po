@@ -16,30 +16,30 @@ msgstr ""
 "n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
 "X-Generator: Poedit 2.2.1\n"
 
-#: authentication.py:89
+#: authentication.py:37 serializers.py:110 serializers.py:180
+msgid "The user's password has been changed."
+msgstr ""
+
+#: authentication.py:93
 msgid "Authorization header must contain two space-delimited values"
 msgstr ""
 "Заголовок авторизации должен содержать два значения, разделенных пробелом"
 
-#: authentication.py:115
+#: authentication.py:119
 msgid "Given token not valid for any token type"
 msgstr "Данный токен недействителен для любого типа токена"
 
-#: authentication.py:128 authentication.py:166
+#: authentication.py:132 authentication.py:171
 msgid "Token contained no recognizable user identification"
 msgstr "Токен не содержит идентификатор пользователя"
 
-#: authentication.py:135
+#: authentication.py:139
 msgid "User not found"
 msgstr "Пользователь не найден"
 
-#: authentication.py:139
+#: authentication.py:143
 msgid "User is inactive"
 msgstr "Пользователь неактивен"
-
-#: authentication.py:146
-msgid "The user's password has been changed."
-msgstr ""
 
 #: backends.py:90
 msgid "Unrecognized algorithm type '{}'"
@@ -74,17 +74,17 @@ msgstr "Токен недействителен или просрочен"
 msgid "Token is invalid or expired"
 msgstr "Токен недействителен или просрочен"
 
-#: serializers.py:35
+#: serializers.py:36
 msgid "No active account found with the given credentials"
 msgstr "Не найдено активной учетной записи с указанными данными"
 
-#: serializers.py:108
+#: serializers.py:109 serializers.py:179
 #, fuzzy
 #| msgid "No active account found with the given credentials"
 msgid "No active account found for the given token."
 msgstr "Не найдено активной учетной записи с указанными данными"
 
-#: serializers.py:178 tokens.py:280
+#: serializers.py:245 tokens.py:280
 msgid "Token is blacklisted"
 msgstr "Токен занесен в черный список"
 
