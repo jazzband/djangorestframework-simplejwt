@@ -13,29 +13,29 @@ msgstr ""
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
-#: authentication.py:89
+#: authentication.py:37 serializers.py:110 serializers.py:180
+msgid "The user's password has been changed."
+msgstr ""
+
+#: authentication.py:93
 msgid "Authorization header must contain two space-delimited values"
 msgstr "يجب أن يحتوي رأس التفويض على قيمتين مفصولتين بمسافات"
 
-#: authentication.py:115
+#: authentication.py:119
 msgid "Given token not valid for any token type"
 msgstr "تأشيرة المرور غير صالحة لأي نوع من أنواع التأشيرات"
 
-#: authentication.py:128 authentication.py:166
+#: authentication.py:132 authentication.py:171
 msgid "Token contained no recognizable user identification"
 msgstr "لا تحتوي تأشيرة المرور على هوية مستخدم يمكن التعرف عليها"
 
-#: authentication.py:135
+#: authentication.py:139
 msgid "User not found"
 msgstr "لم يتم العثور على المستخدم"
 
-#: authentication.py:139
+#: authentication.py:143
 msgid "User is inactive"
 msgstr "الحساب غير مفعل"
-
-#: authentication.py:146
-msgid "The user's password has been changed."
-msgstr ""
 
 #: backends.py:90
 msgid "Unrecognized algorithm type '{}'"
@@ -71,17 +71,17 @@ msgstr "تأشيرة المرور غير صالحة أو منتهية الصلا
 msgid "Token is invalid or expired"
 msgstr "تأشيرة المرور غير صالحة أو منتهية الصلاحية"
 
-#: serializers.py:35
+#: serializers.py:36
 msgid "No active account found with the given credentials"
 msgstr "لم يتم العثور على حساب نشط للبيانات المقدمة"
 
-#: serializers.py:108
+#: serializers.py:109 serializers.py:179
 #, fuzzy
 #| msgid "No active account found with the given credentials"
 msgid "No active account found for the given token."
 msgstr "لم يتم العثور على حساب نشط للبيانات المقدمة"
 
-#: serializers.py:178 tokens.py:280
+#: serializers.py:245 tokens.py:280
 msgid "Token is blacklisted"
 msgstr "التأشيرة مدرجة في القائمة السوداء"
 

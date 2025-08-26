@@ -15,29 +15,29 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: authentication.py:89
+#: authentication.py:37 serializers.py:110 serializers.py:180
+msgid "The user's password has been changed."
+msgstr ""
+
+#: authentication.py:93
 msgid "Authorization header must contain two space-delimited values"
 msgstr "授权头必须包含两个用空格分隔的值"
 
-#: authentication.py:115
+#: authentication.py:119
 msgid "Given token not valid for any token type"
 msgstr "此令牌对任何类型的令牌无效"
 
-#: authentication.py:128 authentication.py:166
+#: authentication.py:132 authentication.py:171
 msgid "Token contained no recognizable user identification"
 msgstr "令牌未包含用户标识符"
 
-#: authentication.py:135
+#: authentication.py:139
 msgid "User not found"
 msgstr "未找到该用户"
 
-#: authentication.py:139
+#: authentication.py:143
 msgid "User is inactive"
 msgstr "该用户已禁用"
-
-#: authentication.py:146
-msgid "The user's password has been changed."
-msgstr ""
 
 #: backends.py:90
 msgid "Unrecognized algorithm type '{}'"
@@ -72,17 +72,17 @@ msgstr "令牌无效或已过期"
 msgid "Token is invalid or expired"
 msgstr "令牌无效或已过期"
 
-#: serializers.py:35
+#: serializers.py:36
 msgid "No active account found with the given credentials"
 msgstr "找不到指定凭据对应的有效用户"
 
-#: serializers.py:108
+#: serializers.py:109 serializers.py:179
 #, fuzzy
 #| msgid "No active account found with the given credentials"
 msgid "No active account found for the given token."
 msgstr "找不到指定凭据对应的有效用户"
 
-#: serializers.py:178 tokens.py:280
+#: serializers.py:245 tokens.py:280
 msgid "Token is blacklisted"
 msgstr "令牌已被加入黑名单"
 

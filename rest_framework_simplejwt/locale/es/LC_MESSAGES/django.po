@@ -12,30 +12,30 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: authentication.py:89
+#: authentication.py:37 serializers.py:110 serializers.py:180
+msgid "The user's password has been changed."
+msgstr ""
+
+#: authentication.py:93
 msgid "Authorization header must contain two space-delimited values"
 msgstr ""
 "El encabezado 'Authorization' debe contener valores delimitados por espacios"
 
-#: authentication.py:115
+#: authentication.py:119
 msgid "Given token not valid for any token type"
 msgstr "El token dado no es valido para ningun tipo de token"
 
-#: authentication.py:128 authentication.py:166
+#: authentication.py:132 authentication.py:171
 msgid "Token contained no recognizable user identification"
 msgstr "El token no contenía identificación de usuario reconocible"
 
-#: authentication.py:135
+#: authentication.py:139
 msgid "User not found"
 msgstr "Usuario no encontrado"
 
-#: authentication.py:139
+#: authentication.py:143
 msgid "User is inactive"
 msgstr "El usuario está inactivo"
-
-#: authentication.py:146
-msgid "The user's password has been changed."
-msgstr ""
 
 #: backends.py:90
 msgid "Unrecognized algorithm type '{}'"
@@ -70,17 +70,17 @@ msgstr "El token es inválido o ha expirado"
 msgid "Token is invalid or expired"
 msgstr "El token es inválido o ha expirado"
 
-#: serializers.py:35
+#: serializers.py:36
 msgid "No active account found with the given credentials"
 msgstr "La combinación de credenciales no tiene una cuenta activa"
 
-#: serializers.py:108
+#: serializers.py:109 serializers.py:179
 #, fuzzy
 #| msgid "No active account found with the given credentials"
 msgid "No active account found for the given token."
 msgstr "La combinación de credenciales no tiene una cuenta activa"
 
-#: serializers.py:178 tokens.py:280
+#: serializers.py:245 tokens.py:280
 msgid "Token is blacklisted"
 msgstr "El token está en lista negra"
 
