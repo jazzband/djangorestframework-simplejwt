@@ -16,29 +16,29 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: authentication.py:89
+#: authentication.py:37 serializers.py:110 serializers.py:180
+msgid "The user's password has been changed."
+msgstr ""
+
+#: authentication.py:93
 msgid "Authorization header must contain two space-delimited values"
 msgstr "Header otorisasi harus berisi dua nilai yang dipisahkan spasi"
 
-#: authentication.py:115
+#: authentication.py:119
 msgid "Given token not valid for any token type"
 msgstr "Token yang diberikan tidak valid untuk semua jenis token"
 
-#: authentication.py:128 authentication.py:166
+#: authentication.py:132 authentication.py:171
 msgid "Token contained no recognizable user identification"
 msgstr "Token tidak mengandung identifikasi pengguna yang dapat dikenali"
 
-#: authentication.py:135
+#: authentication.py:139
 msgid "User not found"
 msgstr "Pengguna tidak ditemukan"
 
-#: authentication.py:139
+#: authentication.py:143
 msgid "User is inactive"
 msgstr "Pengguna tidak aktif"
-
-#: authentication.py:146
-msgid "The user's password has been changed."
-msgstr ""
 
 #: backends.py:90
 msgid "Unrecognized algorithm type '{}'"
@@ -74,17 +74,17 @@ msgstr "Token tidak valid atau kedaluwarsa"
 msgid "Token is invalid or expired"
 msgstr "Token tidak valid atau kedaluwarsa"
 
-#: serializers.py:35
+#: serializers.py:36
 msgid "No active account found with the given credentials"
 msgstr "Tidak ada akun aktif yang ditemukan dengan kredensial yang diberikan"
 
-#: serializers.py:108
+#: serializers.py:109 serializers.py:179
 #, fuzzy
 #| msgid "No active account found with the given credentials"
 msgid "No active account found for the given token."
 msgstr "Tidak ada akun aktif yang ditemukan dengan kredensial yang diberikan"
 
-#: serializers.py:178 tokens.py:280
+#: serializers.py:245 tokens.py:280
 msgid "Token is blacklisted"
 msgstr "Token masuk daftar hitam"
 

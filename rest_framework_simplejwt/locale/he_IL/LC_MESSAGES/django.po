@@ -16,29 +16,29 @@ msgstr ""
 "2 : 3);\n"
 "X-Generator: Poedit 3.2.2\n"
 
-#: authentication.py:89
+#: authentication.py:37 serializers.py:110 serializers.py:180
+msgid "The user's password has been changed."
+msgstr ""
+
+#: authentication.py:93
 msgid "Authorization header must contain two space-delimited values"
 msgstr "Authorization Header חייבת להכיל שני ערכים מופרדים ברווח"
 
-#: authentication.py:115
+#: authentication.py:119
 msgid "Given token not valid for any token type"
 msgstr "המזהה הנתון אינו תקף עבור אף סיווג"
 
-#: authentication.py:128 authentication.py:166
+#: authentication.py:132 authentication.py:171
 msgid "Token contained no recognizable user identification"
 msgstr "המזהה לא הכיל זיהוי משתמש שניתן לזהות"
 
-#: authentication.py:135
+#: authentication.py:139
 msgid "User not found"
 msgstr "משתמש לא נמצא"
 
-#: authentication.py:139
+#: authentication.py:143
 msgid "User is inactive"
 msgstr "המשתמש אינו פעיל"
-
-#: authentication.py:146
-msgid "The user's password has been changed."
-msgstr ""
 
 #: backends.py:90
 msgid "Unrecognized algorithm type '{}'"
@@ -73,17 +73,17 @@ msgstr "המזהה אינו חוקי או שפג תוקפו"
 msgid "Token is invalid or expired"
 msgstr "המזהה אינו חוקי או שפג תוקפו"
 
-#: serializers.py:35
+#: serializers.py:36
 msgid "No active account found with the given credentials"
 msgstr "לא נמצא חשבון עם פרטי זיהוי אלו"
 
-#: serializers.py:108
+#: serializers.py:109 serializers.py:179
 #, fuzzy
 #| msgid "No active account found with the given credentials"
 msgid "No active account found for the given token."
 msgstr "לא נמצא חשבון עם פרטי זיהוי אלו"
 
-#: serializers.py:178 tokens.py:280
+#: serializers.py:245 tokens.py:280
 msgid "Token is blacklisted"
 msgstr "המזהה ברשימה השחורה."
 
