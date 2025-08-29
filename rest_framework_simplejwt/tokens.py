@@ -1,6 +1,8 @@
 from datetime import datetime, timedelta
-from typing import TYPE_CHECKING, Any, Generic, Optional, TypeVar
-from uuid import uuid4
+from typing import TYPE_CHECKING, Any, Generic, Optional, TypeVar, Tuple
+from uuid import uuid4, UUID
+from django.core.exceptions import ImproperlyConfigured
+from django.http import HttpRequest
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -141,7 +143,7 @@ class Token:
         if self.token_type != token_type:
             raise TokenError(_("Token has wrong type"))
 
-    def set_jti(self) -> None:
+    def set_jti(self, session_id: UUID | None = None) -> None:
         """
         Populates the configured jti claim of a token with a string where there
         is a negligible probability that the same string will be chosen at a
@@ -150,7 +152,11 @@ class Token:
         See here:
         https://tools.ietf.org/html/rfc7519#section-4.1.7
         """
-        self.payload[api_settings.JTI_CLAIM] = uuid4().hex
+
+        if session_id is not None:
+            self.payload[api_settings.JTI_CLAIM] = str(session_id)
+        else:
+            self.payload[api_settings.JTI_CLAIM] = uuid4().hex
 
     def set_exp(
         self,
@@ -198,12 +204,14 @@ class Token:
         try:
             claim_value = self.payload[claim]
         except KeyError as e:
-            raise TokenError(format_lazy(_("Token has no '{}' claim"), claim)) from e
+            raise TokenError(format_lazy(
+                _("Token has no '{}' claim"), claim)) from e
 
         claim_time = datetime_from_epoch(claim_value)
         leeway = self.get_token_backend().get_leeway()
         if claim_time <= current_time - leeway:
-            raise TokenError(format_lazy(_("Token '{}' claim has expired"), claim))
+            raise TokenError(format_lazy(
+                _("Token '{}' claim has expired"), claim))
 
     def outstand(self) -> Optional[OutstandingToken]:
         """
@@ -251,6 +259,32 @@ class Token:
         # Backward compatibility.
         return self.token_backend
 
+    @classmethod
+    def get_device_info(self, request: HttpRequest) -> Tuple[str, str]:
+        """
+        Retrieves the device's user agent and IP address from the request.
+
+        This function extracts the `User-Agent` and `IP Address` from the HTTP request's 
+        metadata. If either of these headers is missing, it raises an `ImproperlyConfigured` 
+        exception.
+
+        Raises:
+            ImproperlyConfigured: If the `User-Agent` or `IP Address` headers are missing.
+        """
+
+        device_agent = request.META.get('HTTP_USER_AGENT')
+        device_ip = request.META.get('REMOTE_ADDR')
+
+        if device_agent is None:
+            raise ImproperlyConfigured({
+                'user_agent': 'User-Agent header is required.'
+            })
+        elif device_ip is None:
+            raise ImproperlyConfigured({
+                'device_ip': 'User IP Address header is required.'
+            })
+        return device_agent, device_ip
+
 
 class BlacklistMixin(Generic[T]):
     """
@@ -289,7 +323,8 @@ class BlacklistMixin(Generic[T]):
             user_id = self.payload.get(api_settings.USER_ID_CLAIM)
             User = get_user_model()
             try:
-                user = User.objects.get(**{api_settings.USER_ID_FIELD: user_id})
+                user = User.objects.get(
+                    **{api_settings.USER_ID_FIELD: user_id})
             except User.DoesNotExist:
                 user = None
 
@@ -316,7 +351,8 @@ class BlacklistMixin(Generic[T]):
             user_id = self.payload.get(api_settings.USER_ID_CLAIM)
             User = get_user_model()
             try:
-                user = User.objects.get(**{api_settings.USER_ID_FIELD: user_id})
+                user = User.objects.get(
+                    **{api_settings.USER_ID_FIELD: user_id})
             except User.DoesNotExist:
                 user = None
 
@@ -402,6 +438,9 @@ class RefreshToken(BlacklistMixin["RefreshToken"], Token):
         # access token "exp" claim.  This ensures that both a refresh and
         # access token expire relative to the same time if they are created as
         # a pair.
+        if api_settings.ALLOW_MULTI_DEVICE:
+            access.set_jti(self[api_settings.JTI_CLAIM])
+
         access.set_exp(from_time=self.current_time)
 
         no_copy = self.no_copy_claims

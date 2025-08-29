@@ -1,5 +1,6 @@
 from typing import Any, Optional, TypeVar
 
+from django.http import HttpRequest
 from django.conf import settings
 from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.models import AbstractBaseUser, update_last_login
@@ -11,6 +12,8 @@ from .models import TokenUser
 from .settings import api_settings
 from .tokens import RefreshToken, SlidingToken, Token, UntypedToken
 from .utils import get_md5_hash_password
+
+from .jwt_multi_session.models import JWTSession
 
 AuthUser = TypeVar("AuthUser", AbstractBaseUser, TokenUser)
 
@@ -39,7 +42,8 @@ class TokenObtainSerializer(serializers.Serializer):
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
 
-        self.fields[self.username_field] = serializers.CharField(write_only=True)
+        self.fields[self.username_field] = serializers.CharField(
+            write_only=True)
         self.fields["password"] = PasswordField()
 
     def validate(self, attrs: dict[str, Any]) -> dict[Any, Any]:
@@ -63,7 +67,30 @@ class TokenObtainSerializer(serializers.Serializer):
         return {}
 
     @classmethod
-    def get_token(cls, user: AuthUser) -> Token:
+    def get_token(cls, user: AuthUser, request: HttpRequest | None = None) -> Token:
+
+        if api_settings.ALLOW_MULTI_DEVICE and cls.token_class is RefreshToken:
+            # Multi-device support is only available with RefreshToken.
+            # It does NOT work with stateless tokens (e.g., AccessToken, SlidingToken),
+            # because those cannot be reliably bound to a server-side session.
+            # Enforcing it with other token classes would create security issues.
+
+            try:
+                device_agent, device_ip = cls.token_class.get_device_info(
+                    request=request)
+                session = JWTSession.objects.create(
+                    user=user,
+                    device_agent=device_agent,
+                    device_ip=device_ip
+                )
+                token = cls.token_class.for_user(user)
+                token.set_jti(session.pk)
+                return token
+
+            except Exception as e:
+                raise exceptions.AuthenticationFailed(
+                    f"Could not create session {e}")
+
         return cls.token_class.for_user(user)  # type: ignore
 
 
@@ -72,8 +99,9 @@ class TokenObtainPairSerializer(TokenObtainSerializer):
 
     def validate(self, attrs: dict[str, Any]) -> dict[str, str]:
         data = super().validate(attrs)
+        request = self.context.get('request')
 
-        refresh = self.get_token(self.user)
+        refresh = self.get_token(self.user, request)
 
         data["refresh"] = str(refresh)
         data["access"] = str(refresh.access_token)
@@ -114,6 +142,8 @@ class TokenRefreshSerializer(serializers.Serializer):
         refresh = self.token_class(attrs["refresh"])
 
         user_id = refresh.payload.get(api_settings.USER_ID_CLAIM, None)
+        session_id = refresh.payload.get(api_settings.JTI_CLAIM, None)
+
         if user_id:
             try:
                 user = get_user_model().objects.get(
@@ -161,12 +191,24 @@ class TokenRefreshSerializer(serializers.Serializer):
                     # not be present
                     pass
 
-            refresh.set_jti()
+            if api_settings.ALLOW_MULTI_DEVICE:
+                refresh.set_jti(session_id=session_id)
+            else:
+                refresh.set_jti()
+
             refresh.set_exp()
             refresh.set_iat()
             refresh.outstand()
 
             data["refresh"] = str(refresh)
+
+        if api_settings.ALLOW_MULTI_DEVICE:
+            try:
+                session = JWTSession.objects.get(pk=session_id)
+                session.update()
+            except JWTSession.DoesNotExist:
+                raise exceptions.AuthenticationFailed(
+                    f"Authentication failed: Session not found with id: {session_id}")
 
         return data
 
@@ -258,3 +300,26 @@ class TokenBlacklistSerializer(serializers.Serializer):
         except AttributeError:
             pass
         return {}
+
+
+class JWTSessionSerializer(serializers.ModelSerializer):
+    is_active = serializers.BooleanField(default=False, read_only=True)
+    
+    class Meta:
+        model = JWTSession
+        fields = [
+            'id',
+            'device_agent',
+            'device_ip',
+            'created_at',
+            'expired_at',
+            'is_active'
+        ]
+
+    def to_representation(self, instance: object) -> object:
+        session_id = self.context.get('request').auth
+        print(session_id)
+
+        if str(session_id) == str(instance.id):
+            instance.is_active = True
+        return super().to_representation(instance)

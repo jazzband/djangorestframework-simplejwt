@@ -5,10 +5,13 @@ from rest_framework import generics, status
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.serializers import BaseSerializer
+from rest_framework import viewsets
 
 from .authentication import AUTH_HEADER_TYPES
 from .exceptions import InvalidToken, TokenError
 from .settings import api_settings
+from .serializers import JWTSessionSerializer
+from .jwt_multi_session.models import JWTSession
 
 
 class TokenViewBase(generics.GenericAPIView):
@@ -120,3 +123,13 @@ class TokenBlacklistView(TokenViewBase):
 
 
 token_blacklist = TokenBlacklistView.as_view()
+
+
+class SessionsView(viewsets.ModelViewSet):
+    http_method_names = ['get', 'delete']
+    serializer_class = JWTSessionSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+
+        return JWTSession.objects.filter(user=user)
