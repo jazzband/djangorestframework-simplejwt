@@ -2,7 +2,6 @@ def pytest_configure():
     from django.conf import settings
 
     MIDDLEWARE = (
-        "django.middleware.locale.LocaleMiddleware",
         "django.middleware.common.CommonMiddleware",
         "django.contrib.sessions.middleware.SessionMiddleware",
         "django.contrib.auth.middleware.AuthenticationMiddleware",

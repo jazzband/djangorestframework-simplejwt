@@ -12,7 +12,6 @@ extras_require = {
         "pytest-xdist",
         "pytest",
         "tox",
-        "polib",
     ],
     "lint": [
         "ruff",
