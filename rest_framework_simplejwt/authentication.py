@@ -7,11 +7,11 @@ from rest_framework import HTTP_HEADER_ENCODING, authentication
 from rest_framework.request import Request
 
 from .exceptions import AuthenticationFailed, InvalidToken, TokenError
+from .jwt_multi_session.models import JWTSession
 from .models import TokenUser
 from .settings import api_settings
 from .tokens import Token
 from .utils import get_md5_hash_password
-from .jwt_multi_session.models import JWTSession
 
 AUTH_HEADER_TYPES = api_settings.AUTH_HEADER_TYPES
 
@@ -56,7 +56,7 @@ class JWTAuthentication(authentication.BaseAuthentication):
         if api_settings.ALLOW_MULTI_DEVICE and type(self) is JWTAuthentication:
             # Multi-device support only applies for JWTAuthentication,
             # not for stateless tokens like SlidingToken or AccessToken
-            
+
             session_id = validated_token[api_settings.JTI_CLAIM]
 
             try:
@@ -64,11 +64,13 @@ class JWTAuthentication(authentication.BaseAuthentication):
 
                 if not session.validate():
                     return self.get_user(validated_token), session
-                
+
                 raise JWTSession.DoesNotExist
 
             except JWTSession.DoesNotExist:
-                raise AuthenticationFailed(f"Authentication failed due to Session does not founded")
+                raise AuthenticationFailed(
+                    f"Authentication failed due to Session does not founded"
+                )
 
         return self.get_user(validated_token), validated_token
 

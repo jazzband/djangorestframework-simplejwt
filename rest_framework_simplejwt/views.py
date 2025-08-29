@@ -1,17 +1,16 @@
 from typing import Optional
 
 from django.utils.module_loading import import_string
-from rest_framework import generics, status
+from rest_framework import generics, status, viewsets
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.serializers import BaseSerializer
-from rest_framework import viewsets
 
 from .authentication import AUTH_HEADER_TYPES
 from .exceptions import InvalidToken, TokenError
-from .settings import api_settings
-from .serializers import JWTSessionSerializer
 from .jwt_multi_session.models import JWTSession
+from .serializers import JWTSessionSerializer
+from .settings import api_settings
 
 
 class TokenViewBase(generics.GenericAPIView):
@@ -126,7 +125,7 @@ token_blacklist = TokenBlacklistView.as_view()
 
 
 class SessionsView(viewsets.ModelViewSet):
-    http_method_names = ['get', 'delete']
+    http_method_names = ["get", "delete"]
     serializer_class = JWTSessionSerializer
 
     def get_queryset(self):

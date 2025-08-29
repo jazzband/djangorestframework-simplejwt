@@ -1,19 +1,18 @@
 from typing import Any, Optional, TypeVar
 
-from django.http import HttpRequest
 from django.conf import settings
 from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.models import AbstractBaseUser, update_last_login
+from django.http import HttpRequest
 from django.utils.translation import gettext_lazy as _
 from rest_framework import exceptions, serializers
 from rest_framework.exceptions import AuthenticationFailed, ValidationError
 
+from .jwt_multi_session.models import JWTSession
 from .models import TokenUser
 from .settings import api_settings
 from .tokens import RefreshToken, SlidingToken, Token, UntypedToken
 from .utils import get_md5_hash_password
-
-from .jwt_multi_session.models import JWTSession
 
 AuthUser = TypeVar("AuthUser", AbstractBaseUser, TokenUser)
 
@@ -42,8 +41,7 @@ class TokenObtainSerializer(serializers.Serializer):
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
 
-        self.fields[self.username_field] = serializers.CharField(
-            write_only=True)
+        self.fields[self.username_field] = serializers.CharField(write_only=True)
         self.fields["password"] = PasswordField()
 
     def validate(self, attrs: dict[str, Any]) -> dict[Any, Any]:
@@ -68,7 +66,6 @@ class TokenObtainSerializer(serializers.Serializer):
 
     @classmethod
     def get_token(cls, user: AuthUser, request: HttpRequest | None = None) -> Token:
-
         if api_settings.ALLOW_MULTI_DEVICE and cls.token_class is RefreshToken:
             # Multi-device support is only available with RefreshToken.
             # It does NOT work with stateless tokens (e.g., AccessToken, SlidingToken),
@@ -77,19 +74,17 @@ class TokenObtainSerializer(serializers.Serializer):
 
             try:
                 device_agent, device_ip = cls.token_class.get_device_info(
-                    request=request)
+                    request=request
+                )
                 session = JWTSession.objects.create(
-                    user=user,
-                    device_agent=device_agent,
-                    device_ip=device_ip
+                    user=user, device_agent=device_agent, device_ip=device_ip
                 )
                 token = cls.token_class.for_user(user)
                 token.set_jti(session.pk)
                 return token
 
             except Exception as e:
-                raise exceptions.AuthenticationFailed(
-                    f"Could not create session {e}")
+                raise exceptions.AuthenticationFailed(f"Could not create session {e}")
 
         return cls.token_class.for_user(user)  # type: ignore
 
@@ -99,7 +94,7 @@ class TokenObtainPairSerializer(TokenObtainSerializer):
 
     def validate(self, attrs: dict[str, Any]) -> dict[str, str]:
         data = super().validate(attrs)
-        request = self.context.get('request')
+        request = self.context.get("request")
 
         refresh = self.get_token(self.user, request)
 
@@ -208,7 +203,8 @@ class TokenRefreshSerializer(serializers.Serializer):
                 session.update()
             except JWTSession.DoesNotExist:
                 raise exceptions.AuthenticationFailed(
-                    f"Authentication failed: Session not found with id: {session_id}")
+                    f"Authentication failed: Session not found with id: {session_id}"
+                )
 
         return data
 
@@ -304,20 +300,20 @@ class TokenBlacklistSerializer(serializers.Serializer):
 
 class JWTSessionSerializer(serializers.ModelSerializer):
     is_active = serializers.BooleanField(default=False, read_only=True)
-    
+
     class Meta:
         model = JWTSession
         fields = [
-            'id',
-            'device_agent',
-            'device_ip',
-            'created_at',
-            'expired_at',
-            'is_active'
+            "id",
+            "device_agent",
+            "device_ip",
+            "created_at",
+            "expired_at",
+            "is_active",
         ]
 
     def to_representation(self, instance: object) -> object:
-        session_id = self.context.get('request').auth
+        session_id = self.context.get("request").auth
         print(session_id)
 
         if str(session_id) == str(instance.id):

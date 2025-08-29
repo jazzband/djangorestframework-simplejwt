@@ -1,12 +1,12 @@
 from datetime import datetime, timedelta
-from typing import TYPE_CHECKING, Any, Generic, Optional, TypeVar, Tuple
-from uuid import uuid4, UUID
-from django.core.exceptions import ImproperlyConfigured
-from django.http import HttpRequest
+from typing import TYPE_CHECKING, Any, Generic, Optional, Tuple, TypeVar
+from uuid import UUID, uuid4
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractBaseUser
+from django.core.exceptions import ImproperlyConfigured
+from django.http import HttpRequest
 from django.utils.module_loading import import_string
 from django.utils.translation import gettext_lazy as _
 
@@ -204,14 +204,12 @@ class Token:
         try:
             claim_value = self.payload[claim]
         except KeyError as e:
-            raise TokenError(format_lazy(
-                _("Token has no '{}' claim"), claim)) from e
+            raise TokenError(format_lazy(_("Token has no '{}' claim"), claim)) from e
 
         claim_time = datetime_from_epoch(claim_value)
         leeway = self.get_token_backend().get_leeway()
         if claim_time <= current_time - leeway:
-            raise TokenError(format_lazy(
-                _("Token '{}' claim has expired"), claim))
+            raise TokenError(format_lazy(_("Token '{}' claim has expired"), claim))
 
     def outstand(self) -> Optional[OutstandingToken]:
         """
@@ -260,29 +258,27 @@ class Token:
         return self.token_backend
 
     @classmethod
-    def get_device_info(self, request: HttpRequest) -> Tuple[str, str]:
+    def get_device_info(self, request: HttpRequest) -> tuple[str, str]:
         """
         Retrieves the device's user agent and IP address from the request.
 
-        This function extracts the `User-Agent` and `IP Address` from the HTTP request's 
-        metadata. If either of these headers is missing, it raises an `ImproperlyConfigured` 
+        This function extracts the `User-Agent` and `IP Address` from the HTTP request's
+        metadata. If either of these headers is missing, it raises an `ImproperlyConfigured`
         exception.
 
         Raises:
             ImproperlyConfigured: If the `User-Agent` or `IP Address` headers are missing.
         """
 
-        device_agent = request.META.get('HTTP_USER_AGENT')
-        device_ip = request.META.get('REMOTE_ADDR')
+        device_agent = request.META.get("HTTP_USER_AGENT")
+        device_ip = request.META.get("REMOTE_ADDR")
 
         if device_agent is None:
-            raise ImproperlyConfigured({
-                'user_agent': 'User-Agent header is required.'
-            })
+            raise ImproperlyConfigured({"user_agent": "User-Agent header is required."})
         elif device_ip is None:
-            raise ImproperlyConfigured({
-                'device_ip': 'User IP Address header is required.'
-            })
+            raise ImproperlyConfigured(
+                {"device_ip": "User IP Address header is required."}
+            )
         return device_agent, device_ip
 
 
@@ -323,8 +319,7 @@ class BlacklistMixin(Generic[T]):
             user_id = self.payload.get(api_settings.USER_ID_CLAIM)
             User = get_user_model()
             try:
-                user = User.objects.get(
-                    **{api_settings.USER_ID_FIELD: user_id})
+                user = User.objects.get(**{api_settings.USER_ID_FIELD: user_id})
             except User.DoesNotExist:
                 user = None
 
@@ -351,8 +346,7 @@ class BlacklistMixin(Generic[T]):
             user_id = self.payload.get(api_settings.USER_ID_CLAIM)
             User = get_user_model()
             try:
-                user = User.objects.get(
-                    **{api_settings.USER_ID_FIELD: user_id})
+                user = User.objects.get(**{api_settings.USER_ID_FIELD: user_id})
             except User.DoesNotExist:
                 user = None
 
