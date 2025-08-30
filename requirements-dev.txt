@@ -1,31 +1,31 @@
 # Development dependencies
 -e .
+cryptography>=3.3.1
+freezegun>=1.2.0
+
+# Additional tools
+ipython>=8.0.0
+pre-commit>=3.0.0
 
 # Testing
 pytest>=7.0.0
-pytest-django>=4.5.0
 pytest-cov>=4.0.0
-pytest-xdist>=3.0.0
+pytest-django>=4.5.0
 pytest-watch>=4.2.0
-tox>=4.0.0
+pytest-xdist>=3.0.0
+python-jose==3.3.0
+pyupgrade>=3.20.0
 
 # Linting and formatting
 ruff>=0.1.0
-yesqa>=1.5.0
-pyupgrade>=3.20.0
-pre-commit>=3.0.0
+setuptools_scm[toml]>=6.2.0
 
 # Documentation
 Sphinx>=6.0.0
 sphinx_rtd_theme>=1.2.0
+tox>=4.0.0
+twine>=4.0.0
 
 # Build tools
 wheel>=0.40.0
-twine>=4.0.0
-setuptools_scm[toml]>=6.2.0
-
-# Additional tools
-ipython>=8.0.0
-cryptography>=3.3.1
-freezegun>=1.2.0
-python-jose==3.3.0
+yesqa>=1.5.0
