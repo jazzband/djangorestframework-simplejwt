@@ -1,7 +1,4 @@
-from importlib.metadata import PackageNotFoundError, version
-
 try:
-    __version__ = version("djangorestframework_simplejwt")
-except PackageNotFoundError:
-    # package is not installed
+    from ._version import version as __version__
+except ImportError:
     __version__ = None

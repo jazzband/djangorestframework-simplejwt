@@ -1,0 +1,182 @@
+[build-system]
+requires = ["setuptools>=61.0", "setuptools_scm[toml]>=6.2", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "djangorestframework_simplejwt"
+dynamic = ["version"]
+description = "A minimal JSON Web Token authentication plugin for Django REST Framework"
+readme = "README.rst"
+license = "MIT"
+authors = [
+    { name = "David Sanders", email = "davesque@gmail.com" }
+]
+maintainers = [
+    { name = "David Sanders", email = "davesque@gmail.com" }
+]
+keywords = ["django", "rest", "framework", "jwt", "authentication"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Web Environment",
+    "Framework :: Django",
+    "Framework :: Django :: 4.2",
+    "Framework :: Django :: 5.0",
+    "Framework :: Django :: 5.1",
+    "Framework :: Django :: 5.2",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Internet :: WWW::HTTP",
+]
+requires-python = ">=3.9"
+dependencies = [
+    "django>=4.2",
+    "djangorestframework>=3.14",
+    "pyjwt>=1.7.1",
+]
+
+[project.optional-dependencies]
+test = [
+    "cryptography",
+    "freezegun",
+    "pytest-cov",
+    "pytest-django",
+    "pytest-xdist",
+    "pytest",
+    "tox",
+]
+lint = [
+    "ruff",
+    "yesqa",
+    "pyupgrade",
+    "pre-commit",
+]
+doc = [
+    "Sphinx",
+    "sphinx_rtd_theme>=0.1.9",
+]
+dev = [
+    "pytest-watch",
+    "wheel",
+    "twine",
+    "ipython",
+    "cryptography>=3.3.1",
+    "freezegun",
+    "pytest-cov",
+    "pytest-django",
+    "pytest-xdist",
+    "pytest",
+    "tox",
+    "ruff",
+    "yesqa",
+    "pyupgrade",
+    "pre-commit",
+    "Sphinx",
+    "sphinx_rtd_theme>=0.1.9",
+    "python-jose==3.3.0",
+]
+python-jose = [
+    "python-jose==3.3.0",
+]
+crypto = [
+    "cryptography>=3.3.1",
+]
+
+[project.urls]
+Homepage = "https://github.com/jazzband/djangorestframework-simplejwt"
+Documentation = "https://django-rest-framework-simplejwt.readthedocs.io/"
+Repository = "https://github.com/jazzband/djangorestframework-simplejwt"
+"Bug Tracker" = "https://github.com/jazzband/djangorestframework-simplejwt/issues"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["rest_framework_simplejwt*"]
+exclude = ["tests*"]
+
+[tool.setuptools]
+include-package-data = true
+zip-safe = false
+
+[tool.setuptools.package-data]
+rest_framework_simplejwt = [
+    "py.typed",
+    "locale/**/*.mo",
+    "locale/**/*.po"
+]
+
+[tool.setuptools.exclude-package-data]
+"*" = ["__pycache__", "*.py[co]"]
+
+[tool.setuptools_scm]
+version_scheme = "post-release"
+write_to = "rest_framework_simplejwt/_version.py"
+
+[tool.pytest.ini_options]
+addopts = "-v --showlocals --durations 10"
+pythonpath = "."
+xfail_strict = true
+testpaths = ["tests"]
+
+[tool.pytest-watch]
+runner = "pytest --failed-first --maxfail=1 --no-success-flaky-report"
+
+[tool.ruff]
+target-version = "py39"
+line-length = 88
+
+[tool.ruff.lint]
+select = [
+    "I", # isort
+    "E", # pycodestyle errors
+    "W", # pycodestyle warnings
+    "F", # pyflakes
+    "B", # flake8-bugbear
+    "C4", # flake8-comprehensions
+    "UP", # pyupgrade
+]
+ignore = [
+    "E501", # line too long, handled by black
+    "B008", # do not perform function calls in argument defaults
+    "C901", # too complex
+]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+
+[tool.coverage.run]
+source = ["rest_framework_simplejwt"]
+omit = [
+    "*/tests/*",
+    "*/migrations/*",
+    "*/venv/*",
+    "*/env/*",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if self.debug:",
+    "if settings.DEBUG",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if 0:",
+    "if __name__ == .__main__.:",
+    "class .*\\bProtocol\\):",
+    "@(abc\\.)?abstractmethod",
+]
+
+[tool.coverage.html]
+directory = "htmlcov"
+
+[tool.coverage.xml]
+output = "coverage.xml"

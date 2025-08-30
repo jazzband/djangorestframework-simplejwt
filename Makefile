@@ -59,10 +59,10 @@ pushversion:
 
 .PHONY: publish
 publish:
-	python setup.py sdist bdist_wheel
+	python -m build
 	twine upload dist/*
 
 .PHONY: dist
 dist: clean
-	python setup.py sdist bdist_wheel
+	python -m build
 	ls -l dist

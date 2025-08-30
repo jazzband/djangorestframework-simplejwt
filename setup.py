@@ -84,6 +84,6 @@ setup(
         "Programming Language :: Python :: 3.11",
         "Programming Language :: Python :: 3.12",
         "Programming Language :: Python :: 3.13",
-        "Topic :: Internet :: WWW/HTTP",
+        "Topic :: Internet :: WWW::HTTP",
     ],
 )
