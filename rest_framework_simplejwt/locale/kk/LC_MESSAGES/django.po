@@ -13,29 +13,30 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n!=1);\n"
-#: authentication.py:89
+
+#: authentication.py:37 serializers.py:114 serializers.py:184
+msgid "The user's password has been changed."
+msgstr "Пайдаланушының құпия сөзі өзгертілді."
+
+#: authentication.py:93
 msgid "Authorization header must contain two space-delimited values"
 msgstr "Авторизация тақырыптамасында бос орынмен бөлінген екі мән болуы керек"
 
-#: authentication.py:115
+#: authentication.py:119
 msgid "Given token not valid for any token type"
 msgstr "Берілген токен ешбір токен түріне жарамсыз"
 
-#: authentication.py:128 authentication.py:166
+#: authentication.py:132 authentication.py:171
 msgid "Token contained no recognizable user identification"
 msgstr "Токенде пайдаланушы идентификаторы жоқ"
 
-#: authentication.py:135
+#: authentication.py:139
 msgid "User not found"
 msgstr "Пайдаланушы табылмады"
 
-#: authentication.py:139
+#: authentication.py:143
 msgid "User is inactive"
 msgstr "Пайдаланушы өшірулі"
-
-#: authentication.py:146
-msgid "The user's password has been changed."
-msgstr "Пайдаланушының құпия сөзі өзгертілді."
 
 #: backends.py:90
 msgid "Unrecognized algorithm type '{}'"
@@ -48,7 +49,9 @@ msgstr "{} пайдалану үшін cryptography орнатылған бол�
 #: backends.py:111
 msgid ""
 "Unrecognized type '{}', 'leeway' must be of type int, float or timedelta."
-msgstr "Белгісіз түр '{}', 'leeway' мәні int, float немесе timedelta түрінде болуы керек."
+msgstr ""
+"Белгісіз түр '{}', 'leeway' мәні int, float немесе timedelta түрінде болуы "
+"керек."
 
 #: backends.py:125 backends.py:177 tokens.py:69
 msgid "Token is invalid"
@@ -66,19 +69,19 @@ msgstr "Токеннің мерзімі өткен"
 msgid "Token is invalid or expired"
 msgstr "Токен жарамсыз немесе мерзімі өткен"
 
-#: serializers.py:35
+#: serializers.py:37
 msgid "No active account found with the given credentials"
 msgstr "Көрсетілген тіркелгі деректері бойынша есептік жазба табылмады."
 
-#: serializers.py:108
+#: serializers.py:113 serializers.py:183
 msgid "No active account found for the given token."
 msgstr "Көрсетілген токен бойынша есептік жазба табылмады."
 
-#: serializers.py:178 tokens.py:281
+#: serializers.py:249 tokens.py:280
 msgid "Token is blacklisted"
 msgstr "Токен қара тізімге енгізілген"
 
-#: settings.py:74
+#: settings.py:78
 msgid ""
 "The '{}' setting has been removed. Please refer to '{}' for available "
 "settings."

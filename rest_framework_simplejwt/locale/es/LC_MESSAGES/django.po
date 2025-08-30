@@ -12,7 +12,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: authentication.py:37 serializers.py:110 serializers.py:180
+#: authentication.py:37 serializers.py:114 serializers.py:184
 msgid "The user's password has been changed."
 msgstr ""
 
@@ -70,21 +70,21 @@ msgstr "El token es inválido o ha expirado"
 msgid "Token is invalid or expired"
 msgstr "El token es inválido o ha expirado"
 
-#: serializers.py:36
+#: serializers.py:37
 msgid "No active account found with the given credentials"
 msgstr "La combinación de credenciales no tiene una cuenta activa"
 
-#: serializers.py:109 serializers.py:179
+#: serializers.py:113 serializers.py:183
 #, fuzzy
 #| msgid "No active account found with the given credentials"
 msgid "No active account found for the given token."
 msgstr "La combinación de credenciales no tiene una cuenta activa"
 
-#: serializers.py:245 tokens.py:280
+#: serializers.py:249 tokens.py:280
 msgid "Token is blacklisted"
 msgstr "El token está en lista negra"
 
-#: settings.py:74
+#: settings.py:78
 msgid ""
 "The '{}' setting has been removed. Please refer to '{}' for available "
 "settings."

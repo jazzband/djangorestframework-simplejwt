@@ -16,7 +16,7 @@ msgstr ""
 "n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
 "X-Generator: Poedit 2.2.1\n"
 
-#: authentication.py:37 serializers.py:110 serializers.py:180
+#: authentication.py:37 serializers.py:114 serializers.py:184
 msgid "The user's password has been changed."
 msgstr ""
 
@@ -74,21 +74,21 @@ msgstr "Токен недействителен или просрочен"
 msgid "Token is invalid or expired"
 msgstr "Токен недействителен или просрочен"
 
-#: serializers.py:36
+#: serializers.py:37
 msgid "No active account found with the given credentials"
 msgstr "Не найдено активной учетной записи с указанными данными"
 
-#: serializers.py:109 serializers.py:179
+#: serializers.py:113 serializers.py:183
 #, fuzzy
 #| msgid "No active account found with the given credentials"
 msgid "No active account found for the given token."
 msgstr "Не найдено активной учетной записи с указанными данными"
 
-#: serializers.py:245 tokens.py:280
+#: serializers.py:249 tokens.py:280
 msgid "Token is blacklisted"
 msgstr "Токен занесен в черный список"
 
-#: settings.py:74
+#: settings.py:78
 msgid ""
 "The '{}' setting has been removed. Please refer to '{}' for available "
 "settings."
