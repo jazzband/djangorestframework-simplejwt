@@ -11,7 +11,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: authentication.py:37 serializers.py:110 serializers.py:180
+#: authentication.py:37 serializers.py:114 serializers.py:184
 msgid "The user's password has been changed."
 msgstr "رمز عبور کاربر تغییر کرده است"
 
@@ -64,19 +64,19 @@ msgstr "توکن منقضی شده است"
 msgid "Token is invalid or expired"
 msgstr "توکن نامعتبر است یا منقضی شده است"
 
-#: serializers.py:36
+#: serializers.py:37
 msgid "No active account found with the given credentials"
 msgstr "هیچ اکانت فعالی برای اطلاعات داده شده یافت نشد"
 
-#: serializers.py:109 serializers.py:179
+#: serializers.py:113 serializers.py:183
 msgid "No active account found for the given token."
 msgstr "هیچ اکانت فعالی برای توکن داده شده یافت نشد"
 
-#: serializers.py:245 tokens.py:280
+#: serializers.py:249 tokens.py:280
 msgid "Token is blacklisted"
 msgstr "توکن به لیست سیاه رفته است"
 
-#: settings.py:74
+#: settings.py:78
 msgid ""
 "The '{}' setting has been removed. Please refer to '{}' for available "
 "settings."

@@ -13,7 +13,7 @@ msgstr ""
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
-#: authentication.py:37 serializers.py:110 serializers.py:180
+#: authentication.py:37 serializers.py:114 serializers.py:184
 msgid "The user's password has been changed."
 msgstr ""
 
@@ -71,21 +71,21 @@ msgstr "تأشيرة المرور غير صالحة أو منتهية الصلا
 msgid "Token is invalid or expired"
 msgstr "تأشيرة المرور غير صالحة أو منتهية الصلاحية"
 
-#: serializers.py:36
+#: serializers.py:37
 msgid "No active account found with the given credentials"
 msgstr "لم يتم العثور على حساب نشط للبيانات المقدمة"
 
-#: serializers.py:109 serializers.py:179
+#: serializers.py:113 serializers.py:183
 #, fuzzy
 #| msgid "No active account found with the given credentials"
 msgid "No active account found for the given token."
 msgstr "لم يتم العثور على حساب نشط للبيانات المقدمة"
 
-#: serializers.py:245 tokens.py:280
+#: serializers.py:249 tokens.py:280
 msgid "Token is blacklisted"
 msgstr "التأشيرة مدرجة في القائمة السوداء"
 
-#: settings.py:74
+#: settings.py:78
 msgid ""
 "The '{}' setting has been removed. Please refer to '{}' for available "
 "settings."
