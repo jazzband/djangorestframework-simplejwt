@@ -1,11 +1,12 @@
 from typing import Any, Optional, TypeVar
 
 from django.conf import settings
-from django.contrib.auth import authenticate, get_user_model
+from django.contrib.auth import _clean_credentials, authenticate, get_user_model
 from django.contrib.auth.models import AbstractBaseUser, update_last_login
 from django.utils.translation import gettext_lazy as _
 from rest_framework import exceptions, serializers
 from rest_framework.exceptions import AuthenticationFailed, ValidationError
+from rest_framework.request import Request
 
 from .models import TokenUser
 from .settings import api_settings
@@ -55,6 +56,9 @@ class TokenObtainSerializer(serializers.Serializer):
         self.user = authenticate(**authenticate_kwargs)
 
         if not api_settings.USER_AUTHENTICATION_RULE(self.user):
+            api_settings.ON_LOGIN_FAILED(
+                _clean_credentials(attrs), self.context.get("request")
+            )
             raise exceptions.AuthenticationFailed(
                 self.error_messages["no_active_account"],
                 "no_active_account",
@@ -79,7 +83,7 @@ class TokenObtainPairSerializer(TokenObtainSerializer):
         data["access"] = str(refresh.access_token)
 
         if api_settings.UPDATE_LAST_LOGIN:
-            update_last_login(None, self.user)
+            api_settings.ON_LOGIN_SUCCESS(self.user, self.context.get("request"))
 
         return data
 
@@ -95,7 +99,7 @@ class TokenObtainSlidingSerializer(TokenObtainSerializer):
         data["token"] = str(token)
 
         if api_settings.UPDATE_LAST_LOGIN:
-            update_last_login(None, self.user)
+            api_settings.ON_LOGIN_SUCCESS(self.user, self.context.get("request"))
 
         return data
 
@@ -258,3 +262,11 @@ class TokenBlacklistSerializer(serializers.Serializer):
         except AttributeError:
             pass
         return {}
+
+
+def default_on_login_success(user: AuthUser, request: Optional[Request]) -> None:
+    update_last_login(None, user)
+
+
+def default_on_login_failed(credentials: dict, request: Optional[Request]) -> None:
+    pass
