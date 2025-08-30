@@ -1,0 +1,155 @@
+# This file is distributed under the same license as the djangorestframework_simplejwt package.
+# Dulat Kushibayev <kushibayev@gmail.com>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: djangorestframework_simplejwt\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-06-02 02:51+0300\n"
+"PO-Revision-Date: 2025-06-02 00:51+0000\n"
+"Last-Translator: Dulat Kushibayev <kushibayev@gmail.com>\n"
+"Language-Team: \n"
+"Language: kk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n!=1);\n"
+#: authentication.py:89
+msgid "Authorization header must contain two space-delimited values"
+msgstr "Авторизация тақырыптамасында бос орынмен бөлінген екі мән болуы керек"
+
+#: authentication.py:115
+msgid "Given token not valid for any token type"
+msgstr "Берілген токен ешбір токен түріне жарамсыз"
+
+#: authentication.py:128 authentication.py:166
+msgid "Token contained no recognizable user identification"
+msgstr "Токенде пайдаланушы идентификаторы жоқ"
+
+#: authentication.py:135
+msgid "User not found"
+msgstr "Пайдаланушы табылмады"
+
+#: authentication.py:139
+msgid "User is inactive"
+msgstr "Пайдаланушы өшірулі"
+
+#: authentication.py:146
+msgid "The user's password has been changed."
+msgstr "Пайдаланушының құпия сөзі өзгертілді."
+
+#: backends.py:90
+msgid "Unrecognized algorithm type '{}'"
+msgstr "Белгісіз алгоритм түрі '{}'"
+
+#: backends.py:96
+msgid "You must have cryptography installed to use {}."
+msgstr "{} пайдалану үшін cryptography орнатылған болуы керек."
+
+#: backends.py:111
+msgid ""
+"Unrecognized type '{}', 'leeway' must be of type int, float or timedelta."
+msgstr "Белгісіз түр '{}', 'leeway' мәні int, float немесе timedelta түрінде болуы керек."
+
+#: backends.py:125 backends.py:177 tokens.py:69
+msgid "Token is invalid"
+msgstr "Токен жарамсыз"
+
+#: backends.py:173
+msgid "Invalid algorithm specified"
+msgstr "Көрсетілген алгоритм жарамсыз"
+
+#: backends.py:175 tokens.py:67
+msgid "Token is expired"
+msgstr "Токеннің мерзімі өткен"
+
+#: exceptions.py:55
+msgid "Token is invalid or expired"
+msgstr "Токен жарамсыз немесе мерзімі өткен"
+
+#: serializers.py:35
+msgid "No active account found with the given credentials"
+msgstr "Көрсетілген тіркелгі деректері бойынша есептік жазба табылмады."
+
+#: serializers.py:108
+msgid "No active account found for the given token."
+msgstr "Көрсетілген токен бойынша есептік жазба табылмады."
+
+#: serializers.py:178 tokens.py:281
+msgid "Token is blacklisted"
+msgstr "Токен қара тізімге енгізілген"
+
+#: settings.py:74
+msgid ""
+"The '{}' setting has been removed. Please refer to '{}' for available "
+"settings."
+msgstr "'{}' параметрі жойылды. Қол жетімді параметрлер үшін '{}' қараңыз."
+
+#: token_blacklist/admin.py:79
+msgid "jti"
+msgstr "jti"
+
+#: token_blacklist/admin.py:85
+msgid "user"
+msgstr "пайдаланушы"
+
+#: token_blacklist/admin.py:91
+msgid "created at"
+msgstr "құрылған уақыты"
+
+#: token_blacklist/admin.py:97
+msgid "expires at"
+msgstr "мерзімі аяқталатын уақыт"
+
+#: token_blacklist/apps.py:7
+msgid "Token Blacklist"
+msgstr "Токендердің қара тізімі"
+
+#: token_blacklist/models.py:19
+msgid "Outstanding Token"
+msgstr "Қолданыстағы токен"
+
+#: token_blacklist/models.py:20
+msgid "Outstanding Tokens"
+msgstr "Қолданыстағы токендер"
+
+#: token_blacklist/models.py:32
+#, python-format
+msgid "Token for %(user)s (%(jti)s)"
+msgstr "%(user)s үшін токен (%(jti)s)"
+
+#: token_blacklist/models.py:45
+msgid "Blacklisted Token"
+msgstr "Қара тізімдегі токен"
+
+#: token_blacklist/models.py:46
+msgid "Blacklisted Tokens"
+msgstr "Қара тізімдегі токендер"
+
+#: token_blacklist/models.py:57
+#, python-format
+msgid "Blacklisted token for %(user)s"
+msgstr "%(user)s пайдаланушысына тиесілі қара тізімдегі токен"
+
+#: tokens.py:53
+msgid "Cannot create token with no type or lifetime"
+msgstr "Түрі немесе жарамдылық мерзімі көрсетілмеген токенді жасау мүмкін емес"
+
+#: tokens.py:127
+msgid "Token has no id"
+msgstr "Токенде идентификатор жоқ"
+
+#: tokens.py:139
+msgid "Token has no type"
+msgstr "Токенде түрі көрсетілмеген"
+
+#: tokens.py:142
+msgid "Token has wrong type"
+msgstr "Токеннің түрі қате"
+
+#: tokens.py:201
+msgid "Token has no '{}' claim"
+msgstr "Токенде '{}' талап мерзімі жоқ"
+
+#: tokens.py:206
+msgid "Token '{}' claim has expired"
+msgstr "Токеннің '{}' талап мерзімі аяқталған"
