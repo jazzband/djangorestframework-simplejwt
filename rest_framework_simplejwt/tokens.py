@@ -221,7 +221,7 @@ class Token:
 
         if hasattr(user, "is_active") and not user.is_active:
             logger.warning(
-                f"Creating token for inactive user: {user.id}. If this is not intentional, consider checking the user's status before calling the `for_user` method."
+                f"Creating token for inactive user: {user.pk}. If this is not intentional, consider checking the user's status before calling the `for_user` method."
             )
 
         user_id = getattr(user, api_settings.USER_ID_FIELD)
