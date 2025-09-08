@@ -7,5 +7,5 @@ pytest
 pytest-asyncio==0.24.0
 pytest-cov
 pytest-django
-ruff ==0.12.7
+ruff ==0.12.11
 python-jose==3.4.0
