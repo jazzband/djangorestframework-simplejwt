@@ -19,6 +19,12 @@ extras_require = {
         "pyupgrade",
         "pre-commit",
     ],
+    "typing": [
+        "mypy",
+        "django-stubs",
+        "djangorestframework-stubs",
+        "types-pytz",
+    ],
     "doc": [
         "Sphinx",
         "sphinx_rtd_theme>=0.1.9",
@@ -41,6 +47,7 @@ extras_require["dev"] = (
     extras_require["dev"]
     + extras_require["test"]
     + extras_require["lint"]
+    + extras_require["typing"]
     + extras_require["doc"]
     + extras_require["python-jose"]
 )
