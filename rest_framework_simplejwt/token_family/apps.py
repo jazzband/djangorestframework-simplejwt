@@ -1,8 +1,10 @@
+from datetime import timedelta
+
 from django.apps import AppConfig
-from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import ImproperlyConfigured
 from django.utils.module_loading import import_string
-from datetime import timedelta
+from django.utils.translation import gettext_lazy as _
+
 from rest_framework_simplejwt.settings import api_settings
 
 
@@ -30,11 +32,15 @@ class TokenFamilyConfig(AppConfig):
 
         family_exp_claim = api_settings.TOKEN_FAMILY_EXPIRATION_CLAIM
         if not isinstance(family_exp_claim, str) or not family_exp_claim.strip():
-            raise ImproperlyConfigured("TOKEN_FAMILY_EXPIRATION_CLAIM must be a non-empty string")
+            raise ImproperlyConfigured(
+                "TOKEN_FAMILY_EXPIRATION_CLAIM must be a non-empty string"
+            )
 
         family_lifetime = api_settings.TOKEN_FAMILY_LIFETIME
         if family_lifetime is not None and not isinstance(family_lifetime, timedelta):
-            raise ImproperlyConfigured("TOKEN_FAMILY_LIFETIME must be of type timedelta or None")
+            raise ImproperlyConfigured(
+                "TOKEN_FAMILY_LIFETIME must be of type timedelta or None"
+            )
 
         family_enabled = api_settings.TOKEN_FAMILY_ENABLED
         if not isinstance(family_enabled, bool):
@@ -42,19 +48,29 @@ class TokenFamilyConfig(AppConfig):
 
         check_on_access = api_settings.TOKEN_FAMILY_CHECK_ON_ACCESS
         if not isinstance(check_on_access, bool):
-            raise ImproperlyConfigured("TOKEN_FAMILY_CHECK_ON_ACCESS must be of type bool")
+            raise ImproperlyConfigured(
+                "TOKEN_FAMILY_CHECK_ON_ACCESS must be of type bool"
+            )
 
         blacklist_on_reuse = api_settings.TOKEN_FAMILY_BLACKLIST_ON_REUSE
         if not isinstance(blacklist_on_reuse, bool):
-            raise ImproperlyConfigured("TOKEN_FAMILY_BLACKLIST_ON_REUSE must be of type bool")
-        
+            raise ImproperlyConfigured(
+                "TOKEN_FAMILY_BLACKLIST_ON_REUSE must be of type bool"
+            )
 
         # Validate TOKEN_FAMILY_BLACKLIST_SERIALIZER
         blacklist_serializer_path = api_settings.TOKEN_FAMILY_BLACKLIST_SERIALIZER
-        if not isinstance(blacklist_serializer_path, str) or not blacklist_serializer_path.strip():
-            raise ImproperlyConfigured("TOKEN_FAMILY_BLACKLIST_SERIALIZER must be a non-empty string")
+        if (
+            not isinstance(blacklist_serializer_path, str)
+            or not blacklist_serializer_path.strip()
+        ):
+            raise ImproperlyConfigured(
+                "TOKEN_FAMILY_BLACKLIST_SERIALIZER must be a non-empty string"
+            )
 
         try:
             import_string(blacklist_serializer_path)
         except ImportError as e:
-            raise ImportError(f"Could not import serializer '{blacklist_serializer_path}': {e}") from e
+            raise ImportError(
+                f"Could not import serializer '{blacklist_serializer_path}': {e}"
+            ) from e

@@ -62,4 +62,3 @@ Cache keys follow this format:
 
 - Refresh token: ``sjwt_brt:<jti>``
 - Token family: ``sjwt_btf:<family_id>``
-

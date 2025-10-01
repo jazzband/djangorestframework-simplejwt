@@ -4,14 +4,13 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('token_family', '0001_initial'),
+        ("token_family", "0001_initial"),
     ]
 
     operations = [
         migrations.RenameModel(
-            old_name='TokenFamilyBlacklist',
-            new_name='BlacklistedTokenFamily',
+            old_name="TokenFamilyBlacklist",
+            new_name="BlacklistedTokenFamily",
         ),
     ]

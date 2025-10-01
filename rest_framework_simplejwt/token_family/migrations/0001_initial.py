@@ -6,7 +6,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
@@ -15,29 +14,45 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='TokenFamily',
+            name="TokenFamily",
             fields=[
-                ('id', models.BigAutoField(primary_key=True, serialize=False)),
-                ('family_id', models.CharField(max_length=255, unique=True)),
-                ('created_at', models.DateTimeField(blank=True)),
-                ('expires_at', models.DateTimeField(blank=True, null=True)),
-                ('user', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='token_families', to=settings.AUTH_USER_MODEL)),
+                ("id", models.BigAutoField(primary_key=True, serialize=False)),
+                ("family_id", models.CharField(max_length=255, unique=True)),
+                ("created_at", models.DateTimeField(blank=True)),
+                ("expires_at", models.DateTimeField(blank=True, null=True)),
+                (
+                    "user",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="token_families",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Token Family',
-                'verbose_name_plural': 'Token Families',
+                "verbose_name": "Token Family",
+                "verbose_name_plural": "Token Families",
             },
         ),
         migrations.CreateModel(
-            name='TokenFamilyBlacklist',
+            name="TokenFamilyBlacklist",
             fields=[
-                ('id', models.BigAutoField(primary_key=True, serialize=False)),
-                ('blacklisted_at', models.DateTimeField(auto_now_add=True)),
-                ('family', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='blacklisted', to='token_family.tokenfamily')),
+                ("id", models.BigAutoField(primary_key=True, serialize=False)),
+                ("blacklisted_at", models.DateTimeField(auto_now_add=True)),
+                (
+                    "family",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="blacklisted",
+                        to="token_family.tokenfamily",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Token Family Blacklist',
-                'verbose_name_plural': 'Blacklisted Token Families',
+                "verbose_name": "Token Family Blacklist",
+                "verbose_name_plural": "Blacklisted Token Families",
             },
         ),
     ]

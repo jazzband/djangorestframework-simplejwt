@@ -1,28 +1,28 @@
 from datetime import timedelta
 from importlib import reload
 from unittest.mock import MagicMock, patch
-from freezegun import freeze_time
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.test import TestCase, override_settings
+from freezegun import freeze_time
 from rest_framework import exceptions as drf_exceptions
 from rest_framework.serializers import ValidationError
 
 from rest_framework_simplejwt.exceptions import (
+    RefreshTokenBlacklistedError,
     TokenError,
     TokenFamilyNotConfigured,
-    RefreshTokenBlacklistedError
-    )
+)
 from rest_framework_simplejwt.serializers import (
     TokenBlacklistSerializer,
+    TokenFamilyBlacklistSerializer,
     TokenObtainPairSerializer,
     TokenObtainSerializer,
     TokenObtainSlidingSerializer,
     TokenRefreshSerializer,
     TokenRefreshSlidingSerializer,
     TokenVerifySerializer,
-    TokenFamilyBlacklistSerializer,
 )
 from rest_framework_simplejwt.settings import api_settings
 from rest_framework_simplejwt.token_blacklist.models import (
@@ -30,8 +30,8 @@ from rest_framework_simplejwt.token_blacklist.models import (
     OutstandingToken,
 )
 from rest_framework_simplejwt.token_family.models import (
-    TokenFamily,
     BlacklistedTokenFamily,
+    TokenFamily,
 )
 from rest_framework_simplejwt.tokens import AccessToken, RefreshToken, SlidingToken
 from rest_framework_simplejwt.utils import (
@@ -615,14 +615,13 @@ class TestTokenRefreshSerializer(TestCase):
         self.assertTrue(OutstandingToken.objects.filter(jti=jti).exists())
         self.assertTrue(BlacklistedToken.objects.filter(token__jti=jti).exists())
 
-    
     @override_api_settings(
         ROTATE_REFRESH_TOKENS=True,
         BLACKLIST_AFTER_ROTATION=True,
         TOKEN_FAMILY_BLACKLIST_ON_REUSE=True,
-        )
+    )
     def test_family_blacklisting_on_refresh_token_reuse_is_enabled(self):
-        """ 
+        """
         Tests that the token family is blacklisted upon refresh token reuse.
 
         If a refresh token has been rotated and subsequently added to the
@@ -641,7 +640,7 @@ class TestTokenRefreshSerializer(TestCase):
 
         self.assertIn("blacklisted", e.exception.args[0])
 
-        qs = BlacklistedTokenFamily.objects.filter(family__family_id = "random string")
+        qs = BlacklistedTokenFamily.objects.filter(family__family_id="random string")
 
         self.assertEqual(qs.count(), 1)
 
@@ -649,7 +648,7 @@ class TestTokenRefreshSerializer(TestCase):
         ROTATE_REFRESH_TOKENS=True,
         BLACKLIST_AFTER_ROTATION=True,
         TOKEN_FAMILY_BLACKLIST_ON_REUSE=False,
-        )
+    )
     def test_family_blacklisting_on_refresh_token_reuse_is_disabled(self):
         """
         Tests that refresh token reuse is detected, but the token family
@@ -679,8 +678,10 @@ class TestTokenRefreshSerializer(TestCase):
         ROTATE_REFRESH_TOKENS=True,
         BLACKLIST_AFTER_ROTATION=True,
         TOKEN_FAMILY_BLACKLIST_ON_REUSE=False,
-        )
-    def test_family_blacklisting_on_token_reuse_is_enabled_but_token_has_no_family_id(self):
+    )
+    def test_family_blacklisting_on_token_reuse_is_enabled_but_token_has_no_family_id(
+        self,
+    ):
         """
         Ensures that no error is raised and no family is blacklisted when a reused token lacks a family ID.
 
@@ -696,12 +697,9 @@ class TestTokenRefreshSerializer(TestCase):
         self.assertEqual(BlacklistedToken.objects.all().count(), 1)
         self.assertEqual(BlacklistedTokenFamily.objects.all().count(), 0)
 
-    @override_api_settings(
-        TOKEN_FAMILY_LIFETIME= timedelta(minutes=30)
-        )
+    @override_api_settings(TOKEN_FAMILY_LIFETIME=timedelta(minutes=30))
     def test_raises_token_error_if_token_family_is_expired(self):
-
-        with freeze_time(aware_utcnow() - timedelta(minutes= 30)):
+        with freeze_time(aware_utcnow() - timedelta(minutes=30)):
             token = RefreshToken()
             fam_exp = datetime_to_epoch(aware_utcnow())
             token.payload[api_settings.TOKEN_FAMILY_EXPIRATION_CLAIM] = fam_exp
@@ -710,25 +708,22 @@ class TestTokenRefreshSerializer(TestCase):
 
         with self.assertRaises(TokenError) as e:
             ser.validate({"refresh": str(token)})
-        
-        self.assertIn("family", e.exception.args[0]) 
+
+        self.assertIn("family", e.exception.args[0])
         self.assertIn("expired", e.exception.args[0])
 
     def test_raises_token_error_if_token_family_is_blacklisted(self):
         token = RefreshToken()
-        token.payload[api_settings.TOKEN_FAMILY_CLAIM] =  "random string"
+        token.payload[api_settings.TOKEN_FAMILY_CLAIM] = "random string"
         token.blacklist_family()
 
-        self.assertEqual(
-            BlacklistedTokenFamily.objects.all().count(),
-            1
-        )
+        self.assertEqual(BlacklistedTokenFamily.objects.all().count(), 1)
 
         ser = TokenRefreshSerializer(data={"refresh": str(token)})
-        
+
         with self.assertRaises(TokenError) as e:
             ser.validate({"refresh": str(token)})
-        
+
         self.assertIn("family", e.exception.args[0])
         self.assertIn("blacklisted", e.exception.args[0])
 
@@ -757,7 +752,7 @@ class TestTokenVerifySerializer(TestCase):
     def test_it_should_not_raise_token_error_if_token_has_wrong_type(self):
         token = RefreshToken()
         token[api_settings.TOKEN_TYPE_CLAIM] = "wrong_type"
-                
+
         s = TokenVerifySerializer(data={"token": str(token)})
 
         self.assertTrue(s.is_valid())
@@ -777,12 +772,9 @@ class TestTokenVerifySerializer(TestCase):
 
         self.assertEqual(len(s.validated_data), 0)
 
-    @override_api_settings(
-        TOKEN_FAMILY_LIFETIME= timedelta(minutes=30)
-        )
+    @override_api_settings(TOKEN_FAMILY_LIFETIME=timedelta(minutes=30))
     def test_raises_token_error_if_token_family_is_expired(self):
-
-        with freeze_time(aware_utcnow() - timedelta(minutes= 30)):
+        with freeze_time(aware_utcnow() - timedelta(minutes=30)):
             token = RefreshToken()
             fam_exp = datetime_to_epoch(aware_utcnow())
             token.payload[api_settings.TOKEN_FAMILY_EXPIRATION_CLAIM] = fam_exp
@@ -791,25 +783,22 @@ class TestTokenVerifySerializer(TestCase):
 
         with self.assertRaises(TokenError) as e:
             ser.validate({"token": str(token)})
-        
-        self.assertIn("family", e.exception.args[0]) 
+
+        self.assertIn("family", e.exception.args[0])
         self.assertIn("expired", e.exception.args[0])
-        
+
     def test_raises_token_error_if_token_family_is_blacklisted(self):
         token = RefreshToken()
-        token.payload[api_settings.TOKEN_FAMILY_CLAIM] =  "random string"
+        token.payload[api_settings.TOKEN_FAMILY_CLAIM] = "random string"
         token.blacklist_family()
 
-        self.assertEqual(
-            BlacklistedTokenFamily.objects.all().count(),
-            1
-        )
+        self.assertEqual(BlacklistedTokenFamily.objects.all().count(), 1)
 
         ser = TokenVerifySerializer(data={"token": str(token)})
-        
+
         with self.assertRaises(TokenError) as e:
             ser.validate({"token": str(token)})
-        
+
         self.assertIn("family", e.exception.args[0])
         self.assertIn("blacklisted", e.exception.args[0])
 
@@ -908,12 +897,9 @@ class TestTokenBlacklistSerializer(TestCase):
         reload(tokens)
         reload(serializers)
 
-    @override_api_settings(
-        TOKEN_FAMILY_LIFETIME= timedelta(minutes=30)
-        )
+    @override_api_settings(TOKEN_FAMILY_LIFETIME=timedelta(minutes=30))
     def test_raises_token_error_if_token_family_is_expired(self):
-
-        with freeze_time(aware_utcnow() - timedelta(minutes= 30)):
+        with freeze_time(aware_utcnow() - timedelta(minutes=30)):
             token = RefreshToken()
             fam_exp = datetime_to_epoch(aware_utcnow())
             token.payload[api_settings.TOKEN_FAMILY_EXPIRATION_CLAIM] = fam_exp
@@ -922,33 +908,31 @@ class TestTokenBlacklistSerializer(TestCase):
 
         with self.assertRaises(TokenError) as e:
             ser.validate({"refresh": str(token)})
-        
-        self.assertIn("family", e.exception.args[0]) 
+
+        self.assertIn("family", e.exception.args[0])
         self.assertIn("expired", e.exception.args[0])
 
     def test_raises_token_error_if_token_family_is_blacklisted(self):
         token = RefreshToken()
-        token.payload[api_settings.TOKEN_FAMILY_CLAIM] =  "random string"
+        token.payload[api_settings.TOKEN_FAMILY_CLAIM] = "random string"
         token.blacklist_family()
 
-        self.assertEqual(
-            BlacklistedTokenFamily.objects.all().count(),
-            1
-        )
+        self.assertEqual(BlacklistedTokenFamily.objects.all().count(), 1)
 
         ser = TokenBlacklistSerializer(data={"refresh": str(token)})
-        
+
         with self.assertRaises(TokenError) as e:
             ser.validate({"refresh": str(token)})
-        
+
         self.assertIn("family", e.exception.args[0])
         self.assertIn("blacklisted", e.exception.args[0])
 
 
 class TestTokenFamilyBlacklistSerializer(TestCase):
-
     def setUp(self):
-        self.user = User.objects.create_user(username='test_user', password='test_password')
+        self.user = User.objects.create_user(
+            username="test_user", password="test_password"
+        )
 
     def test_it_should_raise_token_error_if_token_invalid(self):
         token = RefreshToken()
@@ -981,8 +965,10 @@ class TestTokenFamilyBlacklistSerializer(TestCase):
 
         self.assertIn("wrong type", e.exception.args[0])
 
-    @override_api_settings(TOKEN_FAMILY_ENABLED= True)
-    def test_it_should_raise_token_family_not_confgured_if_family_app_is_not_installed(self):
+    @override_api_settings(TOKEN_FAMILY_ENABLED=True)
+    def test_it_should_raise_token_family_not_confgured_if_family_app_is_not_installed(
+        self,
+    ):
         from rest_framework_simplejwt import serializers, tokens
 
         # Remove family app
@@ -998,18 +984,22 @@ class TestTokenFamilyBlacklistSerializer(TestCase):
             token[api_settings.TOKEN_FAMILY_CLAIM] = "random string"
 
             # Serializer validates
-            ser = serializers.TokenFamilyBlacklistSerializer(data={"refresh": str(token)})
+            ser = serializers.TokenFamilyBlacklistSerializer(
+                data={"refresh": str(token)}
+            )
 
             with self.assertRaises(TokenFamilyNotConfigured) as e:
                 ser.validate({"refresh": str(token)})
 
         # Restore origin module without mock
         reload(tokens)
-        reload(serializers)        
+        reload(serializers)
 
-    def test_it_should_raise_token_family_not_confgured_if_family_setting_is_disable(self):
-        """ the default value of the setting TOKEN_FAMILY_ENABLED is False """
-        from rest_framework_simplejwt import tokens, serializers
+    def test_it_should_raise_token_family_not_confgured_if_family_setting_is_disable(
+        self,
+    ):
+        """the default value of the setting TOKEN_FAMILY_ENABLED is False"""
+        from rest_framework_simplejwt import serializers, tokens
 
         with override_api_settings(TOKEN_FAMILY_ENABLED=False):
             reload(tokens)
@@ -1019,12 +1009,14 @@ class TestTokenFamilyBlacklistSerializer(TestCase):
             token[api_settings.TOKEN_FAMILY_CLAIM] = "random string"
 
             # Serializer validates
-            ser = serializers.TokenFamilyBlacklistSerializer(data={"refresh": str(token)})
+            ser = serializers.TokenFamilyBlacklistSerializer(
+                data={"refresh": str(token)}
+            )
 
             with self.assertRaises(TokenFamilyNotConfigured) as e:
                 ser.validate({"refresh": str(token)})
 
-        # restore origin modules 
+        # restore origin modules
         with override_api_settings(TOKEN_FAMILY_ENABLED=True):
             reload(tokens)
             reload(serializers)
@@ -1034,23 +1026,20 @@ class TestTokenFamilyBlacklistSerializer(TestCase):
         del refresh.payload[api_settings.TOKEN_FAMILY_CLAIM]
 
         ser = TokenFamilyBlacklistSerializer(data={"refresh": str(refresh)})
-        
+
         with self.assertRaises(ValidationError) as e:
             ser.validate({"refresh": str(refresh)})
-    
-    @override_api_settings(
-        TOKEN_FAMILY_LIFETIME= timedelta(minutes=30)
-        )
-    def test_raises_token_error_if_family_is_expired(self):
 
-        with freeze_time(aware_utcnow() - timedelta(minutes= 30)):
+    @override_api_settings(TOKEN_FAMILY_LIFETIME=timedelta(minutes=30))
+    def test_raises_token_error_if_family_is_expired(self):
+        with freeze_time(aware_utcnow() - timedelta(minutes=30)):
             token = RefreshToken.for_user(self.user)
 
         ser = TokenFamilyBlacklistSerializer(data={"refresh": str(token)})
 
         with self.assertRaises(TokenError) as e:
             ser.validate({"refresh": str(token)})
-        
+
         self.assertIn("family", e.exception.args[0])
         self.assertIn("expired", e.exception.args[0])
 
@@ -1059,7 +1048,9 @@ class TestTokenFamilyBlacklistSerializer(TestCase):
         ser = TokenFamilyBlacklistSerializer(data={"refresh": str(token)})
         ser.is_valid()
 
-        qs = BlacklistedTokenFamily.objects.filter(family__family_id= token.get_family_id())
+        qs = BlacklistedTokenFamily.objects.filter(
+            family__family_id=token.get_family_id()
+        )
 
         self.assertTrue(qs.exists())
         self.assertEqual(qs.count(), 1)
@@ -1068,16 +1059,13 @@ class TestTokenFamilyBlacklistSerializer(TestCase):
         token = RefreshToken.for_user(self.user)
         token.blacklist_family()
 
-        self.assertEqual(
-            BlacklistedTokenFamily.objects.all().count(),
-            1
-        )
+        self.assertEqual(BlacklistedTokenFamily.objects.all().count(), 1)
 
         ser = TokenFamilyBlacklistSerializer(data={"refresh": str(token)})
-        
+
         with self.assertRaises(TokenError) as e:
             ser.validate({"refresh": str(token)})
-        
+
         self.assertIn("family", e.exception.args[0])
         self.assertIn("blacklisted", e.exception.args[0])
 
@@ -1085,15 +1073,11 @@ class TestTokenFamilyBlacklistSerializer(TestCase):
         token = RefreshToken.for_user(self.user)
         token.blacklist()
 
-        self.assertEqual(
-            BlacklistedToken.objects.all().count(),
-            1
-        )
+        self.assertEqual(BlacklistedToken.objects.all().count(), 1)
 
         ser = TokenFamilyBlacklistSerializer(data={"refresh": str(token)})
-        
+
         with self.assertRaises(TokenError) as e:
             ser.validate({"refresh": str(token)})
-        
+
         self.assertIn("blacklisted", e.exception.args[0])
-        

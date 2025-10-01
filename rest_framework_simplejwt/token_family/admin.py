@@ -8,7 +8,7 @@ from django.utils.translation import gettext_lazy as _
 from rest_framework.request import Request
 
 from ..models import TokenUser
-from .models import TokenFamily, BlacklistedTokenFamily
+from .models import BlacklistedTokenFamily, TokenFamily
 
 AuthUser = TypeVar("AuthUser", AbstractBaseUser, TokenUser)
 

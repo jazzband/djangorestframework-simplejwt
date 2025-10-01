@@ -22,6 +22,7 @@ class TokenBackendExpiredToken(TokenBackendError):
 
 class RefreshTokenBlacklistedError(TokenError):
     """Raised when a refresh token is found in the blacklist."""
+
     pass
 
 
