@@ -8,8 +8,10 @@ from django.contrib.auth.models import AbstractBaseUser
 from django.utils.module_loading import import_string
 from django.utils.translation import gettext_lazy as _
 
+from .cache import blacklist_cache
 from .exceptions import (
     ExpiredTokenError,
+    RefreshTokenBlacklistedError,
     TokenBackendError,
     TokenBackendExpiredToken,
     TokenError,
@@ -17,6 +19,7 @@ from .exceptions import (
 from .models import TokenUser
 from .settings import api_settings
 from .token_blacklist.models import BlacklistedToken, OutstandingToken
+from .token_family.models import BlacklistedTokenFamily, TokenFamily
 from .utils import (
     aware_utcnow,
     datetime_from_epoch,
@@ -276,10 +279,16 @@ class BlacklistMixin(Generic[T]):
             """
             jti = self.payload[api_settings.JTI_CLAIM]
 
-            if BlacklistedToken.objects.filter(token__jti=jti).exists():
-                raise TokenError(_("Token is blacklisted"))
+            if (
+                blacklist_cache.is_refresh_tokens_cache_enabled
+                and blacklist_cache.is_refresh_token_blacklisted(jti)
+            ):
+                raise RefreshTokenBlacklistedError(_("Token is blacklisted"))
 
-        def blacklist(self) -> BlacklistedToken:
+            if BlacklistedToken.objects.filter(token__jti=jti).exists():
+                raise RefreshTokenBlacklistedError(_("Token is blacklisted"))
+
+        def blacklist(self) -> tuple[BlacklistedToken, bool]:
             """
             Ensures this token is included in the outstanding token list and
             adds it to the blacklist.
@@ -304,7 +313,14 @@ class BlacklistMixin(Generic[T]):
                 },
             )
 
-            return BlacklistedToken.objects.get_or_create(token=token)
+            blacklisted_token, created = BlacklistedToken.objects.get_or_create(
+                token=token
+            )
+
+            if blacklist_cache.is_refresh_tokens_cache_enabled:
+                blacklist_cache.add_refresh_token(jti)
+
+            return blacklisted_token, created
 
         def outstand(self) -> Optional[OutstandingToken]:
             """
@@ -352,6 +368,183 @@ class BlacklistMixin(Generic[T]):
             return token
 
 
+class FamilyMixin(Generic[T]):
+    """
+    Tokens created from FamilyMixin subclasses will track token families,
+    enhancing the ability to detect and manage unwanted refresh token reuse.
+
+    This is useful for implementing security measures such as blacklisting
+    entire token families upon detected misuse.
+    """
+
+    payload: dict[str, Any]
+
+    if (
+        api_settings.TOKEN_FAMILY_ENABLED
+        and "rest_framework_simplejwt.token_family" in settings.INSTALLED_APPS
+    ):
+
+        def verify(self, *args, **kwargs) -> None:
+            """
+            Runs verification checks for token family expiration and blacklist status
+            before calling the superclass verification.
+            """
+            self.__class__.check_family_expiration(token=self)
+            self.__class__.check_family_blacklist(token=self)
+
+            super().verify(*args, **kwargs)  # type: ignore
+
+        def blacklist_family(self) -> tuple[BlacklistedTokenFamily, bool]:
+            """
+            Blacklists the token family.
+            """
+            family_id = self.get_family_id()
+            if not family_id:
+                raise TokenError(_("Token has no family ID"))
+
+            # Ensure Family exist with the given family_id
+            family, created = TokenFamily.objects.get_or_create(
+                family_id=family_id,
+                defaults={
+                    "user": self._get_user(),
+                    "created_at": self.current_time,
+                    "expires_at": self.get_family_expiration_date(),
+                },
+            )
+
+            # Blacklist the entire family
+            blacklisted_fam, created = BlacklistedTokenFamily.objects.get_or_create(
+                family=family
+            )
+
+            if blacklist_cache.is_families_cache_enabled:
+                blacklist_cache.add_token_family(family_id)
+
+            return blacklisted_fam, created
+
+        def get_family_id(self) -> Optional[str]:
+            return self.payload.get(api_settings.TOKEN_FAMILY_CLAIM, None)
+
+        def get_family_expiration_date(self) -> Optional[datetime]:
+            expires_at = self.payload.get(
+                api_settings.TOKEN_FAMILY_EXPIRATION_CLAIM, None
+            )
+
+            if expires_at is None:
+                return None
+
+            return datetime_from_epoch(expires_at)
+
+        def _get_user(self) -> Optional[AuthUser]:
+            """
+            Retrieves the user associated with this token.
+            Returns None if the user does not exist.
+            """
+            user_id = self.payload.get(api_settings.USER_ID_CLAIM)
+            if not user_id:
+                return None
+
+            User = get_user_model()
+            try:
+                return User.objects.get(**{api_settings.USER_ID_FIELD: user_id})
+            except User.DoesNotExist:
+                return None
+
+        @staticmethod
+        def check_family_blacklist(token: T) -> None:
+            """
+            Checks if this token's family is blacklisted.
+            Raises `TokenError` if so.
+
+            If the token does not have a `family_id`, it is either an old
+            token (before this feature was added/enabled) or it could be a
+            manually issued JWT without family tracking. In such cases, we
+            skip the blacklist check.
+            """
+            family_id = token.get(api_settings.TOKEN_FAMILY_CLAIM)
+
+            if not family_id:
+                user_id = token.get(api_settings.USER_ID_CLAIM)
+                logger.warning(
+                    f"Token of user:{user_id} does not have a family_id. Skipping family blacklist check."
+                )
+                return
+
+            if (
+                blacklist_cache.is_families_cache_enabled
+                and blacklist_cache.is_token_family_blacklisted(family_id)
+            ):
+                raise TokenError(_("Token family is blacklisted"))
+
+            if BlacklistedTokenFamily.objects.filter(
+                family__family_id=family_id
+            ).exists():
+                raise TokenError(_("Token family is blacklisted"))
+
+        @staticmethod
+        def check_family_expiration(
+            token: T, current_time: Optional[datetime] = None
+        ) -> None:
+            """
+            Checks whether the token family's expiration timestamp has passed
+            (relative to the given `current_time`).
+
+            Raises a `TokenError` with a user-facing error message if the family has expired.
+            If no expiration claim is set, the check is skipped.
+            """
+            expires_at = token.get(api_settings.TOKEN_FAMILY_EXPIRATION_CLAIM, None)
+
+            if expires_at is None:
+                return  # No expiration set, so we skip this check.
+
+            expiration_date = datetime_from_epoch(expires_at)
+
+            if current_time is None:
+                current_time = aware_utcnow()
+
+            if expiration_date <= current_time:
+                raise TokenError(_("Token family has expired"))
+
+        @classmethod
+        def for_user(cls: type[T], user: AuthUser) -> T:
+            """
+            Generates a new token instance with a unique family ID and optional family expiration.
+
+            This method:
+            - Creates a unique `family_id`.
+            - Assigns a family expiration timestamp if `TOKEN_FAMILY_LIFETIME` is set.
+            - Saves the token family information in the database.
+            """
+            token = super().for_user(user)  # type: ignore
+
+            # Generate a new family ID
+            family_id = uuid4().hex
+            token[api_settings.TOKEN_FAMILY_CLAIM] = family_id
+
+            family_lifetime = api_settings.TOKEN_FAMILY_LIFETIME
+            expires_at: Optional[datetime]
+
+            # Since the token_family settings values are checked at startup,
+            # we don't have to worry about checking the value type again.
+            if family_lifetime is None:
+                expires_at = None
+            else:
+                expires_at = token.current_time + family_lifetime
+                token[api_settings.TOKEN_FAMILY_EXPIRATION_CLAIM] = datetime_to_epoch(
+                    expires_at
+                )
+
+            # Create the token family
+            TokenFamily.objects.create(
+                user=user,
+                family_id=family_id,
+                created_at=token.current_time,
+                expires_at=expires_at,
+            )
+
+            return token
+
+
 class SlidingToken(BlacklistMixin["SlidingToken"], Token):
     token_type = "sliding"
     lifetime = api_settings.SLIDING_TOKEN_LIFETIME
@@ -372,8 +565,20 @@ class AccessToken(Token):
     token_type = "access"
     lifetime = api_settings.ACCESS_TOKEN_LIFETIME
 
+    def verify(self):
+        """Runs standard verification and optionally checks token family status."""
+        super().verify()
 
-class RefreshToken(BlacklistMixin["RefreshToken"], Token):
+        if (
+            api_settings.TOKEN_FAMILY_ENABLED
+            and api_settings.TOKEN_FAMILY_CHECK_ON_ACCESS
+            and "rest_framework_simplejwt.token_family" in settings.INSTALLED_APPS
+        ):
+            FamilyMixin.check_family_expiration(token=self)
+            FamilyMixin.check_family_blacklist(token=self)
+
+
+class RefreshToken(BlacklistMixin["RefreshToken"], FamilyMixin["RefreshToken"], Token):
     token_type = "refresh"
     lifetime = api_settings.REFRESH_TOKEN_LIFETIME
     no_copy_claims = (
@@ -404,7 +609,23 @@ class RefreshToken(BlacklistMixin["RefreshToken"], Token):
         # a pair.
         access.set_exp(from_time=self.current_time)
 
-        no_copy = self.no_copy_claims
+        # Convert tuple to set for efficient updates.
+        # This allows us to dynamically add or remove claims without creating a new tuple
+        no_copy = set(self.no_copy_claims)
+
+        # If TOKEN_FAMILY_CHECK_ON_ACCESS is False, the family claims are not needed in the access token.
+        # We exclude them from being copied to reduce unnecessary token size.
+        if (
+            api_settings.TOKEN_FAMILY_ENABLED
+            and not api_settings.TOKEN_FAMILY_CHECK_ON_ACCESS
+        ):
+            no_copy.update(
+                {
+                    api_settings.TOKEN_FAMILY_CLAIM,
+                    api_settings.TOKEN_FAMILY_EXPIRATION_CLAIM,
+                }
+            )
+
         for claim, value in self.payload.items():
             if claim in no_copy:
                 continue

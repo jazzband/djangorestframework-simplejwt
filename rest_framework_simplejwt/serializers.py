@@ -8,15 +8,19 @@ from rest_framework import exceptions, serializers
 from rest_framework.exceptions import AuthenticationFailed, ValidationError
 from rest_framework.request import Request
 
+from .cache import blacklist_cache
+from .exceptions import (
+    RefreshTokenBlacklistedError,
+    TokenError,
+    TokenFamilyNotConfigured,
+)
 from .models import TokenUser
 from .settings import api_settings
-from .tokens import RefreshToken, SlidingToken, Token, UntypedToken
+from .token_blacklist.models import BlacklistedToken
+from .tokens import FamilyMixin, RefreshToken, SlidingToken, Token, UntypedToken
 from .utils import get_md5_hash_password
 
 AuthUser = TypeVar("AuthUser", AbstractBaseUser, TokenUser)
-
-if api_settings.BLACKLIST_AFTER_ROTATION:
-    from .token_blacklist.models import BlacklistedToken
 
 
 class PasswordField(serializers.CharField):
@@ -115,7 +119,7 @@ class TokenRefreshSerializer(serializers.Serializer):
     }
 
     def validate(self, attrs: dict[str, Any]) -> dict[str, str]:
-        refresh = self.token_class(attrs["refresh"])
+        refresh = self._get_refresh_token(attrs["refresh"])
 
         user_id = refresh.payload.get(api_settings.USER_ID_CLAIM, None)
         if user_id:
@@ -173,6 +177,26 @@ class TokenRefreshSerializer(serializers.Serializer):
             data["refresh"] = str(refresh)
 
         return data
+
+    def _get_refresh_token(self, token_str: str) -> RefreshToken:
+        """
+        Handles refresh token instantiation and family blacklisting if enabled.
+        """
+        try:
+            return self.token_class(token_str)
+        except RefreshTokenBlacklistedError as e:
+            if (
+                api_settings.TOKEN_FAMILY_ENABLED
+                and api_settings.TOKEN_FAMILY_BLACKLIST_ON_REUSE
+                and "rest_framework_simplejwt.token_family" in settings.INSTALLED_APPS
+            ):
+                refresh = self.token_class(token=token_str, verify=False)
+                family_id = refresh.get_family_id()
+
+                if family_id:
+                    refresh.blacklist_family()
+
+            raise e
 
 
 class TokenRefreshSlidingSerializer(serializers.Serializer):
@@ -241,12 +265,25 @@ class TokenVerifySerializer(serializers.Serializer):
         token = UntypedToken(attrs["token"])
 
         if (
-            api_settings.BLACKLIST_AFTER_ROTATION
+            token.get(api_settings.TOKEN_TYPE_CLAIM) == RefreshToken.token_type
             and "rest_framework_simplejwt.token_blacklist" in settings.INSTALLED_APPS
         ):
             jti = token.get(api_settings.JTI_CLAIM)
+            if (
+                blacklist_cache.is_refresh_tokens_cache_enabled
+                and blacklist_cache.is_refresh_token_blacklisted(jti)
+            ):
+                raise ValidationError(_("Token is blacklisted"))
+
             if BlacklistedToken.objects.filter(token__jti=jti).exists():
                 raise ValidationError(_("Token is blacklisted"))
+
+        if (
+            api_settings.TOKEN_FAMILY_ENABLED
+            and "rest_framework_simplejwt.token_family" in settings.INSTALLED_APPS
+        ):
+            FamilyMixin.check_family_expiration(token=token)
+            FamilyMixin.check_family_blacklist(token=token)
 
         return {}
 
@@ -262,6 +299,22 @@ class TokenBlacklistSerializer(serializers.Serializer):
         except AttributeError:
             pass
         return {}
+
+
+class TokenFamilyBlacklistSerializer(serializers.Serializer):
+    refresh = serializers.CharField(write_only=True)
+    token_class = RefreshToken
+
+    def validate(self, attrs: dict[str, Any]) -> dict[Any, Any]:
+        refresh = self.token_class(attrs["refresh"])
+        try:
+            refresh.blacklist_family()
+        except AttributeError:
+            raise TokenFamilyNotConfigured()
+        except TokenError as e:
+            raise serializers.ValidationError({"refresh": str(e)})
+
+        return {"message": "Token Family blacklisted"}
 
 
 def default_on_login_success(user: AuthUser, request: Optional[Request]) -> None:

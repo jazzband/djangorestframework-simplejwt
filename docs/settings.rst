@@ -20,6 +20,11 @@ Some of Simple JWT's behavior can be customized through settings variables in
       "BLACKLIST_AFTER_ROTATION": False,
       "UPDATE_LAST_LOGIN": False,
 
+      "TOKEN_FAMILY_ENABLED": False,
+      "TOKEN_FAMILY_LIFETIME": timedelta(days=30),
+      "TOKEN_FAMILY_CHECK_ON_ACCESS": False,
+      "TOKEN_FAMILY_BLACKLIST_ON_REUSE": False,
+
       "ALGORITHM": "HS256",
       "SIGNING_KEY": settings.SECRET_KEY,
       "VERIFYING_KEY": "",
@@ -28,6 +33,14 @@ Some of Simple JWT's behavior can be customized through settings variables in
       "JSON_ENCODER": None,
       "JWK_URL": None,
       "LEEWAY": 0,
+
+      "SJWT_CACHE_NAME": "default",
+      "CACHE_BLACKLISTED_REFRESH_TOKENS": False,
+      "CACHE_BLACKLISTED_FAMILIES": False,
+      "CACHE_TTL_BLACKLISTED_REFRESH_TOKENS": 3600,  # time is seconds
+      "CACHE_TTL_BLACKLISTED_FAMILIES": 3600,  # time in seconds
+      "CACHE_KEY_PREFIX_BLACKLISTED_REFRESH_TOKENS": "sjwt_brt",
+      "CACHE_KEY_PREFIX_BLACKLISTED_FAMILIES": "sjwt_btf",
 
       "AUTH_HEADER_TYPES": ("Bearer",),
       "AUTH_HEADER_NAME": "HTTP_AUTHORIZATION",
@@ -43,6 +56,9 @@ Some of Simple JWT's behavior can be customized through settings variables in
 
       "JTI_CLAIM": "jti", 
 
+      "TOKEN_FAMILY_CLAIM": "family_id",
+      "TOKEN_FAMILY_EXPIRATION_CLAIM": "family_exp",
+
       "SLIDING_TOKEN_REFRESH_EXP_CLAIM": "refresh_exp",
       "SLIDING_TOKEN_LIFETIME": timedelta(minutes=5),
       "SLIDING_TOKEN_REFRESH_LIFETIME": timedelta(days=1),
@@ -53,6 +69,7 @@ Some of Simple JWT's behavior can be customized through settings variables in
       "TOKEN_BLACKLIST_SERIALIZER": "rest_framework_simplejwt.serializers.TokenBlacklistSerializer",
       "SLIDING_TOKEN_OBTAIN_SERIALIZER": "rest_framework_simplejwt.serializers.TokenObtainSlidingSerializer",
       "SLIDING_TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
+      "TOKEN_FAMILY_BLACKLIST_SERIALIZER": "rest_framework_simplejwt.serializers.TokenFamilyBlacklistSerializer",
   }
 
 Above, the default values for these settings are shown.
@@ -104,6 +121,46 @@ login (TokenObtainPairView).
     transactions. People abusing the views could slow the server and this could be
     a security vulnerability. If you really want this, throttle the endpoint with
     DRF at the very least.
+
+``TOKEN_FAMILY_ENABLED``
+----------------------------
+
+When set to ``True``, enables the Token Family tracking system. This allows
+refresh tokens to be grouped into families using a shared identifier. By default,
+this identifier is only included in refresh tokens, but it can also be added to
+access tokens if ``TOKEN_FAMILY_CHECK_ON_ACCESS`` is set to ``True``.
+Families can be invalidated as a whole, meaning all tokens associated with the
+same family will then be considered invalid.
+You need to add ``'rest_framework_simplejwt.token_family',`` to your 
+``INSTALLED_APPS`` in the settings file to use this setting.
+
+This feature is most effective when used in conjunction with the :doc:`/blacklist_app`
+
+Learn more about :doc:`/family_app`.
+
+``TOKEN_FAMILY_LIFETIME``
+----------------------------
+
+A ``datetime.timedelta`` object that specifies how long a token family is considered valid.
+This ``timedelta`` value is added to the current UTC time during token generation
+to obtain the token's default "family_exp" claim value.
+This setting can also be set to ``None``, in which case the "family_exp" claim
+will not be included in the token payload and the token family will never expire automatically.
+In that case, the only way to invalidate the family is by blacklisting it.
+
+``TOKEN_FAMILY_CHECK_ON_ACCESS``
+-------------------------------------
+
+When set to ``True``, the token family claims ("family_id" and "family_exp") will be included
+in the access token payload. Requests authenticated with access tokens will then verify
+that the token's family is valid, meaning it has not expired and has not been blacklisted.
+
+``TOKEN_FAMILY_BLACKLIST_ON_REUSE``
+-------------------------------------
+
+When set to ``True``, any detected reuse of a refresh token will trigger blacklisting of
+the entire token family. This invalidates all tokens that share the same family identifier.
+This feature can be enhanced when used together with ``BLACKLIST_AFTER_ROTATION`` set to ``True``.
 
 ``ALGORITHM``
 -------------
@@ -175,6 +232,47 @@ integer for seconds or a ``datetime.timedelta``. Please reference
 https://pyjwt.readthedocs.io/en/latest/usage.html#expiration-time-claim-exp
 for more information.
 
+``SJWT_CACHE_NAME``
+---------------------
+
+Specifies the Django cache alias to use. This must match a defined entry
+in Django's ``CACHES`` setting.
+
+Learn more about :doc:`/cache_support`.
+
+``CACHE_BLACKLISTED_REFRESH_TOKENS``
+--------------------------------------
+
+When set to ``True``, enables caching of blacklisted refresh tokens.
+Blacklisted refresh token entries will be cached for a period defined
+by ``CACHE_TTL_BLACKLISTED_REFRESH_TOKENS``.
+
+``CACHE_BLACKLISTED_FAMILIES``
+--------------------------------
+
+When set to ``True``, enables caching of blacklisted token families.
+Blacklisted family entries will be cached for a period defined 
+by ``CACHE_TTL_BLACKLISTED_FAMILIES``.
+
+``CACHE_TTL_BLACKLISTED_REFRESH_TOKENS``
+------------------------------------------
+
+Time-to-live (TTL) in seconds for cached refresh token blacklist entries.
+
+``CACHE_TTL_BLACKLISTED_FAMILIES``
+------------------------------------
+
+Time-to-live (TTL) in seconds for cached token family blacklist entries.
+
+``CACHE_KEY_PREFIX_BLACKLISTED_REFRESH_TOKENS``
+-------------------------------------------------
+
+Prefix used for cache keys when storing blacklisted refresh tokens.
+
+``CACHE_KEY_PREFIX_BLACKLISTED_FAMILIES``
+-------------------------------------------
+
+Prefix used for cache keys when storing blacklisted token families.
 
 ``AUTH_HEADER_TYPES``
 ---------------------
@@ -258,6 +356,18 @@ The claim name that is used to store a token's unique identifier.  This
 identifier is used to identify revoked tokens in the blacklist app.  It may be
 necessary in some cases to use another claim besides the default "jti" claim to
 store such a value.
+
+``TOKEN_FAMILY_CLAIM``
+---------------------------
+
+The claim name used to store the token family's unique identifier in the token
+payload. Defaults to "family_id".
+
+``TOKEN_FAMILY_EXPIRATION_CLAIM``
+-------------------------------------
+
+The claim name used to store the token family's expiration date in the token
+payload. Defaults to "family_exp".
 
 ``TOKEN_USER_CLASS``
 --------------------
