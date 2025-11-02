@@ -55,7 +55,7 @@ class TokenBackend:
         self.signing_key = signing_key
         self.verifying_key = verifying_key
         self.audience = audience
-        self.issuer = issuer
+        # self.issuer = issuer
 
         if JWK_CLIENT_AVAILABLE:
             self.jwks_client = PyJWKClient(jwk_url) if jwk_url else None
@@ -133,8 +133,8 @@ class TokenBackend:
         jwt_payload = payload.copy()
         if self.audience is not None:
             jwt_payload["aud"] = self.audience
-        if self.issuer is not None:
-            jwt_payload["iss"] = self.issuer
+        # if self.issuer is not None:
+        #     jwt_payload["iss"] = self.issuer
 
         token = jwt.encode(
             jwt_payload,
@@ -156,17 +156,19 @@ class TokenBackend:
         Raises a `TokenBackendError` if the token is malformed, if its
         signature check fails, or if its 'exp' claim indicates it has expired.
         """
+        # WIP
         try:
             return jwt.decode(
                 token,
                 self.get_verifying_key(token),
                 algorithms=[self.algorithm],
                 audience=self.audience,
-                issuer=self.issuer,
+                # issuer=self.issuer,
                 leeway=self.get_leeway(),
                 options={
                     "verify_aud": self.audience is not None,
                     "verify_signature": verify,
+                    # "verify_iss": self.issuer is not None,
                 },
             )
         except InvalidAlgorithmError as e:
