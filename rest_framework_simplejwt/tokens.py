@@ -80,6 +80,7 @@ class Token:
 
             # Set "jti" claim
             self.set_jti()
+            self.set_iss()
 
     def __repr__(self) -> str:
         return repr(self.payload)
@@ -129,6 +130,9 @@ class Token:
         if api_settings.TOKEN_TYPE_CLAIM is not None:
             self.verify_token_type()
 
+        if api_settings.ISSUER is not None or api_settings.ISS_CLAIM in self.payload:
+            self.verify_iss()
+
     def verify_token_type(self) -> None:
         """
         Ensures that the token type claim is present and has the correct value.
@@ -140,6 +144,54 @@ class Token:
 
         if self.token_type != token_type:
             raise TokenError(_("Token has wrong type"))
+
+    def verify_iss(self) -> None:
+        """
+        Validates the issuer claim in the token payload.
+
+        For dynamic issuers: Just verifies that the iss claim exists and
+        is a non-empty string. Optionally validates against a whitelist
+        if ALLOWED_ISSUERS is configured.
+
+        For static issuers: If ISSUER is configured in settings, validates
+        that the token's iss claim matches the configured value.
+        """
+        issuer = self.payload.get(api_settings.ISS_CLAIM)
+
+        if issuer is None:
+            raise TokenError(_("Token has no issuer"))
+
+        if not isinstance(issuer, str) or not issuer.strip():
+            raise TokenError(_("Token has invalid issuer"))
+
+        if api_settings.ISSUER is not None:
+            if issuer != api_settings.ISSUER:
+                raise TokenError(_("Token has invalid issuer"))
+
+        # If allowed issuers list is configured, validate against it
+        elif api_settings.ALLOWED_ISSUERS is not None:
+            if issuer not in api_settings.ALLOWED_ISSUERS:
+                raise TokenError(_("Token has invalid issuer"))
+
+    def get_iss(self, issuer: str | None = None) -> Optional[str]:
+        """
+        Returns the issuer URL configured in the settings.
+        """
+        return issuer or self.payload.get(api_settings.ISSUER)
+
+    def set_iss(
+        self, claim: str = api_settings.ISS_CLAIM, issuer: str | None = None
+    ) -> None:
+        """
+        Populates the iss claim of a token with the issuer returned by the
+        `get_iss` method.
+
+        See here:
+        https://datatracker.ietf.org/doc/html/rfc7519#section-4.1.1
+        """
+
+        if issuer := self.get_iss(issuer):
+            self.payload[claim] = issuer
 
     def set_jti(self) -> None:
         """
