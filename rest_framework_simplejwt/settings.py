@@ -15,7 +15,7 @@ DEFAULTS = {
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
     "ROTATE_REFRESH_TOKENS": False,
     "BLACKLIST_AFTER_ROTATION": False,
-      # Whether to update the `last_login` timestamp on the user model after successful authentication.
+    # Whether to update the `last_login` timestamp on the user model after successful authentication.
     "UPDATE_LAST_LOGIN": False,
     "ALGORITHM": "HS256",
     "SIGNING_KEY": settings.SECRET_KEY,
