@@ -84,16 +84,16 @@ class TokenUser:
     def user_permissions(self) -> auth_models.Permission:
         return self._user_permissions
 
-    def get_group_permissions(self, obj: Optional[object] = None) -> set:
+    def get_group_permissions(self, obj: object | None = None) -> set:
         return set()
 
-    def get_all_permissions(self, obj: Optional[object] = None) -> set:
+    def get_all_permissions(self, obj: object | None = None) -> set:
         return set()
 
-    def has_perm(self, perm: str, obj: Optional[object] = None) -> bool:
+    def has_perm(self, perm: str, obj: object | None = None) -> bool:
         return False
 
-    def has_perms(self, perm_list: list[str], obj: Optional[object] = None) -> bool:
+    def has_perms(self, perm_list: list[str], obj: object | None = None) -> bool:
         return False
 
     def has_module_perms(self, module: str) -> bool:
@@ -110,6 +110,6 @@ class TokenUser:
     def get_username(self) -> str:
         return self.username
 
-    def __getattr__(self, attr: str) -> Optional[Any]:
+    def __getattr__(self, attr: str) -> Any | None:
         """This acts as a backup attribute getter for custom claims defined in Token serializers."""
         return self.token.get(attr, None)

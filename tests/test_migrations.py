@@ -20,7 +20,7 @@ class MigrationTestCase(TestCase):
         output = StringIO()
 
         # Initialize exception variable to track migration check result
-        exec: Optional[SystemExit] = None
+        exec: SystemExit | None = None
 
         try:
             # Check for pending migrations without actually creating them

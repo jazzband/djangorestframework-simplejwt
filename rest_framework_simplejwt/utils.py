@@ -1,8 +1,8 @@
 import hashlib
 import logging
 from calendar import timegm
+from collections.abc import Callable
 from datetime import datetime, timezone
-from typing import Callable
 
 from django.conf import settings
 from django.utils.functional import lazy

@@ -26,8 +26,8 @@ class DetailDictMixin:
 
     def __init__(
         self,
-        detail: Union[dict[str, Any], str, None] = None,
-        code: Optional[str] = None,
+        detail: dict[str, Any] | str | None = None,
+        code: str | None = None,
     ) -> None:
         """
         Builds a detail dictionary for the error to give more information to API

@@ -40,8 +40,8 @@ class Token:
     new JWT.
     """
 
-    token_type: Optional[str] = None
-    lifetime: Optional[timedelta] = None
+    token_type: str | None = None
+    lifetime: timedelta | None = None
 
     def __init__(self, token: Optional["Token"] = None, verify: bool = True) -> None:
         """
@@ -96,7 +96,7 @@ class Token:
     def __contains__(self, key: str) -> Any:
         return key in self.payload
 
-    def get(self, key: str, default: Optional[Any] = None) -> Any:
+    def get(self, key: str, default: Any | None = None) -> Any:
         return self.payload.get(key, default)
 
     def __str__(self) -> str:
@@ -155,8 +155,8 @@ class Token:
     def set_exp(
         self,
         claim: str = "exp",
-        from_time: Optional[datetime] = None,
-        lifetime: Optional[timedelta] = None,
+        from_time: datetime | None = None,
+        lifetime: timedelta | None = None,
     ) -> None:
         """
         Updates the expiration time of a token.
@@ -172,7 +172,7 @@ class Token:
 
         self.payload[claim] = datetime_to_epoch(from_time + lifetime)
 
-    def set_iat(self, claim: str = "iat", at_time: Optional[datetime] = None) -> None:
+    def set_iat(self, claim: str = "iat", at_time: datetime | None = None) -> None:
         """
         Updates the time at which the token was issued.
 
@@ -185,7 +185,7 @@ class Token:
         self.payload[claim] = datetime_to_epoch(at_time)
 
     def check_exp(
-        self, claim: str = "exp", current_time: Optional[datetime] = None
+        self, claim: str = "exp", current_time: datetime | None = None
     ) -> None:
         """
         Checks whether a timestamp value in the given claim has passed (since
@@ -205,7 +205,7 @@ class Token:
         if claim_time <= current_time - leeway:
             raise TokenError(format_lazy(_("Token '{}' claim has expired"), claim))
 
-    def outstand(self) -> Optional[OutstandingToken]:
+    def outstand(self) -> OutstandingToken | None:
         """
         Ensures this token is included in the outstanding token list and
         adds it to the outstanding token list if not.
@@ -306,7 +306,7 @@ class BlacklistMixin(Generic[T]):
 
             return BlacklistedToken.objects.get_or_create(token=token)
 
-        def outstand(self) -> Optional[OutstandingToken]:
+        def outstand(self) -> OutstandingToken | None:
             """
             Ensures this token is included in the outstanding token list and
             adds it to the outstanding token list if not.

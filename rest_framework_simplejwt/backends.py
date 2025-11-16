@@ -41,13 +41,13 @@ class TokenBackend:
     def __init__(
         self,
         algorithm: str,
-        signing_key: Optional[str] = None,
+        signing_key: str | None = None,
         verifying_key: str = "",
-        audience: Union[str, Iterable, None] = None,
-        issuer: Optional[str] = None,
-        jwk_url: Optional[str] = None,
-        leeway: Union[float, int, timedelta, None] = None,
-        json_encoder: Optional[type[json.JSONEncoder]] = None,
+        audience: str | Iterable | None = None,
+        issuer: str | None = None,
+        jwk_url: str | None = None,
+        leeway: float | int | timedelta | None = None,
+        json_encoder: type[json.JSONEncoder] | None = None,
     ) -> None:
         self._validate_algorithm(algorithm)
 
@@ -73,7 +73,7 @@ class TokenBackend:
     def prepared_verifying_key(self) -> Any:
         return self._prepare_key(self.verifying_key)
 
-    def _prepare_key(self, key: Optional[str]) -> Any:
+    def _prepare_key(self, key: str | None) -> Any:
         # Support for PyJWT 1.7.1 or empty signing key
         if key is None or not getattr(jwt.PyJWS, "get_algorithm_by_name", None):
             return key
