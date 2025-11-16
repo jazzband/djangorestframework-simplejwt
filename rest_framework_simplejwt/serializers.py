@@ -31,7 +31,7 @@ class PasswordField(serializers.CharField):
 
 class TokenObtainSerializer(serializers.Serializer):
     username_field = get_user_model().USERNAME_FIELD
-    token_class: Optional[type[Token]] = None
+    token_class: type[Token] | None = None
 
     default_error_messages = {
         "no_active_account": _("No active account found with the given credentials")
@@ -264,9 +264,9 @@ class TokenBlacklistSerializer(serializers.Serializer):
         return {}
 
 
-def default_on_login_success(user: AuthUser, request: Optional[Request]) -> None:
+def default_on_login_success(user: AuthUser, request: Request | None) -> None:
     update_last_login(None, user)
 
 
-def default_on_login_failed(credentials: dict, request: Optional[Request]) -> None:
+def default_on_login_failed(credentials: dict, request: Request | None) -> None:
     pass

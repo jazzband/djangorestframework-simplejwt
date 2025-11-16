@@ -15,7 +15,7 @@ class TokenViewBase(generics.GenericAPIView):
     permission_classes = ()
     authentication_classes = ()
 
-    serializer_class: Optional[type[BaseSerializer]] = None
+    serializer_class: type[BaseSerializer] | None = None
     _serializer_class = ""
 
     www_authenticate_realm = "api"

@@ -41,7 +41,7 @@ class JWTAuthentication(authentication.BaseAuthentication):
         super().__init__(*args, **kwargs)
         self.user_model = get_user_model()
 
-    def authenticate(self, request: Request) -> Optional[tuple[AuthUser, Token]]:
+    def authenticate(self, request: Request) -> tuple[AuthUser, Token] | None:
         header = self.get_header(request)
         if header is None:
             return None
@@ -73,7 +73,7 @@ class JWTAuthentication(authentication.BaseAuthentication):
 
         return header
 
-    def get_raw_token(self, header: bytes) -> Optional[bytes]:
+    def get_raw_token(self, header: bytes) -> bytes | None:
         """
         Extracts an unvalidated JSON web token from the given "Authorization"
         header value.
@@ -176,7 +176,7 @@ class JWTStatelessUserAuthentication(JWTAuthentication):
 JWTTokenUserAuthentication = JWTStatelessUserAuthentication
 
 
-def default_user_authentication_rule(user: Optional[AuthUser]) -> bool:
+def default_user_authentication_rule(user: AuthUser | None) -> bool:
     # Prior to Django 1.10, inactive users could be authenticated with the
     # default `ModelBackend`.  As of Django 1.10, the `ModelBackend`
     # prevents inactive users from authenticating.  App designers can still
