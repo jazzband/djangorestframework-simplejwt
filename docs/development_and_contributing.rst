@@ -31,9 +31,9 @@ directory:
 
 .. code-block:: bash
 
-  pyenv install 3.9.x
+  pyenv install 3.10.x
   cat > .python-version <<EOF
-  3.9.x
+  3.10.x
   EOF
 
 Above, the ``x`` in each case should be replaced with the latest corresponding
