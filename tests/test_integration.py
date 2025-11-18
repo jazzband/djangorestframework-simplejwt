@@ -34,7 +34,7 @@ class TestTestView(APIViewTestCase):
         res = self.client.post(
             reverse("token_obtain_sliding"),
             data={
-                User.USERNAME_FIELD: self.username,
+                "username_or_email": self.username,
                 "password": self.password,
             },
         )
@@ -79,7 +79,7 @@ class TestTestView(APIViewTestCase):
         res = self.client.post(
             reverse("token_obtain_sliding"),
             data={
-                User.USERNAME_FIELD: self.username,
+                "username_or_email": self.username,
                 "password": self.password,
             },
         )

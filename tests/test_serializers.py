@@ -142,7 +142,7 @@ class TestTokenObtainSlidingSerializer(TestCase):
         s = TokenObtainSlidingSerializer(
             context=MagicMock(),
             data={
-                TokenObtainSlidingSerializer.username_field: self.username,
+                "username_or_email": self.username,
                 "password": self.password,
             },
         )
@@ -743,3 +743,193 @@ class TestTokenBlacklistSerializer(TestCase):
         # Restore origin module without mock
         reload(tokens)
         reload(serializers)
+
+
+class TestTokenObtainSlidingSerializerWithEmailOrUsername(TestCase):
+    def setUp(self):
+        self.username = "test_user"
+        self.email = "testuser@example.com"
+        self.password = "test_password"
+
+        self.user = User.objects.create_user(
+            username=self.username,
+            email=self.email,
+            password=self.password,
+        )
+
+    def test_it_should_accept_username_or_email_field(self):
+        """Test that the serializer has username_or_email field instead of username"""
+        s = TokenObtainSlidingSerializer()
+        self.assertIn("username_or_email", s.fields)
+        self.assertNotIn("username", s.fields)
+
+    def test_it_should_produce_token_when_valid_username_provided(self):
+        """Test that login works with username"""
+        s = TokenObtainSlidingSerializer(
+            context=MagicMock(),
+            data={
+                "username_or_email": self.username,
+                "password": self.password,
+            },
+        )
+
+        self.assertTrue(s.is_valid())
+        self.assertIn("token", s.validated_data)
+
+        # Verify it's a valid sliding token
+        SlidingToken(s.validated_data["token"])
+
+    def test_it_should_produce_token_when_valid_email_provided(self):
+        """Test that login works with email"""
+        s = TokenObtainSlidingSerializer(
+            context=MagicMock(),
+            data={
+                "username_or_email": self.email,
+                "password": self.password,
+            },
+        )
+
+        self.assertTrue(s.is_valid())
+        self.assertIn("token", s.validated_data)
+
+        # Verify it's a valid sliding token
+        SlidingToken(s.validated_data["token"])
+
+    def test_it_should_fail_with_invalid_email(self):
+        """Test that login fails with non-existent email"""
+        s = TokenObtainSlidingSerializer(
+            context=MagicMock(),
+            data={
+                "username_or_email": "nonexistent@example.com",
+                "password": self.password,
+            },
+        )
+
+        self.assertFalse(s.is_valid())
+        self.assertIn("non_field_errors", s.errors)
+
+    def test_it_should_fail_with_invalid_username(self):
+        """Test that login fails with non-existent username"""
+        s = TokenObtainSlidingSerializer(
+            context=MagicMock(),
+            data={
+                "username_or_email": "nonexistent_user",
+                "password": self.password,
+            },
+        )
+
+        with self.assertRaises(drf_exceptions.AuthenticationFailed):
+            s.is_valid(raise_exception=True)
+
+    def test_it_should_fail_with_wrong_password_for_email(self):
+        """Test that login fails with wrong password when using email"""
+        s = TokenObtainSlidingSerializer(
+            context=MagicMock(),
+            data={
+                "username_or_email": self.email,
+                "password": "wrong_password",
+            },
+        )
+
+        with self.assertRaises(drf_exceptions.AuthenticationFailed):
+            s.is_valid(raise_exception=True)
+
+    def test_it_should_fail_with_wrong_password_for_username(self):
+        """Test that login fails with wrong password when using username"""
+        s = TokenObtainSlidingSerializer(
+            context=MagicMock(),
+            data={
+                "username_or_email": self.username,
+                "password": "wrong_password",
+            },
+        )
+
+        with self.assertRaises(drf_exceptions.AuthenticationFailed):
+            s.is_valid(raise_exception=True)
+
+    def test_it_should_fail_when_username_or_email_missing(self):
+        """Test that validation fails when username_or_email is missing"""
+        s = TokenObtainSlidingSerializer(
+            context=MagicMock(),
+            data={
+                "password": self.password,
+            },
+        )
+
+        self.assertFalse(s.is_valid())
+        self.assertIn("username_or_email", s.errors)
+
+    def test_it_should_fail_when_password_missing(self):
+        """Test that validation fails when password is missing"""
+        s = TokenObtainSlidingSerializer(
+            context=MagicMock(),
+            data={
+                "username_or_email": self.username,
+            },
+        )
+
+        self.assertFalse(s.is_valid())
+        self.assertIn("password", s.errors)
+
+    def test_it_should_fail_when_both_fields_missing(self):
+        """Test that validation fails when both fields are missing"""
+        s = TokenObtainSlidingSerializer(
+            context=MagicMock(),
+            data={},
+        )
+
+        self.assertFalse(s.is_valid())
+        self.assertIn("username_or_email", s.errors)
+        self.assertIn("password", s.errors)
+
+    def test_it_should_fail_for_inactive_user_with_email(self):
+        """Test that login fails for inactive user when using email"""
+        self.user.is_active = False
+        self.user.save()
+
+        s = TokenObtainSlidingSerializer(
+            context=MagicMock(),
+            data={
+                "username_or_email": self.email,
+                "password": self.password,
+            },
+        )
+
+        with self.assertRaises(drf_exceptions.AuthenticationFailed):
+            s.is_valid(raise_exception=True)
+
+    def test_it_should_fail_for_inactive_user_with_username(self):
+        """Test that login fails for inactive user when using username"""
+        self.user.is_active = False
+        self.user.save()
+
+        s = TokenObtainSlidingSerializer(
+            context=MagicMock(),
+            data={
+                "username_or_email": self.username,
+                "password": self.password,
+            },
+        )
+
+        with self.assertRaises(drf_exceptions.AuthenticationFailed):
+            s.is_valid(raise_exception=True)
+
+    def test_it_should_handle_email_with_no_at_symbol_as_username(self):
+        """Test that input without @ is treated as username"""
+        # Create a user with username that looks like it could be email-ish
+        # but doesn't have @
+        special_user = User.objects.create_user(
+            username="userwithdot.com",
+            password="testpass123",
+        )
+
+        s = TokenObtainSlidingSerializer(
+            context=MagicMock(),
+            data={
+                "username_or_email": "userwithdot.com",
+                "password": "testpass123",
+            },
+        )
+
+        self.assertTrue(s.is_valid())
+        self.assertIn("token", s.validated_data)

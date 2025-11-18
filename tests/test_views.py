@@ -194,21 +194,21 @@ class TestTokenObtainSlidingView(APIViewTestCase):
     def test_fields_missing(self):
         res = self.view_post(data={})
         self.assertEqual(res.status_code, 400)
-        self.assertIn(User.USERNAME_FIELD, res.data)
+        self.assertIn("username_or_email", res.data)
         self.assertIn("password", res.data)
 
-        res = self.view_post(data={User.USERNAME_FIELD: self.username})
+        res = self.view_post(data={"username_or_email": self.username})
         self.assertEqual(res.status_code, 400)
         self.assertIn("password", res.data)
 
         res = self.view_post(data={"password": self.password})
         self.assertEqual(res.status_code, 400)
-        self.assertIn(User.USERNAME_FIELD, res.data)
+        self.assertIn("username_or_email", res.data)
 
     def test_credentials_wrong(self):
         res = self.view_post(
             data={
-                User.USERNAME_FIELD: self.username,
+                "username_or_email": self.username,
                 "password": "test_user",
             }
         )
@@ -221,7 +221,7 @@ class TestTokenObtainSlidingView(APIViewTestCase):
 
         res = self.view_post(
             data={
-                User.USERNAME_FIELD: self.username,
+                "username_or_email": self.username,
                 "password": self.password,
             }
         )
@@ -231,7 +231,7 @@ class TestTokenObtainSlidingView(APIViewTestCase):
     def test_success(self):
         res = self.view_post(
             data={
-                User.USERNAME_FIELD: self.username,
+                "username_or_email": self.username,
                 "password": self.password,
             }
         )
@@ -241,7 +241,7 @@ class TestTokenObtainSlidingView(APIViewTestCase):
     def test_update_last_login(self):
         self.view_post(
             data={
-                User.USERNAME_FIELD: self.username,
+                "username_or_email": self.username,
                 "password": self.password,
             }
         )
@@ -255,7 +255,7 @@ class TestTokenObtainSlidingView(APIViewTestCase):
         # verify last_login is updated
         self.view_post(
             data={
-                User.USERNAME_FIELD: self.username,
+                "username_or_email": self.username,
                 "password": self.password,
             }
         )

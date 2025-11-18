@@ -91,7 +91,38 @@ class TokenObtainPairSerializer(TokenObtainSerializer):
 class TokenObtainSlidingSerializer(TokenObtainSerializer):
     token_class = SlidingToken
 
+
+    username_or_email = serializers.CharField(
+        write_only=True,
+        help_text='Enter your username or email address'
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.username_field in self.fields:
+            del self.fields[self.username_field]
+
     def validate(self, attrs: dict[str, Any]) -> dict[str, str]:
+        username_or_email = attrs.get('username_or_email')
+        password = attrs.get('password')
+
+        if not username_or_email or not password:
+            raise serializers.ValidationError('Both username_or_email and password are required.')
+
+        User = get_user_model()
+
+        if '@' in username_or_email:
+            try:
+                user = User.objects.get(email=username_or_email)
+                username = getattr(user, self.username_field)
+            except User.DoesNotExist:
+                raise serializers.ValidationError('Invalid email or password.')
+        else:
+            username = username_or_email
+
+        attrs[self.username_field] = username
+        attrs.pop('username_or_email')
+
         data = super().validate(attrs)
 
         token = self.get_token(self.user)
