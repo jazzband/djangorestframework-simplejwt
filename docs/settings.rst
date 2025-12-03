@@ -53,6 +53,10 @@ Some of Simple JWT's behavior can be customized through settings variables in
       "TOKEN_BLACKLIST_SERIALIZER": "rest_framework_simplejwt.serializers.TokenBlacklistSerializer",
       "SLIDING_TOKEN_OBTAIN_SERIALIZER": "rest_framework_simplejwt.serializers.TokenObtainSlidingSerializer",
       "SLIDING_TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
+
+      "CHECK_REVOKE_TOKEN": False,
+      "REVOKE_TOKEN_CLAIM": "hash_password",
+      "CHECK_USER_IS_ACTIVE": True,
   }
 
 Above, the default values for these settings are shown.
@@ -175,6 +179,12 @@ integer for seconds or a ``datetime.timedelta``. Please reference
 https://pyjwt.readthedocs.io/en/latest/usage.html#expiration-time-claim-exp
 for more information.
 
+``JSON_ENCODER``
+----------------
+
+A custom JSON encoder class to use when encoding JWT tokens. When set to
+``None``, the default JSON encoder is used. This is useful if you need to
+serialize non-standard types in your token claims.
 
 ``AUTH_HEADER_TYPES``
 ---------------------
@@ -303,3 +313,52 @@ payload of the JWT token.
 The claim name that is used to store a user hash password.
 If the value of this CHECK_REVOKE_TOKEN field is ``True``, this field will be
 included in the JWT payload.
+
+``CHECK_USER_IS_ACTIVE``
+------------------------
+
+When set to ``True`` (the default), the authentication will check if the user's
+``is_active`` flag is ``True``. If the user is inactive (``is_active=False``),
+authentication will fail with a 401 status code. Set this to ``False`` if you
+want to allow inactive users to authenticate with valid tokens.
+
+This setting affects both token authentication via ``JWTAuthentication`` and
+the login validation via ``USER_AUTHENTICATION_RULE``.
+
+``TOKEN_OBTAIN_SERIALIZER``
+---------------------------
+
+A dot path to the serializer class used by ``TokenObtainPairView``.
+This can be customized to include additional claims or modify the
+token generation logic.
+
+``TOKEN_REFRESH_SERIALIZER``
+----------------------------
+
+A dot path to the serializer class used by ``TokenRefreshView``.
+Customize this to modify refresh token handling behavior.
+
+``TOKEN_VERIFY_SERIALIZER``
+---------------------------
+
+A dot path to the serializer class used by ``TokenVerifyView``.
+Customize this to modify token verification behavior.
+
+``TOKEN_BLACKLIST_SERIALIZER``
+------------------------------
+
+A dot path to the serializer class used by ``TokenBlacklistView``.
+Requires the ``rest_framework_simplejwt.token_blacklist`` app to be
+installed.
+
+``SLIDING_TOKEN_OBTAIN_SERIALIZER``
+-----------------------------------
+
+A dot path to the serializer class used by ``TokenObtainSlidingView``.
+For use with sliding tokens feature.
+
+``SLIDING_TOKEN_REFRESH_SERIALIZER``
+------------------------------------
+
+A dot path to the serializer class used by ``TokenRefreshSlidingView``.
+For use with sliding tokens feature.
