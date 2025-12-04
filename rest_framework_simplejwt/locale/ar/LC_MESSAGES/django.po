@@ -52,20 +52,16 @@ msgstr ""
 "نوع غير معروف '{}'. يجب أن تكون 'leeway' عددًا صحيحًا أو عددًا نسبيًا أو فرق وقت."
 
 #: backends.py:125 backends.py:177 tokens.py:69
-#, fuzzy
-#| msgid "Token is invalid or expired"
 msgid "Token is invalid"
-msgstr "تأشيرة المرور غير صالحة أو منتهية الصلاحية"
+msgstr "الرمز غير صالح"
 
 #: backends.py:173
 msgid "Invalid algorithm specified"
 msgstr "تم تحديد خوارزمية غير صالحة"
 
 #: backends.py:175 tokens.py:67
-#, fuzzy
-#| msgid "Token is invalid or expired"
 msgid "Token is expired"
-msgstr "تأشيرة المرور غير صالحة أو منتهية الصلاحية"
+msgstr "انتهت صلاحية الرمز"
 
 #: exceptions.py:55
 msgid "Token is invalid or expired"
@@ -76,10 +72,8 @@ msgid "No active account found with the given credentials"
 msgstr "لم يتم العثور على حساب نشط للبيانات المقدمة"
 
 #: serializers.py:113 serializers.py:183
-#, fuzzy
-#| msgid "No active account found with the given credentials"
 msgid "No active account found for the given token."
-msgstr "لم يتم العثور على حساب نشط للبيانات المقدمة"
+msgstr "لم يتم العثور على حساب نشط للرمز المقدم."
 
 #: serializers.py:249 tokens.py:280
 msgid "Token is blacklisted"

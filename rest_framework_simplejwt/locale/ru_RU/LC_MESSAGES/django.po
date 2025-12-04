@@ -55,20 +55,16 @@ msgid ""
 msgstr ""
 
 #: backends.py:125 backends.py:177 tokens.py:69
-#, fuzzy
-#| msgid "Token is invalid or expired"
 msgid "Token is invalid"
-msgstr "Токен недействителен или просрочен"
+msgstr "Токен недействителен"
 
 #: backends.py:173
 msgid "Invalid algorithm specified"
 msgstr ""
 
 #: backends.py:175 tokens.py:67
-#, fuzzy
-#| msgid "Token is invalid or expired"
 msgid "Token is expired"
-msgstr "Токен недействителен или просрочен"
+msgstr "Токен недействителен"
 
 #: exceptions.py:55
 msgid "Token is invalid or expired"
@@ -79,10 +75,8 @@ msgid "No active account found with the given credentials"
 msgstr "Не найдено активной учетной записи с указанными данными"
 
 #: serializers.py:113 serializers.py:183
-#, fuzzy
-#| msgid "No active account found with the given credentials"
 msgid "No active account found for the given token."
-msgstr "Не найдено активной учетной записи с указанными данными"
+msgstr "Активная учетная запись для данного токена не найдена"
 
 #: serializers.py:249 tokens.py:280
 msgid "Token is blacklisted"

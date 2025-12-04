@@ -51,20 +51,16 @@ msgid ""
 msgstr ""
 
 #: backends.py:125 backends.py:177 tokens.py:69
-#, fuzzy
-#| msgid "Token is invalid or expired"
 msgid "Token is invalid"
-msgstr "Le jeton est invalide ou expiré"
+msgstr "Le jeton est invalide"
 
 #: backends.py:173
 msgid "Invalid algorithm specified"
 msgstr "L'algorithme spécifié est invalide"
 
 #: backends.py:175 tokens.py:67
-#, fuzzy
-#| msgid "Token is invalid or expired"
 msgid "Token is expired"
-msgstr "Le jeton est invalide ou expiré"
+msgstr "Le jeton a expiré"
 
 #: exceptions.py:55
 msgid "Token is invalid or expired"
@@ -75,10 +71,8 @@ msgid "No active account found with the given credentials"
 msgstr "Aucun compte actif n'a été trouvé avec les identifiants fournis"
 
 #: serializers.py:113 serializers.py:183
-#, fuzzy
-#| msgid "No active account found with the given credentials"
 msgid "No active account found for the given token."
-msgstr "Aucun compte actif n'a été trouvé avec les identifiants fournis"
+msgstr "Aucun compte actif n'a été trouvé pour le token fourni"
 
 #: serializers.py:249 tokens.py:280
 msgid "Token is blacklisted"

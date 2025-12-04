@@ -1,7 +1,6 @@
 # This file is distributed under the same license as the PACKAGE package.
 # Artiukhov Artem <defenite@meta.ua>, 2021.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: djangorestframework_simplejwt\n"
@@ -53,20 +52,16 @@ msgid ""
 msgstr ""
 
 #: backends.py:125 backends.py:177 tokens.py:69
-#, fuzzy
-#| msgid "Token is invalid or expired"
 msgid "Token is invalid"
-msgstr "Токен некоректний або термін його дії вичерпаний"
+msgstr "Токен недійсний"
 
 #: backends.py:173
 msgid "Invalid algorithm specified"
 msgstr "Вказаний невірний алгоритм"
 
 #: backends.py:175 tokens.py:67
-#, fuzzy
-#| msgid "Token is invalid or expired"
 msgid "Token is expired"
-msgstr "Токен некоректний або термін його дії вичерпаний"
+msgstr "Термін дії токена закінчився"
 
 #: exceptions.py:55
 msgid "Token is invalid or expired"
@@ -77,10 +72,8 @@ msgid "No active account found with the given credentials"
 msgstr "Не знайдено жодного облікового запису по наданих облікових даних"
 
 #: serializers.py:113 serializers.py:183
-#, fuzzy
-#| msgid "No active account found with the given credentials"
 msgid "No active account found for the given token."
-msgstr "Не знайдено жодного облікового запису по наданих облікових даних"
+msgstr "Для цього токена не знайдено активного облікового запису."
 
 #: serializers.py:249 tokens.py:280
 msgid "Token is blacklisted"

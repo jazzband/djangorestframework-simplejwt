@@ -4,7 +4,6 @@
 # Translators:
 # Ariel Torti <arieltorti14@gmail.com>, 2020.
 # Fabian Falón <fabian.falon@gmail.com>, 2024.
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: djangorestframework_simplejwt\n"
@@ -56,20 +55,16 @@ msgid ""
 msgstr ""
 
 #: backends.py:125 backends.py:177 tokens.py:69
-#, fuzzy
-#| msgid "Token is invalid or expired"
 msgid "Token is invalid"
-msgstr "El token es inválido o ha expirado"
+msgstr "El token es inválido"
 
 #: backends.py:173
 msgid "Invalid algorithm specified"
 msgstr "Se especificó un algoritmo no válido."
 
 #: backends.py:175 tokens.py:67
-#, fuzzy
-#| msgid "Token is invalid or expired"
 msgid "Token is expired"
-msgstr "El token es inválido o ha expirado"
+msgstr "El token ha expirado"
 
 #: exceptions.py:55
 msgid "Token is invalid or expired"
@@ -80,10 +75,8 @@ msgid "No active account found with the given credentials"
 msgstr "No se encontró una cuenta activa con las credenciales proporcionadas."
 
 #: serializers.py:113 serializers.py:183
-#, fuzzy
-#| msgid "No active account found with the given credentials"
 msgid "No active account found for the given token."
-msgstr "No se encontró una cuenta activa para el token proporcionado"
+msgstr "No se encontró una cuenta de usuario activa para el token proporcionado"
 
 #: serializers.py:249 tokens.py:280
 msgid "Token is blacklisted"

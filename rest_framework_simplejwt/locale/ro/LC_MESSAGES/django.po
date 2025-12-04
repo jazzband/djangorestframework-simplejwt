@@ -54,20 +54,16 @@ msgstr ""
 "timedelta."
 
 #: backends.py:125 backends.py:177 tokens.py:69
-#, fuzzy
-#| msgid "Token is invalid or expired"
 msgid "Token is invalid"
-msgstr "Token nu este valid sau a expirat"
+msgstr "Token nu este valid"
 
 #: backends.py:173
 msgid "Invalid algorithm specified"
 msgstr "Algoritm nevalid specificat"
 
 #: backends.py:175 tokens.py:67
-#, fuzzy
-#| msgid "Token is invalid or expired"
 msgid "Token is expired"
-msgstr "Token nu este valid sau a expirat"
+msgstr "Token-ul a expirat"
 
 #: exceptions.py:55
 msgid "Token is invalid or expired"
@@ -78,10 +74,8 @@ msgid "No active account found with the given credentials"
 msgstr "Nu a fost găsit cont activ cu aceste date de autentificare"
 
 #: serializers.py:113 serializers.py:183
-#, fuzzy
-#| msgid "No active account found with the given credentials"
 msgid "No active account found for the given token."
-msgstr "Nu a fost găsit cont activ cu aceste date de autentificare"
+msgstr "Nu a fost găsit un cont activ pentru token-ul furnizat"
 
 #: serializers.py:249 tokens.py:280
 msgid "Token is blacklisted"

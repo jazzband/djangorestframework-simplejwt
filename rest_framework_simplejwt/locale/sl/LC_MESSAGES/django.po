@@ -55,20 +55,18 @@ msgstr ""
 "Neprepoznana vrsta '{}', 'leeway' mora biti vrste int, float ali timedelta."
 
 #: backends.py:125 backends.py:177 tokens.py:69
-#, fuzzy
-#| msgid "Token is invalid or expired"
 msgid "Token is invalid"
-msgstr "Žeton je neveljaven ali potekel"
+msgstr "Žeton ni veljaven"
+
 
 #: backends.py:173
 msgid "Invalid algorithm specified"
 msgstr "Naveden algoritem je neveljaven"
 
 #: backends.py:175 tokens.py:67
-#, fuzzy
-#| msgid "Token is invalid or expired"
 msgid "Token is expired"
-msgstr "Žeton je neveljaven ali potekel"
+msgstr "Žeton je potekel"
+
 
 #: exceptions.py:55
 msgid "Token is invalid or expired"
@@ -79,10 +77,8 @@ msgid "No active account found with the given credentials"
 msgstr "Aktiven račun s podanimi poverilnicami ni najden"
 
 #: serializers.py:113 serializers.py:183
-#, fuzzy
-#| msgid "No active account found with the given credentials"
 msgid "No active account found for the given token."
-msgstr "Aktiven račun s podanimi poverilnicami ni najden"
+msgstr "Za dani žeton ni bil najden noben aktiven račun."
 
 #: serializers.py:249 tokens.py:280
 msgid "Token is blacklisted"

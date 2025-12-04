@@ -52,20 +52,16 @@ msgid ""
 msgstr ""
 
 #: backends.py:125 backends.py:177 tokens.py:69
-#, fuzzy
-#| msgid "Token is invalid or expired"
 msgid "Token is invalid"
-msgstr "Token geçersiz veya süresi geçmiş"
+msgstr "Token geçersiz"
 
 #: backends.py:173
 msgid "Invalid algorithm specified"
 msgstr "Geçersiz algoritma belirtildi"
 
 #: backends.py:175 tokens.py:67
-#, fuzzy
-#| msgid "Token is invalid or expired"
 msgid "Token is expired"
-msgstr "Token geçersiz veya süresi geçmiş"
+msgstr "Jetonun süresi doldu"
 
 #: exceptions.py:55
 msgid "Token is invalid or expired"
@@ -76,10 +72,8 @@ msgid "No active account found with the given credentials"
 msgstr "Verilen kimlik bilgileriyle aktif bir hesap bulunamadı"
 
 #: serializers.py:113 serializers.py:183
-#, fuzzy
-#| msgid "No active account found with the given credentials"
 msgid "No active account found for the given token."
-msgstr "Verilen kimlik bilgileriyle aktif bir hesap bulunamadı"
+msgstr "Belirtilen token için aktif hesap bulunamadı."
 
 #: serializers.py:249 tokens.py:280
 msgid "Token is blacklisted"

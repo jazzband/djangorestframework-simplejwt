@@ -50,20 +50,16 @@ msgid ""
 msgstr ""
 
 #: backends.py:125 backends.py:177 tokens.py:69
-#, fuzzy
-#| msgid "Token is invalid or expired"
 msgid "Token is invalid"
-msgstr "Token är ogiltig eller har löpt ut"
+msgstr "Token är ogiltig"
 
 #: backends.py:173
 msgid "Invalid algorithm specified"
 msgstr "Ogiltig algoritm har angetts"
 
 #: backends.py:175 tokens.py:67
-#, fuzzy
-#| msgid "Token is invalid or expired"
 msgid "Token is expired"
-msgstr "Token är ogiltig eller har löpt ut"
+msgstr "Token har löpt ut"
 
 #: exceptions.py:55
 msgid "Token is invalid or expired"
@@ -74,10 +70,8 @@ msgid "No active account found with the given credentials"
 msgstr "Inget aktivt konto hittades med de angivna användaruppgifterna"
 
 #: serializers.py:113 serializers.py:183
-#, fuzzy
-#| msgid "No active account found with the given credentials"
 msgid "No active account found for the given token."
-msgstr "Inget aktivt konto hittades med de angivna användaruppgifterna"
+msgstr "Inget aktivt konto hittades för den angivna token."
 
 #: serializers.py:249 tokens.py:280
 msgid "Token is blacklisted"
