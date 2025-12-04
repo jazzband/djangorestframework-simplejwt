@@ -1,7 +1,8 @@
 # tests/test_i18n_translations.py
 
 import pytest
-from django.utils.translation import activate, gettext as _
+from django.utils.translation import activate
+from django.utils.translation import gettext as _
 
 # Mapping: language code → list of messages to test
 translations_to_test = {
@@ -34,7 +35,7 @@ translations_to_test = {
         ("Token is expired", "El token ha expirado"),
         (
             "No active account found for the given token.",
-            "No se encontró una cuenta activa para el token proporcionado."
+            "No se encontró una cuenta activa para el token proporcionado.",
         ),
     ],
     "fr": [
@@ -157,6 +158,6 @@ def test_translations(lang):
     activate(lang)
     for original, expected in translations_to_test[lang]:
         translated = _(original)
-        assert (
-            translated == expected
-        ), f"{lang}: {original} → {translated}, expected: {expected}"
+        assert translated == expected, (
+            f"{lang}: {original} → {translated}, expected: {expected}"
+        )
