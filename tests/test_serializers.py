@@ -217,12 +217,13 @@ class TestTokenObtainPairSerializer(TestCase):
         # Tokens should be valid
         access_token = AccessToken(validated_data["access"])
         refresh_token = RefreshToken(validated_data["refresh"])
-        
+
         # Validate token type and some claims, but don't assert JTI equality
         self.assertEqual(access_token["token_type"], "access")
         self.assertEqual(refresh_token["token_type"], "refresh")
         self.assertEqual(access_token["user_id"], str(self.user.id))
         self.assertEqual(refresh_token["user_id"], str(self.user.id))
+
 
 class TestTokenRefreshSlidingSerializer(TestCase):
     def setUp(self):
