@@ -160,6 +160,7 @@ class TestTokenObtainSlidingSerializer(TestCase):
         self.assertIn("token", serializer.fields)
         self.assertTrue(serializer.fields["token"].read_only)
 
+
 class TestTokenObtainPairSerializer(TestCase):
     def setUp(self):
         self.username = "test_user"
