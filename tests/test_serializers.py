@@ -155,6 +155,10 @@ class TestTokenObtainSlidingSerializer(TestCase):
         # token should not raise an exception.
         SlidingToken(s.validated_data["token"])
 
+    def test_token_field_is_read_only_for_schema(self):
+        serializer = TokenObtainSlidingSerializer()
+        self.assertIn("token", serializer.fields)
+        self.assertTrue(serializer.fields["token"].read_only)
 
 class TestTokenObtainPairSerializer(TestCase):
     def setUp(self):
