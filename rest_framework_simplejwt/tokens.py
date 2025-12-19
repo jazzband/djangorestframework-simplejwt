@@ -236,7 +236,7 @@ class Token:
         else:
             raise TokenError(_("Token has invalid audience"))
 
-    def get_iss(self, issuer: str | None = None) -> Optional[str]:
+    def get_iss(self, issuer: str | None = None) -> str | None:
         """
         Returns the issuer URL configured in the settings.
         """
@@ -258,7 +258,7 @@ class Token:
 
     def get_aud(
         self, audience: str | list[str] | None = None
-    ) -> Optional[str | list[str]]:
+    ) -> str | list[str] | None:
         """
         Returns the audience configured in the settings or the provided value.
         """
