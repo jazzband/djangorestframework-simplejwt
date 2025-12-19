@@ -48,8 +48,8 @@ class TokenBackend:
         jwk_url: str | None = None,
         leeway: float | int | timedelta | None = None,
         json_encoder: type[json.JSONEncoder] | None = None,
-        verify_aud: Optional[bool] = None,
-        verify_iss: Optional[bool] = None,
+        verify_aud: bool | None = None,
+        verify_iss: bool | None = None,
     ) -> None:
         self._validate_algorithm(algorithm)
 
