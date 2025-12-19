@@ -296,6 +296,47 @@ class TestToken(TestCase):
             token["refresh_iat"], datetime_to_epoch(now + timedelta(days=1))
         )
 
+    @override_api_settings(ISSUER="https://issuer.domain.tld")
+    def test_set_iss_defaults_to_configured_issuer(self):
+        token = MyToken()
+        self.assertEqual(token["iss"], "https://issuer.domain.tld")
+
+    @override_api_settings(ISSUER="https://issuer.domain.tld")
+    def test_verify_iss_rejects_mismatch(self):
+        token = MyToken()
+        token["iss"] = "https://other.domain.tld"
+
+        with self.assertRaises(TokenError):
+            token.verify_iss()
+
+    @override_api_settings(AUDIENCE="my-audience")
+    def test_set_aud_defaults_to_configured_audience(self):
+        token = MyToken()
+        self.assertEqual(token["aud"], "my-audience")
+
+    @override_api_settings(AUDIENCE="my-audience")
+    def test_verify_aud_rejects_mismatch(self):
+        token = MyToken()
+        token["aud"] = "other-audience"
+
+        with self.assertRaises(TokenError):
+            token.verify_aud()
+
+    @override_api_settings(AUDIENCE_VALIDATION="static", AUDIENCE=None)
+    def test_verify_aud_raises_when_unexpected_aud_present_static(self):
+        token = MyToken()
+        token["aud"] = "unexpected-audience"
+
+        with self.assertRaises(TokenError):
+            token.verify_aud()
+
+    @override_api_settings(AUDIENCE_VALIDATION="dynamic", AUDIENCE=None)
+    def test_verify_aud_allows_dynamic_aud_when_config_unset(self):
+        token = MyToken()
+        token["aud"] = "dynamic-audience"
+
+        token.verify_aud()
+
     def test_check_exp(self):
         token = MyToken()
 
