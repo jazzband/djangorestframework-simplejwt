@@ -20,6 +20,7 @@ DEFAULTS = {
     "SIGNING_KEY": settings.SECRET_KEY,
     "VERIFYING_KEY": "",
     "AUDIENCE": None,
+    "AUDIENCE_VALIDATION": "static",
     "ISSUER": None,
     "ISSUER_VALIDATION": "static",
     "ISS_CLAIM": "iss",

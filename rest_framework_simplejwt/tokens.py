@@ -81,6 +81,7 @@ class Token:
             # Set "jti" claim
             self.set_jti()
             self.set_iss()
+            self.set_aud()
 
     def __repr__(self) -> str:
         return repr(self.payload)
@@ -130,6 +131,9 @@ class Token:
         if api_settings.TOKEN_TYPE_CLAIM is not None:
             self.verify_token_type()
 
+        if api_settings.AUDIENCE is not None or "aud" in self.payload:
+            self.verify_aud()
+
         if api_settings.ISSUER is not None or api_settings.ISS_CLAIM in self.payload:
             self.verify_iss()
 
@@ -173,6 +177,65 @@ class Token:
             if issuer not in api_settings.ALLOWED_ISSUERS:
                 raise TokenError(_("Token has invalid issuer"))
 
+    def verify_aud(self) -> None:
+        """
+        Validates the audience claim in the token payload.
+
+        If AUDIENCE is configured, the claim must exist and match. Otherwise,
+        if the claim exists, it must be a non-empty string or a collection of
+        non-empty strings.
+        """
+        aud = self.payload.get("aud")
+        expected = api_settings.AUDIENCE
+
+        def _normalize_aud(value: Any) -> list[str]:
+            if isinstance(value, str):
+                return [value]
+
+            if isinstance(value, (list, tuple)):
+                return list(value)
+
+            raise TokenError(_("Token has invalid audience"))
+
+        def _validate_strings(values: list[str]) -> None:
+            if not values or any(
+                (not isinstance(v, str) or not v.strip()) for v in values
+            ):
+                raise TokenError(_("Token has invalid audience"))
+
+        if expected is None:
+            if aud is None:
+                return
+
+            if api_settings.AUDIENCE_VALIDATION == "dynamic":
+                aud_list = _normalize_aud(aud)
+                _validate_strings(aud_list)
+                return
+
+            # Mirror PyJWT semantics for static validation: if no expected
+            # audience is configured but the token carries an aud claim, treat
+            # it as invalid.
+            raise TokenError(_("Token has invalid audience"))
+
+        if aud is None:
+            raise TokenError(_("Token has no audience"))
+
+        aud_list = _normalize_aud(aud)
+        _validate_strings(aud_list)
+
+        if isinstance(expected, str):
+            if expected not in aud_list:
+                raise TokenError(_("Token has invalid audience"))
+
+        elif isinstance(expected, (list, tuple)):
+            _validate_strings(list(expected))
+
+            if not any(aud in expected for aud in aud_list):
+                raise TokenError(_("Token has invalid audience"))
+
+        else:
+            raise TokenError(_("Token has invalid audience"))
+
     def get_iss(self, issuer: str | None = None) -> Optional[str]:
         """
         Returns the issuer URL configured in the settings.
@@ -192,6 +255,28 @@ class Token:
 
         if issuer := self.get_iss(issuer):
             self.payload[claim] = issuer
+
+    def get_aud(
+        self, audience: str | list[str] | None = None
+    ) -> Optional[str | list[str]]:
+        """
+        Returns the audience configured in the settings or the provided value.
+        """
+        return audience or api_settings.AUDIENCE
+
+    def set_aud(
+        self, claim: str = "aud", audience: str | list[str] | None = None
+    ) -> None:
+        """
+        Populates the aud claim of a token with the audience returned by the
+        `get_aud` method.
+
+        See here:
+        https://datatracker.ietf.org/doc/html/rfc7519#section-4.1.3
+        """
+
+        if audience := self.get_aud(audience):
+            self.payload[claim] = audience
 
     def set_jti(self) -> None:
         """
