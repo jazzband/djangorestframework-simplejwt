@@ -155,6 +155,18 @@ The audience claim to be included in generated tokens and/or validated in
 decoded tokens. When set to ``None``, this field is excluded from tokens and is
 not validated.
 
+``AUDIENCE_VALIDATION``
+-----------------------
+
+Controls how the audience claim is validated during backend decode. Valid values:
+
+* ``"static"`` (default): The backend passes ``AUDIENCE`` to PyJWT, which performs
+  audience validation at decode time. Tokens carrying an ``aud`` that does not
+  match the configured audience are rejected by PyJWT.
+* ``"dynamic"``: The backend does not pass an audience to PyJWT, allowing tokens
+  with dynamically assigned audiences to be decoded. Audience validation is then
+  handled in ``Token.verify_aud`` (ensuring the claim exists and is non-empty).
+
 ``ISSUER``
 ----------
 
