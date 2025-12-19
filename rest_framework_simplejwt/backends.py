@@ -2,7 +2,7 @@ import json
 from collections.abc import Iterable
 from datetime import timedelta
 from functools import cached_property
-from typing import Any, Optional, Union
+from typing import Any
 
 import jwt
 from django.utils.translation import gettext_lazy as _
@@ -55,7 +55,7 @@ class TokenBackend:
         self.signing_key = signing_key
         self.verifying_key = verifying_key
         self.audience = audience
-        # self.issuer = issuer
+        self.issuer = issuer
 
         if JWK_CLIENT_AVAILABLE:
             self.jwks_client = PyJWKClient(jwk_url) if jwk_url else None
@@ -133,8 +133,8 @@ class TokenBackend:
         jwt_payload = payload.copy()
         if self.audience is not None:
             jwt_payload["aud"] = self.audience
-        # if self.issuer is not None:
-        #     jwt_payload["iss"] = self.issuer
+        if self.issuer is not None:
+            jwt_payload["iss"] = self.issuer
 
         token = jwt.encode(
             jwt_payload,
@@ -163,12 +163,12 @@ class TokenBackend:
                 self.get_verifying_key(token),
                 algorithms=[self.algorithm],
                 audience=self.audience,
-                # issuer=self.issuer,
+                issuer=self.issuer,
                 leeway=self.get_leeway(),
                 options={
                     "verify_aud": self.audience is not None,
                     "verify_signature": verify,
-                    # "verify_iss": self.issuer is not None,
+                    "verify_iss": self.issuer is not None,
                 },
             )
         except InvalidAlgorithmError as e:

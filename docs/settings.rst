@@ -162,6 +162,17 @@ The issuer claim to be included in generated tokens and/or validated in decoded
 tokens. When set to ``None``, this field is excluded from tokens and is not
 validated.
 
+``ISSUER_VALIDATION``
+---------------------
+
+Controls how the issuer claim is validated during backend decode. Valid values:
+
+* ``"static"`` (default): The backend passes ``ISSUER`` to PyJWT, which performs
+  issuer validation at decode time.
+* ``"dynamic"``: The backend does not pass an issuer to PyJWT, allowing tokens
+  with dynamically assigned issuers to be decoded. Issuer validation is then
+  handled in ``Token.verify_iss``.
+
 ``JWK_URL``
 -----------
 
