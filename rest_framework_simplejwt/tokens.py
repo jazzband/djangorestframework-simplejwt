@@ -177,7 +177,7 @@ class Token:
         """
         Returns the issuer URL configured in the settings.
         """
-        return issuer or self.payload.get(api_settings.ISSUER)
+        return issuer or api_settings.ISSUER
 
     def set_iss(
         self, claim: str = api_settings.ISS_CLAIM, issuer: str | None = None
