@@ -21,6 +21,7 @@ DEFAULTS = {
     "VERIFYING_KEY": "",
     "AUDIENCE": None,
     "ISSUER": None,
+    "ISSUER_VALIDATION": "static",
     "ISS_CLAIM": "iss",
     "ALLOWED_ISSUERS": None,
     "JSON_ENCODER": None,
