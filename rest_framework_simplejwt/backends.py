@@ -2,7 +2,7 @@ import json
 from collections.abc import Iterable
 from datetime import timedelta
 from functools import cached_property
-from typing import Any
+from typing import Any, Optional
 
 import jwt
 from django.utils.translation import gettext_lazy as _
