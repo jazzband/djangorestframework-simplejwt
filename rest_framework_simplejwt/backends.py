@@ -166,7 +166,6 @@ class TokenBackend:
         Raises a `TokenBackendError` if the token is malformed, if its
         signature check fails, or if its 'exp' claim indicates it has expired.
         """
-        # WIP
         try:
             return jwt.decode(
                 token,

@@ -24,7 +24,11 @@ Some of Simple JWT's behavior can be customized through settings variables in
       "SIGNING_KEY": settings.SECRET_KEY,
       "VERIFYING_KEY": "",
       "AUDIENCE": None,
+      "AUDIENCE_VALIDATION": "static",
       "ISSUER": None,
+      "ISSUER_VALIDATION": "static",
+      "ISS_CLAIM": "iss",
+      "ALLOWED_ISSUERS": None,
       "JSON_ENCODER": None,
       "JWK_URL": None,
       "LEEWAY": 0,
@@ -192,6 +196,18 @@ Dynamic audience example::
 The issuer claim to be included in generated tokens and/or validated in decoded
 tokens. When set to ``None``, this field is excluded from tokens and is not
 validated.
+
+``ISS_CLAIM``
+-------------
+
+The claim name used for the issuer in token payloads. Defaults to ``"iss"``.
+
+``ALLOWED_ISSUERS``
+-------------------
+
+Optional list/tuple of acceptable issuer values when using dynamic issuer
+validation. When set to ``None``, any non-empty issuer string is accepted in
+dynamic mode.
 
 ``ISSUER_VALIDATION``
 ---------------------
