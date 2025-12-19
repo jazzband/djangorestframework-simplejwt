@@ -167,6 +167,25 @@ Controls how the audience claim is validated during backend decode. Valid values
   with dynamically assigned audiences to be decoded. Audience validation is then
   handled in ``Token.verify_aud`` (ensuring the claim exists and is non-empty).
 
+Dynamic audience example::
+
+    from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
+    class AudienceAwareTokenSerializer(TokenObtainPairSerializer):
+        @classmethod
+        def get_token(cls, user):
+            token = super().get_token(user)
+
+            audience = getattr(user, "aud_for_token", None)
+            if audience:
+                token.set_aud(audience=audience)
+
+            return token
+
+.. note::
+   To allow dynamic audiences, set ``AUDIENCE_VALIDATION="dynamic"`` so the
+   backend does not enforce a single static audience via PyJWT.
+
 ``ISSUER``
 ----------
 
@@ -184,6 +203,25 @@ Controls how the issuer claim is validated during backend decode. Valid values:
 * ``"dynamic"``: The backend does not pass an issuer to PyJWT, allowing tokens
   with dynamically assigned issuers to be decoded. Issuer validation is then
   handled in ``Token.verify_iss``.
+
+Dynamic issuer example::
+
+    from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
+    class TenantAwareTokenSerializer(TokenObtainPairSerializer):
+        @classmethod
+        def get_token(cls, user):
+            token = super().get_token(user)
+
+            issuer = getattr(user, "issuer_for_token", None)
+            if issuer:
+                token.set_iss(issuer=issuer)
+
+            return token
+
+.. note::
+   To allow dynamic issuers, set ``ISSUER_VALIDATION="dynamic"`` so the backend
+   does not enforce a single static issuer via PyJWT.
 
 ``JWK_URL``
 -----------
