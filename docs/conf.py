@@ -14,7 +14,7 @@
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
-from pkg_resources import get_distribution
+from importlib.metadata import version
 
 # -- General configuration ------------------------------------------------
 
@@ -80,7 +80,7 @@ copyright = "2020, David Sanders"
 # built documents.
 #
 # The full version, including alpha/beta/rc tags.
-release = get_distribution("djangorestframework_simplejwt").version
+release = version("djangorestframework_simplejwt")
 
 # The short X.Y version.
 version = ".".join(release.split(".")[:2])
