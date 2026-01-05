@@ -7,6 +7,7 @@ from rest_framework.test import APIRequestFactory
 
 from rest_framework_simplejwt import authentication
 from rest_framework_simplejwt.exceptions import AuthenticationFailed, InvalidToken
+from rest_framework.request import Request
 from rest_framework_simplejwt.models import TokenUser
 from rest_framework_simplejwt.settings import api_settings
 from rest_framework_simplejwt.tokens import AccessToken, SlidingToken
@@ -277,3 +278,44 @@ class TestJWTStatelessUserAuthentication(TestCase):
 
         # Restore default TokenUser for future tests
         api_settings.TOKEN_USER_CLASS = temp
+
+
+class TestJWTCookieAuthentication(TestCase):
+    def setUp(self):
+        self.factory = APIRequestFactory()
+        self.backend = authentication.JWTCookieAuthentication()
+
+        self.user = User.objects.create_user(
+            username="anirudhk", password="password123", is_active=True
+        )
+
+        self.access_token = str(AccessToken.for_user(self.user))
+
+    def test_cookie_authentication(self) -> None:
+        django_request = self.factory.get("/protected-cookie/")
+        django_request.COOKIES[api_settings.AUTH_COOKIE] = self.access_token
+
+        result = self.backend.authenticate(Request(django_request))
+
+        self.assertIsNotNone(result)
+
+        user, token = result
+
+        self.assertEqual(user, self.user)
+        self.assertIsInstance(token, AccessToken)
+
+    def test_authenticate_without_token(self) -> None:
+        dj_request = self.factory.get("/cookie-protected/")
+        request = Request(dj_request)
+
+        result = self.backend.authenticate(request)
+
+        self.assertIsNone(result)
+
+    def test_authenticate_with_invalid_cookie(self) -> None:
+        dj_request = self.factory.get("/cookie-protected/")
+        dj_request.COOKIES[api_settings.AUTH_COOKIE] = "invalid_token_value"
+
+        request = Request(dj_request)
+        with self.assertRaises(AuthenticationFailed):
+            self.backend.authenticate(request)
