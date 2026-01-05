@@ -47,6 +47,7 @@ DEFAULTS = {
     "CHECK_REVOKE_TOKEN": False,
     "REVOKE_TOKEN_CLAIM": "hash_password",
     "CHECK_USER_IS_ACTIVE": True,
+    "AUTH_COOKIE": "access"
 }
 
 IMPORT_STRINGS = (
