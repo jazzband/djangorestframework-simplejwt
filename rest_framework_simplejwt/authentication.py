@@ -1,4 +1,4 @@
-from typing import Optional, TypeVar
+from typing import Optional, TypeVar, Any
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractBaseUser
@@ -121,6 +121,9 @@ class JWTAuthentication(authentication.BaseAuthentication):
             }
         )
 
+    def get_user_queryset(self, user_id: Any = None) -> Optional[AuthUser]:
+        return self.user_model.objects.get(**{api_settings.USER_ID_FIELD: user_id})
+
     def get_user(self, validated_token: Token) -> AuthUser:
         """
         Attempts to find and return a user using the given validated token.
@@ -133,7 +136,9 @@ class JWTAuthentication(authentication.BaseAuthentication):
             ) from e
 
         try:
-            user = self.user_model.objects.get(**{api_settings.USER_ID_FIELD: user_id})
+            user = self.get_user_queryset(user_id)
+            if not user:
+                raise AuthenticationFailed(_("User not found"), code="user_not_found")
         except self.user_model.DoesNotExist as e:
             raise AuthenticationFailed(
                 _("User not found"), code="user_not_found"
