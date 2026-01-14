@@ -1,4 +1,4 @@
-from typing import Optional, TypeVar, Any
+from typing import Any, Optional, TypeVar
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractBaseUser
@@ -121,7 +121,7 @@ class JWTAuthentication(authentication.BaseAuthentication):
             }
         )
 
-    def get_user_queryset(self, user_id: Any = None) -> Optional[AuthUser]:
+    def get_user_queryset(self, user_id: Any = None) -> AuthUser | None:
         return self.user_model.objects.get(**{api_settings.USER_ID_FIELD: user_id})
 
     def get_user(self, validated_token: Token) -> AuthUser:
