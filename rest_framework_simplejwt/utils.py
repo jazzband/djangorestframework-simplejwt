@@ -1,20 +1,20 @@
 from calendar import timegm
-from datetime import datetime
+from datetime import datetime, timezone
 
 from django.conf import settings
 from django.utils.functional import lazy
-from django.utils.timezone import is_naive, make_aware, utc
+from django.utils.timezone import is_naive, make_aware
 
 
 def make_utc(dt):
     if settings.USE_TZ and is_naive(dt):
-        return make_aware(dt, timezone=utc)
+        return make_aware(dt, timezone=timezone.utc)
 
     return dt
 
 
 def aware_utcnow():
-    return make_utc(datetime.utcnow())
+    return datetime.now(timezone.utc)
 
 
 def datetime_to_epoch(dt):
@@ -22,7 +22,7 @@ def datetime_to_epoch(dt):
 
 
 def datetime_from_epoch(ts):
-    return make_utc(datetime.utcfromtimestamp(ts))
+    return datetime.fromtimestamp(ts, timezone.utc)
 
 
 def format_lazy(s, *args, **kwargs):
