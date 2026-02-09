@@ -21,6 +21,10 @@ from rest_framework_simplejwt.utils import aware_utcnow, datetime_to_epoch, make
 from tests.keys import (
     ES256_PRIVATE_KEY,
     ES256_PUBLIC_KEY,
+    ES384_PRIVATE_KEY,
+    ES384_PUBLIC_KEY,
+    ES512_PRIVATE_KEY,
+    ES512_PUBLIC_KEY,
     PRIVATE_KEY,
     PRIVATE_KEY_2,
     PUBLIC_KEY,
@@ -61,8 +65,8 @@ class TestTokenBackend(TestCase):
             self.hmac_token_backend,
             self.rsa_token_backend,
             TokenBackend("ES256", ES256_PRIVATE_KEY, ES256_PUBLIC_KEY),
-            TokenBackend("ES384", ES256_PRIVATE_KEY, ES256_PUBLIC_KEY),
-            TokenBackend("ES512", ES256_PRIVATE_KEY, ES256_PUBLIC_KEY),
+            TokenBackend("ES384", ES384_PRIVATE_KEY, ES384_PUBLIC_KEY),
+            TokenBackend("ES512", ES512_PRIVATE_KEY, ES512_PUBLIC_KEY),
         )
 
     def test_init(self):
