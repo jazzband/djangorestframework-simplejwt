@@ -126,38 +126,13 @@ tmjhpC+XqK88q5NfIS1cBYYtzhHUS4vGpazNqbW8HA3ZIvJRmx4L96O6/w==
 -----END PUBLIC KEY-----
 """
 
-ES384_PRIVATE_KEY = """
------BEGIN EC PRIVATE KEY-----
-MIGkAgEBBDBeJEPZHK/TlHqgPGudxVPaecJu1viqQ47CfF2fpm5pOZRbxn44fPTv
-NAhZSgq4q9ugBwYFK4EEACKhZANiAATU7YcLn4WVTaF7OsDmhMunXEDm8kBQTqLN
-1OP3BDZb8VDPRAroXrSDFvfqvsX038fy+1esrOhESnpUL3xjeZEZ1Gclz9ps8gAa
-4ioH1wHtDgY1eXnykFfgAYZou0SHF50=
------END EC PRIVATE KEY-----
+# Public upstream fixtures:
+# - https://raw.githubusercontent.com/jpadilla/pyjwt/master/tests/keys/jwk_ec_key_P-384.json
+# - https://raw.githubusercontent.com/jpadilla/pyjwt/master/tests/keys/jwk_ec_key_P-521.json
+ES384_JWK = """
+{"kty":"EC","kid":"bilbo.baggins.384@hobbiton.example","crv":"P-384","x":"IDC-5s6FERlbC4Nc_4JhKW8sd51AhixtMdNUtPxhRFP323QY6cwWeIA3leyZhz-J","y":"eovmN9ocANS8IJxDAGSuC1FehTq5ZFLJU7XSPg36zHpv4H2byKGEcCBiwT4sFJsy","d":"xKPj5IXjiHpQpLOgyMGo6lg_DUp738SuXkiugCFMxbGNKTyTprYPfJz42wTOXbtd"}
 """
 
-ES384_PUBLIC_KEY = """
------BEGIN PUBLIC KEY-----
-MHYwEAYHKoZIzj0CAQYFK4EEACIDYgAE1O2HC5+FlU2hezrA5oTLp1xA5vJAUE6i
-zdTj9wQ2W/FQz0QK6F60gxb36r7F9N/H8vtXrKzoREp6VC98Y3mRGdRnJc/abPIA
-GuIqB9cB7Q4GNXl58pBX4AGGaLtEhxed
------END PUBLIC KEY-----
-"""
-
-ES512_PRIVATE_KEY = """
------BEGIN EC PRIVATE KEY-----
-MIHcAgEBBEIAFFmbLI1wN6jnleaZDTQ8nrmhHxgkGd7phlZE38iMFbu1VwONhBQS
-gueyKbKt12zLxm0cS+5+RcTP6YNybqfCBvqgBwYFK4EEACOhgYkDgYYABACYqb5E
-k0j5mumqUxmBOR9aVGftNR7qJW3ZacLPatoqOKmu1yivzjRkfOJF56ZcPakpx4bQ
-uZAqfDoyl3KfOvZXhgD+44AKUZgyJ8UASBcWzZEmDVBRy8+HOaJUNXYJWUoloOdT
-dkppw79RCcDd5T4MILf1WhRnFIAEGdrAiWIJJnSQTw==
------END EC PRIVATE KEY-----
-"""
-
-ES512_PUBLIC_KEY = """
------BEGIN PUBLIC KEY-----
-MIGbMBAGByqGSM49AgEGBSuBBAAjA4GGAAQAmKm+RJNI+ZrpqlMZgTkfWlRn7TUe
-6iVt2WnCz2raKjiprtcor840ZHziReemXD2pKceG0LmQKnw6Mpdynzr2V4YA/uOA
-ClGYMifFAEgXFs2RJg1QUcvPhzmiVDV2CVlKJaDnU3ZKacO/UQnA3eU+DCC39VoU
-ZxSABBnawIliCSZ0kE8=
------END PUBLIC KEY-----
+ES512_JWK = """
+{"kty":"EC","kid":"bilbo.baggins.521@hobbiton.example","crv":"P-521","x":"AHKZLLOsCOzz5cY97ewNUajB957y-C-U88c3v13nmGZx6sYl_oJXu9A5RkTKqjqvjyekWF-7ytDyRXYgCF5cj0Kt","y":"AdymlHvOiLxXkEhayXQnNCvDX4h9htZaCJN34kfmC6pV5OhQHiraVySsUdaQkAgDPrwQrJmbnX9cwlGfP-HqHZR1","d":"AAhRON2r9cqXX1hg-RoI6R1tX5p2rUAYdmpHZoC1XNM56KtscrX6zbKipQrCW9CGZH3T4ubpnoTKLDYJ_fF3_rJt"}
 """
