@@ -28,6 +28,7 @@ extras_require = {
     "doc": [
         "Sphinx",
         "sphinx_rtd_theme>=0.1.9",
+        "importlib",
     ],
     "dev": [
         "pytest-watch",
