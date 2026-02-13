@@ -155,6 +155,11 @@ class TestTokenObtainSlidingSerializer(TestCase):
         # token should not raise an exception.
         SlidingToken(s.validated_data["token"])
 
+    def test_token_field_is_read_only_for_schema(self):
+        serializer = TokenObtainSlidingSerializer()
+        self.assertIn("token", serializer.fields)
+        self.assertTrue(serializer.fields["token"].read_only)
+
 
 class TestTokenObtainPairSerializer(TestCase):
     def setUp(self):
@@ -184,6 +189,45 @@ class TestTokenObtainPairSerializer(TestCase):
         # encoded tokens should not raise an exception.
         AccessToken(s.validated_data["access"])
         RefreshToken(s.validated_data["refresh"])
+
+    def test_access_and_refresh_fields_are_read_only_for_schema(self):
+        """
+        Ensure 'access' and 'refresh' fields are read-only so
+        automatic schema generators (drf-yasg, drf-spectacular) detect them.
+        """
+        serializer = TokenObtainPairSerializer()
+        # access and refresh should exist
+        self.assertIn("access", serializer.fields)
+        self.assertIn("refresh", serializer.fields)
+        # read-only ensures schema generators know they are output-only
+        self.assertTrue(serializer.fields["access"].read_only)
+        self.assertTrue(serializer.fields["refresh"].read_only)
+
+    def test_schema_fields_do_not_break_runtime_validation(self):
+        """
+        Ensure the patch doesn't interfere with normal validation and token creation.
+        """
+        serializer = TokenObtainPairSerializer(
+            context=MagicMock(),
+            data={
+                TokenObtainPairSerializer.username_field: self.username,
+                "password": self.password,
+            },
+        )
+        self.assertTrue(serializer.is_valid())
+        validated_data = serializer.validated_data
+        self.assertIn("access", validated_data)
+        self.assertIn("refresh", validated_data)
+
+        # Tokens should be valid
+        access_token = AccessToken(validated_data["access"])
+        refresh_token = RefreshToken(validated_data["refresh"])
+
+        # Validate token type and some claims, but don't assert JTI equality
+        self.assertEqual(access_token["token_type"], "access")
+        self.assertEqual(refresh_token["token_type"], "refresh")
+        self.assertEqual(access_token["user_id"], str(self.user.id))
+        self.assertEqual(refresh_token["user_id"], str(self.user.id))
 
 
 class TestTokenRefreshSlidingSerializer(TestCase):

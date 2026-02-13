@@ -74,6 +74,10 @@ class TokenObtainSerializer(serializers.Serializer):
 class TokenObtainPairSerializer(TokenObtainSerializer):
     token_class = RefreshToken
 
+    # Dynamically add read-only fields for schema generation only
+    access = serializers.CharField(read_only=True)
+    refresh = serializers.CharField(read_only=True)
+
     def validate(self, attrs: dict[str, Any]) -> dict[str, str]:
         data = super().validate(attrs)
 
@@ -90,6 +94,7 @@ class TokenObtainPairSerializer(TokenObtainSerializer):
 
 class TokenObtainSlidingSerializer(TokenObtainSerializer):
     token_class = SlidingToken
+    token = serializers.CharField(read_only=True)
 
     def validate(self, attrs: dict[str, Any]) -> dict[str, str]:
         data = super().validate(attrs)
