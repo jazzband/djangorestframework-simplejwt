@@ -2,7 +2,7 @@ import json
 from collections.abc import Iterable
 from datetime import timedelta
 from functools import cached_property
-from typing import Any, Optional, Union
+from typing import Any, Optional
 
 import jwt
 from django.utils.translation import gettext_lazy as _
@@ -48,6 +48,8 @@ class TokenBackend:
         jwk_url: str | None = None,
         leeway: float | int | timedelta | None = None,
         json_encoder: type[json.JSONEncoder] | None = None,
+        verify_aud: bool | None = None,
+        verify_iss: bool | None = None,
     ) -> None:
         self._validate_algorithm(algorithm)
 
@@ -56,6 +58,14 @@ class TokenBackend:
         self.verifying_key = verifying_key
         self.audience = audience
         self.issuer = issuer
+
+        self.verify_aud = audience is not None
+        if verify_aud is not None:
+            self.verify_aud = verify_aud
+
+        self.verify_iss = issuer is not None
+        if verify_iss is not None:
+            self.verify_iss = verify_iss
 
         if JWK_CLIENT_AVAILABLE:
             self.jwks_client = PyJWKClient(jwk_url) if jwk_url else None
@@ -165,8 +175,9 @@ class TokenBackend:
                 issuer=self.issuer,
                 leeway=self.get_leeway(),
                 options={
-                    "verify_aud": self.audience is not None,
+                    "verify_aud": self.verify_aud,
                     "verify_signature": verify,
+                    "verify_iss": self.verify_iss,
                 },
             )
         except InvalidAlgorithmError as e:
