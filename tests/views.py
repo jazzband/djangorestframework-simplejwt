@@ -14,3 +14,14 @@ class TestView(APIView):
 
 
 test_view = TestView.as_view()
+
+
+class CookieProtectedView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    authentication_classes = (authentication.JWTCookieAuthentication,)
+
+    def get(self, request):
+        return Response({"foo": "bar"})
+
+
+cookie_protected_view = CookieProtectedView.as_view()
