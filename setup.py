@@ -37,7 +37,7 @@ extras_require = {
         "ipython",
     ],
     "python-jose": [
-        "python-jose==3.3.0",
+        "python-jose==3.5.0",
     ],
     "crypto": [
         "cryptography>=3.3.1",
