@@ -18,4 +18,9 @@ urlpatterns = [
     re_path(r"^token/verify/$", jwt_views.token_verify, name="token_verify"),
     re_path(r"^token/blacklist/$", jwt_views.token_blacklist, name="token_blacklist"),
     re_path(r"^test-view/$", views.test_view, name="test_view"),
+    re_path(
+        r"^cookie-protected/$",
+        views.cookie_protected_view,
+        name="cookie_protected_view",
+    ),
 ]
