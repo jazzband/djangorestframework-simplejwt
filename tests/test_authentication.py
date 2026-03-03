@@ -10,7 +10,7 @@ from rest_framework_simplejwt.exceptions import AuthenticationFailed, InvalidTok
 from rest_framework_simplejwt.models import TokenUser
 from rest_framework_simplejwt.settings import api_settings
 from rest_framework_simplejwt.tokens import AccessToken, SlidingToken
-from rest_framework_simplejwt.utils import get_md5_hash_password
+from rest_framework_simplejwt.utils import get_password_hash
 
 from .utils import override_api_settings
 
@@ -220,7 +220,9 @@ class TestJWTAuthentication(TestCase):
             self.backend.get_user(payload)
 
         if api_settings.CHECK_REVOKE_TOKEN:
-            payload[api_settings.REVOKE_TOKEN_CLAIM] = get_md5_hash_password(u.password)
+            payload[api_settings.REVOKE_TOKEN_CLAIM] = get_password_hash(
+                u.password, algorithm=api_settings.CHECK_REVOKE_TOKEN_HASH_ALGORITHM
+            )
 
         # Otherwise, should return correct user
         self.assertEqual(self.backend.get_user(payload).id, u.id)
