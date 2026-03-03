@@ -11,7 +11,7 @@ from rest_framework.request import Request
 from .models import TokenUser
 from .settings import api_settings
 from .tokens import RefreshToken, SlidingToken, Token, UntypedToken
-from .utils import get_md5_hash_password
+from .utils import get_password_hash
 
 AuthUser = TypeVar("AuthUser", AbstractBaseUser, TokenUser)
 
@@ -137,7 +137,10 @@ class TokenRefreshSerializer(serializers.Serializer):
             if api_settings.CHECK_REVOKE_TOKEN:
                 if refresh.payload.get(
                     api_settings.REVOKE_TOKEN_CLAIM
-                ) != get_md5_hash_password(user.password):
+                ) != get_password_hash(
+                    user.password,
+                    algorithm=api_settings.CHECK_REVOKE_TOKEN_HASH_ALGORITHM,
+                ):
                     # If the password has changed, we blacklist the token
                     # to prevent any further use.
                     if (
@@ -206,7 +209,10 @@ class TokenRefreshSlidingSerializer(serializers.Serializer):
             if api_settings.CHECK_REVOKE_TOKEN:
                 if token.payload.get(
                     api_settings.REVOKE_TOKEN_CLAIM
-                ) != get_md5_hash_password(user.password):
+                ) != get_password_hash(
+                    user.password,
+                    algorithm=api_settings.CHECK_REVOKE_TOKEN_HASH_ALGORITHM,
+                ):
                     # If the password has changed, we blacklist the token
                     # to prevent any further use.
                     if (
