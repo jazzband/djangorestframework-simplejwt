@@ -7,6 +7,10 @@
   - Follows RFC 7235, where authentication failures should return 401.
   - Clearer for clients: signals an auth issue instead of suggesting the endpoint is missing.
 
+### Bugfixes
+- Fixed OpenAPI schema generation for token obtain endpoints by explicitly
+  declaring dynamically returned fields (`access`, `refresh`) as read-only
+  serializer fields.
 
 ## 5.5.1
 
