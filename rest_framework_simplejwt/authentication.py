@@ -1,5 +1,6 @@
-from typing import Optional, TypeVar
+from typing import Any, Optional, TypeVar
 
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractBaseUser
 from django.utils.translation import gettext_lazy as _
@@ -174,6 +175,24 @@ class JWTStatelessUserAuthentication(JWTAuthentication):
 
 
 JWTTokenUserAuthentication = JWTStatelessUserAuthentication
+
+
+class JWTCookieAuthentication(JWTAuthentication):
+    cookie_name: str = api_settings.AUTH_COOKIE
+
+    def authenticate(self, request: Request) -> tuple[AuthUser, Token] | None:
+        raw_token: str | None = self.get_cookie(request).get(self.cookie_name)
+
+        if raw_token is None:
+            return None
+
+        validated_token = self.get_validated_token(raw_token)
+        user = self.get_user(validated_token)
+
+        return user, validated_token
+
+    def get_cookie(self, request: Request) -> dict[str, str]:
+        return request._request.COOKIES
 
 
 def default_user_authentication_rule(user: AuthUser | None) -> bool:
