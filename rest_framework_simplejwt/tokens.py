@@ -134,10 +134,7 @@ class Token:
         if api_settings.AUDIENCE is not None or "aud" in self.payload:
             self.verify_aud()
 
-        if (
-            api_settings.ISSUER is not None
-            or api_settings.ISSUER_CLAIM in self.payload
-        ):
+        if api_settings.ISSUER is not None or api_settings.ISSUER_CLAIM in self.payload:
             self.verify_iss()
 
     def verify_token_type(self) -> None:
