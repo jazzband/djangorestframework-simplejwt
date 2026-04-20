@@ -69,22 +69,96 @@ REMOVED_SETTINGS = (
     "TOKEN_BACKEND_CLASS",
 )
 
+VALIDATION_MODES = ("static", "dynamic")
+
 
 class APISettings(_APISettings):  # pragma: no cover
-    def __check_user_settings(self, user_settings: dict[str, Any]) -> dict[str, Any]:
-        SETTINGS_DOC = "https://django-rest-framework-simplejwt.readthedocs.io/en/latest/settings.html"
+    def _raise_invalid_setting(self, message: str, settings_doc: str, *args: Any) -> None:
+        raise RuntimeError(
+            format_lazy(
+                _(message),
+                *args,
+                settings_doc,
+            )
+        )
 
+    def _validate_removed_settings(
+        self, user_settings: dict[str, Any], settings_doc: str
+    ) -> None:
         for setting in REMOVED_SETTINGS:
             if setting in user_settings:
-                raise RuntimeError(
-                    format_lazy(
-                        _(
-                            "The '{}' setting has been removed. Please refer to '{}' for available settings."
-                        ),
-                        setting,
-                        SETTINGS_DOC,
-                    )
+                self._raise_invalid_setting(
+                    "The '{}' setting has been removed. Please refer to '{}' for available settings.",
+                    settings_doc,
+                    setting,
                 )
+
+    def _validate_validation_modes(
+        self, user_settings: dict[str, Any], settings_doc: str
+    ) -> None:
+        for setting in ("AUDIENCE_VALIDATION", "ISSUER_VALIDATION"):
+            value = user_settings.get(setting)
+            if value is not None and value not in VALIDATION_MODES:
+                self._raise_invalid_setting(
+                    "The '{}' setting must be one of {}. Please refer to '{}' for available settings.",
+                    settings_doc,
+                    setting,
+                    VALIDATION_MODES,
+                )
+
+    def _validate_allowed_issuers(
+        self, allowed_issuers: Any, settings_doc: str
+    ) -> None:
+        if allowed_issuers is None:
+            return
+
+        if not isinstance(allowed_issuers, (list, tuple)):
+            self._raise_invalid_setting(
+                "The 'ALLOWED_ISSUERS' setting must be a list or tuple. Please refer to '{}' for available settings.",
+                settings_doc,
+            )
+
+        if not allowed_issuers or any(
+            not isinstance(issuer, str) or not issuer.strip()
+            for issuer in allowed_issuers
+        ):
+            self._raise_invalid_setting(
+                "The 'ALLOWED_ISSUERS' setting must contain non-empty strings. Please refer to '{}' for available settings.",
+                settings_doc,
+            )
+
+    def _validate_issuer_settings(
+        self, user_settings: dict[str, Any], settings_doc: str
+    ) -> None:
+        issuer_validation = user_settings.get("ISSUER_VALIDATION")
+        allowed_issuers = user_settings.get("ALLOWED_ISSUERS")
+
+        self._validate_allowed_issuers(allowed_issuers, settings_doc)
+
+        if issuer_validation == "static" and allowed_issuers is not None:
+            self._raise_invalid_setting(
+                "The 'ALLOWED_ISSUERS' setting requires 'ISSUER_VALIDATION' to be 'dynamic'. Please refer to '{}' for available settings.",
+                settings_doc,
+            )
+
+        if (
+            issuer_validation == "dynamic"
+            and user_settings.get("ISSUER") is not None
+            and allowed_issuers is not None
+        ):
+            self._raise_invalid_setting(
+                "The 'ISSUER' and 'ALLOWED_ISSUERS' settings cannot both be set when 'ISSUER_VALIDATION' is 'dynamic'. Please refer to '{}' for available settings.",
+                settings_doc,
+            )
+
+    def __check_user_settings(self, user_settings: dict[str, Any]) -> dict[str, Any]:
+        settings_doc = (
+            "https://django-rest-framework-simplejwt.readthedocs.io/en/latest/settings.html"
+        )
+
+        self._validate_removed_settings(user_settings, settings_doc)
+        self._validate_validation_modes(user_settings, settings_doc)
+        self._validate_issuer_settings(user_settings, settings_doc)
 
         return user_settings
 
