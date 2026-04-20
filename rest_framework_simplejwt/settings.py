@@ -73,7 +73,9 @@ VALIDATION_MODES = ("static", "dynamic")
 
 
 class APISettings(_APISettings):  # pragma: no cover
-    def _raise_invalid_setting(self, message: str, settings_doc: str, *args: Any) -> None:
+    def _raise_invalid_setting(
+        self, message: str, settings_doc: str, *args: Any
+    ) -> None:
         raise RuntimeError(
             format_lazy(
                 _(message),
@@ -152,9 +154,7 @@ class APISettings(_APISettings):  # pragma: no cover
             )
 
     def __check_user_settings(self, user_settings: dict[str, Any]) -> dict[str, Any]:
-        settings_doc = (
-            "https://django-rest-framework-simplejwt.readthedocs.io/en/latest/settings.html"
-        )
+        settings_doc = "https://django-rest-framework-simplejwt.readthedocs.io/en/latest/settings.html"
 
         self._validate_removed_settings(user_settings, settings_doc)
         self._validate_validation_modes(user_settings, settings_doc)

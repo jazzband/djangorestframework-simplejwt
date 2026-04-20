@@ -1,6 +1,6 @@
 import pytest
 
-from rest_framework_simplejwt.settings import APISettings, DEFAULTS, IMPORT_STRINGS
+from rest_framework_simplejwt.settings import DEFAULTS, IMPORT_STRINGS, APISettings
 
 
 def test_validation_mode_must_be_supported():
