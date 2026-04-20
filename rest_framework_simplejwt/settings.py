@@ -23,7 +23,7 @@ DEFAULTS = {
     "AUDIENCE_VALIDATION": "static",
     "ISSUER": None,
     "ISSUER_VALIDATION": "static",
-    "ISS_CLAIM": "iss",
+    "ISSUER_CLAIM": "iss",
     "ALLOWED_ISSUERS": None,
     "JSON_ENCODER": None,
     "JWK_URL": None,

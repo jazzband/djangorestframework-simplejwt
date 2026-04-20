@@ -27,7 +27,7 @@ Some of Simple JWT's behavior can be customized through settings variables in
       "AUDIENCE_VALIDATION": "static",
       "ISSUER": None,
       "ISSUER_VALIDATION": "static",
-      "ISS_CLAIM": "iss",
+      "ISSUER_CLAIM": "iss",
       "ALLOWED_ISSUERS": None,
       "JSON_ENCODER": None,
       "JWK_URL": None,
@@ -197,7 +197,7 @@ The issuer claim to be included in generated tokens and/or validated in decoded
 tokens. When set to ``None``, this field is excluded from tokens and is not
 validated.
 
-``ISS_CLAIM``
+``ISSUER_CLAIM``
 -------------
 
 The claim name used for the issuer in token payloads. Defaults to ``"iss"``.

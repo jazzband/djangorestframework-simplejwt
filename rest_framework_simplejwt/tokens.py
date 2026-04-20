@@ -134,7 +134,10 @@ class Token:
         if api_settings.AUDIENCE is not None or "aud" in self.payload:
             self.verify_aud()
 
-        if api_settings.ISSUER is not None or api_settings.ISS_CLAIM in self.payload:
+        if (
+            api_settings.ISSUER is not None
+            or api_settings.ISSUER_CLAIM in self.payload
+        ):
             self.verify_iss()
 
     def verify_token_type(self) -> None:
@@ -160,7 +163,7 @@ class Token:
         For static issuers: If ISSUER is configured in settings, validates
         that the token's iss claim matches the configured value.
         """
-        issuer = self.payload.get(api_settings.ISS_CLAIM)
+        issuer = self.payload.get(api_settings.ISSUER_CLAIM)
 
         if issuer is None:
             raise TokenError(_("Token has no issuer"))
@@ -243,7 +246,7 @@ class Token:
         return issuer or api_settings.ISSUER
 
     def set_iss(
-        self, claim: str = api_settings.ISS_CLAIM, issuer: str | None = None
+        self, claim: str = api_settings.ISSUER_CLAIM, issuer: str | None = None
     ) -> None:
         """
         Populates the iss claim of a token with the issuer returned by the
