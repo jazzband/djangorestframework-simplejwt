@@ -20,7 +20,9 @@ DEFAULTS = {
     "SIGNING_KEY": settings.SECRET_KEY,
     "VERIFYING_KEY": "",
     "AUDIENCE": None,
+    "AUDIENCE_VALIDATION": "static",
     "ISSUER": None,
+    "ISSUER_CLAIM": "iss",
     "JSON_ENCODER": None,
     "JWK_URL": None,
     "LEEWAY": 0,
@@ -65,22 +67,80 @@ REMOVED_SETTINGS = (
     "TOKEN_BACKEND_CLASS",
 )
 
+AUDIENCE_VALIDATION_MODES = ("static", "dynamic")
+
 
 class APISettings(_APISettings):  # pragma: no cover
-    def __check_user_settings(self, user_settings: dict[str, Any]) -> dict[str, Any]:
-        SETTINGS_DOC = "https://django-rest-framework-simplejwt.readthedocs.io/en/latest/settings.html"
+    def _raise_invalid_setting(
+        self, message: str, settings_doc: str, *args: Any
+    ) -> None:
+        raise RuntimeError(
+            format_lazy(
+                _(message),
+                *args,
+                settings_doc,
+            )
+        )
 
+    def _validate_removed_settings(
+        self, user_settings: dict[str, Any], settings_doc: str
+    ) -> None:
         for setting in REMOVED_SETTINGS:
             if setting in user_settings:
-                raise RuntimeError(
-                    format_lazy(
-                        _(
-                            "The '{}' setting has been removed. Please refer to '{}' for available settings."
-                        ),
-                        setting,
-                        SETTINGS_DOC,
-                    )
+                self._raise_invalid_setting(
+                    "The '{}' setting has been removed. Please refer to '{}' for available settings.",
+                    settings_doc,
+                    setting,
                 )
+
+    def _validate_validation_modes(
+        self, user_settings: dict[str, Any], settings_doc: str
+    ) -> None:
+        audience_validation = user_settings.get("AUDIENCE_VALIDATION")
+        if (
+            audience_validation is not None
+            and audience_validation not in AUDIENCE_VALIDATION_MODES
+        ):
+            self._raise_invalid_setting(
+                "The '{}' setting must be one of {}. Please refer to '{}' for available settings.",
+                settings_doc,
+                "AUDIENCE_VALIDATION",
+                AUDIENCE_VALIDATION_MODES,
+            )
+
+    def _validate_issuer_settings(
+        self, user_settings: dict[str, Any], settings_doc: str
+    ) -> None:
+        issuer = user_settings.get("ISSUER")
+
+        if issuer is None:
+            return
+
+        if isinstance(issuer, str):
+            if issuer.strip():
+                return
+
+            self._raise_invalid_setting(
+                "The 'ISSUER' setting must be a non-empty string or a list/tuple of non-empty strings. Please refer to '{}' for available settings.",
+                settings_doc,
+            )
+
+        if (
+            not isinstance(issuer, (list, tuple))
+            or not issuer
+            or any(not isinstance(item, str) or not item.strip() for item in issuer)
+        ):
+            self._raise_invalid_setting(
+                "The 'ISSUER' setting must be a non-empty string or a list/tuple of non-empty strings. Please refer to '{}' for available settings.",
+                settings_doc,
+            )
+
+    def __check_user_settings(self, user_settings: dict[str, Any]) -> dict[str, Any]:
+        settings_doc = "https://django-rest-framework-simplejwt.readthedocs.io/en/latest/settings.html"
+
+        self._validate_removed_settings(user_settings, settings_doc)
+        self._validate_validation_modes(user_settings, settings_doc)
+        self._validate_issuer_settings(user_settings, settings_doc)
 
         return user_settings
 
