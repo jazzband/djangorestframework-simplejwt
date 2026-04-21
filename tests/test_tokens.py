@@ -309,6 +309,32 @@ class TestToken(TestCase):
         with self.assertRaises(TokenError):
             token.verify_iss()
 
+    @override_api_settings(
+        ISSUER=("https://issuer-1.domain.tld", "https://issuer-2.domain.tld")
+    )
+    def test_set_iss_does_not_default_to_issuer_sequence(self):
+        token = MyToken()
+        self.assertNotIn("iss", token)
+
+    @override_api_settings(
+        ISSUER=("https://issuer-1.domain.tld", "https://issuer-2.domain.tld")
+    )
+    def test_verify_iss_accepts_issuer_sequence(self):
+        token = MyToken()
+        token["iss"] = "https://issuer-2.domain.tld"
+
+        token.verify_iss()
+
+    @override_api_settings(
+        ISSUER=("https://issuer-1.domain.tld", "https://issuer-2.domain.tld")
+    )
+    def test_verify_iss_rejects_mismatch_against_issuer_sequence(self):
+        token = MyToken()
+        token["iss"] = "https://other.domain.tld"
+
+        with self.assertRaises(TokenError):
+            token.verify_iss()
+
     @override_api_settings(AUDIENCE="my-audience")
     def test_set_aud_defaults_to_configured_audience(self):
         token = MyToken()

@@ -22,9 +22,7 @@ DEFAULTS = {
     "AUDIENCE": None,
     "AUDIENCE_VALIDATION": "static",
     "ISSUER": None,
-    "ISSUER_VALIDATION": "static",
     "ISSUER_CLAIM": "iss",
-    "ALLOWED_ISSUERS": None,
     "JSON_ENCODER": None,
     "JWK_URL": None,
     "LEEWAY": 0,
@@ -69,7 +67,7 @@ REMOVED_SETTINGS = (
     "TOKEN_BACKEND_CLASS",
 )
 
-VALIDATION_MODES = ("static", "dynamic")
+AUDIENCE_VALIDATION_MODES = ("static", "dynamic")
 
 
 class APISettings(_APISettings):  # pragma: no cover
@@ -98,58 +96,40 @@ class APISettings(_APISettings):  # pragma: no cover
     def _validate_validation_modes(
         self, user_settings: dict[str, Any], settings_doc: str
     ) -> None:
-        for setting in ("AUDIENCE_VALIDATION", "ISSUER_VALIDATION"):
-            value = user_settings.get(setting)
-            if value is not None and value not in VALIDATION_MODES:
-                self._raise_invalid_setting(
-                    "The '{}' setting must be one of {}. Please refer to '{}' for available settings.",
-                    settings_doc,
-                    setting,
-                    VALIDATION_MODES,
-                )
-
-    def _validate_allowed_issuers(
-        self, allowed_issuers: Any, settings_doc: str
-    ) -> None:
-        if allowed_issuers is None:
-            return
-
-        if not isinstance(allowed_issuers, (list, tuple)):
-            self._raise_invalid_setting(
-                "The 'ALLOWED_ISSUERS' setting must be a list or tuple. Please refer to '{}' for available settings.",
-                settings_doc,
-            )
-
-        if not allowed_issuers or any(
-            not isinstance(issuer, str) or not issuer.strip()
-            for issuer in allowed_issuers
+        audience_validation = user_settings.get("AUDIENCE_VALIDATION")
+        if (
+            audience_validation is not None
+            and audience_validation not in AUDIENCE_VALIDATION_MODES
         ):
             self._raise_invalid_setting(
-                "The 'ALLOWED_ISSUERS' setting must contain non-empty strings. Please refer to '{}' for available settings.",
+                "The '{}' setting must be one of {}. Please refer to '{}' for available settings.",
                 settings_doc,
+                "AUDIENCE_VALIDATION",
+                AUDIENCE_VALIDATION_MODES,
             )
 
     def _validate_issuer_settings(
         self, user_settings: dict[str, Any], settings_doc: str
     ) -> None:
-        issuer_validation = user_settings.get("ISSUER_VALIDATION")
-        allowed_issuers = user_settings.get("ALLOWED_ISSUERS")
+        issuer = user_settings.get("ISSUER")
 
-        self._validate_allowed_issuers(allowed_issuers, settings_doc)
+        if issuer is None:
+            return
 
-        if issuer_validation == "static" and allowed_issuers is not None:
+        if isinstance(issuer, str):
+            if issuer.strip():
+                return
+
             self._raise_invalid_setting(
-                "The 'ALLOWED_ISSUERS' setting requires 'ISSUER_VALIDATION' to be 'dynamic'. Please refer to '{}' for available settings.",
+                "The 'ISSUER' setting must be a non-empty string or a list/tuple of non-empty strings. Please refer to '{}' for available settings.",
                 settings_doc,
             )
 
-        if (
-            issuer_validation == "dynamic"
-            and user_settings.get("ISSUER") is not None
-            and allowed_issuers is not None
+        if not isinstance(issuer, (list, tuple)) or not issuer or any(
+            not isinstance(item, str) or not item.strip() for item in issuer
         ):
             self._raise_invalid_setting(
-                "The 'ISSUER' and 'ALLOWED_ISSUERS' settings cannot both be set when 'ISSUER_VALIDATION' is 'dynamic'. Please refer to '{}' for available settings.",
+                "The 'ISSUER' setting must be a non-empty string or a list/tuple of non-empty strings. Please refer to '{}' for available settings.",
                 settings_doc,
             )
 

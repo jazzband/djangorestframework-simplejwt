@@ -11,60 +11,28 @@ def test_validation_mode_must_be_supported():
             IMPORT_STRINGS,
         )
 
-    with pytest.raises(RuntimeError, match="ISSUER_VALIDATION"):
-        APISettings(
-            {"ISSUER_VALIDATION": "invalid"},
-            DEFAULTS,
-            IMPORT_STRINGS,
-        )
-
-
-@pytest.mark.parametrize("value", ["issuer", ["issuer", ""], ["issuer", 1]])
-def test_allowed_issuers_must_contain_non_empty_strings(value):
-    with pytest.raises(RuntimeError, match="ALLOWED_ISSUERS"):
+@pytest.mark.parametrize(
+    "value",
+    ["", " ", 1, [], ["issuer", ""], ["issuer", 1]],
+)
+def test_issuer_must_be_non_empty_string_or_string_sequence(value):
+    with pytest.raises(RuntimeError, match="ISSUER"):
         APISettings(
             {
-                "ISSUER_VALIDATION": "dynamic",
-                "ALLOWED_ISSUERS": value,
+                "ISSUER": value,
             },
             DEFAULTS,
             IMPORT_STRINGS,
         )
 
 
-def test_allowed_issuers_requires_dynamic_issuer_validation():
-    with pytest.raises(RuntimeError, match="ISSUER_VALIDATION"):
-        APISettings(
-            {
-                "ISSUER_VALIDATION": "static",
-                "ALLOWED_ISSUERS": ["https://issuer.example"],
-            },
-            DEFAULTS,
-            IMPORT_STRINGS,
-        )
-
-
-def test_dynamic_issuer_validation_rejects_static_issuer_and_allowed_issuers():
-    with pytest.raises(RuntimeError, match="ISSUER'.*ALLOWED_ISSUERS"):
-        APISettings(
-            {
-                "ISSUER_VALIDATION": "dynamic",
-                "ISSUER": "https://issuer.example",
-                "ALLOWED_ISSUERS": ["https://issuer.example"],
-            },
-            DEFAULTS,
-            IMPORT_STRINGS,
-        )
-
-
-def test_allowed_issuers_with_dynamic_validation_is_valid():
+def test_issuer_sequence_is_valid():
     settings = APISettings(
         {
-            "ISSUER_VALIDATION": "dynamic",
-            "ALLOWED_ISSUERS": ["https://issuer.example"],
+            "ISSUER": ["https://issuer.example"],
         },
         DEFAULTS,
         IMPORT_STRINGS,
     )
 
-    assert settings.ALLOWED_ISSUERS == ["https://issuer.example"]
+    assert settings.ISSUER == ["https://issuer.example"]

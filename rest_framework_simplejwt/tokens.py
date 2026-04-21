@@ -153,12 +153,10 @@ class Token:
         """
         Validates the issuer claim in the token payload.
 
-        For dynamic issuers: Just verifies that the iss claim exists and
-        is a non-empty string. Optionally validates against a whitelist
-        if ALLOWED_ISSUERS is configured.
-
-        For static issuers: If ISSUER is configured in settings, validates
-        that the token's iss claim matches the configured value.
+        If ISSUER is configured as a string, the token's issuer must match it.
+        If ISSUER is configured as a list/tuple, the token's issuer must be one
+        of the configured values. Otherwise, if the token carries an issuer
+        claim, it must be a non-empty string.
         """
         issuer = self.payload.get(api_settings.ISSUER_CLAIM)
 
@@ -168,14 +166,18 @@ class Token:
         if not isinstance(issuer, str) or not issuer.strip():
             raise TokenError(_("Token has invalid issuer"))
 
-        if api_settings.ISSUER is not None:
-            if issuer != api_settings.ISSUER:
+        expected = api_settings.ISSUER
+
+        if isinstance(expected, str):
+            if issuer != expected:
                 raise TokenError(_("Token has invalid issuer"))
 
-        # If allowed issuers list is configured, validate against it
-        elif api_settings.ALLOWED_ISSUERS is not None:
-            if issuer not in api_settings.ALLOWED_ISSUERS:
+        elif isinstance(expected, (list, tuple)):
+            if issuer not in expected:
                 raise TokenError(_("Token has invalid issuer"))
+
+        elif expected is not None:
+            raise TokenError(_("Token has invalid issuer"))
 
     def verify_aud(self) -> None:
         """
@@ -238,9 +240,13 @@ class Token:
 
     def get_iss(self, issuer: str | None = None) -> str | None:
         """
-        Returns the issuer URL configured in the settings.
+        Returns the issuer string configured in the settings.
         """
-        return issuer or api_settings.ISSUER
+        if issuer is not None:
+            return issuer
+
+        configured_issuer = api_settings.ISSUER
+        return configured_issuer if isinstance(configured_issuer, str) else None
 
     def set_iss(
         self, claim: str = api_settings.ISSUER_CLAIM, issuer: str | None = None
