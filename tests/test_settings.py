@@ -11,6 +11,7 @@ def test_validation_mode_must_be_supported():
             IMPORT_STRINGS,
         )
 
+
 @pytest.mark.parametrize(
     "value",
     ["", " ", 1, [], ["issuer", ""], ["issuer", 1]],

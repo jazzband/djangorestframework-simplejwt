@@ -125,8 +125,10 @@ class APISettings(_APISettings):  # pragma: no cover
                 settings_doc,
             )
 
-        if not isinstance(issuer, (list, tuple)) or not issuer or any(
-            not isinstance(item, str) or not item.strip() for item in issuer
+        if (
+            not isinstance(issuer, (list, tuple))
+            or not issuer
+            or any(not isinstance(item, str) or not item.strip() for item in issuer)
         ):
             self._raise_invalid_setting(
                 "The 'ISSUER' setting must be a non-empty string or a list/tuple of non-empty strings. Please refer to '{}' for available settings.",
