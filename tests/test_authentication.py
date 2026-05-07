@@ -279,12 +279,6 @@ class TestJWTStatelessUserAuthentication(TestCase):
         api_settings.TOKEN_USER_CLASS = temp
 
 
-
-
-
-
-
-
 class TestCookieJWTAuthentication(TestCase):
     def setUp(self):
         self.factory = APIRequestFactory()

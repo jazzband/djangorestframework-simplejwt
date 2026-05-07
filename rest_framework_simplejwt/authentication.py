@@ -189,8 +189,6 @@ def default_user_authentication_rule(user: AuthUser | None) -> bool:
     )
 
 
-
-
 class CookieJWTAuthentication(JWTAuthentication):
     """
     Authenticate users using a JWT stored in one of the configured cookies.
@@ -205,7 +203,7 @@ class CookieJWTAuthentication(JWTAuthentication):
             return [cookie_names]
         return list(cookie_names)
 
-    def get_raw_token_from_cookies(self, request) -> Optional[str]:
+    def get_raw_token_from_cookies(self, request) -> str | None:
         """
         Return the first token found in the configured cookies.
         """
