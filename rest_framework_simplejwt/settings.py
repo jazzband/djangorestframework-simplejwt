@@ -2,7 +2,12 @@ from datetime import timedelta
 from typing import Any
 
 from django.conf import settings
-from django.test.signals import setting_changed
+
+try:
+    from django.test.signals import setting_changed
+except ImportError:
+    from django.core.signals import setting_changed
+    
 from django.utils.translation import gettext_lazy as _
 from rest_framework.settings import APISettings as _APISettings
 
