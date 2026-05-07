@@ -149,3 +149,31 @@ refresh token to obtain another access token:
 
   ...
   {"access":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX3BrIjoxLCJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiY29sZF9zdHVmZiI6IuKYgyIsImV4cCI6MTIzNTY3LCJqdGkiOiJjNzE4ZTVkNjgzZWQ0NTQyYTU0NWJkM2VmMGI0ZGQ0ZSJ9.ekxRxgb9OKmHkfy-zs1Ro_xs1eMLXiR17dIDBVxeT-w"}
+
+
+CookieJWTAuthentication
+-----------------------
+
+``CookieJWTAuthentication`` is an alternative authentication class that retrieves
+the JWT from cookies instead of the ``Authorization`` header.
+
+If multiple cookie names are configured, the first cookie containing a non-empty
+value is used as the token source.
+
+Example usage:
+
+.. code-block:: python
+
+    SIMPLE_JWT = {
+        "COOKIE_NAME": ["access_token", "simple_jwt"],
+    }
+
+    REST_FRAMEWORK = {
+        "DEFAULT_AUTHENTICATION_CLASSES": (
+            "rest_framework_simplejwt.authentication.CookieJWTAuthentication",
+        )
+    }
+
+When using cookie-based authentication, ensure that appropriate CSRF protections
+and secure cookie settings such as ``HttpOnly``, ``Secure``, and ``SameSite``
+are configured for your application.
