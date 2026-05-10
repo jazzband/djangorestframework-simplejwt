@@ -1,0 +1,102 @@
+# This file is distributed under the same license as the PACKAGE package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: djangorestframework_simplejwt\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-02-28 15:09-0300\n"
+"PO-Revision-Date: 2026-05-10 23:10+0200\n"
+"Last-Translator: \n"
+"Language-Team: Greek\n"
+"Language: el\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: authentication.py:37 serializers.py:114 serializers.py:184
+msgid "The user's password has been changed."
+msgstr "Ο κωδικός πρόσβασης του χρήστη έχει αλλάξει."
+
+#: authentication.py:93
+msgid "Authorization header must contain two space-delimited values"
+msgstr "Η επικεφαλίδα Authorization πρέπει να περιέχει δύο τιμές χωρισμένες με κενό"
+
+#: authentication.py:119
+msgid "Given token not valid for any token type"
+msgstr "Το δοθέν κλειδί δεν είναι έγκυρο για κανέναν τύπο κλειδιού"
+
+#: authentication.py:132 authentication.py:171
+msgid "Token contained no recognizable user identification"
+msgstr "Το κλειδί δεν περιέχει αναγνωρίσιμη ταυτοποίηση χρήστη"
+
+#: authentication.py:139
+msgid "User not found"
+msgstr "Ο χρήστης δεν βρέθηκε"
+
+#: authentication.py:143
+msgid "User is inactive"
+msgstr "Ο χρήστης είναι ανενεργός"
+
+#: backends.py:90
+msgid "Unrecognized algorithm type '{}'"
+msgstr "Ο τύπος αλγορίθμου '{}' δεν αναγνωρίστηκε"
+
+#: backends.py:96
+msgid "You must have cryptography installed to use {}."
+msgstr "Πρέπει να έχετε εγκατεστημένο το cryptography για να χρησιμοποιήσετε {}."
+
+#: backends.py:125 backends.py:177 tokens.py:69
+msgid "Token is invalid"
+msgstr "Το κλειδί πρόσβασης δεν είναι έγκυρο"
+
+#: backends.py:173
+msgid "Invalid algorithm specified"
+msgstr "Καθορίστηκε μη έγκυρος αλγόριθμος"
+
+#: backends.py:175 tokens.py:67
+msgid "Token is expired"
+msgstr "Το κλειδί πρόσβασης έχει λήξει"
+
+#: exceptions.py:55
+msgid "Token is invalid or expired"
+msgstr "Το κλειδί πρόσβασης δεν είναι έγκυρο ή έχει λήξει"
+
+#: serializers.py:37
+msgid "No active account found with the given credentials"
+msgstr "Δεν βρέθηκε ενεργός λογαριασμός με τα συγκεκριμένα διαπιστευτήρια"
+
+#: serializers.py:113 serializers.py:183
+msgid "No active account found for the given token."
+msgstr "Δεν βρέθηκε ενεργός λογαριασμός για το συγκεκριμένο κλειδί."
+
+#: serializers.py:249 tokens.py:280
+msgid "Token is blacklisted"
+msgstr "Το κλειδί πρόσβασης βρίσκεται στη μαύρη λίστα"
+
+#: token_blacklist/apps.py:7
+msgid "Token Blacklist"
+msgstr "Μαύρη Λίστα Κλειδιών"
+
+#: tokens.py:53
+msgid "Cannot create token with no type or lifetime"
+msgstr "Αδυναμία δημιουργίας κλειδιού χωρίς τύπο ή διάρκεια ζωής"
+
+#: tokens.py:127
+msgid "Token has no id"
+msgstr "Το κλειδί δεν διαθέτει ID"
+
+#: tokens.py:139
+msgid "Token has no type"
+msgstr "Το κλειδί δεν διαθέτει τύπο"
+
+#: tokens.py:142
+msgid "Token has wrong type"
+msgstr "Το κλειδί πρόσβασης έχει λάθος τύπο"
+
+#: tokens.py:201
+msgid "Token has no '{}' claim"
+msgstr "Το κλειδί δεν περιέχει απαίτηση '{}'"
+
+#: tokens.py:206
+msgid "Token '{}' claim has expired"
+msgstr "Η απαίτηση '{}' του κλειδιού έχει λήξει"
