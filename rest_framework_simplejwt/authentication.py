@@ -187,3 +187,39 @@ def default_user_authentication_rule(user: AuthUser | None) -> bool:
     return user is not None and (
         not api_settings.CHECK_USER_IS_ACTIVE or user.is_active
     )
+
+
+class CookieJWTAuthentication(JWTAuthentication):
+    """
+    Authenticate users using a JWT stored in one of the configured cookies.
+
+    If multiple cookie names are configured, the first cookie that contains
+    a non-empty value is used as the raw token. Only that token is validated.
+    """
+
+    def get_cookie_names(self):
+        cookie_names = api_settings.COOKIE_NAME
+        if isinstance(cookie_names, str):
+            return [cookie_names]
+        return list(cookie_names)
+
+    def get_raw_token_from_cookies(self, request) -> str | None:
+        """
+        Return the first token found in the configured cookies.
+        """
+        for cookie_name in self.get_cookie_names():
+            token = request.COOKIES.get(cookie_name)
+            if token:
+                return token
+        return None
+
+    def authenticate(self, request):
+        """
+        Validate a token retrieved from cookies.
+        """
+        raw_token = self.get_raw_token_from_cookies(request)
+        if raw_token is None:
+            return None
+
+        validated_token = self.get_validated_token(raw_token)
+        return self.get_user(validated_token), validated_token

@@ -277,3 +277,146 @@ class TestJWTStatelessUserAuthentication(TestCase):
 
         # Restore default TokenUser for future tests
         api_settings.TOKEN_USER_CLASS = temp
+
+
+class TestCookieJWTAuthentication(TestCase):
+    def setUp(self):
+        self.factory = APIRequestFactory()
+        self.backend = authentication.CookieJWTAuthentication()
+
+    @override_api_settings(COOKIE_NAME="access")
+    def test_get_cookie_names_single_string(self):
+        # When COOKIE_NAME is a string, get_cookie_names should return a list of length 1
+        reload(authentication)
+        backend = authentication.CookieJWTAuthentication()
+        self.assertEqual(backend.get_cookie_names(), ["access"])
+
+    @override_api_settings(COOKIE_NAME=["access", "jwt"])
+    def test_get_cookie_names_list(self):
+        # When COOKIE_NAME is an iterable, get_cookie_names should return a list with same items
+        reload(authentication)
+        backend = authentication.CookieJWTAuthentication()
+        self.assertEqual(backend.get_cookie_names(), ["access", "jwt"])
+
+    @override_api_settings(COOKIE_NAME="access")
+    def test_get_raw_token_from_cookies_no_cookie(self):
+        # Should return None if no configured cookie is present
+        reload(authentication)
+        backend = authentication.CookieJWTAuthentication()
+        request = self.factory.get("/test-url/")
+        self.assertIsNone(backend.get_raw_token_from_cookies(request))
+
+    @override_api_settings(COOKIE_NAME="access")
+    def test_get_raw_token_from_cookies_single_cookie(self):
+        # Should return the value of the configured cookie if present
+        reload(authentication)
+        backend = authentication.CookieJWTAuthentication()
+        token = "test-token"
+        request = self.factory.get("/test-url/")
+        request.COOKIES["access"] = token
+
+        self.assertEqual(backend.get_raw_token_from_cookies(request), token)
+
+    @override_api_settings(COOKIE_NAME=["access", "jwt"])
+    def test_get_raw_token_from_cookies_multiple_cookies_first_non_empty(self):
+        # Should return the first non-empty token based on COOKIE_NAME order
+        reload(authentication)
+        backend = authentication.CookieJWTAuthentication()
+        request = self.factory.get("/test-url/")
+        # First cookie is empty, second has token
+        request.COOKIES["access"] = ""
+        request.COOKIES["jwt"] = "real-token"
+
+        self.assertEqual(
+            backend.get_raw_token_from_cookies(request),
+            "real-token",
+        )
+
+    @override_api_settings(COOKIE_NAME=["access", "jwt"])
+    def test_get_raw_token_from_cookies_ignores_unconfigured_cookies(self):
+        # Should not read cookies that are not in COOKIE_NAME
+        reload(authentication)
+        backend = authentication.CookieJWTAuthentication()
+        request = self.factory.get("/test-url/")
+        request.COOKIES["other"] = "other-token"
+
+        self.assertIsNone(backend.get_raw_token_from_cookies(request))
+
+    @override_api_settings(COOKIE_NAME="access")
+    def test_authenticate_returns_none_when_no_cookie(self):
+        # authenticate should return None when no configured cookie is present
+        reload(authentication)
+        backend = authentication.CookieJWTAuthentication()
+        request = self.factory.get("/test-url/")
+
+        self.assertIsNone(backend.authenticate(request))
+
+    @override_api_settings(COOKIE_NAME="access")
+    def test_authenticate_with_valid_token_in_cookie(self):
+        # Should authenticate and return (user, validated_token) when cookie contains a valid token
+        reload(authentication)
+        backend = authentication.CookieJWTAuthentication()
+
+        user = User.objects.create_user(username="cookieuser")
+        access_token = AccessToken.for_user(user)
+
+        request = self.factory.get("/test-url/")
+        request.COOKIES["access"] = str(access_token)
+
+        user_obj, validated_token = backend.authenticate(request)
+
+        self.assertEqual(user_obj.id, user.id)
+        self.assertEqual(validated_token.payload, access_token.payload)
+
+    @override_api_settings(COOKIE_NAME="access")
+    def test_authenticate_with_invalid_token_in_cookie(self):
+        # Should raise InvalidToken if cookie contains an invalid token
+        reload(authentication)
+        backend = authentication.CookieJWTAuthentication()
+
+        request = self.factory.get("/test-url/")
+        request.COOKIES["access"] = "not-a-real-token"
+
+        with self.assertRaises(InvalidToken):
+            backend.authenticate(request)
+
+    @override_api_settings(COOKIE_NAME=["access", "jwt"])
+    def test_authenticate_uses_first_non_empty_cookie(self):
+        # When multiple cookie names are configured, authenticate should use
+        # the first non-empty one and ignore the others
+        reload(authentication)
+        backend = authentication.CookieJWTAuthentication()
+
+        primary_user = User.objects.create_user(username="primary")
+        secondary_user = User.objects.create_user(username="secondary")
+
+        primary_token = AccessToken.for_user(primary_user)
+        secondary_token = AccessToken.for_user(secondary_user)
+
+        request = self.factory.get("/test-url/")
+        # Order: ["access", "jwt"]
+        request.COOKIES["access"] = str(primary_token)
+        request.COOKIES["jwt"] = str(secondary_token)
+
+        user_obj, validated_token = backend.authenticate(request)
+
+        self.assertEqual(user_obj.id, primary_user.id)
+        self.assertEqual(validated_token.payload, primary_token.payload)
+
+    @override_api_settings(COOKIE_NAME=["access", "jwt"])
+    def test_authenticate_skips_empty_first_cookie(self):
+        # If the first cookie is empty, it should fall back to the next one
+        reload(authentication)
+        backend = authentication.CookieJWTAuthentication()
+
+        user = User.objects.create_user(username="fallback")
+        token = AccessToken.for_user(user)
+
+        request = self.factory.get("/test-url/")
+        request.COOKIES["access"] = ""
+        request.COOKIES["jwt"] = str(token)
+
+        user_obj, validated_token = backend.authenticate(request)
+
+        self.assertEqual(user_obj.id, user.id)
+        self.assertEqual(validated_token.payload, token.payload)
