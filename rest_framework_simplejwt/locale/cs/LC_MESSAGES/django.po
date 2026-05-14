@@ -82,7 +82,7 @@ msgstr "Žádný aktivní účet s danými údaji nebyl nalezen"
 msgid "Token is blacklisted"
 msgstr "Token je na černé listině"
 
-#: settings.py:78
+#: settings.py:83
 msgid ""
 "The '{}' setting has been removed. Please refer to '{}' for available "
 "settings."

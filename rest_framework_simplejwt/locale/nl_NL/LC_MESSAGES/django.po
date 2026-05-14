@@ -83,7 +83,7 @@ msgstr "Geen actief account gevonden voor deze gegevens"
 msgid "Token is blacklisted"
 msgstr "Token is ge-blacklist"
 
-#: settings.py:78
+#: settings.py:83
 msgid ""
 "The '{}' setting has been removed. Please refer to '{}' for available "
 "settings."

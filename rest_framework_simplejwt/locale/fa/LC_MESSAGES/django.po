@@ -81,7 +81,7 @@ msgstr "هیچ اکانت فعالی برای این توکن یافت نشد"
 msgid "Token is blacklisted"
 msgstr "توکن در لیست سیاه قرار گرفته است"
 
-#: settings.py:78
+#: settings.py:83
 msgid ""
 "The '{}' setting has been removed. Please refer to '{}' for available "
 "settings."

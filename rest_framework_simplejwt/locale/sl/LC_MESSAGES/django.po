@@ -88,7 +88,7 @@ msgstr "Aktiven račun s podanimi poverilnicami ni najden"
 msgid "Token is blacklisted"
 msgstr "Žeton je na črnem seznamu"
 
-#: settings.py:78
+#: settings.py:83
 msgid ""
 "The '{}' setting has been removed. Please refer to '{}' for available "
 "settings."

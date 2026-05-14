@@ -87,7 +87,7 @@ msgstr "Nu a fost găsit cont activ cu aceste date de autentificare"
 msgid "Token is blacklisted"
 msgstr "Tokenul este în listă de tokenuri blocate"
 
-#: settings.py:78
+#: settings.py:83
 msgid ""
 "The '{}' setting has been removed. Please refer to '{}' for available "
 "settings."

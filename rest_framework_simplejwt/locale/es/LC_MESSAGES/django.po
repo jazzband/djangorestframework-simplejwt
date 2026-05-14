@@ -84,7 +84,7 @@ msgstr "La combinación de credenciales no tiene una cuenta activa"
 msgid "Token is blacklisted"
 msgstr "El token está en lista negra"
 
-#: settings.py:78
+#: settings.py:83
 msgid ""
 "The '{}' setting has been removed. Please refer to '{}' for available "
 "settings."

@@ -82,7 +82,7 @@ msgstr "Nie znaleziono aktywnego konta dla podanych danych uwierzytelniających"
 msgid "Token is blacklisted"
 msgstr "Token znajduję się na czarnej liście"
 
-#: settings.py:78
+#: settings.py:83
 msgid ""
 "The '{}' setting has been removed. Please refer to '{}' for available "
 "settings."
