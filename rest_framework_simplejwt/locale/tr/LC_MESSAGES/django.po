@@ -85,7 +85,7 @@ msgstr "Verilen kimlik bilgileriyle aktif bir hesap bulunamadı"
 msgid "Token is blacklisted"
 msgstr "Token kara listeye alınmış"
 
-#: settings.py:78
+#: settings.py:83
 msgid ""
 "The '{}' setting has been removed. Please refer to '{}' for available "
 "settings."

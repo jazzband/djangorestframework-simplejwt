@@ -87,7 +87,7 @@ msgstr "לא נמצא חשבון עם פרטי זיהוי אלו"
 msgid "Token is blacklisted"
 msgstr "המזהה ברשימה השחורה."
 
-#: settings.py:78
+#: settings.py:83
 msgid ""
 "The '{}' setting has been removed. Please refer to '{}' for available "
 "settings."

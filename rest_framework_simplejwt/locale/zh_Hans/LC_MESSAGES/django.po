@@ -86,7 +86,7 @@ msgstr "找不到指定凭据对应的有效用户"
 msgid "Token is blacklisted"
 msgstr "令牌已被加入黑名单"
 
-#: settings.py:78
+#: settings.py:83
 msgid ""
 "The '{}' setting has been removed. Please refer to '{}' for available "
 "settings."

@@ -88,7 +88,7 @@ msgstr "Tidak ada akun aktif yang ditemukan dengan kredensial yang diberikan"
 msgid "Token is blacklisted"
 msgstr "Token masuk daftar hitam"
 
-#: settings.py:78
+#: settings.py:83
 msgid ""
 "The '{}' setting has been removed. Please refer to '{}' for available "
 "settings."
