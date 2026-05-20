@@ -21,6 +21,11 @@ AUTH_HEADER_TYPE_BYTES: set[bytes] = {
     h.encode(HTTP_HEADER_ENCODING) for h in AUTH_HEADER_TYPES
 }
 
+# Pre-lowered for case-insensitive scheme matching per RFC 7235 §2.1.
+_AUTH_HEADER_TYPE_BYTES_LOWER: set[bytes] = {
+    h.lower() for h in AUTH_HEADER_TYPE_BYTES
+}
+
 AuthUser = TypeVar("AuthUser", AbstractBaseUser, TokenUser)
 
 
@@ -84,7 +89,7 @@ class JWTAuthentication(authentication.BaseAuthentication):
             # Empty AUTHORIZATION header sent
             return None
 
-        if parts[0] not in AUTH_HEADER_TYPE_BYTES:
+        if parts[0].lower() not in _AUTH_HEADER_TYPE_BYTES_LOWER:
             # Assume the header does not contain a JSON web token
             return None
 
