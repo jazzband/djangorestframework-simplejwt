@@ -22,9 +22,7 @@ AUTH_HEADER_TYPE_BYTES: set[bytes] = {
 }
 
 # Pre-lowered for case-insensitive scheme matching per RFC 7235 §2.1.
-_AUTH_HEADER_TYPE_BYTES_LOWER: set[bytes] = {
-    h.lower() for h in AUTH_HEADER_TYPE_BYTES
-}
+_AUTH_HEADER_TYPE_BYTES_LOWER: set[bytes] = {h.lower() for h in AUTH_HEADER_TYPE_BYTES}
 
 AuthUser = TypeVar("AuthUser", AbstractBaseUser, TokenUser)
 
