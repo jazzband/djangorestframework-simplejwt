@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 from typing import TYPE_CHECKING, Any, Generic, Optional, TypeVar
+
 try:
     from uuid import uuid7 as _uuid_for_jti  # Python 3.13+
 except ImportError:
