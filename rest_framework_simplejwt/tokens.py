@@ -1,6 +1,9 @@
 from datetime import datetime, timedelta
 from typing import TYPE_CHECKING, Any, Generic, Optional, TypeVar
-from uuid import uuid4
+try:
+    from uuid import uuid7 as _uuid_for_jti  # Python 3.13+
+except ImportError:
+    from uuid import uuid4 as _uuid_for_jti  # type: ignore[assignment]
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -150,7 +153,7 @@ class Token:
         See here:
         https://tools.ietf.org/html/rfc7519#section-4.1.7
         """
-        self.payload[api_settings.JTI_CLAIM] = uuid4().hex
+        self.payload[api_settings.JTI_CLAIM] = _uuid_for_jti().hex
 
     def set_exp(
         self,
