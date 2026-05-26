@@ -370,6 +370,45 @@ class TestTokenBackend(TestCase):
             ):
                 self.rsa_token_backend.decode(token)
 
+    def test_decode_static_issuer_mismatch_raises(self):
+        self.payload["exp"] = aware_utcnow() + timedelta(days=1)
+        self.payload["aud"] = AUDIENCE
+        self.payload["iss"] = "https://other.domain.tld"
+
+        token = jwt.encode(self.payload, PRIVATE_KEY, algorithm="RS256")
+        if IS_OLD_JWT:
+            token = token.decode("utf-8")
+        else:
+            self.payload["exp"] = datetime_to_epoch(self.payload["exp"])
+
+        with self.assertRaisesRegex(TokenBackendError, "Token is invalid"):
+            self.aud_iss_token_backend.decode(token)
+
+    def test_decode_dynamic_issuer_skips_backend_validation(self):
+        self.payload["exp"] = aware_utcnow() + timedelta(days=1)
+        self.payload["aud"] = AUDIENCE
+        self.payload["iss"] = "https://other.domain.tld"
+
+        token = jwt.encode(self.payload, PRIVATE_KEY, algorithm="RS256")
+        if IS_OLD_JWT:
+            token = token.decode("utf-8")
+            expected_payload = self.payload
+        else:
+            expected_payload = self.payload.copy()
+            expected_payload["exp"] = datetime_to_epoch(self.payload["exp"])
+
+        backend = TokenBackend(
+            "RS256",
+            PRIVATE_KEY,
+            PUBLIC_KEY,
+            AUDIENCE,
+            None,
+            verify_aud=True,
+            verify_iss=False,
+        )
+
+        self.assertEqual(backend.decode(token), expected_payload)
+
     def test_decode_when_token_algorithm_does_not_match(self):
         token = jwt.encode(self.payload, PRIVATE_KEY, algorithm="RS256")
         if IS_OLD_JWT:
