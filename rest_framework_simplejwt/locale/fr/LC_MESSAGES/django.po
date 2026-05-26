@@ -11,29 +11,29 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: authentication.py:37 serializers.py:114 serializers.py:184
+#: authentication.py:40 serializers.py:114 serializers.py:184
 msgid "The user's password has been changed."
 msgstr ""
 
-#: authentication.py:93
+#: authentication.py:96
 msgid "Authorization header must contain two space-delimited values"
 msgstr ""
 "L'en-tête 'Authorization' doit contenir deux valeurs séparées par des espaces"
 
-#: authentication.py:119
+#: authentication.py:122
 msgid "Given token not valid for any token type"
 msgstr "Le type de jeton fourni n'est pas valide"
 
-#: authentication.py:132 authentication.py:171
+#: authentication.py:135 authentication.py:174
 msgid "Token contained no recognizable user identification"
 msgstr ""
 "Le jeton ne contient aucune information permettant d'identifier l'utilisateur"
 
-#: authentication.py:139
+#: authentication.py:142
 msgid "User not found"
 msgstr "L'utilisateur n'a pas été trouvé"
 
-#: authentication.py:143
+#: authentication.py:146
 msgid "User is inactive"
 msgstr "L'utilisateur est désactivé"
 
