@@ -79,7 +79,7 @@ msgstr "Nenhuma conta ativa encontrada para o token fornecido."
 msgid "Token is blacklisted"
 msgstr "Token está na blacklist"
 
-#: settings.py:78
+#: settings.py:83
 msgid ""
 "The '{}' setting has been removed. Please refer to '{}' for available "
 "settings."

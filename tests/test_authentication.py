@@ -85,6 +85,14 @@ class TestJWTAuthentication(TestCase):
             self.fake_token,
         )
 
+    def test_get_raw_token_scheme_is_case_insensitive(self):
+        # Per RFC 7235 §2.1, scheme matching is case-insensitive.
+        reload(authentication)
+
+        for prefix in (b"bearer", b"BEARER", b"bEaReR"):
+            header = prefix + b" " + self.fake_token
+            self.assertEqual(self.backend.get_raw_token(header), self.fake_token)
+
     def test_get_validated_token(self):
         # Should raise InvalidToken if token not valid
         token = AuthToken()

@@ -84,7 +84,7 @@ msgstr "Aucun compte actif n'a été trouvé avec les identifiants fournis"
 msgid "Token is blacklisted"
 msgstr "Le jeton a été banni"
 
-#: settings.py:78
+#: settings.py:83
 msgid ""
 "The '{}' setting has been removed. Please refer to '{}' for available "
 "settings."

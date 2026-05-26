@@ -15,17 +15,27 @@ jobs:
       fail-fast: false
       max-parallel: 5
       matrix:
-        python-version: ['3.10', '3.11', '3.12', '3.13']
-        django-version: ['4.2', '5.0', '5.1', '5.2']
-        drf-version: ['3.14', '3.15']
+        python-version: ['3.10', '3.11', '3.12', '3.13', '3.14']
+        django-version: ['4.2', '5.0', '5.1', '5.2', '6.0']
+        drf-version: ['3.14', '3.15', '3.16']
         exclude:
           - drf-version: '3.14'
             django-version: '5.0'
           - drf-version: '3.14'
             django-version: '5.1'
+          - python-version: '3.14'
+            django-version: '4.2'
+          - python-version: '3.14'
+            django-version: '5.0'
+          - python-version: '3.14'
+            django-version: '5.1'
+          - python-version: '3.11'
+            django-version: '6.0'
+          - python-version: '3.10'
+            django-version: '6.0'
 
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
 
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v6
@@ -38,7 +48,7 @@ jobs:
         echo "dir=$(pip cache dir)" >> $GITHUB_OUTPUT
 
     - name: Cache
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       with:
         path: ${{ steps.pip-cache.outputs.dir }}
         key:
@@ -59,6 +69,6 @@ jobs:
         DRF: ${{ matrix.drf-version }}
 
     - name: Upload coverage
-      uses: codecov/codecov-action@v5
+      uses: codecov/codecov-action@v6
       with:
         name: Python ${{ matrix.python-version }}

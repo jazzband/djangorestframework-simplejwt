@@ -28,6 +28,7 @@ extras_require = {
     "doc": [
         "Sphinx",
         "sphinx_rtd_theme>=0.1.9",
+        "importlib",
     ],
     "dev": [
         "pytest-watch",
@@ -36,7 +37,7 @@ extras_require = {
         "ipython",
     ],
     "python-jose": [
-        "python-jose==3.3.0",
+        "python-jose==3.5.0",
     ],
     "crypto": [
         "cryptography>=3.3.1",
@@ -81,6 +82,7 @@ setup(
         "Framework :: Django :: 5.0",
         "Framework :: Django :: 5.1",
         "Framework :: Django :: 5.2",
+        "Framework :: Django :: 6.0",
         "Intended Audience :: Developers",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
@@ -90,6 +92,7 @@ setup(
         "Programming Language :: Python :: 3.11",
         "Programming Language :: Python :: 3.12",
         "Programming Language :: Python :: 3.13",
+        "Programming Language :: Python :: 3.14",
         "Topic :: Internet :: WWW/HTTP",
     ],
 )

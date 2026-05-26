@@ -81,7 +81,7 @@ msgstr "Көрсетілген токен бойынша есептік жазб
 msgid "Token is blacklisted"
 msgstr "Токен қара тізімге енгізілген"
 
-#: settings.py:78
+#: settings.py:83
 msgid ""
 "The '{}' setting has been removed. Please refer to '{}' for available "
 "settings."
