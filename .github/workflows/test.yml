@@ -64,6 +64,11 @@ jobs:
     - name: Tox tests
       run: |
         tox -v
+    - name: Run mypy
+      run: |
+        pip install mypy
+        mypy rest_framework_simplejwt
+    
       env:
         DJANGO: ${{ matrix.django-version }}
         DRF: ${{ matrix.drf-version }}
