@@ -27,7 +27,7 @@ from .utils import (
 )
 
 if TYPE_CHECKING:
-    from .backends import TokenBackend
+    from .backends import RawToken, TokenBackend
 
 T = TypeVar("T", bound="Token")
 
@@ -43,7 +43,11 @@ class Token:
     token_type: str | None = None
     lifetime: timedelta | None = None
 
-    def __init__(self, token: Optional["Token"] = None, verify: bool = True) -> None:
+    def __init__(
+        self,
+        token: Optional["RawToken"] = None,
+        verify: bool = True,
+    ) -> None:
         """
         !!!! IMPORTANT !!!! MUST raise a TokenError with a user-facing error
         message if the given token is invalid, expired, or otherwise not safe

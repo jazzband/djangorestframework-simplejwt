@@ -2,7 +2,7 @@ import json
 from collections.abc import Iterable
 from datetime import timedelta
 from functools import cached_property
-from typing import Any, Optional, Union
+from typing import TYPE_CHECKING, Any, Optional, Union, cast
 
 import jwt
 from django.utils.translation import gettext_lazy as _
@@ -14,7 +14,6 @@ from jwt import (
 )
 
 from .exceptions import TokenBackendError, TokenBackendExpiredToken
-from .tokens import Token
 from .utils import format_lazy
 
 try:
@@ -23,6 +22,8 @@ try:
     JWK_CLIENT_AVAILABLE = True
 except ImportError:
     JWK_CLIENT_AVAILABLE = False
+
+RawToken = Union[bytes, str]
 
 ALLOWED_ALGORITHMS = {
     "HS256",
@@ -114,12 +115,15 @@ class TokenBackend:
                 )
             )
 
-    def get_verifying_key(self, token: Token) -> Any:
+    def get_verifying_key(self, token: RawToken) -> Any:
         if self.algorithm.startswith("HS"):
             return self.prepared_signing_key
 
         if self.jwks_client:
             try:
+                if isinstance(token, bytes):
+                    # https://github.com/jpadilla/pyjwt/issues/1047
+                    token = cast(str, token)
                 return self.jwks_client.get_signing_key_from_jwt(token).key
             except PyJWKClientError as e:
                 raise TokenBackendError(_("Token is invalid")) from e
@@ -148,7 +152,7 @@ class TokenBackend:
         # For PyJWT >= 2.0.0a1
         return token
 
-    def decode(self, token: Token, verify: bool = True) -> dict[str, Any]:
+    def decode(self, token: RawToken, verify: bool = True) -> dict[str, Any]:
         """
         Performs a validation of the given token and returns its payload
         dictionary.
