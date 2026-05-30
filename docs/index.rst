@@ -52,6 +52,7 @@ Contents
     token_types
     blacklist_app
     stateless_user_authentication
+    cookie_authentication
     development_and_contributing
     drf_yasg_integration
     rest_framework_simplejwt
