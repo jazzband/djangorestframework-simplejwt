@@ -70,11 +70,11 @@ msgstr "هیچ اکانت فعالی برای اطلاعات داده شده ی�
 
 #: serializers.py:113 serializers.py:183
 msgid "No active account found for the given token."
-msgstr "هیچ اکانت فعالی برای توکن داده شده یافت نشد"
+msgstr "هیچ اکانت فعالی برای این توکن یافت نشد"
 
 #: serializers.py:249 tokens.py:280
 msgid "Token is blacklisted"
-msgstr "توکن به لیست سیاه رفته است"
+msgstr "توکن در لیست سیاه قرار گرفته است"
 
 #: settings.py:83
 msgid ""
@@ -130,7 +130,7 @@ msgstr "توکن لیست سیاه برای %(user)s"
 
 #: tokens.py:53
 msgid "Cannot create token with no type or lifetime"
-msgstr "توکن بدون هیچ نوع و طول عمر قابل ساخت نیست"
+msgstr "توکن بدون نوع یا طول عمر قابل ایجاد نیست"
 
 #: tokens.py:127
 msgid "Token has no id"
@@ -138,11 +138,11 @@ msgstr "توکن id ندارد"
 
 #: tokens.py:139
 msgid "Token has no type"
-msgstr "توکن نوع ندارد"
+msgstr "توکن نوعی ندارد"
 
 #: tokens.py:142
 msgid "Token has wrong type"
-msgstr "توکن نوع اشتباهی دارد"
+msgstr "توکن دارای نوع نادرستی است"
 
 #: tokens.py:201
 msgid "Token has no '{}' claim"

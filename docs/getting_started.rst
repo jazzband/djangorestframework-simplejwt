@@ -106,6 +106,36 @@ If you wish to use localizations/translations, simply add
       ...
   ]
 
+Alternatively, if you do not want to add ``rest_framework_simplejwt`` to
+``INSTALLED_APPS``, you can enable translations by adding its locale directory to
+``LOCALE_PATHS`` in your ``settings.py``:
+
+.. code-block:: python
+
+    import os
+    from rest_framework_simplejwt import __file__ as simplejwt_file
+
+    LOCALE_PATHS = [
+        os.path.join(os.path.dirname(simplejwt_file), 'locale'),
+    ]
+
+In order for per-request language selection (via the ``Accept-Language`` header)
+to work in views and error responses, ensure Django's ``LocaleMiddleware`` is
+enabled and appears after ``SessionMiddleware`` and before ``CommonMiddleware``:
+
+.. code-block:: python
+
+  MIDDLEWARE = [
+      'django.middleware.security.SecurityMiddleware',
+      'django.contrib.sessions.middleware.SessionMiddleware',
+      'django.middleware.locale.LocaleMiddleware',
+      'django.middleware.common.CommonMiddleware',
+      'django.middleware.csrf.CsrfViewMiddleware',
+      'django.contrib.auth.middleware.AuthenticationMiddleware',
+      'django.contrib.messages.middleware.MessageMiddleware',
+      'django.middleware.clickjacking.XFrameOptionsMiddleware',
+  ]
+
 
 Usage
 -----
