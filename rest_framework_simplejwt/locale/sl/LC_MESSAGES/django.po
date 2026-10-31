@@ -15,28 +15,28 @@ msgstr ""
 "X-Generator: Poedit 2.0.6\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: authentication.py:37 serializers.py:114 serializers.py:184
+#: authentication.py:40 serializers.py:114 serializers.py:184
 msgid "The user's password has been changed."
 msgstr ""
 
-#: authentication.py:93
+#: authentication.py:96
 msgid "Authorization header must contain two space-delimited values"
 msgstr ""
 "Glava 'Authorization' mora vsebovati dve vrednosti, ločeni s presledkom"
 
-#: authentication.py:119
+#: authentication.py:122
 msgid "Given token not valid for any token type"
 msgstr "Podan žeton ni veljaven za nobeno vrsto žetona"
 
-#: authentication.py:132 authentication.py:171
+#: authentication.py:135 authentication.py:174
 msgid "Token contained no recognizable user identification"
 msgstr "Žeton ni vseboval prepoznavne identifikacije uporabnika"
 
-#: authentication.py:139
+#: authentication.py:142
 msgid "User not found"
 msgstr "Uporabnik ni najden"
 
-#: authentication.py:143
+#: authentication.py:146
 msgid "User is inactive"
 msgstr "Uporabnik je neaktiven"
 

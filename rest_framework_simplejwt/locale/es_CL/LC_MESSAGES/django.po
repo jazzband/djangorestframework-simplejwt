@@ -12,28 +12,28 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: authentication.py:37 serializers.py:114 serializers.py:184
+#: authentication.py:40 serializers.py:114 serializers.py:184
 msgid "The user's password has been changed."
 msgstr ""
 
-#: authentication.py:93
+#: authentication.py:96
 msgid "Authorization header must contain two space-delimited values"
 msgstr ""
 "El header de autorización debe contener dos valores delimitados por espacio"
 
-#: authentication.py:119
+#: authentication.py:122
 msgid "Given token not valid for any token type"
 msgstr "El token provisto no es válido para ningún tipo de token"
 
-#: authentication.py:132 authentication.py:171
+#: authentication.py:135 authentication.py:174
 msgid "Token contained no recognizable user identification"
 msgstr "El token no contiene identificación de usuario reconocible"
 
-#: authentication.py:139
+#: authentication.py:142
 msgid "User not found"
 msgstr "Usuario no encontrado"
 
-#: authentication.py:143
+#: authentication.py:146
 msgid "User is inactive"
 msgstr "El usuario está inactivo"
 

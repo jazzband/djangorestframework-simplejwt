@@ -14,27 +14,27 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n!=1);\n"
 
-#: authentication.py:37 serializers.py:114 serializers.py:184
+#: authentication.py:40 serializers.py:114 serializers.py:184
 msgid "The user's password has been changed."
 msgstr "Пайдаланушының құпия сөзі өзгертілді."
 
-#: authentication.py:93
+#: authentication.py:96
 msgid "Authorization header must contain two space-delimited values"
 msgstr "Авторизация тақырыптамасында бос орынмен бөлінген екі мән болуы керек"
 
-#: authentication.py:119
+#: authentication.py:122
 msgid "Given token not valid for any token type"
 msgstr "Берілген токен ешбір токен түріне жарамсыз"
 
-#: authentication.py:132 authentication.py:171
+#: authentication.py:135 authentication.py:174
 msgid "Token contained no recognizable user identification"
 msgstr "Токенде пайдаланушы идентификаторы жоқ"
 
-#: authentication.py:139
+#: authentication.py:142
 msgid "User not found"
 msgstr "Пайдаланушы табылмады"
 
-#: authentication.py:143
+#: authentication.py:146
 msgid "User is inactive"
 msgstr "Пайдаланушы өшірулі"
 
