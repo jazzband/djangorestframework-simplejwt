@@ -13,27 +13,27 @@ msgstr ""
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
-#: authentication.py:37 serializers.py:114 serializers.py:184
+#: authentication.py:40 serializers.py:114 serializers.py:184
 msgid "The user's password has been changed."
 msgstr ""
 
-#: authentication.py:93
+#: authentication.py:96
 msgid "Authorization header must contain two space-delimited values"
 msgstr "يجب أن يحتوي رأس التفويض على قيمتين مفصولتين بمسافات"
 
-#: authentication.py:119
+#: authentication.py:122
 msgid "Given token not valid for any token type"
 msgstr "تأشيرة المرور غير صالحة لأي نوع من أنواع التأشيرات"
 
-#: authentication.py:132 authentication.py:171
+#: authentication.py:135 authentication.py:174
 msgid "Token contained no recognizable user identification"
 msgstr "لا تحتوي تأشيرة المرور على هوية مستخدم يمكن التعرف عليها"
 
-#: authentication.py:139
+#: authentication.py:142
 msgid "User not found"
 msgstr "لم يتم العثور على المستخدم"
 
-#: authentication.py:143
+#: authentication.py:146
 msgid "User is inactive"
 msgstr "الحساب غير مفعل"
 

@@ -15,27 +15,27 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: authentication.py:37 serializers.py:114 serializers.py:184
+#: authentication.py:40 serializers.py:114 serializers.py:184
 msgid "The user's password has been changed."
 msgstr ""
 
-#: authentication.py:93
+#: authentication.py:96
 msgid "Authorization header must contain two space-delimited values"
 msgstr "授权头必须包含两个用空格分隔的值"
 
-#: authentication.py:119
+#: authentication.py:122
 msgid "Given token not valid for any token type"
 msgstr "此令牌对任何类型的令牌无效"
 
-#: authentication.py:132 authentication.py:171
+#: authentication.py:135 authentication.py:174
 msgid "Token contained no recognizable user identification"
 msgstr "令牌未包含用户标识符"
 
-#: authentication.py:139
+#: authentication.py:142
 msgid "User not found"
 msgstr "未找到该用户"
 
-#: authentication.py:143
+#: authentication.py:146
 msgid "User is inactive"
 msgstr "该用户已禁用"
 
