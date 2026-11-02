@@ -5,18 +5,24 @@ on:
     tags:
     - '*'
 
+permissions:
+  contents: read
+
 jobs:
   build:
     if: github.repository == 'jazzband/djangorestframework-simplejwt'
     runs-on: ubuntu-latest
+    outputs:
+      artifact-id: ${{ steps.package.outputs.artifact-id }}
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           fetch-depth: 0
+          persist-credentials: false
 
       - name: Set up Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with:
           python-version: '3.12'
 
@@ -40,10 +46,32 @@ jobs:
           python setup.py sdist --format=gztar bdist_wheel
           twine check dist/*
 
+      - name: Save package artifacts
+        id: package
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: python-package-distributions
+          path: dist/
+          if-no-files-found: error
+
+  upload:
+    needs: build
+    if: github.repository == 'jazzband/djangorestframework-simplejwt' && startsWith(github.ref, 'refs/tags/') && needs.build.outputs.artifact-id != ''
+    runs-on: ubuntu-latest
+    permissions: {}
+    environment: jazzband-upload
+    steps:
+      - name: Download package artifacts
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          artifact-ids: ${{ needs.build.outputs.artifact-id }}
+          merge-multiple: true
+          path: dist/
+
       - name: Upload packages to Jazzband
-        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
-        uses: pypa/gh-action-pypi-publish@release/v1
+        uses: pypa/gh-action-pypi-publish@7245906fb61fa33a13554f9d5fb856fe61758086 # v1.14.3
         with:
           user: jazzband
           password: ${{ secrets.JAZZBAND_RELEASE_KEY }}
-          repository_url: https://jazzband.co/projects/djangorestframework-simplejwt/upload
+          repository-url: https://jazzband.co/projects/djangorestframework-simplejwt/upload
+          attestations: false
