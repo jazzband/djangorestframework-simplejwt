@@ -9,7 +9,7 @@
 
 ### Fixed
 - `JWTAuthentication.get_raw_token()` now matches the `Authorization` scheme prefix case-insensitively, per RFC 7235 §2.1. The module-level `AUTH_HEADER_TYPE_BYTES` constant is unchanged for back-compat. Closes #908.
-
+- Fixed OpenAPI schema generation for token obtain endpoints by explicitly declaring dynamically returned fields (`access`, `refresh`) as read-only serializer fields.
 
 ## 5.5.1
 
