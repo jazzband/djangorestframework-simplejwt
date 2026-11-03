@@ -74,6 +74,6 @@ jobs:
         DRF: ${{ matrix.drf-version }}
 
     - name: Upload coverage
-      uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v6
+      uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7.1.1
       with:
         name: Python ${{ matrix.python-version }}
