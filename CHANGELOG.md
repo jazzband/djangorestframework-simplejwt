@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## 6.0.0
+
 ### Changed
 - **BREAKING:** In `serializers.py`, when a user linked to a token is missing or deleted, the code now raises `AuthenticationFailed("no_active_account")` instead of allowing `DoesNotExist` to propagate.
   - Response changed from **404 Not Found** → **401 Unauthorized**.
@@ -8,8 +10,26 @@
   - Clearer for clients: signals an auth issue instead of suggesting the endpoint is missing.
 
 ### Fixed
-- `JWTAuthentication.get_raw_token()` now matches the `Authorization` scheme prefix case-insensitively, per RFC 7235 §2.1. The module-level `AUTH_HEADER_TYPE_BYTES` constant is unchanged for back-compat. Closes #908.
+* 
+* `JWTAuthentication.get_raw_token()` now matches the `Authorization` scheme prefix case-insensitively, per RFC 7235 §2.1. The module-level `AUTH_HEADER_TYPE_BYTES` constant is unchanged for back-compat. Closes (#908)(https://github.com/jazzband/djangorestframework-simplejwt/pull/908).
+* fix: Avoid DoesNotExist exception in TokenRefreshSerializer by @yuekui in https://github.com/jazzband/djangorestframework-simplejwt/pull/861
+* feat(auth): Revoke refresh token on password change by @mahdirahimi1999 in https://github.com/jazzband/djangorestframework-simplejwt/pull/928
+* Add hook mechanism when a login attempt fails or succeeds by @mdefeche in https://github.com/jazzband/djangorestframework-simplejwt/pull/904
+* Fix log message to use user.pk instead of user.id by @SebCorbin in https://github.com/jazzband/djangorestframework-simplejwt/pull/936
+* Fix: fallback to django.core.signals if django.test is missing by @KyriakosVerveridis in https://github.com/jazzband/djangorestframework-simplejwt/pull/974
 
+#### Misc
+
+* deps: add mypy and stubs packages by @vgrozdanic in https://github.com/jazzband/djangorestframework-simplejwt/pull/940
+* fix: use curve-matching EC keys for ES384/ES512 backend tests by @vgrozdanic in https://github.com/jazzband/djangorestframework-simplejwt/pull/963
+* Add missing settings documentation by @2ykwang in https://github.com/jazzband/djangorestframework-simplejwt/pull/952
+* feat: add django 6.0 and python 3.14 support by @angryfoxx in https://github.com/jazzband/djangorestframework-simplejwt/pull/959
+* Drop support for `python3.9` by @2ykwang in https://github.com/jazzband/djangorestframework-simplejwt/pull/948
+
+#### Translation Updates
+
+* Feat/add greek translation by @KyriakosVerveridis in https://github.com/jazzband/djangorestframework-simplejwt/pull/975
+* Add Kazakh (kk) translations for drf-simplejwt by @kushibayev in https://github.com/jazzband/djangorestframework-simplejwt/pull/916
 
 ## 5.5.1
 
