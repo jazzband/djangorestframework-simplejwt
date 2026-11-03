@@ -250,6 +250,8 @@ class TestToken(TestCase):
 
         self.assertIn("jti", token)
         self.assertNotEqual(old_jti, token["jti"])
+        # JTI should be a 32-character hex string (UUID without hyphens)
+        self.assertRegex(token["jti"], r"^[0-9a-f]{32}$")
 
     @override_api_settings(JTI_CLAIM=None)
     def test_optional_jti(self):
