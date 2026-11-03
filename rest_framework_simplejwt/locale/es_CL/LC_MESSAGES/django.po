@@ -100,7 +100,7 @@ msgstr "jti"
 
 #: token_blacklist/admin.py:85
 msgid "user"
-msgstr "Usuario"
+msgstr "usuario"
 
 #: token_blacklist/admin.py:91
 msgid "created at"

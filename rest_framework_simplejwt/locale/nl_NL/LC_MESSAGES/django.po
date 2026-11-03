@@ -38,7 +38,7 @@ msgstr "Gebruiker is inactief"
 
 #: backends.py:90
 msgid "Unrecognized algorithm type '{}'"
-msgstr "Niet herkend algoritme type '{}"
+msgstr "Niet herkend algoritme type '{}'"
 
 #: backends.py:96
 msgid "You must have cryptography installed to use {}."
