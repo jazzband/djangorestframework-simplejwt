@@ -8,11 +8,28 @@ from django.conf import settings
 from django.utils.functional import lazy
 
 
+def get_password_hash(password: str, algorithm: str = "md5") -> str:
+    """
+    Returns hash of the given password using specified algorithm.
+    Defaults to MD5 for backward compatibility.
+    """
+    try:
+        hash_obj = hashlib.new(algorithm)
+    except ValueError:
+        logger.warning(
+            f"Hashing algorithm '{algorithm}' not supported by hashlib. Falling back to MD5."
+        )
+        hash_obj = hashlib.md5()
+
+    hash_obj.update(password.encode())
+    return hash_obj.hexdigest().upper()
+
+
 def get_md5_hash_password(password: str) -> str:
     """
-    Returns MD5 hash of the given password
+    Legacy wrapper for MD5 hashing.
     """
-    return hashlib.md5(password.encode()).hexdigest().upper()
+    return get_password_hash(password, algorithm="md5")
 
 
 def make_utc(dt: datetime) -> datetime:
