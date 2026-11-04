@@ -9,6 +9,7 @@
 
 ### Fixed
 - `JWTAuthentication.get_raw_token()` now matches the `Authorization` scheme prefix case-insensitively, per RFC 7235 §2.1. The module-level `AUTH_HEADER_TYPE_BYTES` constant is unchanged for back-compat. Closes #908.
+- Import `setting_changed` from `django.core.signals` so importing SimpleJWT does not load `django.test`. Closes #969.
 
 
 ## 5.5.1
