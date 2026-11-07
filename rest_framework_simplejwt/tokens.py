@@ -304,7 +304,9 @@ class BlacklistMixin(Generic[T]):
                 },
             )
 
-            return BlacklistedToken.objects.get_or_create(token=token)
+            bltoken, _ = BlacklistedToken.objects.get_or_create(token=token)
+
+            return bltoken
 
         def outstand(self) -> OutstandingToken | None:
             """
